@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checking Part Report - Heat Exchanger</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-red: #E60012;
+      --primary-black: #111111;
+      --bg-gray: #F4F6F9;
+      --card-bg: #FFFFFF;
+      --border-color: #E2E8F0;
+      --text-main: #1E293B;
+      --text-muted: #64748B;
+      --focus-ring: rgba(230, 0, 18, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-gray);
+      color: var(--text-main);
+      padding: 24px 16px;
+      line-height: 1.5;
+    }
+
+    .app-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Header Styling */
+    .brand-header {
+      background: #FFFFFF;
+      padding: 20px 28px;
+      border-bottom: 3px solid var(--primary-red);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand-logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .report-badge {
+      background-color: #F8FAFC;
+      border: 1px solid var(--border-color);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .report-badge input {
+      border: none;
+      background: transparent;
+      font-weight: 700;
+      color: var(--primary-black);
+      font-size: 0.9rem;
+      outline: none;
+      width: 110px;
+    }
+
+    .form-body {
+      padding: 28px;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-black);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .page-title::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 24px;
+      background-color: var(--primary-red);
+      border-radius: 4px;
+    }
+
+    .section-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary-black);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-group label {
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .input-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      color: var(--text-main);
+      background-color: #FAFAFA;
+      transition: all 0.2s ease;
+    }
+
+    .input-control:focus {
+      outline: none;
+      background-color: #FFFFFF;
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    .parts-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 20px;
+    }
+
+    @media (max-width: 500px) {
+      .parts-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .part-item-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      transition: border-color 0.2s ease;
+    }
+
+    .part-item-card:hover {
+      border-color: #CBD5E1;
+    }
+
+    .part-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .part-header input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary-red);
+      cursor: pointer;
+    }
+
+    .part-title-text {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--primary-black);
+    }
+
+    .image-preview-box {
+      width: 100%;
+      height: 200px;
+      background-color: #F1F5F9;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .image-preview-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .custom-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: #F8FAFC;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.825rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s ease;
+    }
+
+    .custom-check:hover {
+      background: #F1F5F9;
+    }
+
+    .custom-check input[type="checkbox"] {
+      accent-color: var(--primary-red);
+      width: 15px;
+      height: 15px;
+    }
+
+    .upload-zone {
+      position: relative;
+      border: 1px dashed #CBD5E1;
+      border-radius: 6px;
+      padding: 8px 12px;
+      background: #FAFAFA;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .upload-zone:hover {
+      background: #F1F5F9;
+      border-color: var(--primary-red);
+    }
+
+    .upload-zone input[type="file"] {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .upload-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .action-container {
+      margin-top: 28px;
+    }
+
+    .btn-submit-primary {
+      width: 100%;
+      background-color: var(--primary-red);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(230, 0, 18, 0.25);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-submit-primary:hover {
+      background-color: #CC0010;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  
+  <!-- Header with Brand Logo -->
+  <header class="brand-header">
+    <div class="brand-logo-container">
+      <!-- 🔗 CHANGE LINK HERE: จุดที่ 0 - Logo แบรนด์ -->
+      <img src="images/Picture1.png" 
+           alt="Mitsubishi Heavy Industries" 
+           class="brand-logo-img" 
+           id="img_logo">
+    </div>
+    <div class="report-badge">
+      <span>Service Report No:</span>
+      <input type="text" id="serviceReportNo" placeholder="SR-XXXXX" value="SR-2026-001">
+    </div>
+  </header>
+
+  <!-- Body Content -->
+  <main class="form-body">
+    <h1 class="page-title">Checking Part Report (Heat Exchanger)</h1>
+
+    <form id="inspectionForm">
+      
+      <!-- General Data Section -->
+      <section class="section-card">
+        <div class="section-title">1. General Information</div>
+        <div class="grid-3" style="margin-bottom: 16px;">
+          <div class="input-group">
+            <label for="claimDate">Claim Date</label>
+            <input type="date" id="claimDate" class="input-control" required>
+          </div>
+          <div class="input-group">
+            <label for="serviceDate">Service Date</label>
+            <input type="date" id="serviceDate" class="input-control" required>
+          </div>
+          <div class="input-group">
+            <label for="customer">Customer Name</label>
+            <input type="text" id="customer" class="input-control" placeholder="Enter customer name">
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="input-group">
+            <label for="place">Service Location / Site</label>
+            <input type="text" id="place" class="input-control" placeholder="Enter site address">
+          </div>
+          <div class="input-group">
+            <label for="indoorModel">Indoor Model</label>
+            <input type="text" id="indoorModel" class="input-control" placeholder="Model number">
+          </div>
+          <div class="input-group">
+            <label for="indoorSN">Indoor Serial No. (S/N)</label>
+            <input type="text" id="indoorSN" class="input-control" placeholder="Serial number">
+          </div>
+        </div>
+      </section>
+
+      <!-- Technical Inspection Section -->
+      <section class="section-card">
+        <div class="section-title">
+          <span>2. Technical Inspection & Defect Locations</span>
+          <div style="width: 200px;">
+            <input type="text" id="partNo" class="input-control" placeholder="Part No. (e.g. RKX-101)" style="padding: 6px 10px; font-size: 0.8rem;">
+          </div>
+        </div>
+
+        <div class="parts-container">
+          
+          <!-- 1. Hair-pin tube side -->
+          <div class="part-item-card">
+            <div class="part-header">
+              <input type="checkbox" id="chk_hairpin">
+              <span class="part-title-text">Hair-pin tube side</span>
+            </div>
+            <div class="image-preview-box">
+              <!-- 🔗 CHANGE LINK HERE: จุดที่ 1 - รูป Hair-pin tube side -->
+              <img src="images/Hair-pin tube side.png">
+            </div>
+            <div class="options-grid">
+              <label class="custom-check"><input type="checkbox" name="hairpin" value="(A) area"> (A) area</label>
+              <label class="custom-check"><input type="checkbox" name="hairpin" value="(H) area"> (H) area</label>
+              <label class="custom-check"><input type="checkbox" name="hairpin" value="(C) area"> (C) area</label>
+            </div>
+            <div class="upload-zone">
+              <input type="file" id="pic_hairpin" accept="image/*">
+              <div class="upload-label">📷 Attach Defect Image (Hair-pin)</div>
+            </div>
+          </div>
+
+          <!-- 2. Distributor part -->
+          <div class="part-item-card">
+            <div class="part-header">
+              <input type="checkbox" id="chk_distributor">
+              <span class="part-title-text">Distributor part</span>
+            </div>
+            <div class="image-preview-box">
+              <!-- 🔗 CHANGE LINK HERE: จุดที่ 2 - รูป Distributor part -->
+              <img src="images/Distributor part.png">
+            </div>
+            <div class="options-grid">
+              <label class="custom-check"><input type="checkbox" name="distributor" value="(D) area"> (D) area</label>
+              <label class="custom-check"><input type="checkbox" name="distributor" value="(E) area"> (E) area</label>
+              <label class="custom-check"><input type="checkbox" name="distributor" value="(F) area"> (F) area</label>
+              <label class="custom-check"><input type="checkbox" name="distributor" value="(G) area"> (G) area</label>
+            </div>
+            <div class="upload-zone">
+              <input type="file" id="pic_distributor" accept="image/*">
+              <div class="upload-label">📷 Attach Defect Image (Distributor)</div>
+            </div>
+          </div>
+
+          <!-- 3. Inside the area of Heat Exchanger -->
+          <div class="part-item-card">
+            <div class="part-header">
+              <input type="checkbox" id="chk_inside">
+              <span class="part-title-text">Inside the area of Heat Exchanger</span>
+            </div>
+            <div class="image-preview-box">
+              <!-- 🔗 CHANGE LINK HERE: จุดที่ 3 - รูป Inside Heat Exchanger -->
+              <img src="images/Inside Heat Exchanger.png">
+            </div>
+            <div class="options-grid">
+              <label class="custom-check"><input type="checkbox" name="inside" value="(I) Back side"> (I) Back side</label>
+              <label class="custom-check"><input type="checkbox" name="inside" value="(H) Upper front"> (H) Upper front</label>
+              <label class="custom-check"><input type="checkbox" name="inside" value="(J) Lower front"> (J) Lower front</label>
+            </div>
+            <div class="upload-zone">
+              <input type="file" id="pic_inside" accept="image/*">
+              <div class="upload-label">📷 Attach Defect Image (Inside Area)</div>
+            </div>
+          </div>
+
+          <!-- 4. Header part -->
+          <div class="part-item-card">
+            <div class="part-header">
+              <input type="checkbox" id="chk_header">
+              <span class="part-title-text">Header part</span>
+            </div>
+            <div class="image-preview-box">
+              <!-- 🔗 CHANGE LINK HERE: จุดที่ 4 - รูป Header part -->
+              <img src="images/Header part.png">
+            </div>
+            <div class="options-grid">
+              <label class="custom-check"><input type="checkbox" name="header" value="(K) at header"> (K) at header</label>
+              <label class="custom-check"><input type="checkbox" name="header" value="(L) at any end"> (L) at any end</label>
+            </div>
+            <div class="upload-zone">
+              <input type="file" id="pic_header" accept="image/*">
+              <div class="upload-label">📷 Attach Defect Image (Header)</div>
+            </div>
+          </div>
+
+          <!-- 5. U-bend part -->
+          <div class="part-item-card">
+            <div class="part-header">
+              <input type="checkbox" id="chk_ubend">
+              <span class="part-title-text">U-bend part</span>
+            </div>
+            <div class="image-preview-box">
+              <!-- 🔗 CHANGE LINK HERE: จุดที่ 5 - รูป U-bend part -->
+              <img src="images/U-bend part.png">
+            </div>
+            <div class="options-grid" style="grid-template-columns: 1fr;">
+              <label class="custom-check"><input type="checkbox" name="ubend" value="(M) at brazing points"> (M) at brazing points</label>
+              <label class="custom-check"><input type="checkbox" name="ubend" value="(N) at edge of metal plate"> (N) at edge of metal plate</label>
+            </div>
+            <div class="upload-zone">
+              <input type="file" id="pic_ubend" accept="image/*">
+              <div class="upload-label">📷 Attach Defect Image (U-bend)</div>
+            </div>
+          </div>
+
+          <!-- 6. Union part -->
+          <div class="part-item-card">
+            <div class="part-header">
+              <input type="checkbox" id="chk_union">
+              <span class="part-title-text">Union part</span>
+            </div>
+            <div class="image-preview-box">
+              <!-- 🔗 CHANGE LINK HERE: จุดที่ 6 - รูป Union part -->
+              <img src="images/Union part.png">
+            </div>
+            <div class="options-grid" style="grid-template-columns: 1fr;">
+              <label class="custom-check"><input type="checkbox" name="union" value="(O) at brazing point of gas pipe"> (O) at brazing point (gas pipe)</label>
+              <label class="custom-check"><input type="checkbox" name="union" value="(P) at brazing point of liquid pipe"> (P) at brazing point (liquid pipe)</label>
+            </div>
+            <div class="upload-zone">
+              <input type="file" id="pic_union" accept="image/*">
+              <div class="upload-label">📷 Attach Defect Image (Union)</div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Judgement Section -->
+      <section class="section-card">
+        <div class="section-title">3. Overall Assessment</div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label for="judgement">Judgement Result</label>
+            <select id="judgement" class="input-control" required style="font-weight: 600;">
+              <option value="Defective part" style="color: var(--primary-red);">Defective part</option>
+              <option value="Normal" style="color: #10B981;">Normal</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Submit Button -->
+      <div class="action-container">
+        <button type="button" class="btn-submit-primary" onclick="handleFormSubmit()">
+          <span>Submit Service Report</span>
+        </button>
+      </div>
+
+    </form>
+  </main>
+</div>
+
+<script>
+  function handleFormSubmit() {
+    alert("Report submitted successfully! Ready for Microsoft Lists integration.");
+  }
+</script>
+
+</body>
+</html>
