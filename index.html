@@ -488,7 +488,8 @@
               <input type="file" id="pic_hairpin" accept="image/*" onchange="handleImageUpload(this, 'Hairpin plate side', 'attach_hairpin', 'zone_hairpin')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
-            <div class="input-group">
+            <!-- ช่อง Input สำหรับกรอก Comment ในส่วนที่ 2 (จะถูกซ่อนอัตโนมัติเมื่อกด Generate PDF ตามที่ต้องการ) -->
+            <div class="input-group hide-on-pdf">
               <input type="text" id="comment_hairpin" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_hairpin', this.value)" style="font-size: 0.75rem; padding: 6px;">
             </div>
           </div>
@@ -512,7 +513,7 @@
               <input type="file" id="pic_distributor" accept="image/*" onchange="handleImageUpload(this, 'Distributor part', 'attach_distributor', 'zone_distributor')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
-            <div class="input-group">
+            <div class="input-group hide-on-pdf">
               <input type="text" id="comment_distributor" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_distributor', this.value)" style="font-size: 0.75rem; padding: 6px;">
             </div>
           </div>
@@ -534,7 +535,7 @@
               <input type="file" id="pic_inside" accept="image/*" onchange="handleImageUpload(this, 'Inside area Of Heat Exchanger', 'attach_inside', 'zone_inside')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
-            <div class="input-group">
+            <div class="input-group hide-on-pdf">
               <input type="text" id="comment_inside" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_inside', this.value)" style="font-size: 0.75rem; padding: 6px;">
             </div>
           </div>
@@ -556,7 +557,7 @@
               <input type="file" id="pic_header" accept="image/*" onchange="handleImageUpload(this, 'Header', 'attach_header', 'zone_header')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
-            <div class="input-group">
+            <div class="input-group hide-on-pdf">
               <input type="text" id="comment_header" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_header', this.value)" style="font-size: 0.75rem; padding: 6px;">
             </div>
           </div>
@@ -578,7 +579,7 @@
               <input type="file" id="pic_ubend" accept="image/*" onchange="handleImageUpload(this, 'U-bend', 'attach_ubend', 'zone_ubend')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
-            <div class="input-group">
+            <div class="input-group hide-on-pdf">
               <input type="text" id="comment_ubend" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_ubend', this.value)" style="font-size: 0.75rem; padding: 6px;">
             </div>
           </div>
@@ -600,7 +601,7 @@
               <input type="file" id="pic_union" accept="image/*" onchange="handleImageUpload(this, 'Union', 'attach_union', 'zone_union')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
-            <div class="input-group">
+            <div class="input-group hide-on-pdf">
               <input type="text" id="comment_union" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_union', this.value)" style="font-size: 0.75rem; padding: 6px;">
             </div>
           </div>
@@ -683,7 +684,6 @@
     container.innerHTML = '';
 
     const keys = Object.keys(uploadedImages);
-    // แสดงเฉพาะรายการที่มีการอัปโหลดรูปภาพแล้วเท่านั้น
     const activeKeys = keys.filter(k => uploadedImages[k].src && uploadedImages[k].src !== '');
 
     if (activeKeys.length === 0) {
@@ -710,9 +710,9 @@
   function generatePDF() {
     const reportNoInput = document.getElementById('serviceReportNo');
     
-    // 1. ตรวจสอบว่ากรอก Service Report No หรือยัง
+    // 1. เปลี่ยนข้อความเตือนตอนไม่กรอก Service Report No ให้เป็นภาษาอังกฤษ
     if (!reportNoInput.value.trim()) {
-      alert('กรุณากรอก Service Report No ก่อนทำการ Generate PDF Report');
+      alert('Please fill in the Service Report No before generating the PDF report.');
       reportNoInput.focus();
       return;
     }
@@ -721,7 +721,7 @@
     const elementsToHide = document.querySelectorAll('.hide-on-pdf');
     const reportNo = reportNoInput.value.trim();
 
-    // 2. ซ่อนปุ่มและโซนอัปโหลด
+    // 2. ซ่อนปุ่ม โซนอัปโหลด และช่องกรอก Comment ในส่วนที่ 2 (เพื่อให้ Comment ไปแสดงเฉพาะใน Section 4 ตอนเป็น PDF)
     elementsToHide.forEach(el => el.style.display = 'none');
 
     // 3. สลับเป็น Mode PDF
