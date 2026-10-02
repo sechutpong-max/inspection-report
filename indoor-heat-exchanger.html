@@ -8,6 +8,10 @@
   
   <!-- CDN html2pdf.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- CDN heic2any for converting iOS HEIC images -->
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  <!-- CDN html2canvas เพื่อใช้เรนเดอร์คอมเมนต์เป็นภาพ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
     :root {
@@ -208,6 +212,7 @@
       color: var(--text-main);
       background-color: #FAFAFA;
       box-sizing: border-box;
+      font-family: 'Tahoma', 'Inter', sans-serif !important;
     }
 
     .parts-container {
@@ -365,15 +370,22 @@
       object-fit: contain;
     }
 
-    .attached-comment-text {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      background: #FFFFFF;
+    .attached-comment-container {
+      width: 100%;
+      min-height: 32px;
       border: 1px solid var(--border-color);
       border-radius: 4px;
-      padding: 6px;
-      min-height: 28px;
-      word-break: break-all;
+      background: #FFFFFF;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .attached-comment-container img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
 
     .action-container {
@@ -477,7 +489,7 @@
               <span class="part-title-text">Hairpin plate side</span>
             </div>
             <div class="image-preview-box">
-              <img src="images/Hair-pin tube side.png">
+              <img src="images/Hair-pin tube side.png" alt="Hairpin plate side">
             </div>
             <div class="options-grid">
               <label class="custom-check"><input type="checkbox" name="hairpin" value="(A) Bottom position"> (A) Bottom position</label>
@@ -488,7 +500,6 @@
               <input type="file" id="pic_hairpin" accept="image/*" onchange="handleImageUpload(this, 'Hairpin plate side', 'attach_hairpin', 'zone_hairpin')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
-            <!-- ช่อง Input สำหรับกรอก Comment ในส่วนที่ 2 (จะถูกซ่อนอัตโนมัติเมื่อกด Generate PDF ตามที่ต้องการ) -->
             <div class="input-group hide-on-pdf">
               <input type="text" id="comment_hairpin" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_hairpin', this.value)" style="font-size: 0.75rem; padding: 6px;">
             </div>
@@ -501,7 +512,7 @@
               <span class="part-title-text">Distributor part</span>
             </div>
             <div class="image-preview-box">
-              <img src="images/Distributor part.png">
+              <img src="images/Distributor part.png" alt="Distributor part">
             </div>
             <div class="options-grid">
               <label class="custom-check"><input type="checkbox" name="distributor" value="(D) area"> (D) area</label>
@@ -525,7 +536,7 @@
               <span class="part-title-text">Inside area Of Heat Exchanger</span>
             </div>
             <div class="image-preview-box">
-              <img src="images/Inside Heat Exchanger.png">
+              <img src="images/Inside Heat Exchanger.png" alt="Inside Heat Exchanger">
             </div>
             <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
               <label class="custom-check"><input type="checkbox" name="inside" value="(H) Back side"> (H) Back side</label>
@@ -547,7 +558,7 @@
               <span class="part-title-text">Header</span>
             </div>
             <div class="image-preview-box">
-              <img src="images/Header part.png">
+              <img src="images/Header part.png" alt="Header part">
             </div>
             <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
               <label class="custom-check"><input type="checkbox" name="header" value="(K) Header (brazing)"> (K) Header (brazing)</label>
@@ -569,7 +580,7 @@
               <span class="part-title-text">U-bend</span>
             </div>
             <div class="image-preview-box">
-              <img src="images/U-bend part.png">
+              <img src="images/U-bend part.png" alt="U-bend part">
             </div>
             <div class="options-grid" style="grid-template-columns: 1fr;">
               <label class="custom-check"><input type="checkbox" name="ubend" value="(M) U-bend (brazing)"> (M) U-bend (brazing)</label>
@@ -591,7 +602,7 @@
               <span class="part-title-text">Union</span>
             </div>
             <div class="image-preview-box">
-              <img src="images/Union part.png">
+              <img src="images/Union part.png" alt="Union part">
             </div>
             <div class="options-grid" style="grid-template-columns: 1fr;">
               <label class="custom-check"><input type="checkbox" name="union" value="(O) Pipe (gas)"> (O) Pipe (gas)</label>
@@ -644,21 +655,46 @@
 <script>
   const uploadedImages = {};
 
-  function handleImageUpload(input, title, cardId, zoneId) {
-    const file = input.files[0];
+  async function handleImageUpload(fileInput, title, cardId, zoneId) {
+    let file = fileInput.files[0];
     const zoneElement = document.getElementById(zoneId);
     const labelElement = zoneElement.querySelector('.upload-label');
 
     if (!uploadedImages[cardId]) {
-      uploadedImages[cardId] = { title: title, src: '', comment: '' };
+      uploadedImages[cardId] = { title: title, src: '', comment: '', commentImg: '' };
     }
 
     if (file) {
+      const isHeic = file.type === "image/heic" || file.type === "image/heif" || file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+
+      if (isHeic) {
+        if (typeof heic2any !== 'undefined') {
+          try {
+            labelElement.innerHTML = `⏳ Converting HEIC...`;
+            const convertedBlob = await heic2any({
+              blob: file,
+              toType: 'image/jpeg',
+              quality: 0.8
+            });
+            file = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+          } catch (err) {
+            console.error('HEIC conversion error:', err);
+            alert('Unable to convert HEIC file. Please use JPG or PNG images instead.');
+            labelElement.innerHTML = `📷 Attach Defect Image`;
+            fileInput.value = '';
+            return;
+          }
+        } else {
+          alert('HEIC conversion library is not available.');
+          return; 
+        }
+      }
+
       const reader = new FileReader();
       reader.onload = function(e) {
         uploadedImages[cardId].src = e.target.result;
         zoneElement.classList.add('has-file');
-        labelElement.innerHTML = `✔ Image Attached (${file.name.substring(0, 12)}...)`;
+        labelElement.innerHTML = `✔ Image Attached (${file.name ? file.name.substring(0, 12) : 'Image'}...)`;
         renderAttachedPictures();
       }
       reader.readAsDataURL(file);
@@ -672,7 +708,7 @@
 
   function updateComment(cardId, commentVal) {
     if (!uploadedImages[cardId]) {
-      uploadedImages[cardId] = { title: '', src: '', comment: '' };
+      uploadedImages[cardId] = { title: '', src: '', comment: '', commentImg: '' };
     }
     uploadedImages[cardId].comment = commentVal;
     renderAttachedPictures();
@@ -701,33 +737,47 @@
         <div class="attached-img-box">
           <img src="${item.src}" alt="${item.title}">
         </div>
-        <div class="attached-comment-text">${item.comment ? item.comment : '<span style="color: #CBD5E1;">No comment provided</span>'}</div>
+        <div class="attached-comment-container" id="container_${key}">
+          <div style="font-size: 0.75rem; color: ${item.comment ? 'var(--text-main)' : '#CBD5E1'}; padding: 6px; width: 100%; word-break: break-all;">
+            ${item.comment ? item.comment : 'No comment provided'}
+          </div>
+        </div>
       `;
       container.appendChild(card);
     });
   }
 
-  function generatePDF() {
+  async function generatePDF() {
     const reportNoInput = document.getElementById('serviceReportNo');
     
-    // 1. เปลี่ยนข้อความเตือนตอนไม่กรอก Service Report No ให้เป็นภาษาอังกฤษ
     if (!reportNoInput.value.trim()) {
       alert('Please fill in the Service Report No before generating the PDF report.');
       reportNoInput.focus();
       return;
     }
 
+    // แปลงข้อความคอมเมนต์ทั้งหมดให้เป็นภาพแคปชั่วย่อยๆ ก่อนสร้าง PDF ป้องกันสระสลับ
+    const activeKeys = Object.keys(uploadedImages).filter(k => uploadedImages[k].src && uploadedImages[k].src !== '');
+    for (const key of activeKeys) {
+      const commentContainer = document.getElementById(`container_${key}`);
+      if (commentContainer && uploadedImages[key].comment) {
+        try {
+          const canvas = await html2canvas(commentContainer, { scale: 2, useCORS: true });
+          const imgData = canvas.toDataURL('image/png');
+          commentContainer.innerHTML = `<img src="${imgData}" alt="Comment" style="width: 100%; display: block;">`;
+        } catch (e) {
+          console.error('Error converting comment to image:', e);
+        }
+      }
+    }
+
     const element = document.getElementById('reportContent');
     const elementsToHide = document.querySelectorAll('.hide-on-pdf');
     const reportNo = reportNoInput.value.trim();
 
-    // 2. ซ่อนปุ่ม โซนอัปโหลด และช่องกรอก Comment ในส่วนที่ 2 (เพื่อให้ Comment ไปแสดงเฉพาะใน Section 4 ตอนเป็น PDF)
     elementsToHide.forEach(el => el.style.display = 'none');
-
-    // 3. สลับเป็น Mode PDF
     element.classList.add('pdf-render-mode');
 
-    // 4. กำหนด Config PDF
     const opt = {
       margin:       [5, 5, 5, 5],
       filename:     `Checking_Part_Report_Indoor_${reportNo}.pdf`,
@@ -742,14 +792,15 @@
       pagebreak:    { mode: ['css', 'legacy'] }
     };
 
-    // 5. สั่ง Export และสลับคลาสกลับ
     html2pdf().set(opt).from(element).save().then(() => {
       element.classList.remove('pdf-render-mode');
       elementsToHide.forEach(el => el.style.display = '');
+      renderAttachedPictures(); // รีเซ็ตคอมเมนต์กลับเป็นข้อความปกติหลังโหลดเสร็จ
     }).catch(err => {
       console.error('PDF Generation Error:', err);
       element.classList.remove('pdf-render-mode');
       elementsToHide.forEach(el => el.style.display = '');
+      renderAttachedPictures();
     });
   }
 </script>
