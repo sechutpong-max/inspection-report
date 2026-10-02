@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checking Part Report - Indoor Heat Exchanger</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CDN html2pdf.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- CDN heic2any for converting iOS HEIC images -->
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  <!-- CDN html2canvas เพื่อใช้เรนเดอร์คอมเมนต์เป็นภาพ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    :root {
+      --primary-red: #E60012;
+      --primary-black: #111111;
+      --bg-gray: #F4F6F9;
+      --card-bg: #FFFFFF;
+      --border-color: #E2E8F0;
+      --text-main: #1E293B;
+      --text-muted: #64748B;
+      --success-green: #10B981;
+      --success-bg: #ECFDF5;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-gray);
+      color: var(--text-main);
+      padding: 24px 16px;
+      line-height: 1.4;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
+    }
+
+    .app-container.pdf-render-mode {
+      width: 200mm !important;
+      max-width: 200mm !important;
+      border-radius: 0 !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .app-container.pdf-render-mode .form-body {
+      padding: 10px 16px !important;
+    }
+
+    .app-container.pdf-render-mode .section-card {
+      padding: 10px 12px !important;
+      margin-bottom: 10px !important;
+    }
+
+    .app-container.pdf-render-mode .page-title {
+      font-size: 1.1rem !important;
+      margin-bottom: 10px !important;
+    }
+
+    .app-container.pdf-render-mode .image-preview-box {
+      height: 95px !important;
+    }
+
+    .app-container.pdf-render-mode .parts-container {
+      gap: 8px !important;
+    }
+
+    .app-container.pdf-render-mode .part-item-card {
+      padding: 8px !important;
+    }
+
+    .app-container.pdf-render-mode .page-break-before {
+      page-break-before: always !important;
+      break-before: page !important;
+    }
+
+    .brand-header {
+      background: #FFFFFF;
+      padding: 16px 24px;
+      border-bottom: 3px solid var(--primary-red);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-logo-img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .report-badge {
+      background-color: #F8FAFC;
+      border: 1px solid var(--border-color);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .report-badge input {
+      border: none;
+      background: transparent;
+      font-weight: 700;
+      color: var(--primary-black);
+      font-size: 0.9rem;
+      outline: none;
+      width: 130px;
+    }
+
+    .form-body {
+      padding: 20px 24px;
+    }
+
+    .page-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary-black);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .page-title::before {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 22px;
+      background-color: var(--primary-red);
+      border-radius: 3px;
+    }
+
+    .section-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--primary-black);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+    }
+
+    .input-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .input-control {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      background-color: #FAFAFA;
+      box-sizing: border-box;
+      font-family: 'Tahoma', 'Inter', sans-serif !important;
+    }
+
+    .parts-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .part-item-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .part-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .part-header input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary-red);
+    }
+
+    .part-title-text {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--primary-black);
+    }
+
+    .image-preview-box {
+      width: 100%;
+      height: 150px;
+      background-color: #F8FAFC;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-preview-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .custom-check {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 6px;
+      background: #F8FAFC;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .custom-check input[type="checkbox"] {
+      accent-color: var(--primary-red);
+      width: 13px;
+      height: 13px;
+    }
+
+    .upload-zone {
+      position: relative;
+      border: 1px dashed #CBD5E1;
+      border-radius: 6px;
+      padding: 6px;
+      background: #FAFAFA;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 8px;
+    }
+
+    .upload-zone.has-file {
+      background: var(--success-bg);
+      border: 1px solid var(--success-green);
+    }
+
+    .upload-zone input[type="file"] {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .upload-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .upload-zone.has-file .upload-label {
+      color: var(--success-green);
+      font-weight: 700;
+    }
+
+    .attached-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .attached-card {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px;
+      background: #FAFAFA;
+      text-align: left;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .attached-card-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--primary-black);
+      margin-bottom: 6px;
+    }
+
+    .attached-img-box {
+      width: 100%;
+      height: 150px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+    }
+
+    .attached-img-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .attached-comment-container {
+      width: 100%;
+      min-height: 32px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background: #FFFFFF;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .attached-comment-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .action-container {
+      margin-top: 20px;
+    }
+
+    .btn-submit-primary {
+      width: 100%;
+      background-color: var(--primary-red);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-submit-primary:hover {
+      background-color: #C0000F;
+    }
+
+    /* Style สำหรับแสดงภาพหลายรูปในส่วนของ Preview */
+    .multi-img-preview {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      width: 100%;
+      height: 150px;
+      margin-bottom: 8px;
+    }
+    .multi-img-preview .image-preview-box {
+      height: 100%;
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+      .grid-3, .grid-2, .parts-container, .attached-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container" id="reportContent">
+  
+  <!-- Header -->
+  <header class="brand-header">
+    <div class="brand-logo-container">
+      <img src="images/Picture1.png" alt="Mitsubishi Heavy Industries" class="brand-logo-img">
+    </div>
+    <div class="report-badge">
+      <span>Service Report No:</span>
+      <input type="text" id="serviceReportNo" placeholder="SR-XXXXX" value="" required>
+    </div>
+  </header>
+
+  <!-- Body Content -->
+  <main class="form-body">
+    <h1 class="page-title">Checking Part Report (Indoor Heat Exchanger)</h1>
+
+    <form id="inspectionForm">
+      
+      <!-- 1. General Information -->
+      <section class="section-card">
+        <div class="section-title">1. General Information</div>
+        <div class="grid-3" style="margin-bottom: 12px;">
+          <div class="input-group">
+            <label for="installationDate">Installation Date</label>
+            <input type="date" id="installationDate" class="input-control">
+          </div>
+          <div class="input-group">
+            <label for="claimDate">Claim Date</label>
+            <input type="date" id="claimDate" class="input-control">
+          </div>
+          <div class="input-group">
+            <label for="customer">Customer Name</label>
+            <input type="text" id="customer" class="input-control" placeholder="Enter customer name">
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="input-group">
+            <label for="place">Service Location / Site</label>
+            <input type="text" id="place" class="input-control" placeholder="Enter site address">
+          </div>
+          <div class="input-group">
+            <label for="indoorModel">Indoor Model</label>
+            <input type="text" id="indoorModel" class="input-control" placeholder="Model number">
+          </div>
+          <div class="input-group">
+            <label for="indoorSN">Indoor Serial No. (S/N)</label>
+            <input type="text" id="indoorSN" class="input-control" placeholder="Serial number">
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Technical Inspection & Defect Locations -->
+      <section class="section-card">
+        <div class="section-title">
+          <span>2. Technical Inspection & Defect Locations</span>
+          <div style="width: 160px;">
+            <input type="text" id="partNo" class="input-control" placeholder="Part No. (e.g. RKX-101)" style="padding: 4px 8px; font-size: 0.75rem;">
+          </div>
+        </div>
+
+        <div class="parts-container">
+          
+          <!-- 1. Hairpin plate side (มี 3 รูป) -->
+          <div class="part-item-card">
+            <div class="part-header">
+              <input type="checkbox" id="chk_hairpin">
+              <span class="part-title-text">Hairpin plate side</span>
+            </div>
+            <div class="multi-img-preview">
+              <div class="image-preview-box"><img src="images/outheathair1.png" alt="Hairpin 1"></div>
+              <div class="image-preview-box"><img src="images/outheathair2.png" alt="Hairpin 2"></div>
+              <div class="image-preview-box"><img src="images/outheathair3.png" alt="Hairpin 3"></div>
+            </div>
+            <div class="options-grid">
+              <label class="custom-check"><input type="checkbox" name="hairpin" value="(A) Bottom position"> (A) Bottom position</label>
+              <label class="custom-check"><input type="checkbox" name="hairpin" value="(B) Middle position"> (B) Middle position</label>
+              <label class="custom-check"><input type="checkbox" name="hairpin" value="(C) Top position"> (C) Top position</label>
+            </div>
+            <div class="upload-zone hide-on-pdf" id="zone_hairpin">
+              <input type="file" id="pic_hairpin" accept="image/*" onchange="handleImageUpload(this, 'Hairpin plate side', 'attach_hairpin', 'zone_hairpin')">
+              <div class="upload-label">📷 Attach Defect Image</div>
+            </div>
+            <div class="input-group hide-on-pdf">
+              <input type="text" id="comment_hairpin" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_hairpin', this.value)" style="font-size: 0.75rem; padding: 6px;">
+            </div>
+          </div>
+
+          <!-- 2. Distributor part -->
+          <div class="part-item-card">
+            <div class="part-header">
+              <input type="checkbox" id="chk_distributor">
+              <span class="part-title-text">Distributor part</span>
+            </div>
+            <div class="image-preview-box">
+              <img src="images/Distributor part.png" alt="Distributor part">
+            </div>
+            <div class="options-grid">
+              <label class="custom-check"><input type="checkbox" name="distributor" value="(D) area"> (D) area</label>
+              <label class="custom-check"><input type="checkbox" name="distributor" value="(E) area"> (E) area</label>
+              <label class="custom-check"><input type="checkbox" name="distributor" value="(F) area"> (F) area</label>
+              <label class="custom-check"><input type="checkbox" name="distributor" value="(G) area"> (G) area</label>
+            </div>
+            <div class="upload-zone hide-on-pdf" id="zone_distributor">
+              <input type="file" id="pic_distributor" accept="image/*" onchange="handleImageUpload(this, 'Distributor part', 'attach_distributor', 'zone_distributor')">
+              <div class="upload-label">📷 Attach Defect Image</div>
+            </div>
+            <div class="input-group hide-on-pdf">
+              <input type="text" id="comment_distributor" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_distributor', this.value)" style="font-size: 0.75rem; padding: 6px;">
+            </div>
+          </div>
+
+          <!-- 3. Inside area Of Heat Exchanger (ใช้รูป outheatu1.png ตามระบุ) -->
+          <div class="part-item-card">
+            <div class="part-header">
+              <input type="checkbox" id="chk_inside">
+              <span class="part-title-text">Inside area Of Heat Exchanger</span>
+            </div>
+            <div class="image-preview-box">
+              <img src="images/outheatu1.png" alt="Inside Heat Exchanger">
+            </div>
+            <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
+              <label class="custom-check"><input type="checkbox" name="inside" value="(H) Back side"> (H) Back side</label>
+              <label class="custom-check"><input type="checkbox" name="inside" value="(I) Upper front"> (I) Upper front</label>
+            </div>
+            <div class="upload-zone hide-on-pdf" id="zone_inside">
+              <input type="file" id="pic_inside" accept="image/*" onchange="handleImageUpload(this, 'Inside area Of Heat Exchanger', 'attach_inside', 'zone_inside')">
+              <div class="upload-label">📷 Attach Defect Image</div>
+            </div>
+            <div class="input-group hide-on-pdf">
+              <input type="text" id="comment_inside" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_inside', this.value)" style="font-size: 0.75rem; padding: 6px;">
+            </div>
+          </div>
+
+          <!-- 4. Header -->
+          <div class="part-item-card">
+            <div class="part-header">
+              <input type="checkbox" id="chk_header">
+              <span class="part-title-text">Header</span>
+            </div>
+            <div class="image-preview-box">
+              <img src="images/Header part.png" alt="Header part">
+            </div>
+            <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
+              <label class="custom-check"><input type="checkbox" name="header" value="(K) Header (brazing)"> (K) Header (brazing)</label>
+              <label class="custom-check"><input type="checkbox" name="header" value="(L) Header (plate)"> (L) Header (plate)</label>
+            </div>
+            <div class="upload-zone hide-on-pdf" id="zone_header">
+              <input type="file" id="pic_header" accept="image/*" onchange="handleImageUpload(this, 'Header', 'attach_header', 'zone_header')">
+              <div class="upload-label">📷 Attach Defect Image</div>
+            </div>
+            <div class="input-group hide-on-pdf">
+              <input type="text" id="comment_header" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_header', this.value)" style="font-size: 0.75rem; padding: 6px;">
+            </div>
+          </div>
+
+          <!-- 5. U-bend (มี 3 รูป: outheatu1.png, outheatu2.png, outheatu3.png) -->
+          <div class="part-item-card">
+            <div class="part-header">
+              <input type="checkbox" id="chk_ubend">
+              <span class="part-title-text">U-bend</span>
+            </div>
+            <div class="multi-img-preview">
+              <div class="image-preview-box"><img src="images/outheatu1.png" alt="U-bend 1"></div>
+              <div class="image-preview-box"><img src="images/outheatu2.png" alt="U-bend 2"></div>
+              <div class="image-preview-box"><img src="images/outheatu3.png" alt="U-bend 3"></div>
+            </div>
+            <div class="options-grid" style="grid-template-columns: 1fr;">
+              <label class="custom-check"><input type="checkbox" name="ubend" value="(M) U-bend (brazing)"> (M) U-bend (brazing)</label>
+              <label class="custom-check"><input type="checkbox" name="ubend" value="(N) Hairpin (plate side)"> (N) Hairpin (plate side)</label>
+            </div>
+            <div class="upload-zone hide-on-pdf" id="zone_ubend">
+              <input type="file" id="pic_ubend" accept="image/*" onchange="handleImageUpload(this, 'U-bend', 'attach_ubend', 'zone_ubend')">
+              <div class="upload-label">📷 Attach Defect Image</div>
+            </div>
+            <div class="input-group hide-on-pdf">
+              <input type="text" id="comment_ubend" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_ubend', this.value)" style="font-size: 0.75rem; padding: 6px;">
+            </div>
+          </div>
+
+          <!-- 6. Union -->
+          <div class="part-item-card">
+            <div class="part-header">
+              <input type="checkbox" id="chk_union">
+              <span class="part-title-text">Union</span>
+            </div>
+            <div class="image-preview-box">
+              <img src="images/Union part.png" alt="Union part">
+            </div>
+            <div class="options-grid" style="grid-template-columns: 1fr;">
+              <label class="custom-check"><input type="checkbox" name="union" value="(O) Pipe (gas)"> (O) Pipe (gas)</label>
+              <label class="custom-check"><input type="checkbox" name="union" value="(P) Pipe (liquid)"> (P) Pipe (liquid)</label>
+            </div>
+            <div class="upload-zone hide-on-pdf" id="zone_union">
+              <input type="file" id="pic_union" accept="image/*" onchange="handleImageUpload(this, 'Union', 'attach_union', 'zone_union')">
+              <div class="upload-label">📷 Attach Defect Image</div>
+            </div>
+            <div class="input-group hide-on-pdf">
+              <input type="text" id="comment_union" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_union', this.value)" style="font-size: 0.75rem; padding: 6px;">
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 3. Overall Assessment -->
+      <section class="section-card page-break-before">
+        <div class="section-title">3. Overall Assessment</div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label for="judgement">Judgement Result</label>
+            <select id="judgement" class="input-control" required style="font-weight: 600;">
+              <option value="Defective part" style="color: var(--primary-red);">Defective part</option>
+              <option value="Normal" style="color: #10B981;">Normal</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Attached Pictures Section -->
+      <section class="section-card" id="section_attached_pictures" style="display: none;">
+        <div class="section-title">4. Attached Defect Pictures</div>
+        <div class="attached-grid" id="attached_container">
+        </div>
+      </section>
+
+      <!-- Export PDF Button -->
+      <div class="action-container hide-on-pdf">
+        <button type="button" class="btn-submit-primary" onclick="generatePDF()">
+          <span>📄 Generate PDF Report</span>
+        </button>
+      </div>
+
+    </form>
+  </main>
+</div>
+
+<script>
+  const uploadedImages = {};
+
+  async function handleImageUpload(fileInput, title, cardId, zoneId) {
+    let file = fileInput.files[0];
+    const zoneElement = document.getElementById(zoneId);
+    const labelElement = zoneElement.querySelector('.upload-label');
+
+    if (!uploadedImages[cardId]) {
+      uploadedImages[cardId] = { title: title, src: '', comment: '', commentImg: '' };
+    }
+
+    if (file) {
+      const isHeic = file.type === "image/heic" || file.type === "image/heif" || file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+
+      if (isHeic) {
+        if (typeof heic2any !== 'undefined') {
+          try {
+            labelElement.innerHTML = `⏳ Converting HEIC...`;
+            const convertedBlob = await heic2any({
+              blob: file,
+              toType: 'image/jpeg',
+              quality: 0.8
+            });
+            file = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+          } catch (err) {
+            console.error('HEIC conversion error:', err);
+            alert('Unable to convert HEIC file. Please use JPG or PNG images instead.');
+            labelElement.innerHTML = `📷 Attach Defect Image`;
+            fileInput.value = '';
+            return;
+          }
+        } else {
+          alert('HEIC conversion library is not available.');
+          return; 
+        }
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        uploadedImages[cardId].src = e.target.result;
+        zoneElement.classList.add('has-file');
+        labelElement.innerHTML = `✔ Image Attached (${file.name ? file.name.substring(0, 12) : 'Image'}...)`;
+        renderAttachedPictures();
+      }
+      reader.readAsDataURL(file);
+    } else {
+      uploadedImages[cardId].src = '';
+      zoneElement.classList.remove('has-file');
+      labelElement.innerHTML = `📷 Attach Defect Image`;
+      renderAttachedPictures();
+    }
+  }
+
+  function updateComment(cardId, commentVal) {
+    if (!uploadedImages[cardId]) {
+      uploadedImages[cardId] = { title: '', src: '', comment: '', commentImg: '' };
+    }
+    uploadedImages[cardId].comment = commentVal;
+    renderAttachedPictures();
+  }
+
+  function renderAttachedPictures() {
+    const section = document.getElementById('section_attached_pictures');
+    const container = document.getElementById('attached_container');
+    container.innerHTML = '';
+
+    const keys = Object.keys(uploadedImages);
+    const activeKeys = keys.filter(k => uploadedImages[k].src && uploadedImages[k].src !== '');
+
+    if (activeKeys.length === 0) {
+      section.style.display = 'none';
+      return;
+    }
+
+    section.style.display = 'block';
+    activeKeys.forEach(key => {
+      const item = uploadedImages[key];
+      const card = document.createElement('div');
+      card.className = 'attached-card';
+      card.innerHTML = `
+        <div class="attached-card-title">${item.title}</div>
+        <div class="attached-img-box">
+          <img src="${item.src}" alt="${item.title}">
+        </div>
+        <div class="attached-comment-container" id="container_${key}">
+          <div style="font-size: 0.75rem; color: ${item.comment ? 'var(--text-main)' : '#CBD5E1'}; padding: 6px; width: 100%; word-break: break-all;">
+            ${item.comment ? item.comment : 'No comment provided'}
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  async function generatePDF() {
+    const reportNoInput = document.getElementById('serviceReportNo');
+    
+    if (!reportNoInput.value.trim()) {
+      alert('Please fill in the Service Report No before generating the PDF report.');
+      reportNoInput.focus();
+      return;
+    }
+
+    const activeKeys = Object.keys(uploadedImages).filter(k => uploadedImages[k].src && uploadedImages[k].src !== '');
+    for (const key of activeKeys) {
+      const commentContainer = document.getElementById(`container_${key}`);
+      if (commentContainer && uploadedImages[key].comment) {
+        try {
+          const canvas = await html2canvas(commentContainer, { scale: 2, useCORS: true });
+          const imgData = canvas.toDataURL('image/png');
+          commentContainer.innerHTML = `<img src="${imgData}" alt="Comment" style="width: 100%; display: block;">`;
+        } catch (e) {
+          console.error('Error converting comment to image:', e);
+        }
+      }
+    }
+
+    const element = document.getElementById('reportContent');
+    const elementsToHide = document.querySelectorAll('.hide-on-pdf');
+    const reportNo = reportNoInput.value.trim();
+
+    elementsToHide.forEach(el => el.style.display = 'none');
+    element.classList.add('pdf-render-mode');
+
+    const opt = {
+      margin:       [5, 5, 5, 5],
+      filename:     `Checking_Part_Report_Indoor_${reportNo}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { 
+        scale: 2, 
+        useCORS: true, 
+        scrollY: 0,
+        scrollX: 0
+      },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak:    { mode: ['css', 'legacy'] }
+    };
+
+    html2pdf().set(opt).from(element).save().then(() => {
+      element.classList.remove('pdf-render-mode');
+      elementsToHide.forEach(el => el.style.display = '');
+      renderAttachedPictures();
+    }).catch(err => {
+      console.error('PDF Generation Error:', err);
+      element.classList.remove('pdf-render-mode');
+      elementsToHide.forEach(el => el.style.display = '');
+      renderAttachedPictures();
+    });
+  }
+</script>
+
+</body>
+</html>
