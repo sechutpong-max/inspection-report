@@ -10,8 +10,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <!-- CDN heic2any for converting iOS HEIC images -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <!-- CDN html2canvas เพื่อใช้เรนเดอร์คอมเมนต์เป็นภาพ -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
     :root {
@@ -290,7 +288,6 @@
       box-shadow: 0 0 8px rgba(230, 0, 18, 0.6);
       background: rgba(230, 0, 18, 0.08);
     }
-    /* พิกัดตำแหน่งไฮไลท์แต่ละส่วน (อ้างอิงตาม Overview.jpg) */
     .hl-hairpin { top: 48%; left: 63%; width: 28%; height: 42%; border-radius: 40%; }
     .hl-distributor { top: 62%; left: 74%; width: 23%; height: 36%; border-radius: 40%; }
     .hl-inside { top: 46%; left: 24%; width: 34%; height: 35%; border-radius: 30%; }
@@ -391,7 +388,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 6px;
     }
 
     .attached-img-box img {
@@ -400,22 +396,27 @@
       object-fit: contain;
     }
 
-    .attached-comment-container {
+    .summary-comment-box {
       width: 100%;
-      min-height: 32px;
+      min-height: 50px;
       border: 1px solid var(--border-color);
-      border-radius: 4px;
-      background: #FFFFFF;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border-radius: 6px;
+      background: #FAFAFA;
+      padding: 10px;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      box-sizing: border-box;
     }
 
-    .attached-comment-container img {
-      width: 100%;
-      height: auto;
-      display: block;
+    .summary-item-row {
+      margin-bottom: 6px;
+    }
+    .summary-item-row:last-child {
+      margin-bottom: 0;
+    }
+    .summary-part-name {
+      font-weight: 700;
+      color: var(--primary-black);
     }
 
     .action-container {
@@ -467,32 +468,7 @@
 
     <form id="inspectionForm">
       
-      <!-- Drawing Overall with Interactive Highlights -->
-      <section class="section-card">
-        <div class="section-title">Drawing Overall</div>
-        <div style="text-align: center; margin-bottom: 12px;">
-          <div class="highlight-overlay-container">
-            <img src="images/Overview.jpg" alt="Drawing Overall" id="overviewImage">
-            <!-- ไฮไลท์ตำแหน่งต่างๆ จะแสดงขึ้นเมื่อเลือก -->
-            <div class="map-highlight hl-hairpin" id="hl_Hairpin plate side"></div>
-            <div class="map-highlight hl-distributor" id="hl_Distributor part"></div>
-            <div class="map-highlight hl-inside" id="hl_Inside area Of Heat Exchanger"></div>
-            <div class="map-highlight hl-header" id="hl_Header"></div>
-            <div class="map-highlight hl-ubend" id="hl_U-bend"></div>
-            <div class="map-highlight hl-union" id="hl_Union"></div>
-          </div>
-        </div>
-        <div class="options-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="Hairpin plate side" onchange="filterInspectionSections()"> Hairpin plate side</label>
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="Distributor part" onchange="filterInspectionSections()"> Distributor part</label>
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="Inside area Of Heat Exchanger" onchange="filterInspectionSections()"> Inside area Of Heat Exchanger</label>
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="Header" onchange="filterInspectionSections()"> Header</label>
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="U-bend" onchange="filterInspectionSections()"> U-bend</label>
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="Union" onchange="filterInspectionSections()"> Union</label>
-        </div>
-      </section>
-
-      <!-- General Information -->
+      <!-- 1. General Information -->
       <section class="section-card">
         <div class="section-title">General Information</div>
         <div class="grid-3">
@@ -511,7 +487,31 @@
         </div>
       </section>
 
-      <!-- Technical Inspection & Defect Locations (ซ่อนเฉพาะตอน Gen PDF โดยเพิ่ม hide-on-pdf ที่นี่) -->
+      <!-- 2. Drawing Overall with Interactive Highlights -->
+      <section class="section-card">
+        <div class="section-title">Drawing Overall</div>
+        <div style="text-align: center; margin-bottom: 12px;">
+          <div class="highlight-overlay-container">
+            <img src="images/Overview.jpg" alt="Drawing Overall" id="overviewImage">
+            <div class="map-highlight hl-hairpin" id="hl_Hairpin plate side"></div>
+            <div class="map-highlight hl-distributor" id="hl_Distributor part"></div>
+            <div class="map-highlight hl-inside" id="hl_Inside area Of Heat Exchanger"></div>
+            <div class="map-highlight hl-header" id="hl_Header"></div>
+            <div class="map-highlight hl-ubend" id="hl_U-bend"></div>
+            <div class="map-highlight hl-union" id="hl_Union"></div>
+          </div>
+        </div>
+        <div class="options-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+          <label class="custom-check"><input type="checkbox" name="overall_part" value="Hairpin plate side" onchange="filterInspectionSections()"> Hairpin plate side</label>
+          <label class="custom-check"><input type="checkbox" name="overall_part" value="Distributor part" onchange="filterInspectionSections()"> Distributor part</label>
+          <label class="custom-check"><input type="checkbox" name="overall_part" value="Inside area Of Heat Exchanger" onchange="filterInspectionSections()"> Inside area Of Heat Exchanger</label>
+          <label class="custom-check"><input type="checkbox" name="overall_part" value="Header" onchange="filterInspectionSections()"> Header</label>
+          <label class="custom-check"><input type="checkbox" name="overall_part" value="U-bend" onchange="filterInspectionSections()"> U-bend</label>
+          <label class="custom-check"><input type="checkbox" name="overall_part" value="Union" onchange="filterInspectionSections()"> Union</label>
+        </div>
+      </section>
+
+      <!-- 3. Technical Inspection & Defect Locations (ซ่อนเฉพาะตอน Gen PDF) -->
       <section class="section-card hide-on-pdf" id="section_technical">
         <div class="section-title">
           <span>Technical Inspection & Defect Locations</span>
@@ -639,10 +639,17 @@
         </div>
       </section>
 
-      <!-- Attached Pictures Section -->
+      <!-- 4. Attached Defect Pictures Section -->
       <section class="section-card" id="section_attached_pictures" style="display: none;">
         <div class="section-title">Attached Defect Pictures</div>
         <div class="attached-grid" id="attached_container">
+        </div>
+      </section>
+
+      <!-- 5. Inspection Summary & Comments -->
+      <section class="section-card" id="section_inspection_summary" style="display: none;">
+        <div class="section-title">Inspection Summary & Comments</div>
+        <div class="summary-comment-box" id="summary_comment_content">
         </div>
       </section>
 
@@ -684,7 +691,6 @@
       .filter(cb => cb.checked)
       .map(cb => cb.value.trim());
 
-    // ควบคุมการแสดงผลไฮไลท์บนรูป Overview
     const allHighlights = document.querySelectorAll('.map-highlight');
     allHighlights.forEach(hl => hl.style.display = 'none');
 
@@ -771,6 +777,7 @@
         zoneElement.classList.add('has-file');
         labelElement.innerHTML = `✔ Image Attached (${file.name ? file.name.substring(0, 12) : 'Image'}...)`;
         renderAttachedPictures();
+        updateSummarySection();
       }
       reader.readAsDataURL(file);
     } else {
@@ -778,6 +785,7 @@
       zoneElement.classList.remove('has-file');
       labelElement.innerHTML = `📷 Attach Defect Image`;
       renderAttachedPictures();
+      updateSummarySection();
     }
   }
 
@@ -797,6 +805,7 @@
       uploadedImages[cardId].comments = selectedTexts;
     }
     renderAttachedPictures();
+    updateSummarySection();
   }
 
   function renderAttachedPictures() {
@@ -815,9 +824,6 @@
     section.style.display = 'block';
     activeKeys.forEach(key => {
       const item = uploadedImages[key];
-      const commentsList = item.comments && item.comments.length > 0 
-        ? item.comments.join(', ') 
-        : 'No option selected';
 
       const card = document.createElement('div');
       card.className = 'attached-card';
@@ -826,14 +832,37 @@
         <div class="attached-img-box">
           <img src="${item.src}" alt="${item.title}">
         </div>
-        <div class="attached-comment-container" id="container_${key}">
-          <div style="font-size: 0.75rem; color: ${item.comments && item.comments.length > 0 ? 'var(--text-main)' : '#CBD5E1'}; padding: 6px; width: 100%; word-break: break-all; font-weight: 500;">
-            ${commentsList}
-          </div>
-        </div>
       `;
       container.appendChild(card);
     });
+  }
+
+  function updateSummarySection() {
+    const section = document.getElementById('section_inspection_summary');
+    const summaryContent = document.getElementById('summary_comment_content');
+    
+    let summaryHTML = '';
+    let hasAnyComment = false;
+
+    for (const cardId in groupMapping) {
+      const item = uploadedImages[cardId];
+      if (item && item.comments && item.comments.length > 0) {
+        hasAnyComment = true;
+        summaryHTML += `
+          <div class="summary-item-row">
+            <span class="summary-part-name">• ${item.title}:</span> ${item.comments.join(', ')}
+          </div>
+        `;
+      }
+    }
+
+    if (!hasAnyComment) {
+      section.style.display = 'none';
+      summaryContent.innerHTML = '';
+    } else {
+      section.style.display = 'block';
+      summaryContent.innerHTML = summaryHTML;
+    }
   }
 
   async function generatePDF() {
@@ -845,20 +874,6 @@
       return;
     }
 
-    const activeKeys = Object.keys(uploadedImages).filter(k => uploadedImages[k].src && uploadedImages[k].src !== '');
-    for (const key of activeKeys) {
-      const commentContainer = document.getElementById(`container_${key}`);
-      if (commentContainer && uploadedImages[key].comments && uploadedImages[key].comments.length > 0) {
-        try {
-          const canvas = await html2canvas(commentContainer, { scale: 2, useCORS: true });
-          const imgData = canvas.toDataURL('image/png');
-          commentContainer.innerHTML = `<img src="${imgData}" alt="Comment" style="width: 100%; display: block;">`;
-        } catch (e) {
-          console.error('Error converting comment to image:', e);
-        }
-      }
-    }
-
     const element = document.getElementById('reportContent');
     const elementsToHide = document.querySelectorAll('.hide-on-pdf');
     const reportNo = reportNoInput.value.trim();
@@ -866,6 +881,7 @@
     elementsToHide.forEach(el => el.style.display = 'none');
     element.classList.add('pdf-render-mode');
 
+    // ตั้งค่า html2pdf ให้ออกมาเป็นรูปแบบ vector text และ document ปกติ (ไม่ใช่ canvas image)
     const opt = {
       margin:       [5, 5, 5, 5],
       filename:     `Checking_Part_Report_Indoor_${reportNo}.pdf`,
@@ -874,21 +890,26 @@
         scale: 2, 
         useCORS: true, 
         scrollY: 0,
-        scrollX: 0
+        scrollX: 0,
+        letterRendering: true
       },
-      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
       pagebreak:    { mode: ['css', 'legacy'] }
     };
 
-    html2pdf().set(opt).from(element).save().then(() => {
+    html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
+      // เอกสารจะถูกสร้างเป็น PDF ปกติโดยอัตโนมัติ
+    }).save().then(() => {
       element.classList.remove('pdf-render-mode');
       elementsToHide.forEach(el => el.style.display = '');
       renderAttachedPictures();
+      updateSummarySection();
     }).catch(err => {
       console.error('PDF Generation Error:', err);
       element.classList.remove('pdf-render-mode');
       elementsToHide.forEach(el => el.style.display = '');
       renderAttachedPictures();
+      updateSummarySection();
     });
   }
 </script>
