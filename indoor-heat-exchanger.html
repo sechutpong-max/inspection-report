@@ -77,7 +77,7 @@
     }
 
     .app-container.pdf-render-mode .image-preview-box {
-      height: 95px !important;
+      height: 140px !important;
     }
 
     .app-container.pdf-render-mode .parts-container {
@@ -260,6 +260,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
     }
 
     .image-preview-box img {
@@ -267,6 +268,35 @@
       max-height: 100%;
       object-fit: contain;
     }
+
+    /* สไตล์สำหรับกล่องไฮไลท์ตำแหน่งบนรูปภาพ Overview */
+    .highlight-overlay-container {
+      position: relative;
+      display: inline-block;
+      max-width: 100%;
+    }
+    .highlight-overlay-container img {
+      display: block;
+      max-height: 220px;
+      width: auto;
+      margin: 0 auto;
+    }
+    .map-highlight {
+      position: absolute;
+      border: 3px solid #E60012;
+      border-radius: 50%;
+      pointer-events: none;
+      display: none;
+      box-shadow: 0 0 8px rgba(230, 0, 18, 0.6);
+      background: rgba(230, 0, 18, 0.08);
+    }
+    /* พิกัดตำแหน่งไฮไลท์แต่ละส่วน (ปรับแต่งตำแหน่ง top, left, width, height ตามสัดส่วนรูปจริง) */
+    .hl-hairpin { top: 48%; left: 63%; width: 28%; height: 42%; border-radius: 40%; }
+    .hl-distributor { top: 62%; left: 74%; width: 23%; height: 36%; border-radius: 40%; }
+    .hl-inside { top: 46%; left: 24%; width: 34%; height: 35%; border-radius: 30%; }
+    .hl-header { top: 8%; left: 55%; width: 38%; height: 45%; border-radius: 40%; }
+    .hl-ubend { top: 10%; left: 29%; width: 17%; height: 35%; border-radius: 40%; }
+    .hl-union { top: 20%; left: 5%; width: 20%; height: 45%; border-radius: 40%; }
 
     .options-grid {
       display: grid;
@@ -437,29 +467,35 @@
 
     <form id="inspectionForm">
       
-      <!-- 1. General Information -->
+      <!-- Drawing Overall with Interactive Highlights -->
       <section class="section-card">
-        <div class="section-title">1. General Information</div>
-        <div class="grid-3" style="margin-bottom: 12px;">
-          <div class="input-group">
-            <label for="installationDate">Installation Date</label>
-            <input type="date" id="installationDate" class="input-control">
-          </div>
-          <div class="input-group">
-            <label for="claimDate">Claim Date</label>
-            <input type="date" id="claimDate" class="input-control">
-          </div>
-          <div class="input-group">
-            <label for="customer">Customer Name</label>
-            <input type="text" id="customer" class="input-control" placeholder="Enter customer name">
+        <div class="section-title">Drawing Overall</div>
+        <div style="text-align: center; margin-bottom: 12px;">
+          <div class="highlight-overlay-container">
+            <img src="images/Drawing overall.png" alt="Drawing Overall" id="overviewImage">
+            <!-- ไฮไลท์ตำแหน่งต่างๆ จะแสดงขึ้นเมื่อเลือก -->
+            <div class="map-highlight hl-hairpin" id="hl_Hairpin plate side"></div>
+            <div class="map-highlight hl-distributor" id="hl_Distributor part"></div>
+            <div class="map-highlight hl-inside" id="hl_Inside area Of Heat Exchanger"></div>
+            <div class="map-highlight hl-header" id="hl_Header"></div>
+            <div class="map-highlight hl-ubend" id="hl_U-bend"></div>
+            <div class="map-highlight hl-union" id="hl_Union"></div>
           </div>
         </div>
+        <div class="options-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+          <label class="custom-check"><input type="checkbox" name="overall_part" value="Hairpin plate side" onchange="filterInspectionSections()"> Hairpin plate side</label>
+          <label class="custom-check"><input type="checkbox" name="overall_part" value="Distributor part" onchange="filterInspectionSections()"> Distributor part</label>
+          <label class="custom-check"><input type="checkbox" name="overall_part" value="Inside area Of Heat Exchanger" onchange="filterInspectionSections()"> Inside area Of Heat Exchanger</label>
+          <label class="custom-check"><input type="checkbox" name="overall_part" value="Header" onchange="filterInspectionSections()"> Header</label>
+          <label class="custom-check"><input type="checkbox" name="overall_part" value="U-bend" onchange="filterInspectionSections()"> U-bend</label>
+          <label class="custom-check"><input type="checkbox" name="overall_part" value="Union" onchange="filterInspectionSections()"> Union</label>
+        </div>
+      </section>
 
+      <!-- General Information -->
+      <section class="section-card">
+        <div class="section-title">General Information</div>
         <div class="grid-3">
-          <div class="input-group">
-            <label for="place">Service Location / Site</label>
-            <input type="text" id="place" class="input-control" placeholder="Enter site address">
-          </div>
           <div class="input-group">
             <label for="indoorModel">Indoor Model</label>
             <input type="text" id="indoorModel" class="input-control" placeholder="Model number">
@@ -468,22 +504,23 @@
             <label for="indoorSN">Indoor Serial No. (S/N)</label>
             <input type="text" id="indoorSN" class="input-control" placeholder="Serial number">
           </div>
+          <div class="input-group">
+            <label for="partNo">Part No.</label>
+            <input type="text" id="partNo" class="input-control" placeholder="Part No. (e.g. RKX-101)">
+          </div>
         </div>
       </section>
 
-      <!-- 2. Technical Inspection & Defect Locations -->
-      <section class="section-card">
+      <!-- Technical Inspection & Defect Locations -->
+      <section class="section-card" id="section_technical">
         <div class="section-title">
-          <span>2. Technical Inspection & Defect Locations</span>
-          <div style="width: 160px;">
-            <input type="text" id="partNo" class="input-control" placeholder="Part No. (e.g. RKX-101)" style="padding: 4px 8px; font-size: 0.75rem;">
-          </div>
+          <span>Technical Inspection & Defect Locations</span>
         </div>
 
         <div class="parts-container">
           
           <!-- 1. Hairpin plate side -->
-          <div class="part-item-card">
+          <div class="part-item-card" data-title="Hairpin plate side">
             <div class="part-header">
               <input type="checkbox" id="chk_hairpin">
               <span class="part-title-text">Hairpin plate side</span>
@@ -492,21 +529,18 @@
               <img src="images/Hair-pin tube side.png" alt="Hairpin plate side">
             </div>
             <div class="options-grid">
-              <label class="custom-check"><input type="checkbox" name="hairpin" value="(A) Bottom position"> (A) Bottom position</label>
-              <label class="custom-check"><input type="checkbox" name="hairpin" value="(B) Middle position"> (B) Middle position</label>
-              <label class="custom-check"><input type="checkbox" name="hairpin" value="(C) Top position"> (C) Top position</label>
+              <label class="custom-check"><input type="checkbox" name="hairpin" value="(A) Bottom position" onchange="updateAttachedComments()"> (A) Bottom position</label>
+              <label class="custom-check"><input type="checkbox" name="hairpin" value="(B) Middle position" onchange="updateAttachedComments()"> (B) Middle position</label>
+              <label class="custom-check"><input type="checkbox" name="hairpin" value="(C) Top position" onchange="updateAttachedComments()"> (C) Top position</label>
             </div>
             <div class="upload-zone hide-on-pdf" id="zone_hairpin">
               <input type="file" id="pic_hairpin" accept="image/*" onchange="handleImageUpload(this, 'Hairpin plate side', 'attach_hairpin', 'zone_hairpin')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
-            <div class="input-group hide-on-pdf">
-              <input type="text" id="comment_hairpin" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_hairpin', this.value)" style="font-size: 0.75rem; padding: 6px;">
-            </div>
           </div>
 
           <!-- 2. Distributor part -->
-          <div class="part-item-card">
+          <div class="part-item-card" data-title="Distributor part">
             <div class="part-header">
               <input type="checkbox" id="chk_distributor">
               <span class="part-title-text">Distributor part</span>
@@ -515,22 +549,19 @@
               <img src="images/Distributor part.png" alt="Distributor part">
             </div>
             <div class="options-grid">
-              <label class="custom-check"><input type="checkbox" name="distributor" value="(D) area"> (D) area</label>
-              <label class="custom-check"><input type="checkbox" name="distributor" value="(E) area"> (E) area</label>
-              <label class="custom-check"><input type="checkbox" name="distributor" value="(F) area"> (F) area</label>
-              <label class="custom-check"><input type="checkbox" name="distributor" value="(G) area"> (G) area</label>
+              <label class="custom-check"><input type="checkbox" name="distributor" value="(D) area" onchange="updateAttachedComments()"> (D) area</label>
+              <label class="custom-check"><input type="checkbox" name="distributor" value="(E) area" onchange="updateAttachedComments()"> (E) area</label>
+              <label class="custom-check"><input type="checkbox" name="distributor" value="(F) area" onchange="updateAttachedComments()"> (F) area</label>
+              <label class="custom-check"><input type="checkbox" name="distributor" value="(G) area" onchange="updateAttachedComments()"> (G) area</label>
             </div>
             <div class="upload-zone hide-on-pdf" id="zone_distributor">
               <input type="file" id="pic_distributor" accept="image/*" onchange="handleImageUpload(this, 'Distributor part', 'attach_distributor', 'zone_distributor')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
-            <div class="input-group hide-on-pdf">
-              <input type="text" id="comment_distributor" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_distributor', this.value)" style="font-size: 0.75rem; padding: 6px;">
-            </div>
           </div>
 
           <!-- 3. Inside area Of Heat Exchanger -->
-          <div class="part-item-card">
+          <div class="part-item-card" data-title="Inside area Of Heat Exchanger">
             <div class="part-header">
               <input type="checkbox" id="chk_inside">
               <span class="part-title-text">Inside area Of Heat Exchanger</span>
@@ -539,20 +570,17 @@
               <img src="images/Inside Heat Exchanger.png" alt="Inside Heat Exchanger">
             </div>
             <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
-              <label class="custom-check"><input type="checkbox" name="inside" value="(H) Back side"> (H) Back side</label>
-              <label class="custom-check"><input type="checkbox" name="inside" value="(I) Upper front"> (I) Upper front</label>
+              <label class="custom-check"><input type="checkbox" name="inside" value="(H) Back side" onchange="updateAttachedComments()"> (H) Back side</label>
+              <label class="custom-check"><input type="checkbox" name="inside" value="(I) Upper front" onchange="updateAttachedComments()"> (I) Upper front</label>
             </div>
             <div class="upload-zone hide-on-pdf" id="zone_inside">
               <input type="file" id="pic_inside" accept="image/*" onchange="handleImageUpload(this, 'Inside area Of Heat Exchanger', 'attach_inside', 'zone_inside')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
-            <div class="input-group hide-on-pdf">
-              <input type="text" id="comment_inside" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_inside', this.value)" style="font-size: 0.75rem; padding: 6px;">
-            </div>
           </div>
 
           <!-- 4. Header -->
-          <div class="part-item-card">
+          <div class="part-item-card" data-title="Header">
             <div class="part-header">
               <input type="checkbox" id="chk_header">
               <span class="part-title-text">Header</span>
@@ -561,20 +589,17 @@
               <img src="images/Header part.png" alt="Header part">
             </div>
             <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
-              <label class="custom-check"><input type="checkbox" name="header" value="(K) Header (brazing)"> (K) Header (brazing)</label>
-              <label class="custom-check"><input type="checkbox" name="header" value="(L) Header (plate)"> (L) Header (plate)</label>
+              <label class="custom-check"><input type="checkbox" name="header" value="(K) Header (brazing)" onchange="updateAttachedComments()"> (K) Header (brazing)</label>
+              <label class="custom-check"><input type="checkbox" name="header" value="(L) Header (plate)" onchange="updateAttachedComments()"> (L) Header (plate)</label>
             </div>
             <div class="upload-zone hide-on-pdf" id="zone_header">
               <input type="file" id="pic_header" accept="image/*" onchange="handleImageUpload(this, 'Header', 'attach_header', 'zone_header')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
-            <div class="input-group hide-on-pdf">
-              <input type="text" id="comment_header" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_header', this.value)" style="font-size: 0.75rem; padding: 6px;">
-            </div>
           </div>
 
           <!-- 5. U-bend -->
-          <div class="part-item-card">
+          <div class="part-item-card" data-title="U-bend">
             <div class="part-header">
               <input type="checkbox" id="chk_ubend">
               <span class="part-title-text">U-bend</span>
@@ -583,20 +608,17 @@
               <img src="images/U-bend part.png" alt="U-bend part">
             </div>
             <div class="options-grid" style="grid-template-columns: 1fr;">
-              <label class="custom-check"><input type="checkbox" name="ubend" value="(M) U-bend (brazing)"> (M) U-bend (brazing)</label>
-              <label class="custom-check"><input type="checkbox" name="ubend" value="(N) Hairpin (plate side)"> (N) Hairpin (plate side)</label>
+              <label class="custom-check"><input type="checkbox" name="ubend" value="(M) U-bend (brazing)" onchange="updateAttachedComments()"> (M) U-bend (brazing)</label>
+              <label class="custom-check"><input type="checkbox" name="ubend" value="(N) Hairpin (plate side)" onchange="updateAttachedComments()"> (N) Hairpin (plate side)</label>
             </div>
             <div class="upload-zone hide-on-pdf" id="zone_ubend">
               <input type="file" id="pic_ubend" accept="image/*" onchange="handleImageUpload(this, 'U-bend', 'attach_ubend', 'zone_ubend')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
-            <div class="input-group hide-on-pdf">
-              <input type="text" id="comment_ubend" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_ubend', this.value)" style="font-size: 0.75rem; padding: 6px;">
-            </div>
           </div>
 
           <!-- 6. Union -->
-          <div class="part-item-card">
+          <div class="part-item-card" data-title="Union">
             <div class="part-header">
               <input type="checkbox" id="chk_union">
               <span class="part-title-text">Union</span>
@@ -605,38 +627,21 @@
               <img src="images/Union part.png" alt="Union part">
             </div>
             <div class="options-grid" style="grid-template-columns: 1fr;">
-              <label class="custom-check"><input type="checkbox" name="union" value="(O) Pipe (gas)"> (O) Pipe (gas)</label>
-              <label class="custom-check"><input type="checkbox" name="union" value="(P) Pipe (liquid)"> (P) Pipe (liquid)</label>
+              <label class="custom-check"><input type="checkbox" name="union" value="(O) Pipe (gas)" onchange="updateAttachedComments()"> (O) Pipe (gas)</label>
+              <label class="custom-check"><input type="checkbox" name="union" value="(P) Pipe (liquid)" onchange="updateAttachedComments()"> (P) Pipe (liquid)</label>
             </div>
             <div class="upload-zone hide-on-pdf" id="zone_union">
               <input type="file" id="pic_union" accept="image/*" onchange="handleImageUpload(this, 'Union', 'attach_union', 'zone_union')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
-            <div class="input-group hide-on-pdf">
-              <input type="text" id="comment_union" class="input-control" placeholder="Attach Comment..." oninput="updateComment('attach_union', this.value)" style="font-size: 0.75rem; padding: 6px;">
-            </div>
           </div>
 
         </div>
       </section>
 
-      <!-- 3. Overall Assessment -->
-      <section class="section-card page-break-before">
-        <div class="section-title">3. Overall Assessment</div>
-        <div class="grid-2">
-          <div class="input-group">
-            <label for="judgement">Judgement Result</label>
-            <select id="judgement" class="input-control" required style="font-weight: 600;">
-              <option value="Defective part" style="color: var(--primary-red);">Defective part</option>
-              <option value="Normal" style="color: #10B981;">Normal</option>
-            </select>
-          </div>
-        </div>
-      </section>
-
-      <!-- 4. Attached Pictures Section -->
+      <!-- Attached Pictures Section -->
       <section class="section-card" id="section_attached_pictures" style="display: none;">
-        <div class="section-title">4. Attached Defect Pictures</div>
+        <div class="section-title">Attached Defect Pictures</div>
         <div class="attached-grid" id="attached_container">
         </div>
       </section>
@@ -654,14 +659,84 @@
 
 <script>
   const uploadedImages = {};
+  
+  const groupMapping = {
+    'attach_hairpin': 'hairpin',
+    'attach_distributor': 'distributor',
+    'attach_inside': 'inside',
+    'attach_header': 'header',
+    'attach_ubend': 'ubend',
+    'attach_union': 'union'
+  };
+
+  const partTitles = {
+    'attach_hairpin': 'Hairpin plate side',
+    'attach_distributor': 'Distributor part',
+    'attach_inside': 'Inside area Of Heat Exchanger',
+    'attach_header': 'Header',
+    'attach_ubend': 'U-bend',
+    'attach_union': 'Union'
+  };
+
+  function filterInspectionSections() {
+    const checkboxes = document.querySelectorAll('input[name="overall_part"]');
+    const checkedValues = Array.from(checkboxes)
+      .filter(cb => cb.checked)
+      .map(cb => cb.value.trim());
+
+    // ควบคุมการแสดงผลไฮไลท์บนรูป Overview
+    const allHighlights = document.querySelectorAll('.map-highlight');
+    allHighlights.forEach(hl => hl.style.display = 'none');
+
+    checkedValues.forEach(val => {
+      const hlElem = document.getElementById(`hl_${val}`);
+      if (hlElem) {
+        hlElem.style.display = 'block';
+      }
+    });
+
+    const partCards = document.querySelectorAll('.part-item-card');
+    const technicalSection = document.getElementById('section_technical');
+
+    let visibleCount = 0;
+
+    partCards.forEach(card => {
+      const cardTitle = card.getAttribute('data-title').trim();
+      
+      if (checkedValues.length === 0) {
+        card.style.display = 'block';
+        visibleCount++;
+      } else {
+        if (checkedValues.includes(cardTitle)) {
+          card.style.display = 'block';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      }
+    });
+
+    if (visibleCount === 0 && checkedValues.length > 0) {
+      technicalSection.style.display = 'none';
+    } else {
+      technicalSection.style.display = 'block';
+    }
+  }
 
   async function handleImageUpload(fileInput, title, cardId, zoneId) {
     let file = fileInput.files[0];
     const zoneElement = document.getElementById(zoneId);
     const labelElement = zoneElement.querySelector('.upload-label');
 
+    const groupName = groupMapping[cardId];
+    const checkedBoxes = document.querySelectorAll(`input[name="${groupName}"]:checked`);
+    const selectedTexts = Array.from(checkedBoxes).map(cb => cb.value);
+
     if (!uploadedImages[cardId]) {
-      uploadedImages[cardId] = { title: title, src: '', comment: '', commentImg: '' };
+      uploadedImages[cardId] = { title: title || partTitles[cardId] || '', src: '', comments: selectedTexts };
+    } else {
+      uploadedImages[cardId].comments = selectedTexts;
+      uploadedImages[cardId].title = title || partTitles[cardId] || uploadedImages[cardId].title;
     }
 
     if (file) {
@@ -706,11 +781,21 @@
     }
   }
 
-  function updateComment(cardId, commentVal) {
-    if (!uploadedImages[cardId]) {
-      uploadedImages[cardId] = { title: '', src: '', comment: '', commentImg: '' };
+  function updateAttachedComments() {
+    for (const cardId in groupMapping) {
+      const groupName = groupMapping[cardId];
+      const checkedBoxes = document.querySelectorAll(`input[name="${groupName}"]:checked`);
+      const selectedTexts = Array.from(checkedBoxes).map(cb => cb.value);
+
+      if (!uploadedImages[cardId]) {
+        uploadedImages[cardId] = { title: partTitles[cardId] || '', src: '', comments: [] };
+      } else {
+        if (!uploadedImages[cardId].title) {
+          uploadedImages[cardId].title = partTitles[cardId] || '';
+        }
+      }
+      uploadedImages[cardId].comments = selectedTexts;
     }
-    uploadedImages[cardId].comment = commentVal;
     renderAttachedPictures();
   }
 
@@ -730,6 +815,10 @@
     section.style.display = 'block';
     activeKeys.forEach(key => {
       const item = uploadedImages[key];
+      const commentsList = item.comments && item.comments.length > 0 
+        ? item.comments.join(', ') 
+        : 'No option selected';
+
       const card = document.createElement('div');
       card.className = 'attached-card';
       card.innerHTML = `
@@ -738,8 +827,8 @@
           <img src="${item.src}" alt="${item.title}">
         </div>
         <div class="attached-comment-container" id="container_${key}">
-          <div style="font-size: 0.75rem; color: ${item.comment ? 'var(--text-main)' : '#CBD5E1'}; padding: 6px; width: 100%; word-break: break-all;">
-            ${item.comment ? item.comment : 'No comment provided'}
+          <div style="font-size: 0.75rem; color: ${item.comments && item.comments.length > 0 ? 'var(--text-main)' : '#CBD5E1'}; padding: 6px; width: 100%; word-break: break-all; font-weight: 500;">
+            ${commentsList}
           </div>
         </div>
       `;
@@ -756,11 +845,10 @@
       return;
     }
 
-    // แปลงข้อความคอมเมนต์ทั้งหมดให้เป็นภาพแคปชั่วย่อยๆ ก่อนสร้าง PDF ป้องกันสระสลับ
     const activeKeys = Object.keys(uploadedImages).filter(k => uploadedImages[k].src && uploadedImages[k].src !== '');
     for (const key of activeKeys) {
       const commentContainer = document.getElementById(`container_${key}`);
-      if (commentContainer && uploadedImages[key].comment) {
+      if (commentContainer && uploadedImages[key].comments && uploadedImages[key].comments.length > 0) {
         try {
           const canvas = await html2canvas(commentContainer, { scale: 2, useCORS: true });
           const imgData = canvas.toDataURL('image/png');
@@ -795,7 +883,7 @@
     html2pdf().set(opt).from(element).save().then(() => {
       element.classList.remove('pdf-render-mode');
       elementsToHide.forEach(el => el.style.display = '');
-      renderAttachedPictures(); // รีเซ็ตคอมเมนต์กลับเป็นข้อความปกติหลังโหลดเสร็จ
+      renderAttachedPictures();
     }).catch(err => {
       console.error('PDF Generation Error:', err);
       element.classList.remove('pdf-render-mode');
