@@ -404,6 +404,12 @@
         background: transparent !important;
         padding: 0 !important;
       }
+      
+      /* บังคับให้แสดงส่วน Summary และ Attached Pictures ตอนสั่งพิมพ์เสมอถ้ามีข้อมูล */
+      #section_attached_pictures[style*="display: block"],
+      #section_inspection_summary[style*="display: block"] {
+        display: block !important;
+      }
     }
   </style>
 </head>
@@ -583,7 +589,6 @@
     allHighlights.forEach(hl => hl.style.display = 'none');
 
     checkedValues.forEach(val => {
-      // Escape spaces and special characters for safe ID selector if needed, or direct match:
       const hlElem = document.getElementById(`hl_${val}`);
       if (hlElem) {
         hlElem.style.display = 'block';
@@ -763,7 +768,14 @@
       return;
     }
 
-    window.print();
+    // บังคับอัปเดตสถานะและเรนเดอร์เนื้อหาก่อนพิมพ์ทันที ป้องกันปัญหาบนจอมือถือ
+    updateSummarySection();
+    renderAttachedPictures();
+
+    // หน่วงเวลาเล็กน้อยให้มือถือเตรียมหน้าจอพิมพ์สำเร็จ
+    setTimeout(() => {
+      window.print();
+    }, 150);
   }
 </script>
 
