@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Checking Part Report - Indoor Heat Exchanger</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
+
   <!-- CDN heic2any for converting iOS HEIC images -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
 
@@ -405,10 +405,10 @@
       .hide-on-pdf {
         display: none !important;
       }
-      input, textarea {
-        border: none !important;
-        background: transparent !important;
-        padding: 0 !important;
+      /* บังคับซ่อนส่วนที่ถูกสั่ง display: none บนมือถือตอนพิมพ์ PDF เด็ดขาด */
+      #section_attached_pictures[style*="display: none"],
+      #section_inspection_summary[style*="display: none"] {
+        display: none !important;
       }
     }
   </style>
@@ -416,7 +416,7 @@
 <body>
 
 <div class="app-container" id="reportContent">
-  
+
   <!-- Header -->
   <header class="brand-header">
     <div class="brand-logo-container">
@@ -433,7 +433,7 @@
     <h1 class="page-title">Checking Part Report (Indoor Heat Exchanger)</h1>
 
     <form id="inspectionForm">
-      
+
       <!-- 1. General Information -->
       <section class="section-card">
         <div class="section-title">General Information</div>
@@ -484,7 +484,7 @@
         </div>
 
         <div class="parts-container">
-          
+
           <!-- 1. Hairpin plate side -->
           <div class="part-item-card" data-title="Hairpin plate side">
             <div class="part-header">
@@ -626,7 +626,7 @@
 
 <script>
   const uploadedImages = {};
-  
+
   const groupMapping = {
     'attach_hairpin': 'hairpin',
     'attach_distributor': 'distributor',
@@ -668,7 +668,7 @@
 
     partCards.forEach(card => {
       const cardTitle = card.getAttribute('data-title').trim();
-      
+
       if (checkedValues.length === 0) {
         card.style.display = 'block';
         visibleCount++;
@@ -800,7 +800,7 @@
   function updateSummarySection() {
     const section = document.getElementById('section_inspection_summary');
     const summaryContent = document.getElementById('summary_comment_content');
-    
+
     let summaryHTML = '';
     let hasAnyComment = false;
 
@@ -827,14 +827,21 @@
 
   function generatePDF() {
     const reportNoInput = document.getElementById('serviceReportNo');
-    
+
     if (!reportNoInput.value.trim()) {
       alert('Please fill in the Service Report No before generating the PDF report.');
       reportNoInput.focus();
       return;
     }
 
-    window.print();
+    // อัปเดตการแสดงผลและบังคับซ่อนให้เรียบร้อยก่อนสั่งพิมพ์
+    updateSummarySection();
+    renderAttachedPictures();
+
+    // หน่วงเวลาเล็กน้อยเพื่อให้เบราว์เซอร์บนมือถือเรนเดอร์ DOM ทันก่อนเปิดหน้าต่าง Print
+    setTimeout(() => {
+      window.print();
+    }, 100);
   }
 </script>
 
