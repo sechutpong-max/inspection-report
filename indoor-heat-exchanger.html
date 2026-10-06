@@ -166,16 +166,16 @@
     }
 
     .parts-container {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
     .part-item-card {
       background: #FFFFFF;
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      padding: 12px;
+      padding: 16px;
       break-inside: avoid;
       page-break-inside: avoid;
     }
@@ -184,32 +184,31 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     .part-title-text {
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       color: var(--primary-black);
     }
 
     .image-preview-box {
       width: 100%;
-      height: 140px;
+      max-height: 220px;
       background-color: #F8FAFC;
       border-radius: 6px;
       overflow: hidden;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
       border: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
     }
 
     .image-preview-box img {
       max-width: 100%;
-      max-height: 100%;
+      max-height: 200px;
       object-fit: contain;
     }
 
@@ -220,7 +219,7 @@
     }
     .highlight-overlay-container img {
       display: block;
-      max-height: 200px;
+      max-height: 250px;
       width: auto;
       margin: 0 auto;
     }
@@ -233,47 +232,43 @@
       box-shadow: 0 0 8px rgba(230, 0, 18, 0.6);
       background: rgba(230, 0, 18, 0.08);
     }
-    .hl-hairpin { top: 48%; left: 63%; width: 28%; height: 42%; border-radius: 40%; }
-    .hl-distributor { top: 62%; left: 74%; width: 23%; height: 36%; border-radius: 40%; }
-    .hl-inside { top: 46%; left: 24%; width: 34%; height: 35%; border-radius: 30%; }
-    .hl-header { top: 8%; left: 55%; width: 38%; height: 45%; border-radius: 40%; }
-    .hl-ubend { top: 10%; left: 29%; width: 17%; height: 35%; border-radius: 40%; }
-    .hl-union { top: 20%; left: 5%; width: 20%; height: 45%; border-radius: 40%; }
+    .hl-hairpin { top: 20%; left: 30%; width: 40% ; height: 60%; border-radius: 30%; }
+    .hl-ubend { top: 15%; left: 25%; width: 50%; height: 70%; border-radius: 30%; }
+    .hl-inside { top: 15%; left: 30%; width: 40%; height: 70%; border-radius: 30%; }
 
     .options-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-      gap: 6px;
-      margin-bottom: 8px;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
     }
 
     .custom-check {
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 4px 6px;
+      gap: 8px;
+      padding: 8px 10px;
       background: #F8FAFC;
       border: 1px solid var(--border-color);
-      border-radius: 4px;
-      font-size: 0.75rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
       cursor: pointer;
     }
 
     .custom-check input[type="checkbox"] {
       accent-color: var(--primary-red);
-      width: 13px;
-      height: 13px;
+      width: 15px;
+      height: 15px;
     }
 
     .upload-zone {
       position: relative;
       border: 1px dashed #CBD5E1;
       border-radius: 6px;
-      padding: 6px;
+      padding: 10px;
       background: #FAFAFA;
       text-align: center;
       cursor: pointer;
-      margin-bottom: 8px;
     }
 
     .upload-zone.has-file {
@@ -289,7 +284,7 @@
     }
 
     .upload-label {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
       font-weight: 500;
     }
@@ -376,7 +371,7 @@
     }
 
     @media (max-width: 768px) {
-      .grid-3, .parts-container, .attached-grid {
+      .grid-3, .attached-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -397,7 +392,6 @@
         border: none !important;
         border-radius: 0 !important;
       }
-      /* บังคับให้วงกลมไฮไลต์ตอน Save เป็น PDF ไม่มีสีพื้นหลังทึบ เหลือแต่เส้นขอบ */
       .map-highlight {
         background: transparent !important;
         box-shadow: none !important;
@@ -459,25 +453,19 @@
         <div style="text-align: center; margin-bottom: 12px;">
           <div class="highlight-overlay-container">
             <img src="images/Overview.jpg" alt="Drawing Overall" id="overviewImage">
-            <div class="map-highlight hl-hairpin" id="hl_Hairpin plate side"></div>
-            <div class="map-highlight hl-distributor" id="hl_Distributor part"></div>
-            <div class="map-highlight hl-inside" id="hl_Inside area Of Heat Exchanger"></div>
-            <div class="map-highlight hl-header" id="hl_Header"></div>
-            <div class="map-highlight hl-ubend" id="hl_U-bend"></div>
-            <div class="map-highlight hl-union" id="hl_Union"></div>
+            <div class="map-highlight hl-hairpin" id="hl_Hair-pin tube side"></div>
+            <div class="map-highlight hl-ubend" id="hl_U-bend tube side"></div>
+            <div class="map-highlight hl-inside" id="hl_Inside the area of Heat Exchanger"></div>
           </div>
         </div>
-        <div class="options-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="Hairpin plate side" onchange="filterInspectionSections()"> Hairpin plate side</label>
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="Distributor part" onchange="filterInspectionSections()"> Distributor part</label>
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="Inside area Of Heat Exchanger" onchange="filterInspectionSections()"> Inside area Of Heat Exchanger</label>
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="Header" onchange="filterInspectionSections()"> Header</label>
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="U-bend" onchange="filterInspectionSections()"> U-bend</label>
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="Union" onchange="filterInspectionSections()"> Union</label>
+        <div class="options-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+          <label class="custom-check"><input type="checkbox" name="overall_part" value="Hair-pin tube side" onchange="filterInspectionSections()"> Hair-pin tube side</label>
+          <label class="custom-check"><input type="checkbox" name="overall_part" value="U-bend tube side" onchange="filterInspectionSections()"> U-bend tube side</label>
+          <label class="custom-check"><input type="checkbox" name="overall_part" value="Inside the area of Heat Exchanger" onchange="filterInspectionSections()"> Inside the area of Heat Exchanger</label>
         </div>
       </section>
 
-      <!-- 3. Technical Inspection & Defect Locations -->
+      <!-- 3. Technical Inspection & Defect Locations (1 Column Layout) -->
       <section class="section-card hide-on-pdf" id="section_technical">
         <div class="section-title">
           <span>Technical Inspection & Defect Locations</span>
@@ -485,113 +473,59 @@
 
         <div class="parts-container">
           
-          <!-- 1. Hairpin plate side -->
-          <div class="part-item-card" data-title="Hairpin plate side">
+          <!-- 1. Hair-pin tube side -->
+          <div class="part-item-card" data-title="Hair-pin tube side">
             <div class="part-header">
-              <span class="part-title-text">Hairpin plate side</span>
+              <span class="part-title-text">Hair-pin tube side</span>
             </div>
             <div class="image-preview-box">
-              <img src="images/Hair-pin tube side.png" alt="Hairpin plate side">
+              <img src="images/Out hair-pin.png" alt="Hair-pin tube side">
             </div>
             <div class="options-grid">
-              <label class="custom-check"><input type="checkbox" name="hairpin" value="(A) Bottom position" onchange="updateAttachedComments()"> (A) Bottom position</label>
-              <label class="custom-check"><input type="checkbox" name="hairpin" value="(B) Middle position" onchange="updateAttachedComments()"> (B) Middle position</label>
-              <label class="custom-check"><input type="checkbox" name="hairpin" value="(C) Top position" onchange="updateAttachedComments()"> (C) Top position</label>
+              <label class="custom-check"><input type="checkbox" name="hairpin" value="(A) area ( Arc of hair-pin tube )" onchange="updateAttachedComments()"> (A) area ( Arc of hair-pin tube )</label>
+              <label class="custom-check"><input type="checkbox" name="hairpin" value="(B) area ( Point which is touched with the metal plate )" onchange="updateAttachedComments()"> (B) area ( Point which is touched with the metal plate )</label>
             </div>
             <div class="upload-zone hide-on-pdf" id="zone_hairpin">
-              <input type="file" id="pic_hairpin" accept="image/*" onchange="handleImageUpload(this, 'Hairpin plate side', 'attach_hairpin', 'zone_hairpin')">
+              <input type="file" id="pic_hairpin" accept="image/*" onchange="handleImageUpload(this, 'Hair-pin tube side', 'attach_hairpin', 'zone_hairpin')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
           </div>
 
-          <!-- 2. Distributor part -->
-          <div class="part-item-card" data-title="Distributor part">
+          <!-- 2. U-bend tube side -->
+          <div class="part-item-card" data-title="U-bend tube side">
             <div class="part-header">
-              <span class="part-title-text">Distributor part</span>
+              <span class="part-title-text">U-bend tube side</span>
             </div>
             <div class="image-preview-box">
-              <img src="images/Distributor part.png" alt="Distributor part">
+              <img src="images/Out u-bend.png" alt="U-bend tube side">
             </div>
             <div class="options-grid">
-              <label class="custom-check"><input type="checkbox" name="distributor" value="(D) area" onchange="updateAttachedComments()"> (D) area</label>
-              <label class="custom-check"><input type="checkbox" name="distributor" value="(E) area" onchange="updateAttachedComments()"> (E) area</label>
-              <label class="custom-check"><input type="checkbox" name="distributor" value="(F) area" onchange="updateAttachedComments()"> (F) area</label>
-              <label class="custom-check"><input type="checkbox" name="distributor" value="(G) area" onchange="updateAttachedComments()"> (G) area</label>
-            </div>
-            <div class="upload-zone hide-on-pdf" id="zone_distributor">
-              <input type="file" id="pic_distributor" accept="image/*" onchange="handleImageUpload(this, 'Distributor part', 'attach_distributor', 'zone_distributor')">
-              <div class="upload-label">📷 Attach Defect Image</div>
-            </div>
-          </div>
-
-          <!-- 3. Inside area Of Heat Exchanger -->
-          <div class="part-item-card" data-title="Inside area Of Heat Exchanger">
-            <div class="part-header">
-              <span class="part-title-text">Inside area Of Heat Exchanger</span>
-            </div>
-            <div class="image-preview-box">
-              <img src="images/Inside Heat Exchanger.png" alt="Inside Heat Exchanger">
-            </div>
-            <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
-              <label class="custom-check"><input type="checkbox" name="inside" value="(H) Back side" onchange="updateAttachedComments()"> (H) Back side</label>
-              <label class="custom-check"><input type="checkbox" name="inside" value="(I) Upper front" onchange="updateAttachedComments()"> (I) Upper front</label>
-            </div>
-            <div class="upload-zone hide-on-pdf" id="zone_inside">
-              <input type="file" id="pic_inside" accept="image/*" onchange="handleImageUpload(this, 'Inside area Of Heat Exchanger', 'attach_inside', 'zone_inside')">
-              <div class="upload-label">📷 Attach Defect Image</div>
-            </div>
-          </div>
-
-          <!-- 4. Header -->
-          <div class="part-item-card" data-title="Header">
-            <div class="part-header">
-              <span class="part-title-text">Header</span>
-            </div>
-            <div class="image-preview-box">
-              <img src="images/Header part.png" alt="Header part">
-            </div>
-            <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
-              <label class="custom-check"><input type="checkbox" name="header" value="(K) Header (brazing)" onchange="updateAttachedComments()"> (K) Header (brazing)</label>
-              <label class="custom-check"><input type="checkbox" name="header" value="(L) Header (plate)" onchange="updateAttachedComments()"> (L) Header (plate)</label>
-            </div>
-            <div class="upload-zone hide-on-pdf" id="zone_header">
-              <input type="file" id="pic_header" accept="image/*" onchange="handleImageUpload(this, 'Header', 'attach_header', 'zone_header')">
-              <div class="upload-label">📷 Attach Defect Image</div>
-            </div>
-          </div>
-
-          <!-- 5. U-bend -->
-          <div class="part-item-card" data-title="U-bend">
-            <div class="part-header">
-              <span class="part-title-text">U-bend</span>
-            </div>
-            <div class="image-preview-box">
-              <img src="images/U-bend part.png" alt="U-bend part">
-            </div>
-            <div class="options-grid" style="grid-template-columns: 1fr;">
-              <label class="custom-check"><input type="checkbox" name="ubend" value="(M) U-bend (brazing)" onchange="updateAttachedComments()"> (M) U-bend (brazing)</label>
-              <label class="custom-check"><input type="checkbox" name="ubend" value="(N) Hairpin (plate side)" onchange="updateAttachedComments()"> (N) Hairpin (plate side)</label>
+              <label class="custom-check"><input type="checkbox" name="ubend" value="(C) area ( Arc of U-bend tube )" onchange="updateAttachedComments()"> (C) area ( Arc of U-bend tube )</label>
+              <label class="custom-check"><input type="checkbox" name="ubend" value="(D) area ( Brazing point of U-bend tube )" onchange="updateAttachedComments()"> (D) area ( Brazing point of U-bend tube )</label>
+              <label class="custom-check"><input type="checkbox" name="ubend" value="(E) area ( Point which is touched with the metal plate )" onchange="updateAttachedComments()"> (E) area ( Point which is touched with the metal plate )</label>
+              <label class="custom-check"><input type="checkbox" name="ubend" value="(F) area ( Brazing point of pipe component )" onchange="updateAttachedComments()"> (F) area ( Brazing point of pipe component )</label>
             </div>
             <div class="upload-zone hide-on-pdf" id="zone_ubend">
-              <input type="file" id="pic_ubend" accept="image/*" onchange="handleImageUpload(this, 'U-bend', 'attach_ubend', 'zone_ubend')">
+              <input type="file" id="pic_ubend" accept="image/*" onchange="handleImageUpload(this, 'U-bend tube side', 'attach_ubend', 'zone_ubend')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
           </div>
 
-          <!-- 6. Union -->
-          <div class="part-item-card" data-title="Union">
+          <!-- 3. Inside the area of Heat Exchanger -->
+          <div class="part-item-card" data-title="Inside the area of Heat Exchanger">
             <div class="part-header">
-              <span class="part-title-text">Union</span>
+              <span class="part-title-text">Inside the area of Heat Exchanger</span>
             </div>
             <div class="image-preview-box">
-              <img src="images/Union part.png" alt="Union part">
+              <img src="images/Out inside heat exchanger.png" alt="Inside the area of Heat Exchanger">
             </div>
-            <div class="options-grid" style="grid-template-columns: 1fr;">
-              <label class="custom-check"><input type="checkbox" name="union" value="(O) Pipe (gas)" onchange="updateAttachedComments()"> (O) Pipe (gas)</label>
-              <label class="custom-check"><input type="checkbox" name="union" value="(P) Pipe (liquid)" onchange="updateAttachedComments()"> (P) Pipe (liquid)</label>
+            <div class="options-grid">
+              <label class="custom-check"><input type="checkbox" name="inside" value="(G) area ( The flat back of Heat Exchanger )" onchange="updateAttachedComments()"> (G) area ( The flat back of Heat Exchanger )</label>
+              <label class="custom-check"><input type="checkbox" name="inside" value="(H) area ( The flat side of Heat Exchanger )" onchange="updateAttachedComments()"> (H) area ( The flat side of Heat Exchanger )</label>
+              <label class="custom-check"><input type="checkbox" name="inside" value="(I) area ( The curved area of Heat Exchanger )" onchange="updateAttachedComments()"> (I) area ( The curved area of Heat Exchanger )</label>
             </div>
-            <div class="upload-zone hide-on-pdf" id="zone_union">
-              <input type="file" id="pic_union" accept="image/*" onchange="handleImageUpload(this, 'Union', 'attach_union', 'zone_union')">
+            <div class="upload-zone hide-on-pdf" id="zone_inside">
+              <input type="file" id="pic_inside" accept="image/*" onchange="handleImageUpload(this, 'Inside the area of Heat Exchanger', 'attach_inside', 'zone_inside')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
           </div>
@@ -629,20 +563,14 @@
   
   const groupMapping = {
     'attach_hairpin': 'hairpin',
-    'attach_distributor': 'distributor',
-    'attach_inside': 'inside',
-    'attach_header': 'header',
     'attach_ubend': 'ubend',
-    'attach_union': 'union'
+    'attach_inside': 'inside'
   };
 
   const partTitles = {
-    'attach_hairpin': 'Hairpin plate side',
-    'attach_distributor': 'Distributor part',
-    'attach_inside': 'Inside area Of Heat Exchanger',
-    'attach_header': 'Header',
-    'attach_ubend': 'U-bend',
-    'attach_union': 'Union'
+    'attach_hairpin': 'Hair-pin tube side',
+    'attach_ubend': 'U-bend tube side',
+    'attach_inside': 'Inside the area of Heat Exchanger'
   };
 
   function filterInspectionSections() {
@@ -655,6 +583,7 @@
     allHighlights.forEach(hl => hl.style.display = 'none');
 
     checkedValues.forEach(val => {
+      // Escape spaces and special characters for safe ID selector if needed, or direct match:
       const hlElem = document.getElementById(`hl_${val}`);
       if (hlElem) {
         hlElem.style.display = 'block';
