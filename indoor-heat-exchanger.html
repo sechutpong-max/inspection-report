@@ -6,8 +6,6 @@
   <title>Checking Part Report - Indoor Heat Exchanger</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- CDN html2pdf.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <!-- CDN heic2any for converting iOS HEIC images -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
 
@@ -47,48 +45,6 @@
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
       overflow: hidden;
       border: 1px solid var(--border-color);
-      transition: all 0.2s ease;
-    }
-
-    .app-container.pdf-render-mode {
-      width: 200mm !important;
-      max-width: 200mm !important;
-      border-radius: 0 !important;
-      border: none !important;
-      box-shadow: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
-    }
-
-    .app-container.pdf-render-mode .form-body {
-      padding: 10px 16px !important;
-    }
-
-    .app-container.pdf-render-mode .section-card {
-      padding: 10px 12px !important;
-      margin-bottom: 10px !important;
-    }
-
-    .app-container.pdf-render-mode .page-title {
-      font-size: 1.1rem !important;
-      margin-bottom: 10px !important;
-    }
-
-    .app-container.pdf-render-mode .image-preview-box {
-      height: 140px !important;
-    }
-
-    .app-container.pdf-render-mode .parts-container {
-      gap: 8px !important;
-    }
-
-    .app-container.pdf-render-mode .part-item-card {
-      padding: 8px !important;
-    }
-
-    .app-container.pdf-render-mode .page-break-before {
-      page-break-before: always !important;
-      break-before: page !important;
     }
 
     .brand-header {
@@ -160,6 +116,8 @@
       border-radius: 8px;
       padding: 16px;
       margin-bottom: 16px;
+      break-inside: avoid;
+      page-break-inside: avoid;
     }
 
     .section-title {
@@ -174,12 +132,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
     }
 
     .grid-3 {
@@ -235,21 +187,15 @@
       margin-bottom: 8px;
     }
 
-    .part-header input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: var(--primary-red);
-    }
-
     .part-title-text {
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.85rem;
       color: var(--primary-black);
     }
 
     .image-preview-box {
       width: 100%;
-      height: 150px;
+      height: 140px;
       background-color: #F8FAFC;
       border-radius: 6px;
       overflow: hidden;
@@ -267,7 +213,6 @@
       object-fit: contain;
     }
 
-    /* สไตล์สำหรับกล่องไฮไลท์ตำแหน่งบนรูปภาพ Overview */
     .highlight-overlay-container {
       position: relative;
       display: inline-block;
@@ -275,7 +220,7 @@
     }
     .highlight-overlay-container img {
       display: block;
-      max-height: 220px;
+      max-height: 200px;
       width: auto;
       margin: 0 auto;
     }
@@ -328,7 +273,6 @@
       background: #FAFAFA;
       text-align: center;
       cursor: pointer;
-      transition: all 0.2s ease;
       margin-bottom: 8px;
     }
 
@@ -364,15 +308,14 @@
     .attached-card {
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      padding: 8px;
+      padding: 10px;
       background: #FAFAFA;
-      text-align: left;
       break-inside: avoid;
       page-break-inside: avoid;
     }
 
     .attached-card-title {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 600;
       color: var(--primary-black);
       margin-bottom: 6px;
@@ -380,7 +323,7 @@
 
     .attached-img-box {
       width: 100%;
-      height: 150px;
+      height: 160px;
       background: #FFFFFF;
       border: 1px solid var(--border-color);
       border-radius: 6px;
@@ -398,25 +341,17 @@
 
     .summary-comment-box {
       width: 100%;
-      min-height: 50px;
+      min-height: 40px;
       border: 1px solid var(--border-color);
       border-radius: 6px;
       background: #FAFAFA;
       padding: 10px;
       font-size: 0.85rem;
       color: var(--text-main);
-      box-sizing: border-box;
     }
 
     .summary-item-row {
       margin-bottom: 6px;
-    }
-    .summary-item-row:last-child {
-      margin-bottom: 0;
-    }
-    .summary-part-name {
-      font-weight: 700;
-      color: var(--primary-black);
     }
 
     .action-container {
@@ -441,8 +376,39 @@
     }
 
     @media (max-width: 768px) {
-      .grid-3, .grid-2, .parts-container, .attached-grid {
+      .grid-3, .parts-container, .attached-grid {
         grid-template-columns: 1fr;
+      }
+    }
+
+    /* ตั้งค่าพิมพ์ PDF */
+    @media print {
+      @page {
+        size: A4;
+        margin: 10mm;
+      }
+      body {
+        background-color: #FFFFFF !important;
+        padding: 0 !important;
+      }
+      .app-container {
+        max-width: 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+      }
+      /* บังคับให้วงกลมไฮไลต์ตอน Save เป็น PDF ไม่มีสีพื้นหลังทึบ เหลือแต่เส้นขอบ */
+      .map-highlight {
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      .hide-on-pdf {
+        display: none !important;
+      }
+      input, textarea {
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
       }
     }
   </style>
@@ -458,7 +424,7 @@
     </div>
     <div class="report-badge">
       <span>Service Report No:</span>
-      <input type="text" id="serviceReportNo" placeholder="Ref. Job No." value="" required>
+      <input type="text" id="serviceReportNo" placeholder="Ref.Job No." value="" required>
     </div>
   </header>
 
@@ -511,7 +477,7 @@
         </div>
       </section>
 
-      <!-- 3. Technical Inspection & Defect Locations (ซ่อนเฉพาะตอน Gen PDF) -->
+      <!-- 3. Technical Inspection & Defect Locations -->
       <section class="section-card hide-on-pdf" id="section_technical">
         <div class="section-title">
           <span>Technical Inspection & Defect Locations</span>
@@ -522,7 +488,6 @@
           <!-- 1. Hairpin plate side -->
           <div class="part-item-card" data-title="Hairpin plate side">
             <div class="part-header">
-              <input type="checkbox" id="chk_hairpin">
               <span class="part-title-text">Hairpin plate side</span>
             </div>
             <div class="image-preview-box">
@@ -542,7 +507,6 @@
           <!-- 2. Distributor part -->
           <div class="part-item-card" data-title="Distributor part">
             <div class="part-header">
-              <input type="checkbox" id="chk_distributor">
               <span class="part-title-text">Distributor part</span>
             </div>
             <div class="image-preview-box">
@@ -563,7 +527,6 @@
           <!-- 3. Inside area Of Heat Exchanger -->
           <div class="part-item-card" data-title="Inside area Of Heat Exchanger">
             <div class="part-header">
-              <input type="checkbox" id="chk_inside">
               <span class="part-title-text">Inside area Of Heat Exchanger</span>
             </div>
             <div class="image-preview-box">
@@ -582,7 +545,6 @@
           <!-- 4. Header -->
           <div class="part-item-card" data-title="Header">
             <div class="part-header">
-              <input type="checkbox" id="chk_header">
               <span class="part-title-text">Header</span>
             </div>
             <div class="image-preview-box">
@@ -601,7 +563,6 @@
           <!-- 5. U-bend -->
           <div class="part-item-card" data-title="U-bend">
             <div class="part-header">
-              <input type="checkbox" id="chk_ubend">
               <span class="part-title-text">U-bend</span>
             </div>
             <div class="image-preview-box">
@@ -620,7 +581,6 @@
           <!-- 6. Union -->
           <div class="part-item-card" data-title="Union">
             <div class="part-header">
-              <input type="checkbox" id="chk_union">
               <span class="part-title-text">Union</span>
             </div>
             <div class="image-preview-box">
@@ -656,7 +616,7 @@
       <!-- Export PDF Button -->
       <div class="action-container hide-on-pdf">
         <button type="button" class="btn-submit-primary" onclick="generatePDF()">
-          <span>📄 Generate PDF Report</span>
+          <span>🖨 Save as PDF Report</span>
         </button>
       </div>
 
@@ -865,7 +825,7 @@
     }
   }
 
-  async function generatePDF() {
+  function generatePDF() {
     const reportNoInput = document.getElementById('serviceReportNo');
     
     if (!reportNoInput.value.trim()) {
@@ -874,43 +834,7 @@
       return;
     }
 
-    const element = document.getElementById('reportContent');
-    const elementsToHide = document.querySelectorAll('.hide-on-pdf');
-    const reportNo = reportNoInput.value.trim();
-
-    elementsToHide.forEach(el => el.style.display = 'none');
-    element.classList.add('pdf-render-mode');
-
-    // ตั้งค่า html2pdf ให้ออกมาเป็นรูปแบบ vector text และ document ปกติ (ไม่ใช่ canvas image)
-    const opt = {
-      margin:       [5, 5, 5, 5],
-      filename:     `Checking_Part_Report_Indoor_${reportNo}.pdf`,
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { 
-        scale: 2, 
-        useCORS: true, 
-        scrollY: 0,
-        scrollX: 0,
-        letterRendering: true
-      },
-      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
-      pagebreak:    { mode: ['css', 'legacy'] }
-    };
-
-    html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
-      // เอกสารจะถูกสร้างเป็น PDF ปกติโดยอัตโนมัติ
-    }).save().then(() => {
-      element.classList.remove('pdf-render-mode');
-      elementsToHide.forEach(el => el.style.display = '');
-      renderAttachedPictures();
-      updateSummarySection();
-    }).catch(err => {
-      console.error('PDF Generation Error:', err);
-      element.classList.remove('pdf-render-mode');
-      elementsToHide.forEach(el => el.style.display = '');
-      renderAttachedPictures();
-      updateSummarySection();
-    });
+    window.print();
   }
 </script>
 
