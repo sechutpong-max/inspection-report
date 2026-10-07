@@ -375,7 +375,8 @@
       background-color: #C0000F;
     }
 
-    @media (max-width: 768px) {
+    /* ใช้ @media screen เพื่อให้ย่อเฉพาะตอนดูบนหน้าจอมือถือเท่านั้น (จะไม่กระทบตอนกดพิมพ์ PDF) */
+    @media screen and (max-width: 768px) {
       .grid-3, .parts-container, .attached-grid {
         grid-template-columns: 1fr;
       }
