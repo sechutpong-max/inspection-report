@@ -235,7 +235,7 @@
     }
     .hl-hairpin { top: 48%; left: 63%; width: 28%; height: 42%; border-radius: 40%; }
     .hl-distributor { top: 62%; left: 74%; width: 23%; height: 36%; border-radius: 40%; }
-    .hl-inside { top: 46%; left: 24%; width: 34%; height: 35%; border-radius: 30%; }
+    .hl-middlecoils { top: 46%; left: 24%; width: 34%; height: 35%; border-radius: 30%; }
     .hl-header { top: 8%; left: 55%; width: 38%; height: 45%; border-radius: 40%; }
     .hl-ubend { top: 10%; left: 29%; width: 17%; height: 35%; border-radius: 40%; }
     .hl-union { top: 20%; left: 5%; width: 20%; height: 45%; border-radius: 40%; }
@@ -376,7 +376,6 @@
     }
 
     @media (max-width: 768px) {
-      /* ปรับ Header บนมือถือให้เรียงบน-ล่าง เพื่อไม่ให้ช่อง Service Report No. ล้นตกขอบ */
       .brand-header {
         flex-direction: column;
         align-items: stretch;
@@ -399,7 +398,6 @@
       }
     }
 
-    /* ตั้งค่าพิมพ์ PDF */
     @media print {
       @page {
         size: A4;
@@ -415,7 +413,6 @@
         border: none !important;
         border-radius: 0 !important;
       }
-      /* บังคับให้วงกลมไฮไลต์ตอน Save เป็น PDF ไม่มีสีพื้นหลังทึบ เหลือแต่เส้นขอบ */
       .map-highlight {
         background: transparent !important;
         box-shadow: none !important;
@@ -423,7 +420,6 @@
       .hide-on-pdf {
         display: none !important;
       }
-      /* บังคับซ่อนส่วนที่ถูกสั่ง display: none บนมือถือตอนพิมพ์ PDF เด็ดขาด */
       #section_attached_pictures[style*="display: none"],
       #section_inspection_summary[style*="display: none"] {
         display: none !important;
@@ -479,7 +475,7 @@
             <img src="images/Ovinheat.jpg" alt="Drawing Overall" id="overviewImage">
             <div class="map-highlight hl-hairpin" id="hl_Hairpin plate side"></div>
             <div class="map-highlight hl-distributor" id="hl_Distributor part"></div>
-            <div class="map-highlight hl-inside" id="hl_Inside area Of Heat Exchanger"></div>
+            <div class="map-highlight hl-middlecoils" id="hl_Middle coil"></div>
             <div class="map-highlight hl-header" id="hl_Header"></div>
             <div class="map-highlight hl-ubend" id="hl_U-bend"></div>
             <div class="map-highlight hl-union" id="hl_Union"></div>
@@ -488,7 +484,7 @@
         <div class="options-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
           <label class="custom-check"><input type="checkbox" name="overall_part" value="Hairpin plate side" onchange="filterInspectionSections()"> Hairpin plate side</label>
           <label class="custom-check"><input type="checkbox" name="overall_part" value="Distributor part" onchange="filterInspectionSections()"> Distributor part</label>
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="Inside area Of Heat Exchanger" onchange="filterInspectionSections()"> Inside area Of Heat Exchanger</label>
+          <label class="custom-check"><input type="checkbox" name="overall_part" value="Middle coil" onchange="filterInspectionSections()"> Middle coil</label>
           <label class="custom-check"><input type="checkbox" name="overall_part" value="Header" onchange="filterInspectionSections()"> Header</label>
           <label class="custom-check"><input type="checkbox" name="overall_part" value="U-bend" onchange="filterInspectionSections()"> U-bend</label>
           <label class="custom-check"><input type="checkbox" name="overall_part" value="Union" onchange="filterInspectionSections()"> Union</label>
@@ -542,20 +538,20 @@
             </div>
           </div>
 
-          <!-- 3. Inside area Of Heat Exchanger -->
-          <div class="part-item-card" data-title="Inside area Of Heat Exchanger">
+          <!-- 3. Middle coil -->
+          <div class="part-item-card" data-title="Middle coil">
             <div class="part-header">
-              <span class="part-title-text">Inside area Of Heat Exchanger</span>
+              <span class="part-title-text">Middle coil</span>
             </div>
             <div class="image-preview-box">
-              <img src="images/Inside Heat Exchanger.png" alt="Inside Heat Exchanger">
+              <img src="images/Inside Heat Exchanger.png" alt="Middle coil">
             </div>
             <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
-              <label class="custom-check"><input type="checkbox" name="inside" value="(H) Back side" onchange="updateAttachedComments()"> (H) Back side</label>
-              <label class="custom-check"><input type="checkbox" name="inside" value="(I) Upper front" onchange="updateAttachedComments()"> (I) Upper front</label>
+              <label class="custom-check"><input type="checkbox" name="middlecoils" value="(H) Back side" onchange="updateAttachedComments()"> (H) Back side</label>
+              <label class="custom-check"><input type="checkbox" name="middlecoils" value="(I) Upper front" onchange="updateAttachedComments()"> (I) Upper front</label>
             </div>
-            <div class="upload-zone hide-on-pdf" id="zone_inside">
-              <input type="file" id="pic_inside" accept="image/*" onchange="handleImageUpload(this, 'Inside area Of Heat Exchanger', 'attach_inside', 'zone_inside')">
+            <div class="upload-zone hide-on-pdf" id="zone_middlecoils">
+              <input type="file" id="pic_middlecoils" accept="image/*" onchange="handleImageUpload(this, 'Middle coil', 'attach_middlecoils', 'zone_middlecoils')">
               <div class="upload-label">📷 Attach Defect Image</div>
             </div>
           </div>
@@ -648,7 +644,7 @@
   const groupMapping = {
     'attach_hairpin': 'hairpin',
     'attach_distributor': 'distributor',
-    'attach_inside': 'inside',
+    'attach_middlecoils': 'middlecoils',
     'attach_header': 'header',
     'attach_ubend': 'ubend',
     'attach_union': 'union'
@@ -657,7 +653,7 @@
   const partTitles = {
     'attach_hairpin': 'Hairpin plate side',
     'attach_distributor': 'Distributor part',
-    'attach_inside': 'Inside area Of Heat Exchanger',
+    'attach_middlecoils': 'Middle coil',
     'attach_header': 'Header',
     'attach_ubend': 'U-bend',
     'attach_union': 'Union'
