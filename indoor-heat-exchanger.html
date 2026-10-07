@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Checking Part Report - Indoor Heat Exchanger</title>
+  <title id="pageHeaderTitle">Checking Part Report (Indoor Heat Exchanger)</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- CDN heic2any for converting iOS HEIC images -->
@@ -213,7 +213,6 @@
       object-fit: contain;
     }
 
-    /* แก้ไขส่วนกรอบรูปภาพหลักให้ Responsive ไม่ล้นจอ */
     .highlight-overlay-container {
       position: relative;
       display: inline-block;
@@ -238,14 +237,6 @@
       box-shadow: 0 0 8px rgba(230, 0, 18, 0.6);
       background: rgba(230, 0, 18, 0.08);
     }
-
-    /* พิกัดตำแหน่งไฮไลต์ตามรูปภาพ */
-.hl-hairpin { top: 16.8%; left: 0.5%; width: 10%; height: 58.6%; border-radius: 40%; }
-    .hl-middlecoils { top: 10%; left: 20%; width: 38%; height: 63%; border-radius: 50%; }
-    .hl-union { top: 72%; left: 38%; width: 15%; height: 26%; border-radius: 40%; }
-    .hl-ubend { top: 12%; left: 75%; width: 10%; height: 65%; border-radius: 50%; }
-    .hl-header { top: 3%; left: 87%; width: 13%; height: 46%; border-radius: 40%; }
-    .hl-distributor { top: 52%; left: 87%; width: 13%; height: 43%; border-radius: 40% }
 
     .options-grid {
       display: grid;
@@ -382,6 +373,44 @@
       background-color: #C0000F;
     }
 
+    /* Small Floating Designer Button */
+    .designer-fab {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      z-index: 9999;
+      background: #111111;
+      color: #FFFFFF;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+      opacity: 0.7;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .designer-fab:hover {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+
+    /* Editor Panel Styles */
+    .editor-panel-box {
+      display: none;
+      background: #FFFFFF;
+      border: 2px solid var(--primary-red);
+      padding: 16px;
+      margin: 16px auto;
+      max-width: 980px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
     @media (max-width: 768px) {
       .brand-header {
         flex-direction: column;
@@ -451,7 +480,7 @@
 
   <!-- Body Content -->
   <main class="form-body">
-    <h1 class="page-title">Checking Part Report (Indoor Heat Exchanger)</h1>
+    <h1 class="page-title" id="displayFormTitle">Checking Part Report (Indoor Heat Exchanger)</h1>
 
     <form id="inspectionForm">
 
@@ -478,23 +507,12 @@
       <section class="section-card">
         <div class="section-title">Drawing Overall</div>
         <div style="text-align: center; margin-bottom: 12px;">
-          <div class="highlight-overlay-container">
-            <img src="images/Ovinheat.jpg" alt="Drawing Overall" id="overviewImage">
-            <div class="map-highlight hl-hairpin" id="hl_Hairpin plate side"></div>
-            <div class="map-highlight hl-distributor" id="hl_Distributor part"></div>
-            <div class="map-highlight hl-middlecoils" id="hl_Middle coil"></div>
-            <div class="map-highlight hl-header" id="hl_Header"></div>
-            <div class="map-highlight hl-ubend" id="hl_U-bend"></div>
-            <div class="map-highlight hl-union" id="hl_Union"></div>
+          <div class="highlight-overlay-container" id="overviewContainer">
+            <!-- Dynamically rendered image and highlights -->
           </div>
         </div>
-        <div class="options-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="Hairpin plate side" onchange="filterInspectionSections()"> Hairpin plate side</label>
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="Distributor part" onchange="filterInspectionSections()"> Distributor part</label>
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="Middle coil" onchange="filterInspectionSections()"> Middle coil</label>
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="Header" onchange="filterInspectionSections()"> Header</label>
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="U-bend" onchange="filterInspectionSections()"> U-bend</label>
-          <label class="custom-check"><input type="checkbox" name="overall_part" value="Union" onchange="filterInspectionSections()"> Union</label>
+        <div class="options-grid" id="overallOptionsGrid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+          <!-- Dynamically rendered overall options -->
         </div>
       </section>
 
@@ -503,120 +521,8 @@
         <div class="section-title">
           <span>Technical Inspection & Defect Locations</span>
         </div>
-
-        <div class="parts-container">
-
-          <!-- 1. Hairpin plate side -->
-          <div class="part-item-card" data-title="Hairpin plate side">
-            <div class="part-header">
-              <span class="part-title-text">Hairpin plate side</span>
-            </div>
-            <div class="image-preview-box">
-              <img src="images/Hair-pin tube side.png" alt="Hairpin plate side">
-            </div>
-            <div class="options-grid">
-              <label class="custom-check"><input type="checkbox" name="hairpin" value="(A) Bottom position" onchange="updateAttachedComments()"> (A) Bottom position</label>
-              <label class="custom-check"><input type="checkbox" name="hairpin" value="(B) Middle position" onchange="updateAttachedComments()"> (B) Middle position</label>
-              <label class="custom-check"><input type="checkbox" name="hairpin" value="(C) Top position" onchange="updateAttachedComments()"> (C) Top position</label>
-            </div>
-            <div class="upload-zone hide-on-pdf" id="zone_hairpin">
-              <input type="file" id="pic_hairpin" accept="image/*" onchange="handleImageUpload(this, 'Hairpin plate side', 'attach_hairpin', 'zone_hairpin')">
-              <div class="upload-label">📷 Attach Defect Image</div>
-            </div>
-          </div>
-
-          <!-- 2. Distributor part -->
-          <div class="part-item-card" data-title="Distributor part">
-            <div class="part-header">
-              <span class="part-title-text">Distributor part</span>
-            </div>
-            <div class="image-preview-box">
-              <img src="images/Distributor part.png" alt="Distributor part">
-            </div>
-            <div class="options-grid">
-              <label class="custom-check"><input type="checkbox" name="distributor" value="(D) area" onchange="updateAttachedComments()"> (D) area</label>
-              <label class="custom-check"><input type="checkbox" name="distributor" value="(E) area" onchange="updateAttachedComments()"> (E) area</label>
-              <label class="custom-check"><input type="checkbox" name="distributor" value="(F) area" onchange="updateAttachedComments()"> (F) area</label>
-              <label class="custom-check"><input type="checkbox" name="distributor" value="(G) area" onchange="updateAttachedComments()"> (G) area</label>
-            </div>
-            <div class="upload-zone hide-on-pdf" id="zone_distributor">
-              <input type="file" id="pic_distributor" accept="image/*" onchange="handleImageUpload(this, 'Distributor part', 'attach_distributor', 'zone_distributor')">
-              <div class="upload-label">📷 Attach Defect Image</div>
-            </div>
-          </div>
-
-          <!-- 3. Middle coil -->
-          <div class="part-item-card" data-title="Middle coil">
-            <div class="part-header">
-              <span class="part-title-text">Middle coil</span>
-            </div>
-            <div class="image-preview-box">
-              <img src="images/Inside Heat Exchanger.png" alt="Middle coil">
-            </div>
-            <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
-              <label class="custom-check"><input type="checkbox" name="middlecoils" value="(H) Back side" onchange="updateAttachedComments()"> (H) Back side</label>
-              <label class="custom-check"><input type="checkbox" name="middlecoils" value="(I) Upper front" onchange="updateAttachedComments()"> (I) Upper front</label>
-            </div>
-            <div class="upload-zone hide-on-pdf" id="zone_middlecoils">
-              <input type="file" id="pic_middlecoils" accept="image/*" onchange="handleImageUpload(this, 'Middle coil', 'attach_middlecoils', 'zone_middlecoils')">
-              <div class="upload-label">📷 Attach Defect Image</div>
-            </div>
-          </div>
-
-          <!-- 4. Header -->
-          <div class="part-item-card" data-title="Header">
-            <div class="part-header">
-              <span class="part-title-text">Header</span>
-            </div>
-            <div class="image-preview-box">
-              <img src="images/Header part.png" alt="Header part">
-            </div>
-            <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
-              <label class="custom-check"><input type="checkbox" name="header" value="(K) Header (brazing)" onchange="updateAttachedComments()"> (K) Header (brazing)</label>
-              <label class="custom-check"><input type="checkbox" name="header" value="(L) Header (plate)" onchange="updateAttachedComments()"> (L) Header (plate)</label>
-            </div>
-            <div class="upload-zone hide-on-pdf" id="zone_header">
-              <input type="file" id="pic_header" accept="image/*" onchange="handleImageUpload(this, 'Header', 'attach_header', 'zone_header')">
-              <div class="upload-label">📷 Attach Defect Image</div>
-            </div>
-          </div>
-
-          <!-- 5. U-bend -->
-          <div class="part-item-card" data-title="U-bend">
-            <div class="part-header">
-              <span class="part-title-text">U-bend</span>
-            </div>
-            <div class="image-preview-box">
-              <img src="images/U-bend part.png" alt="U-bend part">
-            </div>
-            <div class="options-grid" style="grid-template-columns: 1fr;">
-              <label class="custom-check"><input type="checkbox" name="ubend" value="(M) U-bend (brazing)" onchange="updateAttachedComments()"> (M) U-bend (brazing)</label>
-              <label class="custom-check"><input type="checkbox" name="ubend" value="(N) Hairpin (plate side)" onchange="updateAttachedComments()"> (N) Hairpin (plate side)</label>
-            </div>
-            <div class="upload-zone hide-on-pdf" id="zone_ubend">
-              <input type="file" id="pic_ubend" accept="image/*" onchange="handleImageUpload(this, 'U-bend', 'attach_ubend', 'zone_ubend')">
-              <div class="upload-label">📷 Attach Defect Image</div>
-            </div>
-          </div>
-
-          <!-- 6. Union -->
-          <div class="part-item-card" data-title="Union">
-            <div class="part-header">
-              <span class="part-title-text">Union</span>
-            </div>
-            <div class="image-preview-box">
-              <img src="images/Union part.png" alt="Union part">
-            </div>
-            <div class="options-grid" style="grid-template-columns: 1fr;">
-              <label class="custom-check"><input type="checkbox" name="union" value="(O) Pipe (gas)" onchange="updateAttachedComments()"> (O) Pipe (gas)</label>
-              <label class="custom-check"><input type="checkbox" name="union" value="(P) Pipe (liquid)" onchange="updateAttachedComments()"> (P) Pipe (liquid)</label>
-            </div>
-            <div class="upload-zone hide-on-pdf" id="zone_union">
-              <input type="file" id="pic_union" accept="image/*" onchange="handleImageUpload(this, 'Union', 'attach_union', 'zone_union')">
-              <div class="upload-label">📷 Attach Defect Image</div>
-            </div>
-          </div>
-
+        <div class="parts-container" id="technicalPartsContainer">
+          <!-- Dynamically rendered part cards -->
         </div>
       </section>
 
@@ -645,26 +551,344 @@
   </main>
 </div>
 
+<!-- Small Floating Designer Button -->
+<button type="button" class="designer-fab hide-on-pdf" onclick="promptEditorMode()" title="Designer Mode">
+  ⚙️
+</button>
+
+<!-- Editor Panel for Configuration -->
+<div id="editorPanel" class="editor-panel-box hide-on-pdf">
+  <h3 style="margin-bottom: 10px; color: var(--primary-red);">Designer & Layout Editor</h3>
+  <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">ปรับแต่งชื่อฟอร์ม, รูปภาพ Overall, เพิ่ม/ลดตัวเลือก Overall, และจัดการ Parts ได้อย่างอิสระ</p>
+  
+  <div style="margin-bottom: 14px; background: #F8FAFC; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+    <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 4px;">ชื่อฟอร์ม (Form Title):</label>
+    <input type="text" id="editFormTitle" class="input-control" style="background:#fff;">
+    
+    <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-top: 8px; margin-bottom: 4px;">รูปภาพ Drawing Overall:</label>
+    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+      <input type="text" id="editOverallImg" class="input-control" style="background:#fff;" placeholder="URL หรือเลือกไฟล์ภาพ">
+      <input type="file" accept="image/*" onchange="uploadOverallImage(this)" style="font-size:0.75rem;">
+    </div>
+
+    <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-top: 8px; margin-bottom: 4px;">ตัวเลือก Drawing Overall (เพิ่ม/ลด หรือจับคู่คีย์พาร์ท คั่นด้วยจุลภาค เช่น hairpin:Hairpin plate side, distributor:Distributor part):</label>
+    <textarea id="editOverallOptions" class="input-control" rows="3" style="background:#fff; font-size:0.75rem;" placeholder="key:ชื่อที่แสดง"></textarea>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+    <strong>รายการ Parts ทั้งหมดใน Technical Inspection:</strong>
+    <button type="button" onclick="addNewPart()" style="background: var(--success-green); color: #fff; border:none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor:pointer;">➕ เพิ่ม Part ใหม่</button>
+  </div>
+
+  <div id="editorPartsContainer" style="display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; margin-bottom: 15px; padding-right: 4px;">
+    <!-- Dynamic Part Editors -->
+  </div>
+
+  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+    <button type="button" onclick="saveLayoutChanges()" style="background: var(--success-green); color: #fff; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">💾 บันทึกชั่วคราว</button>
+    <button type="button" onclick="updateHtmlFile()" style="background: #E60012; color: #fff; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">⚡ อัปเดตโค้ด HTML (ดาวน์โหลดไฟล์ใหม่แบบไม่มีโหมดแก้ไข)</button>
+    <button type="button" onclick="resetLayoutChanges()" style="background: var(--text-muted); color: #fff; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">🔄 รีเซ็ตค่าเดิม</button>
+  </div>
+</div>
+
 <script>
   const uploadedImages = {};
 
-  const groupMapping = {
-    'attach_hairpin': 'hairpin',
-    'attach_distributor': 'distributor',
-    'attach_middlecoils': 'middlecoils',
-    'attach_header': 'header',
-    'attach_ubend': 'ubend',
-    'attach_union': 'union'
+  /* CONFIG START */
+  let reportConfig = JSON.parse(localStorage.getItem('reportConfig')) || {
+    formTitle: "Checking Part Report (Indoor Heat Exchanger)",
+    overallImage: "images/Ovinheat.jpg",
+    overallOptions: [
+      { key: "hairpin", label: "Hairpin plate side" },
+      { key: "distributor", label: "Distributor part" },
+      { key: "middlecoils", label: "Middle coil" },
+      { key: "header", label: "Header" },
+      { key: "ubend", label: "U-bend" },
+      { key: "union", label: "Union" }
+    ],
+    parts: {
+      "hairpin": {
+        title: "Hairpin plate side",
+        image: "images/Hair-pin tube side.png",
+        options: ["(A) Bottom position", "(B) Middle position", "(C) Top position"],
+        highlight: { top: 16.8, left: 0.5, width: 10, height: 58.6, radius: "40%" }
+      },
+      "distributor": {
+        title: "Distributor part",
+        image: "images/Distributor part.png",
+        options: ["(D) area", "(E) area", "(F) area", "(G) area"],
+        highlight: { top: 52, left: 87, width: 13, height: 43, radius: "40%" }
+      },
+      "middlecoils": {
+        title: "Middle coil",
+        image: "images/Inside Heat Exchanger.png",
+        options: ["(H) Back side", "(I) Upper front"],
+        highlight: { top: 10, left: 20, width: 38, height: 63, radius: "50%" }
+      },
+      "header": {
+        title: "Header",
+        image: "images/Header part.png",
+        options: ["(K) Header (brazing)", "(L) Header (plate)"],
+        highlight: { top: 3, left: 87, width: 13, height: 46, radius: "40%" }
+      },
+      "ubend": {
+        title: "U-bend",
+        image: "images/U-bend part.png",
+        options: ["(M) U-bend (brazing)", "(N) Hairpin (plate side)"],
+        highlight: { top: 12, left: 75, width: 10, height: 65, radius: "50%" }
+      },
+      "union": {
+        title: "Union",
+        image: "images/Union part.png",
+        options: ["(O) Pipe (gas)", "(P) Pipe (liquid)"],
+        highlight: { top: 72, left: 38, width: 15, height: 26, radius: "40%" }
+      }
+    }
   };
+  /* CONFIG END */
 
-  const partTitles = {
-    'attach_hairpin': 'Hairpin plate side',
-    'attach_distributor': 'Distributor part',
-    'attach_middlecoils': 'Middle coil',
-    'attach_header': 'Header',
-    'attach_ubend': 'U-bend',
-    'attach_union': 'Union'
-  };
+  function renderForm() {
+    document.getElementById('displayFormTitle').textContent = reportConfig.formTitle;
+    document.getElementById('pageHeaderTitle').textContent = reportConfig.formTitle;
+
+    const overviewContainer = document.getElementById('overviewContainer');
+    let overviewHTML = `<img src="${reportConfig.overallImage}" alt="Drawing Overall" id="overviewImage">`;
+    for (const [key, part] of Object.entries(reportConfig.parts)) {
+      if (part.highlight) {
+        overviewHTML += `<div class="map-highlight" id="hl_${key}" style="top: ${part.highlight.top}%; left: ${part.highlight.left}%; width: ${part.highlight.width}%; height: ${part.highlight.height}%; border-radius: ${part.highlight.radius};"></div>`;
+      }
+    }
+    overviewContainer.innerHTML = overviewHTML;
+
+    const overallOptionsGrid = document.getElementById('overallOptionsGrid');
+    let overallOptsHTML = '';
+    if (reportConfig.overallOptions && Array.isArray(reportConfig.overallOptions)) {
+      reportConfig.overallOptions.forEach(opt => {
+        overallOptsHTML += `<label class="custom-check"><input type="checkbox" name="overall_part" value="${opt.key}" onchange="filterInspectionSections()"> ${opt.label}</label>`;
+      });
+    }
+    overallOptionsGrid.innerHTML = overallOptsHTML;
+
+    const techContainer = document.getElementById('technicalPartsContainer');
+    let techHTML = '';
+    for (const [key, part] of Object.entries(reportConfig.parts)) {
+      let optionsHTML = '';
+      part.options.forEach(opt => {
+        optionsHTML += `<label class="custom-check"><input type="checkbox" name="${key}" value="${opt}" onchange="updateAttachedComments()"> ${opt}</label>`;
+      });
+
+      techHTML += `
+        <div class="part-item-card" data-key="${key}" data-title="${part.title}">
+          <div class="part-header">
+            <span class="part-title-text">${part.title}</span>
+          </div>
+          <div class="image-preview-box">
+            <img src="${part.image}" alt="${part.title}">
+          </div>
+          <div class="options-grid">
+            ${optionsHTML}
+          </div>
+          <div class="upload-zone hide-on-pdf" id="zone_${key}">
+            <input type="file" id="pic_${key}" accept="image/*" onchange="handleImageUpload(this, '${part.title}', 'attach_${key}', 'zone_${key}')">
+            <div class="upload-label">📷 Attach Defect Image</div>
+          </div>
+        </div>
+      `;
+    }
+    techContainer.innerHTML = techHTML;
+    filterInspectionSections();
+  }
+
+  function promptEditorMode() {
+    const panel = document.getElementById('editorPanel');
+    if (panel.style.display === 'block') {
+      // ปิดโหมดทันทีโดยไม่ต้องใส่รหัสผ่าน
+      panel.style.display = 'none';
+    } else {
+      // เปิดโหมด ต้องใส่รหัสผ่าน
+      const pwd = prompt("กรุณากรอกรหัสผ่าน Designer Mode:");
+      if (pwd === "maco2026") {
+        panel.style.display = 'block';
+        renderEditorFields();
+        panel.scrollIntoView({ behavior: 'smooth' });
+      } else if (pwd !== null) {
+        alert("รหัสผ่านไม่ถูกต้อง!");
+      }
+    }
+  }
+
+  function renderEditorFields() {
+    document.getElementById('editFormTitle').value = reportConfig.formTitle;
+    document.getElementById('editOverallImg').value = reportConfig.overallImage;
+
+    if (reportConfig.overallOptions && Array.isArray(reportConfig.overallOptions)) {
+      const optStr = reportConfig.overallOptions.map(o => `${o.key}:${o.label}`).join(', ');
+      document.getElementById('editOverallOptions').value = optStr;
+    }
+
+    const container = document.getElementById('editorPartsContainer');
+    container.innerHTML = '';
+
+    for (const [key, part] of Object.entries(reportConfig.parts)) {
+      const div = document.createElement('div');
+      div.style.cssText = 'background: #F8FAFC; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;';
+      div.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <strong>Part Key: <input type="text" value="${key}" data-oldkey="${key}" class="part-key-input" style="font-weight:bold; width:120px; padding:2px 4px;"></strong>
+          <button type="button" onclick="deletePart('${key}')" style="background: #E60012; color: #fff; border:none; padding: 2px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+          <label>Display Title: <input type="text" value="${part.title}" data-part="${key}" data-prop="title" style="width:100%"></label>
+          <label>Image URL/Path: 
+            <div style="display:flex; gap:4px;">
+              <input type="text" value="${part.image}" data-part="${key}" data-prop="image" id="img_path_${key}" style="width:100%">
+              <input type="file" accept="image/*" onchange="uploadPartImage(this, '${key}')" style="font-size:0.7rem; width:80px;">
+            </div>
+          </label>
+        </div>
+        <div style="margin-bottom: 8px;">
+          <label>Options (คั่นด้วยเครื่องหมายจุลภาค ,):</label>
+          <input type="text" value="${part.options.join(', ')}" data-part="${key}" data-prop="options" style="width:100%">
+        </div>
+        <div>
+          <strong>พิกัดไฮไลต์บน Drawing Overall (%):</strong>
+          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px;">
+            <label>Top: <input type="number" step="0.5" value="${part.highlight ? part.highlight.top : 10}" data-part="${key}" data-hl="top" style="width:100%"></label>
+            <label>Left: <input type="number" step="0.5" value="${part.highlight ? part.highlight.left : 10}" data-part="${key}" data-hl="left" style="width:100%"></label>
+            <label>Width: <input type="number" step="0.5" value="${part.highlight ? part.highlight.width : 15}" data-part="${key}" data-hl="width" style="width:100%"></label>
+            <label>Height: <input type="number" step="0.5" value="${part.highlight ? part.highlight.height : 15}" data-part="${key}" data-hl="height" style="width:100%"></label>
+            <label>Radius: <input type="text" value="${part.highlight ? part.highlight.radius : '40%'}" data-part="${key}" data-hl="radius" style="width:100%"></label>
+          </div>
+        </div>
+      `;
+      container.appendChild(div);
+    }
+  }
+
+  function uploadOverallImage(input) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('editOverallImg').value = e.target.result;
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  function uploadPartImage(input, key) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById(`img_path_${key}`).value = e.target.result;
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  function addNewPart() {
+    const newKey = 'part_' + Date.now();
+    reportConfig.parts[newKey] = {
+      title: "New Part Name",
+      image: "",
+      options: ["Option 1", "Option 2"],
+      highlight: { top: 10, left: 10, width: 15, height: 15, radius: "40%" }
+    };
+    renderEditorFields();
+  }
+
+  function deletePart(key) {
+    if (confirm('คุณต้องการลบ Part นี้ใช่หรือไม่?')) {
+      delete reportConfig.parts[key];
+      renderEditorFields();
+    }
+  }
+
+  function saveLayoutChangesFromEditor() {
+    reportConfig.formTitle = document.getElementById('editFormTitle').value;
+    reportConfig.overallImage = document.getElementById('editOverallImg').value;
+
+    const rawOpts = document.getElementById('editOverallOptions').value;
+    const parsedOpts = [];
+    rawOpts.split(',').forEach(item => {
+      const parts = item.split(':');
+      if (parts.length >= 2) {
+        parsedOpts.push({ key: parts[0].trim(), label: parts.slice(1).join(':').trim() });
+      } else if (parts.length === 1 && parts[0].trim() !== '') {
+        const val = parts[0].trim();
+        parsedOpts.push({ key: val, label: val });
+      }
+    });
+    reportConfig.overallOptions = parsedOpts;
+
+    const partDivs = document.querySelectorAll('#editorPartsContainer > div');
+    const newParts = {};
+
+    partDivs.forEach(div => {
+      const keyInput = div.querySelector('.part-key-input');
+      const oldKey = keyInput.getAttribute('data-oldkey');
+      const newKey = keyInput.value.trim() || oldKey;
+
+      const title = div.querySelector(`[data-prop="title"]`).value;
+      const image = div.querySelector(`[data-prop="image"]`).value;
+      const optionsRaw = div.querySelector(`[data-prop="options"]`).value;
+      const options = optionsRaw.split(',').map(s => s.trim()).filter(s => s.length > 0);
+
+      const top = parseFloat(div.querySelector(`[data-hl="top"]`).value) || 0;
+      const left = parseFloat(div.querySelector(`[data-hl="left"]`).value) || 0;
+      const width = parseFloat(div.querySelector(`[data-hl="width"]`).value) || 10;
+      const height = parseFloat(div.querySelector(`[data-hl="height"]`).value) || 10;
+      const radius = div.querySelector(`[data-hl="radius"]`).value || "40%";
+
+      newParts[newKey] = {
+        title,
+        image,
+        options,
+        highlight: { top, left, width, height, radius }
+      };
+    });
+
+    reportConfig.parts = newParts;
+    localStorage.setItem('reportConfig', JSON.stringify(reportConfig));
+    renderForm();
+  }
+
+  function saveLayoutChanges() {
+    saveLayoutChangesFromEditor();
+    alert('บันทึกการตั้งค่าชั่วคราวเรียบร้อยแล้ว!');
+  }
+
+  function updateHtmlFile() {
+    saveLayoutChangesFromEditor();
+
+    const cloneDoc = document.documentElement.cloneNode(true);
+    
+    const editPanelClone = cloneDoc.querySelector('#editorPanel');
+    if (editPanelClone) editPanelClone.remove();
+
+    const floatBtnClone = cloneDoc.querySelector('.designer-fab');
+    if (floatBtnClone) floatBtnClone.remove();
+
+    let htmlContent = "<!DOCTYPE html>\n" + cloneDoc.outerHTML;
+    const newConfigCode = `  /* CONFIG START */\n  let reportConfig = ${JSON.stringify(reportConfig, null, 4)};\n  /* CONFIG END */`;
+    htmlContent = htmlContent.replace(/\/\* CONFIG START \*\/[\s\S]*?\/\* CONFIG END \*\//, newConfigCode);
+
+    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", url);
+    downloadAnchor.setAttribute("download", "index.html");
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    URL.revokeObjectURL(url);
+
+    alert('อัปเดตและดาวน์โหลดไฟล์ HTML ฉบับใช้งานจริง (ไม่มีโหมดแก้ไข) สำเร็จเรียบร้อยแล้วครับ!');
+  }
+
+  function resetLayoutChanges() {
+    localStorage.removeItem('reportConfig');
+    location.reload();
+  }
 
   function filterInspectionSections() {
     const checkboxes = document.querySelectorAll('input[name="overall_part"]');
@@ -684,17 +908,15 @@
 
     const partCards = document.querySelectorAll('.part-item-card');
     const technicalSection = document.getElementById('section_technical');
-
     let visibleCount = 0;
 
     partCards.forEach(card => {
-      const cardTitle = card.getAttribute('data-title').trim();
-
+      const cardKey = card.getAttribute('data-key').trim();
       if (checkedValues.length === 0) {
         card.style.display = 'block';
         visibleCount++;
       } else {
-        if (checkedValues.includes(cardTitle)) {
+        if (checkedValues.includes(cardKey)) {
           card.style.display = 'block';
           visibleCount++;
         } else {
@@ -715,15 +937,15 @@
     const zoneElement = document.getElementById(zoneId);
     const labelElement = zoneElement.querySelector('.upload-label');
 
-    const groupName = groupMapping[cardId];
-    const checkedBoxes = document.querySelectorAll(`input[name="${groupName}"]:checked`);
+    const key = cardId.replace('attach_', '');
+    const checkedBoxes = document.querySelectorAll(`input[name="${key}"]:checked`);
     const selectedTexts = Array.from(checkedBoxes).map(cb => cb.value);
 
     if (!uploadedImages[cardId]) {
-      uploadedImages[cardId] = { title: title || partTitles[cardId] || '', src: '', comments: selectedTexts };
+      uploadedImages[cardId] = { title: title || '', src: '', comments: selectedTexts };
     } else {
       uploadedImages[cardId].comments = selectedTexts;
-      uploadedImages[cardId].title = title || partTitles[cardId] || uploadedImages[cardId].title;
+      uploadedImages[cardId].title = title || uploadedImages[cardId].title;
     }
 
     if (file) {
@@ -733,22 +955,15 @@
         if (typeof heic2any !== 'undefined') {
           try {
             labelElement.innerHTML = `⏳ Converting HEIC...`;
-            const convertedBlob = await heic2any({
-              blob: file,
-              toType: 'image/jpeg',
-              quality: 0.8
-            });
+            const convertedBlob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.8 });
             file = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
           } catch (err) {
-            console.error('HEIC conversion error:', err);
-            alert('Unable to convert HEIC file. Please use JPG or PNG images instead.');
+            console.error('HEIC error:', err);
+            alert('Unable to convert HEIC file.');
             labelElement.innerHTML = `📷 Attach Defect Image`;
             fileInput.value = '';
             return;
           }
-        } else {
-          alert('HEIC conversion library is not available.');
-          return; 
         }
       }
 
@@ -771,17 +986,15 @@
   }
 
   function updateAttachedComments() {
-    for (const cardId in groupMapping) {
-      const groupName = groupMapping[cardId];
-      const checkedBoxes = document.querySelectorAll(`input[name="${groupName}"]:checked`);
+    for (const key of Object.keys(reportConfig.parts)) {
+      const cardId = 'attach_' + key;
+      const checkedBoxes = document.querySelectorAll(`input[name="${key}"]:checked`);
       const selectedTexts = Array.from(checkedBoxes).map(cb => cb.value);
 
       if (!uploadedImages[cardId]) {
-        uploadedImages[cardId] = { title: partTitles[cardId] || '', src: '', comments: [] };
+        uploadedImages[cardId] = { title: reportConfig.parts[key].title, src: '', comments: [] };
       } else {
-        if (!uploadedImages[cardId].title) {
-          uploadedImages[cardId].title = partTitles[cardId] || '';
-        }
+        uploadedImages[cardId].title = reportConfig.parts[key].title;
       }
       uploadedImages[cardId].comments = selectedTexts;
     }
@@ -805,7 +1018,6 @@
     section.style.display = 'block';
     activeKeys.forEach(key => {
       const item = uploadedImages[key];
-
       const card = document.createElement('div');
       card.className = 'attached-card';
       card.innerHTML = `
@@ -825,7 +1037,8 @@
     let summaryHTML = '';
     let hasAnyComment = false;
 
-    for (const cardId in groupMapping) {
+    for (const key of Object.keys(reportConfig.parts)) {
+      const cardId = 'attach_' + key;
       const item = uploadedImages[cardId];
       if (item && item.comments && item.comments.length > 0) {
         hasAnyComment = true;
@@ -848,20 +1061,19 @@
 
   function generatePDF() {
     const reportNoInput = document.getElementById('serviceReportNo');
-
     if (!reportNoInput.value.trim()) {
       alert('Please fill in the Service Report No before generating the PDF report.');
       reportNoInput.focus();
       return;
     }
-
     updateSummarySection();
     renderAttachedPictures();
-
-    setTimeout(() => {
-      window.print();
-    }, 100);
+    setTimeout(() => { window.print(); }, 100);
   }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    renderForm();
+  });
 </script>
 
 </body>
