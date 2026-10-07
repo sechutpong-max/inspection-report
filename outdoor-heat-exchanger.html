@@ -212,16 +212,21 @@
       object-fit: contain;
     }
 
+    /* ปรับปรุงส่วนรูปภาพภาพรวมให้ย่อขยายตามหน้าจออัตโนมัติ (ไม่ล้นจอ) */
     .highlight-overlay-container {
       position: relative;
       display: inline-block;
-      max-width: 100%;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
     }
     .highlight-overlay-container img {
       display: block;
-      max-height: 250px;
-      width: auto;
+      width: 100%;
+      height: auto;
+      max-height: none;
       margin: 0 auto;
+      object-fit: contain;
     }
     .map-highlight {
       position: absolute;
@@ -423,7 +428,6 @@
         padding: 0 !important;
       }
       
-      /* บังคับให้แสดงส่วน Summary และ Attached Pictures ตอนสั่งพิมพ์เสมอถ้ามีข้อมูล */
       #section_attached_pictures[style*="display: block"],
       #section_inspection_summary[style*="display: block"] {
         display: block !important;
@@ -786,11 +790,9 @@
       return;
     }
 
-    // บังคับอัปเดตสถานะและเรนเดอร์เนื้อหาก่อนพิมพ์ทันที ป้องกันปัญหาบนจอมือถือ
     updateSummarySection();
     renderAttachedPictures();
 
-    // หน่วงเวลาเล็กน้อยให้มือถือเตรียมหน้าจอพิมพ์สำเร็จ
     setTimeout(() => {
       window.print();
     }, 150);
