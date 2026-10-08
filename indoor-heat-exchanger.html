@@ -994,12 +994,12 @@
     alert('บันทึกการตั้งค่าชั่วคราวเรียบร้อยแล้ว!');
   }
 
-  function updateHtmlFile() {
+function updateHtmlFile() {
     saveLayoutChangesFromEditor();
+    const panel = document.getElementById('editorPanel');
+    panel.style.display = 'none';
 
-    const cloneDoc = document.documentElement.cloneNode(true);
-
-    let htmlContent = "<!DOCTYPE html>\n" + cloneDoc.outerHTML;
+    let htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
     const newConfigCode = `  /* CONFIG START */\n  let reportConfig = ${JSON.stringify(reportConfig, null, 4)};\n  /* CONFIG END */`;
     htmlContent = htmlContent.replace(/\/\* CONFIG START \*\/[\s\S]*?\/\* CONFIG END \*\//, newConfigCode);
 
@@ -1013,7 +1013,8 @@
     downloadAnchor.remove();
     URL.revokeObjectURL(url);
 
-    alert('อัปเดตและดาวน์โหลดไฟล์ HTML ฉบับใช้งานจริง (ไม่มีโหมดแก้ไข) สำเร็จเรียบร้อยแล้วครับ!');
+    panel.style.display = 'block';
+    alert('อัปเดตโค้ด HTML สำเร็จ! ระบบได้ดาวน์โหลดไฟล์ใหม่ที่บันทึกทุกการแก้ไขให้เรียบร้อยแล้ว');
   }
 
   function resetLayoutChanges() {
