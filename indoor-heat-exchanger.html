@@ -1011,10 +1011,12 @@ function updateHtmlFile() {
     downloadAnchor.remove();
     URL.revokeObjectURL(url);
 
-    // แก้ไขจุดที่เคยทำให้ Error และคืนค่าให้แผง Designer แสดงผลตามปกติ
+    // สั่งเปิดแผง Designer พร้อมเรนเดอร์ข้อมูลและเลื่อนหน้าจอลงมาให้เห็นทันที
     const panel = document.getElementById('editorPanel');
     if (panel) {
         panel.style.display = 'block';
+        renderEditorFields(); // สร้างฟิลด์ข้อมูลการตั้งค่าขึ้นมาแสดง
+        panel.scrollIntoView({ behavior: 'smooth' }); // เลื่อนจอลงมาที่แผงควบคุม
     }
     
     alert('อัปเดตโค้ด HTML สำเร็จ! ระบบได้ดาวน์โหลดไฟล์ใหม่ที่บันทึกทุกการแก้ไขให้เรียบร้อยแล้ว');
