@@ -996,8 +996,7 @@
 
 function updateHtmlFile() {
     saveLayoutChangesFromEditor();
-   
-
+    
     let htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
     const newConfigCode = `  /* CONFIG START */\n  let reportConfig = ${JSON.stringify(reportConfig, null, 4)};\n  /* CONFIG END */`;
     htmlContent = htmlContent.replace(/\/\* CONFIG START \*\/[\s\S]*?\/\* CONFIG END \*\//, newConfigCode);
@@ -1012,7 +1011,12 @@ function updateHtmlFile() {
     downloadAnchor.remove();
     URL.revokeObjectURL(url);
 
-    panel.style.display = 'block';
+    // แก้ไขจุดที่เคยทำให้ Error และคืนค่าให้แผง Designer แสดงผลตามปกติ
+    const panel = document.getElementById('editorPanel');
+    if (panel) {
+        panel.style.display = 'block';
+    }
+    
     alert('อัปเดตโค้ด HTML สำเร็จ! ระบบได้ดาวน์โหลดไฟล์ใหม่ที่บันทึกทุกการแก้ไขให้เรียบร้อยแล้ว');
   }
 
