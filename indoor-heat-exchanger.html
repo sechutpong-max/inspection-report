@@ -641,9 +641,12 @@
 </div>
 
 <!-- Small Floating Designer Button -->
-
+<button type="button" class="designer-fab hide-on-pdf" onclick="promptEditorMode()" title="Designer Mode">⚙️</button>
 
 <!-- Editor Panel for Configuration -->
+<div id="editorPanel" class="editor-panel-box hide-on-pdf" style="display:none;">
+  <!-- (เนื้อหาภายในแผง Designer ตามโค้ดเดิมของคุณ) -->
+</div>
 
 
 <script>
@@ -995,31 +998,32 @@
   }
 
 function updateHtmlFile() {
-    saveLayoutChangesFromEditor();
-    
-    let htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-    const newConfigCode = `  /* CONFIG START */\n  let reportConfig = ${JSON.stringify(reportConfig, null, 4)};\n  /* CONFIG END */`;
-    htmlContent = htmlContent.replace(/\/\* CONFIG START \*\/[\s\S]*?\/\* CONFIG END \*\//, newConfigCode);
+  saveLayoutChangesFromEditor();
+  
+  // ใช้ DOM ปัจจุบันแบบเต็มๆ โดยไม่ลบแผงควบคุมออก เพื่อให้ไฟล์ที่ดาวน์โหลดไปมีปุ่ม Designer ติดไปด้วย
+  let htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+  const newConfigCode = `  /* CONFIG START */\n  let reportConfig = ${JSON.stringify(reportConfig, null, 4)};\n  /* CONFIG END */`;
+  htmlContent = htmlContent.replace(/\/\* CONFIG START \*\/[\s\S]*?\/\* CONFIG END \*\//, newConfigCode);
 
-    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute("href", url);
-    downloadAnchor.setAttribute("download", "index.html");
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-    URL.revokeObjectURL(url);
+  const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const downloadAnchor = document.createElement('a');
+  downloadAnchor.setAttribute("href", url);
+  downloadAnchor.setAttribute("download", "index.html");
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
+  URL.revokeObjectURL(url);
 
-    // สั่งเปิดแผง Designer พร้อมเรนเดอร์ข้อมูลและเลื่อนหน้าจอลงมาให้เห็นทันที
-    const panel = document.getElementById('editorPanel');
-    if (panel) {
-        panel.style.display = 'block';
-        renderEditorFields(); // สร้างฟิลด์ข้อมูลการตั้งค่าขึ้นมาแสดง
-        panel.scrollIntoView({ behavior: 'smooth' }); // เลื่อนจอลงมาที่แผงควบคุม
-    }
-    
-    alert('อัปเดตโค้ด HTML สำเร็จ! ระบบได้ดาวน์โหลดไฟล์ใหม่ที่บันทึกทุกการแก้ไขให้เรียบร้อยแล้ว');
+  // ให้หน้าจอปัจจุบันเปิดแผง Designer ค้างไว้พร้อมแก้ไขต่อได้ทันที
+  const panel = document.getElementById('editorPanel');
+  if (panel) {
+      panel.style.display = 'block';
+      renderEditorFields();
+      panel.scrollIntoView({ behavior: 'smooth' });
+  }
+  
+  alert('อัปเดตและดาวน์โหลดไฟล์ HTML สำเร็จ!');
   }
 
   function resetLayoutChanges() {
