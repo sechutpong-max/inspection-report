@@ -996,8 +996,7 @@
 
 function updateHtmlFile() {
     saveLayoutChangesFromEditor();
-    const panel = document.getElementById('editorPanel');
-    panel.style.display = 'none';
+   
 
     let htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
     const newConfigCode = `  /* CONFIG START */\n  let reportConfig = ${JSON.stringify(reportConfig, null, 4)};\n  /* CONFIG END */`;
