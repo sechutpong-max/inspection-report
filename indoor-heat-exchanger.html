@@ -998,12 +998,6 @@
     saveLayoutChangesFromEditor();
 
     const cloneDoc = document.documentElement.cloneNode(true);
-    
-    const editPanelClone = cloneDoc.querySelector('#editorPanel');
-    if (editPanelClone) editPanelClone.remove();
-
-    const floatBtnClone = cloneDoc.querySelector('.designer-fab');
-    if (floatBtnClone) floatBtnClone.remove();
 
     let htmlContent = "<!DOCTYPE html>\n" + cloneDoc.outerHTML;
     const newConfigCode = `  /* CONFIG START */\n  let reportConfig = ${JSON.stringify(reportConfig, null, 4)};\n  /* CONFIG END */`;
