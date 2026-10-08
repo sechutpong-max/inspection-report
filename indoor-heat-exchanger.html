@@ -943,7 +943,9 @@
   function updateHtmlFile() {
     saveLayoutChangesFromEditor();
 
-    let htmlContent = "<!DOCTYPE html>\n" + cloneDoc.outerHTML;
+    let htmlContent =
+    "<!DOCTYPE html>\n" +
+    document.documentElement.outerHTML;
     const newConfigCode = `  /* CONFIG START */\n  let reportConfig = ${JSON.stringify(reportConfig, null, 4)};\n  /* CONFIG END */`;
     htmlContent = htmlContent.replace(/\/\* CONFIG START \*\/[\s\S]*?\/\* CONFIG END \*\//, newConfigCode);
 
