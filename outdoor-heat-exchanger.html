@@ -427,9 +427,17 @@
   }
   function updateHtmlFile() {
     saveLayoutChangesFromEditor();
+    
+    // ซ่อนแผง Editor และลบค่าที่กรอกค้างในหน้าปัจจุบันก่อนดึง HTML
+    const panel = document.getElementById('editorPanel');
+    panel.style.display = 'none';
+
     let htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    
+    // อัปเดต CONFIG ใหม่เข้าไป
     const newConfigCode = `  /* CONFIG START */\n  let reportConfig = ${JSON.stringify(reportConfig, null, 4)};\n  /* CONFIG END */`;
     htmlContent = htmlContent.replace(/\/\* CONFIG START \*\/[\s\S]*?\/\* CONFIG END \*\//, newConfigCode);
+
     const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const downloadAnchor = document.createElement('a');
@@ -439,6 +447,7 @@
     downloadAnchor.click();
     downloadAnchor.remove();
     URL.revokeObjectURL(url);
+
     alert('อัปเดตและดาวน์โหลดไฟล์ HTML สำเร็จเรียบร้อยแล้ว!');
   }
   function resetLayoutChanges() {
@@ -574,7 +583,18 @@
     renderAttachedPictures();
     setTimeout(() => { window.print(); }, 100);
   }
-  window.addEventListener('DOMContentLoaded', () => { renderForm(); });
+  window.addEventListener('DOMContentLoaded', () => {
+    // โหลดค่าที่เคยบันทึกไว้ในเครื่องขึ้นมาใช้งาน (ถ้ามี)
+    const savedConfig = localStorage.getItem('reportConfig');
+    if (savedConfig) {
+      try {
+        reportConfig = JSON.parse(savedConfig);
+      } catch (e) {
+        console.error('Error loading saved config', e);
+      }
+    }
+    renderForm();
+  });
 </script>
 
 
