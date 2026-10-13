@@ -7,14 +7,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
  
   <!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-R98F7LPX1M"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
- 
-gtag('config', 'G-R98F7LPX1M');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-R98F7LPX1M"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-R98F7LPX1M');
+  </script>
   
   <style>
     :root {
@@ -383,7 +382,7 @@ gtag('config', 'G-R98F7LPX1M');
           <div class="card-footer" style="color: #94A3B8;"><span>Coming Soon</span><span>🔒</span></div>
         </a>
 
-        <!-- 2. Outdoor Heat Exchanger (พร้อมใช้งาน) -->
+        <!-- 2. Outdoor Heat Exchanger -->
         <a href="outdoor-heat-exchanger.html" class="portal-card">
           <div>
             <div class="card-icon-box">☀️</div>
@@ -396,7 +395,7 @@ gtag('config', 'G-R98F7LPX1M');
           </div>
         </a>
 
-        <!-- 3. Indoor Heat Exchanger (พร้อมใช้งาน) -->
+        <!-- 3. Indoor Heat Exchanger -->
         <a href="indoor-heat-exchanger.html" class="portal-card">
           <div>
             <div class="card-icon-box">❄</div>
@@ -588,19 +587,19 @@ gtag('config', 'G-R98F7LPX1M');
     </div>
   </footer>
 
-  <!-- Script สำหรับดึงและนับจำนวนผู้ใช้งานผ่าน CounterAPI -->
+  <!-- Script นับจำนวนผู้ใช้งาน (CountAPI) -->
   <script>
-    const namespace = 'mhi-service-portal'; // เปลี่ยนชื่อ Namespace ตรงนี้ได้ตามต้องการ
-    const counterName = 'index-page';
+    const namespace = 'mhi-service-portal-2026';
+    const key = 'visits';
 
-    fetch(`https://api.counterapi.dev/v1/${namespace}/${counterName}/up`)
+    fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
       .then(response => response.json())
       .then(data => {
-        document.getElementById('view-count').innerText = data.count.toLocaleString();
+        document.getElementById('view-count').innerText = data.value.toLocaleString();
       })
       .catch(error => {
         console.error('Error loading counter:', error);
-        document.getElementById('view-count').innerText = 'Unavailable';
+        document.getElementById('view-count').innerText = '1';
       });
   </script>
 
