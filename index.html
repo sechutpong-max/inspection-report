@@ -12,7 +12,7 @@
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
- 
+ 
 gtag('config', 'G-R98F7LPX1M');
 </script>
   
@@ -310,6 +310,12 @@ gtag('config', 'G-R98F7LPX1M');
       color: #94A3B8;
     }
 
+    .visitor-counter {
+      margin-top: 6px;
+      font-size: 0.75rem;
+      color: #94A3B8;
+    }
+
     @media (max-width: 768px) {
       .hero-title {
         font-size: 1.6rem;
@@ -377,7 +383,7 @@ gtag('config', 'G-R98F7LPX1M');
           <div class="card-footer" style="color: #94A3B8;"><span>Coming Soon</span><span>🔒</span></div>
         </a>
 
-        <!-- 2. Outdoor Heat Exchanger (พร้อมใช้งาน) -->
+        <!-- 2. Outdoor Heat Exchanger -->
         <a href="outdoor-heat-exchanger.html" class="portal-card">
           <div>
             <div class="card-icon-box">☀️</div>
@@ -390,7 +396,7 @@ gtag('config', 'G-R98F7LPX1M');
           </div>
         </a>
 
-        <!-- 3. Indoor Heat Exchanger (พร้อมใช้งาน) -->
+        <!-- 3. Indoor Heat Exchanger -->
         <a href="indoor-heat-exchanger.html" class="portal-card">
           <div>
             <div class="card-icon-box">❄</div>
@@ -526,7 +532,7 @@ gtag('config', 'G-R98F7LPX1M');
         <!-- 16. DC motor -->
         <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('Module coming soon!');">
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">⚙️️</div>
+            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">⚙</div>
             <h2 class="card-title" style="color: #FFFFFF;">DC Motor</h2>
             <p class="card-desc" style="color: #94A3B8;">Direct current brushless fan motor feedback and control signal inspection.</p>
           </div>
@@ -576,7 +582,11 @@ gtag('config', 'G-R98F7LPX1M');
 
   <!-- Footer -->
   <footer class="footer">
-    &copy; 2026 Mitsubishi Heavy Industries. All rights reserved. Service Engineering Division.
+    <div>&copy; 2026 Mitsubishi Heavy Industries. All rights reserved. Service Engineering Division.</div>
+    <div class="visitor-counter">
+      Visitor Views: 
+      <img src="https://visitor-badge.laobi.icu/badge?page_id=sechutpong-max.inspection-report&left_text=&color=1e293b" alt="visitor count" style="vertical-align: middle; height: 18px;">
+    </div>
   </footer>
 
 </body>
