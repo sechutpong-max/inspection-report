@@ -7,13 +7,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
  
   <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-R98F7LPX1M"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-R98F7LPX1M');
-  </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-R98F7LPX1M"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+ 
+gtag('config', 'G-R98F7LPX1M');
+</script>
   
   <style>
     :root {
@@ -309,12 +310,6 @@
       color: #94A3B8;
     }
 
-    .visitor-counter {
-      margin-top: 6px;
-      font-size: 0.75rem;
-      color: #64748B;
-    }
-
     @media (max-width: 768px) {
       .hero-title {
         font-size: 1.6rem;
@@ -382,7 +377,7 @@
           <div class="card-footer" style="color: #94A3B8;"><span>Coming Soon</span><span>🔒</span></div>
         </a>
 
-        <!-- 2. Outdoor Heat Exchanger -->
+        <!-- 2. Outdoor Heat Exchanger (พร้อมใช้งาน) -->
         <a href="outdoor-heat-exchanger.html" class="portal-card">
           <div>
             <div class="card-icon-box">☀️</div>
@@ -395,7 +390,7 @@
           </div>
         </a>
 
-        <!-- 3. Indoor Heat Exchanger -->
+        <!-- 3. Indoor Heat Exchanger (พร้อมใช้งาน) -->
         <a href="indoor-heat-exchanger.html" class="portal-card">
           <div>
             <div class="card-icon-box">❄</div>
@@ -531,7 +526,7 @@
         <!-- 16. DC motor -->
         <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('Module coming soon!');">
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">⚙</div>
+            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">⚙️️</div>
             <h2 class="card-title" style="color: #FFFFFF;">DC Motor</h2>
             <p class="card-desc" style="color: #94A3B8;">Direct current brushless fan motor feedback and control signal inspection.</p>
           </div>
@@ -581,27 +576,8 @@
 
   <!-- Footer -->
   <footer class="footer">
-    <div>&copy; 2026 Mitsubishi Heavy Industries. All rights reserved. Service Engineering Division.</div>
-    <div class="visitor-counter">
-      Visitor Views: <span id="view-count">Loading...</span>
-    </div>
+    &copy; 2026 Mitsubishi Heavy Industries. All rights reserved. Service Engineering Division.
   </footer>
-
-  <!-- Script นับจำนวนผู้ใช้งาน (CountAPI) -->
-  <script>
-    const namespace = 'mhi-service-portal-2026';
-    const key = 'visits';
-
-    fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('view-count').innerText = data.value.toLocaleString();
-      })
-      .catch(error => {
-        console.error('Error loading counter:', error);
-        document.getElementById('view-count').innerText = '1';
-      });
-  </script>
 
 </body>
 </html>
