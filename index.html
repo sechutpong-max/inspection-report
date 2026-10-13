@@ -584,9 +584,38 @@
     <div>&copy; 2026 Mitsubishi Heavy Industries. All rights reserved. Service Engineering Division.</div>
     <div class="visitor-counter">
       Visitor Views: 
-      <img src="https://visitor-badge.laobi.icu/badge?page_id=sechutpong-max.inspection-report-v2&left_text=&color=1e293b" alt="visitor count" style="vertical-align: middle; height: 18px;" loading="lazy">
+      <img id="visitor-badge" src="https://visitor-badge.laobi.icu/badge?page_id=sechutpong-max.inspection-report-v2&left_text=&color=1e293b" alt="visitor count" style="vertical-align: middle; height: 18px;">
     </div>
   </footer>
+
+  <!-- Script ป้องกันการนับเบิ้ล 2 ครั้งเด็ดขาดด้วย sessionStorage -->
+  <script>
+    (function() {
+      window.addEventListener('pageshow', function (event) {
+        var isBack = event.persisted || 
+                     (window.performance && performance.navigation && performance.navigation.type === 2) ||
+                     (window.performance && performance.getEntriesByType && performance.getEntriesByType("navigation")[0] && performance.getEntriesByType("navigation")[0].type === "back_forward");
+
+        if (isBack) {
+          // ตรวจสอบว่าพึ่งยิง request ไปในช่วงเสี้ยววินาทีนี้หรือไม่ เพื่อบล็อกไม่ให้เบราว์เซอร์เบิ้ลซ้ำ
+          var lastRun = sessionStorage.getItem('last_badge_update');
+          var now = new Date().getTime();
+
+          if (!lastRun || (now - lastRun > 1000)) {
+            sessionStorage.setItem('last_badge_update', now);
+            
+            setTimeout(function() {
+              var badge = document.getElementById('visitor-badge');
+              if (badge) {
+                var cleanUrl = badge.src.split('&_t=')[0];
+                badge.src = cleanUrl + '&_t=' + now;
+              }
+            }, 100);
+          }
+        }
+      });
+    })();
+  </script>
 
 </body>
 </html>
