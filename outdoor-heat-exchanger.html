@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="pageHeaderTitle">Checking Part Report (Outdoor Heat Exchanger)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
   <style>
     :root {
@@ -99,13 +100,13 @@
       <section class="section-card">
         <div class="section-title">Drawing Overall</div>
         <div style="text-align: center; margin-bottom: 12px;">
-          <div class="highlight-overlay-container" id="overviewContainer"><img src="images/OutdoorOV.png" alt="Drawing Overall" id="overviewImage"><div class="map-highlight" id="hl_hairpin" style="top: 2%; left: 3%; width: 6%; height: 85%; border-radius: 20%; display: none;"></div><div class="map-highlight" id="hl_ubend" style="top: 12%; left: 24%; width: 8%; height: 90%; border-radius: 20%; display: none;"></div><div class="map-highlight" id="hl_Heat Exchanger" style="top: 2%; left: 10%; width: 13%; height: 90%; border-radius: 20%; display: none;"></div><div class="map-highlight" id="hl_distributor" style="top: 53%; left: 69%; width: 32%; height: 46%; border-radius: 20%; display: none;"></div><div class="map-highlight" id="hl_header" style="top: 2%; left: 69%; width: 32%; height: 46%; border-radius: 20%; display: none;"></div><div class="map-highlight" id="hl_pipe" style="top: 1.5%; left: 35%; width: 14%; height: 98%; border-radius: 20%; display: none;"></div><div class="map-highlight" id="hl_expansion" style="top: 2%; left: 50%; width: 18%; height: 96%; border-radius: 20%; display: none;"></div></div>
+          <div class="highlight-overlay-container" id="overviewContainer"></div>
         </div>
-        <div class="options-grid" id="overallOptionsGrid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));"><label class="custom-check"><input type="checkbox" name="overall_part" value="hairpin" onchange="filterInspectionSections()"> Hair-pin tube side</label><label class="custom-check"><input type="checkbox" name="overall_part" value="ubend" onchange="filterInspectionSections()"> U-bend tube side</label><label class="custom-check"><input type="checkbox" name="overall_part" value="Heat Exchanger" onchange="filterInspectionSections()"> Middle coil</label><label class="custom-check"><input type="checkbox" name="overall_part" value="distributor" onchange="filterInspectionSections()"> Distributor</label><label class="custom-check"><input type="checkbox" name="overall_part" value="header" onchange="filterInspectionSections()"> Header</label><label class="custom-check"><input type="checkbox" name="overall_part" value="pipe" onchange="filterInspectionSections()"> Pipe Assy</label><label class="custom-check"><input type="checkbox" name="overall_part" value="expansion" onchange="filterInspectionSections()"> Expansion pipe</label></div>
+        <div class="options-grid" id="overallOptionsGrid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));"></div>
       </section>
       <section class="section-card hide-on-pdf" id="section_technical" style="display: block;">
         <div class="section-title"><span>Technical Inspection &amp; Defect Locations</span></div>
-        <div class="parts-container" id="technicalPartsContainer"><div class="part-item-card" data-key="hairpin" data-title="Hair-pin tube side" style="display: block;"><div class="part-header"><span class="part-title-text">Hair-pin tube side</span></div><div class="image-preview-box"><img src="images/Out hair-pin.png" alt="Hair-pin tube side"></div><div class="options-grid"><label class="custom-check"><input type="checkbox" name="hairpin" value="(A) Arc of hair-pin tube" onchange="updateAttachedComments()"> (A) Arc of hair-pin tube</label><label class="custom-check"><input type="checkbox" name="hairpin" value="(B) Point which is touched with the metal plate" onchange="updateAttachedComments()"> (B) Point which is touched with the metal plate</label></div><div class="upload-zone hide-on-pdf" id="zone_hairpin"><input type="file" id="pic_hairpin" accept="image/*" onchange="handleImageUpload(this, 'Hair-pin tube side', 'attach_hairpin', 'zone_hairpin')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="ubend" data-title="U-bend tube side" style="display: block;"><div class="part-header"><span class="part-title-text">U-bend tube side</span></div><div class="image-preview-box"><img src="images/Out u-bend.png" alt="U-bend tube side"></div><div class="options-grid"><label class="custom-check"><input type="checkbox" name="ubend" value="(C) Arc of U-bend tube" onchange="updateAttachedComments()"> (C) Arc of U-bend tube</label><label class="custom-check"><input type="checkbox" name="ubend" value="(D) Brazing point of U-bend tube" onchange="updateAttachedComments()"> (D) Brazing point of U-bend tube</label><label class="custom-check"><input type="checkbox" name="ubend" value="(E) Point which is touched with the metal plate" onchange="updateAttachedComments()"> (E) Point which is touched with the metal plate</label><label class="custom-check"><input type="checkbox" name="ubend" value="(F) Brazing point of pipe component" onchange="updateAttachedComments()"> (F) Brazing point of pipe component</label></div><div class="upload-zone hide-on-pdf" id="zone_ubend"><input type="file" id="pic_ubend" accept="image/*" onchange="handleImageUpload(this, 'U-bend tube side', 'attach_ubend', 'zone_ubend')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="Heat Exchanger" data-title="Middle coil" style="display: block;"><div class="part-header"><span class="part-title-text">Middle coil</span></div><div class="image-preview-box"><img src="images/Out inside heat exchanger.png" alt="Middle coil"></div><div class="options-grid"><label class="custom-check"><input type="checkbox" name="Heat Exchanger" value="(G) The flat back of Heat Exchanger" onchange="updateAttachedComments()"> (G) The flat back of Heat Exchanger</label><label class="custom-check"><input type="checkbox" name="Heat Exchanger" value="(H) The flat side of Heat Exchanger" onchange="updateAttachedComments()"> (H) The flat side of Heat Exchanger</label><label class="custom-check"><input type="checkbox" name="Heat Exchanger" value="(I) The curved area of Heat Exchanger" onchange="updateAttachedComments()"> (I) The curved area of Heat Exchanger</label></div><div class="upload-zone hide-on-pdf" id="zone_Heat Exchanger"><input type="file" id="pic_Heat Exchanger" accept="image/*" onchange="handleImageUpload(this, 'Middle coil', 'attach_Heat Exchanger', 'zone_Heat Exchanger')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="distributor" data-title="Distributor" style="display: block;"><div class="part-header"><span class="part-title-text">Distributor</span></div><div class="image-preview-box"><img src="images/Outdistributor.png" alt="Distributor"></div><div class="options-grid"><label class="custom-check"><input type="checkbox" name="distributor" value="(J) Cap tube" onchange="updateAttachedComments()"> (J) Cap tube</label><label class="custom-check"><input type="checkbox" name="distributor" value="(K) Brazing(brass)" onchange="updateAttachedComments()"> (K) Brazing(brass)</label><label class="custom-check"><input type="checkbox" name="distributor" value="(L) Brazing point" onchange="updateAttachedComments()"> (L) Brazing point</label></div><div class="upload-zone hide-on-pdf" id="zone_distributor"><input type="file" id="pic_distributor" accept="image/*" onchange="handleImageUpload(this, 'Distributor', 'attach_distributor', 'zone_distributor')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="header" data-title="Header" style="display: block;"><div class="part-header"><span class="part-title-text">Header</span></div><div class="image-preview-box"><img src="images/Outheader.png" alt="Header"></div><div class="options-grid"><label class="custom-check"><input type="checkbox" name="header" value="(M) Brazing point" onchange="updateAttachedComments()"> (M) Brazing point</label><label class="custom-check"><input type="checkbox" name="header" value="(N) Burring" onchange="updateAttachedComments()"> (N) Burring</label><label class="custom-check"><input type="checkbox" name="header" value="(O) Spinding" onchange="updateAttachedComments()"> (O) Spinding</label></div><div class="upload-zone hide-on-pdf" id="zone_header"><input type="file" id="pic_header" accept="image/*" onchange="handleImageUpload(this, 'Header', 'attach_header', 'zone_header')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="pipe" data-title="Pipe Assy" style="display: block;"><div class="part-header"><span class="part-title-text">Pipe Assy</span></div><div class="image-preview-box"><img src="images/Outpipeassy.png" alt="Pipe Assy"></div><div class="options-grid"><label class="custom-check"><input type="checkbox" name="pipe" value="(P) Sensor holder" onchange="updateAttachedComments()"> (P) Sensor holder</label><label class="custom-check"><input type="checkbox" name="pipe" value="(Q) Discharge pipe" onchange="updateAttachedComments()"> (Q) Discharge pipe</label><label class="custom-check"><input type="checkbox" name="pipe" value="(R) Suction pipe" onchange="updateAttachedComments()"> (R) Suction pipe</label></div><div class="upload-zone hide-on-pdf" id="zone_pipe"><input type="file" id="pic_pipe" accept="image/*" onchange="handleImageUpload(this, 'Pipe Assy', 'attach_pipe', 'zone_pipe')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="expansion" data-title="Expansion pipe" style="display: block;"><div class="part-header"><span class="part-title-text">Expansion pipe</span></div><div class="image-preview-box"><img src="images/Outexpansion.png" alt="Expansion pipe"></div><div class="options-grid"><label class="custom-check"><input type="checkbox" name="expansion" value="(S) Valve body" onchange="updateAttachedComments()"> (S) Valve body</label><label class="custom-check"><input type="checkbox" name="expansion" value="(T) Strainer" onchange="updateAttachedComments()"> (T) Strainer</label><label class="custom-check"><input type="checkbox" name="expansion" value="(U) Cap tube" onchange="updateAttachedComments()"> (U) Cap tube</label></div><div class="upload-zone hide-on-pdf" id="zone_expansion"><input type="file" id="pic_expansion" accept="image/*" onchange="handleImageUpload(this, 'Expansion pipe', 'attach_expansion', 'zone_expansion')"><div class="upload-label">📷 Attach Defect Image</div></div></div></div>
+        <div class="parts-container" id="technicalPartsContainer"></div>
       </section>
       <section class="section-card" id="section_attached_pictures" style="display: none;">
         <div class="section-title">Attached Defect Pictures</div>
@@ -121,6 +122,7 @@
     </form>
   </main>
 </div>
+
 <button type="button" class="designer-fab hide-on-pdf" onclick="promptEditorMode()" title="Designer Mode">⚙️</button>
 <div id="editorPanel" class="editor-panel-box hide-on-pdf" style="display: none;">
   <h3 style="margin-bottom: 10px; color: var(--primary-red);">Designer &amp; Layout Editor</h3>
@@ -140,165 +142,76 @@
     <strong>รายการ Parts ทั้งหมดใน Technical Inspection:</strong>
     <button type="button" onclick="addNewPart()" style="background: var(--success-green); color: #fff; border:none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor:pointer;">➕ เพิ่ม Part ใหม่</button>
   </div>
-  <div id="editorPartsContainer" style="display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; margin-bottom: 15px; padding-right: 4px;"><div style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><strong>Part Key: <input type="text" value="hairpin" data-oldkey="hairpin" class="part-key-input" style="font-weight:bold; width:120px; padding:2px 4px;"></strong><button type="button" onclick="deletePart('hairpin')" style="background: #E60012; color: #fff; border:none; padding: 2px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button></div><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;"><label>Display Title: <input type="text" value="Hair-pin tube side" data-part="hairpin" data-prop="title" style="width:100%"></label><label>Image URL/Path: <div style="display:flex; gap:4px;"><input type="text" value="images/Out hair-pin.png" data-part="hairpin" data-prop="image" id="img_path_hairpin" style="width:100%"><input type="file" accept="image/*" onchange="uploadPartImage(this, 'hairpin')" style="font-size:0.7rem; width:80px;"></div></label></div><div style="margin-bottom: 8px;"><label>Options (คั่นด้วยจุลภาค ,):</label><input type="text" value="(A) Arc of hair-pin tube, (B) Point which is touched with the metal plate" data-part="hairpin" data-prop="options" style="width:100%"></div><div><strong>พิกัดไฮไลต์ (%):</strong><div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px;"><label>Top: <input type="number" step="0.5" value="2" data-part="hairpin" data-hl="top" style="width:100%"></label><label>Left: <input type="number" step="0.5" value="3" data-part="hairpin" data-hl="left" style="width:100%"></label><label>Width: <input type="number" step="0.5" value="6" data-part="hairpin" data-hl="width" style="width:100%"></label><label>Height: <input type="number" step="0.5" value="85" data-part="hairpin" data-hl="height" style="width:100%"></label><label>Radius: <input type="text" value="20%" data-part="hairpin" data-hl="radius" style="width:100%"></label></div></div></div><div style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><strong>Part Key: <input type="text" value="ubend" data-oldkey="ubend" class="part-key-input" style="font-weight:bold; width:120px; padding:2px 4px;"></strong><button type="button" onclick="deletePart('ubend')" style="background: #E60012; color: #fff; border:none; padding: 2px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button></div><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;"><label>Display Title: <input type="text" value="U-bend tube side" data-part="ubend" data-prop="title" style="width:100%"></label><label>Image URL/Path: <div style="display:flex; gap:4px;"><input type="text" value="images/Out u-bend.png" data-part="ubend" data-prop="image" id="img_path_ubend" style="width:100%"><input type="file" accept="image/*" onchange="uploadPartImage(this, 'ubend')" style="font-size:0.7rem; width:80px;"></div></label></div><div style="margin-bottom: 8px;"><label>Options (คั่นด้วยจุลภาค ,):</label><input type="text" value="(C) Arc of U-bend tube, (D) Brazing point of U-bend tube, (E) Point which is touched with the metal plate, (F) Brazing point of pipe component" data-part="ubend" data-prop="options" style="width:100%"></div><div><strong>พิกัดไฮไลต์ (%):</strong><div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px;"><label>Top: <input type="number" step="0.5" value="12" data-part="ubend" data-hl="top" style="width:100%"></label><label>Left: <input type="number" step="0.5" value="24" data-part="ubend" data-hl="left" style="width:100%"></label><label>Width: <input type="number" step="0.5" value="8" data-part="ubend" data-hl="width" style="width:100%"></label><label>Height: <input type="number" step="0.5" value="90" data-part="ubend" data-hl="height" style="width:100%"></label><label>Radius: <input type="text" value="20%" data-part="ubend" data-hl="radius" style="width:100%"></label></div></div></div><div style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><strong>Part Key: <input type="text" value="Heat Exchanger" data-oldkey="Heat Exchanger" class="part-key-input" style="font-weight:bold; width:120px; padding:2px 4px;"></strong><button type="button" onclick="deletePart('Heat Exchanger')" style="background: #E60012; color: #fff; border:none; padding: 2px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button></div><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;"><label>Display Title: <input type="text" value="Middle coil" data-part="Heat Exchanger" data-prop="title" style="width:100%"></label><label>Image URL/Path: <div style="display:flex; gap:4px;"><input type="text" value="images/Out inside heat exchanger.png" data-part="Heat Exchanger" data-prop="image" id="img_path_Heat Exchanger" style="width:100%"><input type="file" accept="image/*" onchange="uploadPartImage(this, 'Heat Exchanger')" style="font-size:0.7rem; width:80px;"></div></label></div><div style="margin-bottom: 8px;"><label>Options (คั่นด้วยจุลภาค ,):</label><input type="text" value="(G) The flat back of Heat Exchanger, (H) The flat side of Heat Exchanger, (I) The curved area of Heat Exchanger" data-part="Heat Exchanger" data-prop="options" style="width:100%"></div><div><strong>พิกัดไฮไลต์ (%):</strong><div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px;"><label>Top: <input type="number" step="0.5" value="2" data-part="Heat Exchanger" data-hl="top" style="width:100%"></label><label>Left: <input type="number" step="0.5" value="10" data-part="Heat Exchanger" data-hl="left" style="width:100%"></label><label>Width: <input type="number" step="0.5" value="13" data-part="Heat Exchanger" data-hl="width" style="width:100%"></label><label>Height: <input type="number" step="0.5" value="90" data-part="Heat Exchanger" data-hl="height" style="width:100%"></label><label>Radius: <input type="text" value="20%" data-part="Heat Exchanger" data-hl="radius" style="width:100%"></label></div></div></div><div style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><strong>Part Key: <input type="text" value="distributor" data-oldkey="distributor" class="part-key-input" style="font-weight:bold; width:120px; padding:2px 4px;"></strong><button type="button" onclick="deletePart('distributor')" style="background: #E60012; color: #fff; border:none; padding: 2px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button></div><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;"><label>Display Title: <input type="text" value="Distributor" data-part="distributor" data-prop="title" style="width:100%"></label><label>Image URL/Path: <div style="display:flex; gap:4px;"><input type="text" value="images/Outdistributor.png" data-part="distributor" data-prop="image" id="img_path_distributor" style="width:100%"><input type="file" accept="image/*" onchange="uploadPartImage(this, 'distributor')" style="font-size:0.7rem; width:80px;"></div></label></div><div style="margin-bottom: 8px;"><label>Options (คั่นด้วยจุลภาค ,):</label><input type="text" value="(J) Cap tube, (K) Brazing(brass), (L) Brazing point" data-part="distributor" data-prop="options" style="width:100%"></div><div><strong>พิกัดไฮไลต์ (%):</strong><div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px;"><label>Top: <input type="number" step="0.5" value="53" data-part="distributor" data-hl="top" style="width:100%"></label><label>Left: <input type="number" step="0.5" value="69" data-part="distributor" data-hl="left" style="width:100%"></label><label>Width: <input type="number" step="0.5" value="32" data-part="distributor" data-hl="width" style="width:100%"></label><label>Height: <input type="number" step="0.5" value="46" data-part="distributor" data-hl="height" style="width:100%"></label><label>Radius: <input type="text" value="20%" data-part="distributor" data-hl="radius" style="width:100%"></label></div></div></div><div style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><strong>Part Key: <input type="text" value="header" data-oldkey="header" class="part-key-input" style="font-weight:bold; width:120px; padding:2px 4px;"></strong><button type="button" onclick="deletePart('header')" style="background: #E60012; color: #fff; border:none; padding: 2px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button></div><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;"><label>Display Title: <input type="text" value="Header" data-part="header" data-prop="title" style="width:100%"></label><label>Image URL/Path: <div style="display:flex; gap:4px;"><input type="text" value="images/Outheader.png" data-part="header" data-prop="image" id="img_path_header" style="width:100%"><input type="file" accept="image/*" onchange="uploadPartImage(this, 'header')" style="font-size:0.7rem; width:80px;"></div></label></div><div style="margin-bottom: 8px;"><label>Options (คั่นด้วยจุลภาค ,):</label><input type="text" value="(M) Brazing point, (N) Burring, (O) Spinding" data-part="header" data-prop="options" style="width:100%"></div><div><strong>พิกัดไฮไลต์ (%):</strong><div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px;"><label>Top: <input type="number" step="0.5" value="2" data-part="header" data-hl="top" style="width:100%"></label><label>Left: <input type="number" step="0.5" value="69" data-part="header" data-hl="left" style="width:100%"></label><label>Width: <input type="number" step="0.5" value="32" data-part="header" data-hl="width" style="width:100%"></label><label>Height: <input type="number" step="0.5" value="46" data-part="header" data-hl="height" style="width:100%"></label><label>Radius: <input type="text" value="20%" data-part="header" data-hl="radius" style="width:100%"></label></div></div></div><div style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><strong>Part Key: <input type="text" value="pipe" data-oldkey="pipe" class="part-key-input" style="font-weight:bold; width:120px; padding:2px 4px;"></strong><button type="button" onclick="deletePart('pipe')" style="background: #E60012; color: #fff; border:none; padding: 2px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button></div><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;"><label>Display Title: <input type="text" value="Pipe Assy" data-part="pipe" data-prop="title" style="width:100%"></label><label>Image URL/Path: <div style="display:flex; gap:4px;"><input type="text" value="images/Outpipeassy.png" data-part="pipe" data-prop="image" id="img_path_pipe" style="width:100%"><input type="file" accept="image/*" onchange="uploadPartImage(this, 'pipe')" style="font-size:0.7rem; width:80px;"></div></label></div><div style="margin-bottom: 8px;"><label>Options (คั่นด้วยจุลภาค ,):</label><input type="text" value="(P) Sensor holder, (Q) Discharge pipe, (R) Suction pipe" data-part="pipe" data-prop="options" style="width:100%"></div><div><strong>พิกัดไฮไลต์ (%):</strong><div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px;"><label>Top: <input type="number" step="0.5" value="1.5" data-part="pipe" data-hl="top" style="width:100%"></label><label>Left: <input type="number" step="0.5" value="35" data-part="pipe" data-hl="left" style="width:100%"></label><label>Width: <input type="number" step="0.5" value="14" data-part="pipe" data-hl="width" style="width:100%"></label><label>Height: <input type="number" step="0.5" value="98" data-part="pipe" data-hl="height" style="width:100%"></label><label>Radius: <input type="text" value="20%" data-part="pipe" data-hl="radius" style="width:100%"></label></div></div></div><div style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><strong>Part Key: <input type="text" value="expansion" data-oldkey="expansion" class="part-key-input" style="font-weight:bold; width:120px; padding:2px 4px;"></strong><button type="button" onclick="deletePart('expansion')" style="background: #E60012; color: #fff; border:none; padding: 2px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button></div><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;"><label>Display Title: <input type="text" value="Expansion pipe" data-part="expansion" data-prop="title" style="width:100%"></label><label>Image URL/Path: <div style="display:flex; gap:4px;"><input type="text" value="images/Outexpansion.png" data-part="expansion" data-prop="image" id="img_path_expansion" style="width:100%"><input type="file" accept="image/*" onchange="uploadPartImage(this, 'expansion')" style="font-size:0.7rem; width:80px;"></div></label></div><div style="margin-bottom: 8px;"><label>Options (คั่นด้วยจุลภาค ,):</label><input type="text" value="(S) Valve body, (T) Strainer, (U) Cap tube" data-part="expansion" data-prop="options" style="width:100%"></div><div><strong>พิกัดไฮไลต์ (%):</strong><div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px;"><label>Top: <input type="number" step="0.5" value="2" data-part="expansion" data-hl="top" style="width:100%"></label><label>Left: <input type="number" step="0.5" value="50" data-part="expansion" data-hl="left" style="width:100%"></label><label>Width: <input type="number" step="0.5" value="18" data-part="expansion" data-hl="width" style="width:100%"></label><label>Height: <input type="number" step="0.5" value="96" data-part="expansion" data-hl="height" style="width:100%"></label><label>Radius: <input type="text" value="20%" data-part="expansion" data-hl="radius" style="width:100%"></label></div></div></div></div>
+  <div id="editorPartsContainer" style="display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; margin-bottom: 15px; padding-right: 4px;"></div>
   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
     <button type="button" onclick="saveLayoutChanges()" style="background: var(--success-green); color: #fff; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">💾 บันทึกชั่วคราว</button>
     <button type="button" onclick="updateHtmlFile()" style="background: #E60012; color: #fff; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">⚡ อัปเดตโค้ด HTML</button>
     <button type="button" onclick="resetLayoutChanges()" style="background: var(--text-muted); color: #fff; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">🔄 รีเซ็ตค่าเดิม</button>
   </div>
 </div>
+
 <script>
   const uploadedImages = {};
-        /* CONFIG START */
+  /* CONFIG START */
   let reportConfig = {
     "formTitle": "Checking Part Report (Outdoor Heat Exchanger)",
     "overallImage": "images/OutdoorOV.png",
     "overallOptions": [
-        {
-            "key": "hairpin",
-            "label": "Hair-pin tube side"
-        },
-        {
-            "key": "ubend",
-            "label": "U-bend tube side"
-        },
-        {
-            "key": "Heat Exchanger",
-            "label": "Middle coil"
-        },
-        {
-            "key": "distributor",
-            "label": "Distributor"
-        },
-        {
-            "key": "header",
-            "label": "Header"
-        },
-        {
-            "key": "pipe",
-            "label": "Pipe Assy"
-        },
-        {
-            "key": "expansion",
-            "label": "Expansion pipe"
-        }
+        { "key": "hairpin", "label": "Hair-pin tube side" },
+        { "key": "ubend", "label": "U-bend tube side" },
+        { "key": "Heat Exchanger", "label": "Middle coil" },
+        { "key": "distributor", "label": "Distributor" },
+        { "key": "header", "label": "Header" },
+        { "key": "pipe", "label": "Pipe Assy" },
+        { "key": "expansion", "label": "Expansion pipe" }
     ],
     "parts": {
         "hairpin": {
             "title": "Hair-pin tube side",
             "image": "images/Out hair-pin.png",
-            "options": [
-                "(A) Arc of hair-pin tube",
-                "(B) Point which is touched with the metal plate"
-            ],
-            "highlight": {
-                "top": 2,
-                "left": 3,
-                "width": 6,
-                "height": 85,
-                "radius": "20%"
-            }
+            "options": [ "(A) Arc of hair-pin tube", "(B) Point which is touched with the metal plate" ],
+            "highlight": { "top": 2, "left": 3, "width": 6, "height": 85, "radius": "20%" }
         },
         "ubend": {
             "title": "U-bend tube side",
             "image": "images/Out u-bend.png",
-            "options": [
-                "(C) Arc of U-bend tube",
-                "(D) Brazing point of U-bend tube",
-                "(E) Point which is touched with the metal plate",
-                "(F) Brazing point of pipe component"
-            ],
-            "highlight": {
-                "top": 12,
-                "left": 24,
-                "width": 8,
-                "height": 90,
-                "radius": "20%"
-            }
+            "options": [ "(C) Arc of U-bend tube", "(D) Brazing point of U-bend tube", "(E) Point which is touched with the metal plate", "(F) Brazing point of pipe component" ],
+            "highlight": { "top": 12, "left": 24, "width": 8, "height": 90, "radius": "20%" }
         },
         "Heat Exchanger": {
             "title": "Middle coil",
             "image": "images/Out inside heat exchanger.png",
-            "options": [
-                "(G) The flat back of Heat Exchanger",
-                "(H) The flat side of Heat Exchanger",
-                "(I) The curved area of Heat Exchanger"
-            ],
-            "highlight": {
-                "top": 2,
-                "left": 10,
-                "width": 13,
-                "height": 90,
-                "radius": "20%"
-            }
+            "options": [ "(G) The flat back of Heat Exchanger", "(H) The flat side of Heat Exchanger", "(I) The curved area of Heat Exchanger" ],
+            "highlight": { "top": 2, "left": 10, "width": 13, "height": 90, "radius": "20%" }
         },
         "distributor": {
             "title": "Distributor",
             "image": "images/Outdistributor.png",
-            "options": [
-                "(J) Cap tube",
-                "(K) Brazing(brass)",
-                "(L) Brazing point"
-            ],
-            "highlight": {
-                "top": 53,
-                "left": 69,
-                "width": 32,
-                "height": 46,
-                "radius": "20%"
-            }
+            "options": [ "(J) Cap tube", "(K) Brazing(brass)", "(L) Brazing point" ],
+            "highlight": { "top": 53, "left": 69, "width": 32, "height": 46, "radius": "20%" }
         },
         "header": {
             "title": "Header",
             "image": "images/Outheader.png",
-            "options": [
-                "(M) Brazing point",
-                "(N) Burring",
-                "(O) Spinding"
-            ],
-            "highlight": {
-                "top": 2,
-                "left": 69,
-                "width": 32,
-                "height": 46,
-                "radius": "20%"
-            }
+            "options": [ "(M) Brazing point", "(N) Burring", "(O) Spinding" ],
+            "highlight": { "top": 2, "left": 69, "width": 32, "height": 46, "radius": "20%" }
         },
         "pipe": {
             "title": "Pipe Assy",
             "image": "images/Outpipeassy.png",
-            "options": [
-                "(P) Sensor holder",
-                "(Q) Discharge pipe",
-                "(R) Suction pipe"
-            ],
-            "highlight": {
-                "top": 1.5,
-                "left": 35,
-                "width": 14,
-                "height": 98,
-                "radius": "20%"
-            }
+            "options": [ "(P) Sensor holder", "(Q) Discharge pipe", "(R) Suction pipe" ],
+            "highlight": { "top": 1.5, "left": 35, "width": 14, "height": 98, "radius": "20%" }
         },
         "expansion": {
             "title": "Expansion pipe",
             "image": "images/Outexpansion.png",
-            "options": [
-                "(S) Valve body",
-                "(T) Strainer",
-                "(U) Cap tube"
-            ],
-            "highlight": {
-                "top": 2,
-                "left": 50,
-                "width": 18,
-                "height": 96,
-                "radius": "20%"
-            }
+            "options": [ "(S) Valve body", "(T) Strainer", "(U) Cap tube" ],
+            "highlight": { "top": 2, "left": 50, "width": 18, "height": 96, "radius": "20%" }
         }
     }
-};
+  };
   /* CONFIG END */
+
   function renderForm() {
     document.getElementById('displayFormTitle').textContent = reportConfig.formTitle;
     document.getElementById('pageHeaderTitle').textContent = reportConfig.formTitle;
@@ -330,6 +243,7 @@
     techContainer.innerHTML = techHTML;
     filterInspectionSections();
   }
+
   function promptEditorMode() {
     const panel = document.getElementById('editorPanel');
     if (panel.style.display === 'block') {
@@ -345,6 +259,7 @@
       }
     }
   }
+
   function renderEditorFields() {
     document.getElementById('editFormTitle').value = reportConfig.formTitle;
     document.getElementById('editOverallImg').value = reportConfig.overallImage;
@@ -360,6 +275,7 @@
       container.appendChild(div);
     }
   }
+
   function uploadOverallImage(input) {
     if (input.files && input.files[0]) {
       const reader = new FileReader();
@@ -367,6 +283,7 @@
       reader.readAsDataURL(input.files[0]);
     }
   }
+
   function uploadPartImage(input, key) {
     if (input.files && input.files[0]) {
       const reader = new FileReader();
@@ -374,17 +291,20 @@
       reader.readAsDataURL(input.files[0]);
     }
   }
+
   function addNewPart() {
     const newKey = 'part_' + Date.now();
     reportConfig.parts[newKey] = { title: "New Part Name", image: "", options: ["Option 1", "Option 2"], highlight: { top: 10, left: 10, width: 15, height: 15, radius: "40%" } };
     renderEditorFields();
   }
+
   function deletePart(key) {
     if (confirm('คุณต้องการลบ Part นี้ใช่หรือไม่?')) {
       delete reportConfig.parts[key];
       renderEditorFields();
     }
   }
+
   function saveLayoutChangesFromEditor() {
     reportConfig.formTitle = document.getElementById('editFormTitle').value;
     reportConfig.overallImage = document.getElementById('editOverallImg').value;
@@ -421,20 +341,18 @@
     localStorage.setItem('reportConfig', JSON.stringify(reportConfig));
     renderForm();
   }
+
   function saveLayoutChanges() {
     saveLayoutChangesFromEditor();
     alert('บันทึกการตั้งค่าชั่วคราวเรียบร้อยแล้ว!');
   }
+
   function updateHtmlFile() {
     saveLayoutChangesFromEditor();
-    
-    // ซ่อนแผง Editor และลบค่าที่กรอกค้างในหน้าปัจจุบันก่อนดึง HTML
     const panel = document.getElementById('editorPanel');
     panel.style.display = 'none';
 
     let htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-    
-    // อัปเดต CONFIG ใหม่เข้าไป
     const newConfigCode = `  /* CONFIG START */\n  let reportConfig = ${JSON.stringify(reportConfig, null, 4)};\n  /* CONFIG END */`;
     htmlContent = htmlContent.replace(/\/\* CONFIG START \*\/[\s\S]*?\/\* CONFIG END \*\//, newConfigCode);
 
@@ -450,10 +368,12 @@
 
     alert('อัปเดตและดาวน์โหลดไฟล์ HTML สำเร็จเรียบร้อยแล้ว!');
   }
+
   function resetLayoutChanges() {
     localStorage.removeItem('reportConfig');
     location.reload();
   }
+
   function filterInspectionSections() {
     const checkboxes = document.querySelectorAll('input[name="overall_part"]');
     const checkedValues = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value.trim());
@@ -476,6 +396,7 @@
     });
     technicalSection.style.display = (visibleCount === 0 && checkedValues.length > 0) ? 'none' : 'block';
   }
+
   async function handleImageUpload(fileInput, title, cardId, zoneId) {
     let file = fileInput.files[0];
     const zoneElement = document.getElementById(zoneId);
@@ -520,6 +441,7 @@
       updateSummarySection();
     }
   }
+
   function updateAttachedComments() {
     for (const key of Object.keys(reportConfig.parts)) {
       const cardId = 'attach_' + key;
@@ -534,6 +456,7 @@
     renderAttachedPictures();
     updateSummarySection();
   }
+
   function renderAttachedPictures() {
     const section = document.getElementById('section_attached_pictures');
     const container = document.getElementById('attached_container');
@@ -552,6 +475,7 @@
       container.appendChild(card);
     });
   }
+
   function updateSummarySection() {
     const section = document.getElementById('section_inspection_summary');
     const summaryContent = document.getElementById('summary_comment_content');
@@ -572,6 +496,7 @@
       summaryContent.innerHTML = summaryHTML;
     }
   }
+
   function generatePDF() {
     const reportNoInput = document.getElementById('serviceReportNo');
     if (!reportNoInput.value.trim()) {
@@ -583,8 +508,8 @@
     renderAttachedPictures();
     setTimeout(() => { window.print(); }, 100);
   }
+
   window.addEventListener('DOMContentLoaded', () => {
-    // โหลดค่าที่เคยบันทึกไว้ในเครื่องขึ้นมาใช้งาน (ถ้ามี)
     const savedConfig = localStorage.getItem('reportConfig');
     if (savedConfig) {
       try {
@@ -596,6 +521,5 @@
     renderForm();
   });
 </script>
-
-
-</body></html>
+</body>
+</html>
