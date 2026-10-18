@@ -44,8 +44,8 @@
     .highlight-overlay-container img { display: block; width: 100%; height: auto; max-height: none; margin: 0 auto; object-fit: contain; }
     .map-highlight { position: absolute; border: 3px solid #E60012; border-radius: 50%; pointer-events: none; display: none; box-shadow: 0 0 8px rgba(230, 0, 18, 0.6); background: rgba(230, 0, 18, 0.08); }
     .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 6px; margin-bottom: 8px; }
-    .custom-check { display: flex; align-items: flex-start; gap: 6px; padding: 4px 6px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.75rem; cursor: pointer; }
-    .custom-check input[type="checkbox"] { accent-color: var(--primary-red); width: 13px; height: 13px; }
+    .custom-check { display: flex; align-items: flex-start; gap: 6px; padding: 6px 8px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: 500; transition: all 0.2s ease; }
+    .custom-check input[type="checkbox"] { accent-color: var(--primary-red); width: 13px; height: 13px; margin-top: 1px; }
     .upload-zone { position: relative; border: 1px dashed #CBD5E1; border-radius: 6px; padding: 6px; background: #FAFAFA; text-align: center; cursor: pointer; margin-bottom: 8px; }
     .upload-zone.has-file { background: var(--success-bg); border: 1px solid var(--success-green); }
     .upload-zone input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
@@ -64,6 +64,11 @@
     .designer-fab { position: fixed; bottom: 16px; right: 16px; z-index: 9999; background: #111111; color: #FFFFFF; width: 38px; height: 38px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,0.3); opacity: 0.7; transition: opacity 0.2s, transform 0.2s; }
     .designer-fab:hover { opacity: 1; transform: scale(1.08); }
     .editor-panel-box { display: none; background: #FFFFFF; border: 2px solid var(--primary-red); padding: 16px; margin: 16px auto; max-width: 980px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    
+    /* สไตล์จานสีและรายการ Option ใน Designer Panel */
+    .editor-option-row { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; background: #FFF; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 6px; }
+    .color-picker-btn { width: 28px; height: 28px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0; cursor: pointer; background: none; }
+
     @media (max-width: 768px) {
       .brand-header { flex-direction: column; align-items: stretch; gap: 12px; padding: 14px 16px; }
       .report-badge { justify-content: space-between; width: 100%; }
@@ -84,7 +89,7 @@
 <div class="app-container" id="reportContent">
   <header class="brand-header">
     <div class="brand-logo-container"><img src="images/Picture1.png" alt="Mitsubishi Heavy Industries" class="brand-logo-img"></div>
-    <div class="report-badge"><span>Service Report No:</span><input type="text" id="serviceReportNo" placeholder="Ref.Job No." value="" required=""></div>
+    <div class="report-badge"><span>Service Report No:</span><input type="text" id="serviceReportNo" placeholder="Ref.Job No." value="" required></div>
   </header>
   <main class="form-body">
     <h1 class="page-title" id="displayFormTitle">Checking Part Report (Outdoor Heat Exchanger)</h1>
@@ -104,7 +109,7 @@
         </div>
         <div class="options-grid" id="overallOptionsGrid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));"></div>
       </section>
-      <section class="section-card hide-on-pdf" id="section_technical" style="display: block;">
+      <section class="section-card hide-on-pdf" id="section_technical">
         <div class="section-title"><span>Technical Inspection &amp; Defect Locations</span></div>
         <div class="parts-container" id="technicalPartsContainer"></div>
       </section>
@@ -124,9 +129,9 @@
 </div>
 
 <button type="button" class="designer-fab hide-on-pdf" onclick="promptEditorMode()" title="Designer Mode">⚙️</button>
-<div id="editorPanel" class="editor-panel-box hide-on-pdf" style="display: none;">
+<div id="editorPanel" class="editor-panel-box hide-on-pdf">
   <h3 style="margin-bottom: 10px; color: var(--primary-red);">Designer &amp; Layout Editor</h3>
-  <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">ปรับแต่งชื่อฟอร์ม, รูปภาพ Overall, เพิ่ม/ลดตัวเลือก Overall, และจัดการ Parts ได้อย่างอิสระ</p>
+  <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">ปรับแต่งชื่อฟอร์ม, รูปภาพ Overall, เพิ่ม/ลดตัวเลือก Overall, และจัดการ Parts พร้อมกำหนดสีรายชอยส์ได้อย่างอิสระ</p>
   <div style="margin-bottom: 14px; background: #F8FAFC; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
     <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 4px;">ชื่อฟอร์ม (Form Title):</label>
     <input type="text" id="editFormTitle" class="input-control" style="background:#fff;">
@@ -142,7 +147,7 @@
     <strong>รายการ Parts ทั้งหมดใน Technical Inspection:</strong>
     <button type="button" onclick="addNewPart()" style="background: var(--success-green); color: #fff; border:none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor:pointer;">➕ เพิ่ม Part ใหม่</button>
   </div>
-  <div id="editorPartsContainer" style="display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; margin-bottom: 15px; padding-right: 4px;"></div>
+  <div id="editorPartsContainer" style="display: flex; flex-direction: column; gap: 10px; max-height: 380px; overflow-y: auto; margin-bottom: 15px; padding-right: 4px;"></div>
   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
     <button type="button" onclick="saveLayoutChanges()" style="background: var(--success-green); color: #fff; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">💾 บันทึกชั่วคราว</button>
     <button type="button" onclick="updateHtmlFile()" style="background: #E60012; color: #fff; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">⚡ อัปเดตโค้ด HTML</button>
@@ -169,52 +174,89 @@
         "hairpin": {
             "title": "Hair-pin tube side",
             "image": "images/Out hair-pin.png",
-            "options": [ "(A) Arc of hair-pin tube", "(B) Point which is touched with the metal plate" ],
+            "options": [
+              { "label": "(A) Arc of hair-pin tube", "bgColor": "#FEE2E2", "textColor": "#991B1B" },
+              { "label": "(B) Point which is touched with the metal plate", "bgColor": "#FEF3C7", "textColor": "#92400E" }
+            ],
             "highlight": { "top": 2, "left": 3, "width": 6, "height": 85, "radius": "20%" }
         },
         "ubend": {
             "title": "U-bend tube side",
             "image": "images/Out u-bend.png",
-            "options": [ "(C) Arc of U-bend tube", "(D) Brazing point of U-bend tube", "(E) Point which is touched with the metal plate", "(F) Brazing point of pipe component" ],
+            "options": [
+              { "label": "(C) Arc of U-bend tube", "bgColor": "#FEE2E2", "textColor": "#991B1B" },
+              { "label": "(D) Brazing point of U-bend tube", "bgColor": "#FEF3C7", "textColor": "#92400E" },
+              { "label": "(E) Point which is touched with the metal plate", "bgColor": "#E0E7FF", "textColor": "#3730A3" },
+              { "label": "(F) Brazing point of pipe component", "bgColor": "#DCFCE7", "textColor": "#166534" }
+            ],
             "highlight": { "top": 12, "left": 24, "width": 8, "height": 90, "radius": "20%" }
         },
         "Heat Exchanger": {
             "title": "Middle coil",
             "image": "images/Out inside heat exchanger.png",
-            "options": [ "(G) The flat back of Heat Exchanger", "(H) The flat side of Heat Exchanger", "(I) The curved area of Heat Exchanger" ],
+            "options": [
+              { "label": "(G) The flat back of Heat Exchanger", "bgColor": "#FEE2E2", "textColor": "#991B1B" },
+              { "label": "(H) The flat side of Heat Exchanger", "bgColor": "#FEF3C7", "textColor": "#92400E" },
+              { "label": "(I) The curved area of Heat Exchanger", "bgColor": "#E0E7FF", "textColor": "#3730A3" }
+            ],
             "highlight": { "top": 2, "left": 10, "width": 13, "height": 90, "radius": "20%" }
         },
         "distributor": {
             "title": "Distributor",
             "image": "images/Outdistributor.png",
-            "options": [ "(J) Cap tube", "(K) Brazing(brass)", "(L) Brazing point" ],
+            "options": [
+              { "label": "(J) Cap tube", "bgColor": "#FEE2E2", "textColor": "#991B1B" },
+              { "label": "(K) Brazing(brass)", "bgColor": "#FEF3C7", "textColor": "#92400E" },
+              { "label": "(L) Brazing point", "bgColor": "#E0E7FF", "textColor": "#3730A3" }
+            ],
             "highlight": { "top": 53, "left": 69, "width": 32, "height": 46, "radius": "20%" }
         },
         "header": {
             "title": "Header",
             "image": "images/Outheader.png",
-            "options": [ "(M) Brazing point", "(N) Burring", "(O) Spinding" ],
+            "options": [
+              { "label": "(M) Brazing point", "bgColor": "#FEE2E2", "textColor": "#991B1B" },
+              { "label": "(N) Burring", "bgColor": "#FEF3C7", "textColor": "#92400E" },
+              { "label": "(O) Spinding", "bgColor": "#E0E7FF", "textColor": "#3730A3" }
+            ],
             "highlight": { "top": 2, "left": 69, "width": 32, "height": 46, "radius": "20%" }
         },
         "pipe": {
             "title": "Pipe Assy",
             "image": "images/Outpipeassy.png",
-            "options": [ "(P) Sensor holder", "(Q) Discharge pipe", "(R) Suction pipe" ],
+            "options": [
+              { "label": "(P) Sensor holder", "bgColor": "#FEE2E2", "textColor": "#991B1B" },
+              { "label": "(Q) Discharge pipe", "bgColor": "#FEF3C7", "textColor": "#92400E" },
+              { "label": "(R) Suction pipe", "bgColor": "#E0E7FF", "textColor": "#3730A3" }
+            ],
             "highlight": { "top": 1.5, "left": 35, "width": 14, "height": 98, "radius": "20%" }
         },
         "expansion": {
             "title": "Expansion pipe",
             "image": "images/Outexpansion.png",
-            "options": [ "(S) Valve body", "(T) Strainer", "(U) Cap tube" ],
+            "options": [
+              { "label": "(S) Valve body", "bgColor": "#FEE2E2", "textColor": "#991B1B" },
+              { "label": "(T) Strainer", "bgColor": "#FEF3C7", "textColor": "#92400E" },
+              { "label": "(U) Cap tube", "bgColor": "#E0E7FF", "textColor": "#3730A3" }
+            ],
             "highlight": { "top": 2, "left": 50, "width": 18, "height": 96, "radius": "20%" }
         }
     }
   };
   /* CONFIG END */
 
+  function normalizeOption(opt) {
+    if (typeof opt === 'string') {
+      const parts = opt.split('|');
+      return { label: parts[0].trim(), bgColor: parts[1] || '#F8FAFC', textColor: parts[2] || '#1E293B' };
+    }
+    return { label: opt.label || '', bgColor: opt.bgColor || '#F8FAFC', textColor: opt.textColor || '#1E293B' };
+  }
+
   function renderForm() {
     document.getElementById('displayFormTitle').textContent = reportConfig.formTitle;
     document.getElementById('pageHeaderTitle').textContent = reportConfig.formTitle;
+    
     const overviewContainer = document.getElementById('overviewContainer');
     let overviewHTML = `<img src="${reportConfig.overallImage}" alt="Drawing Overall" id="overviewImage">`;
     for (const [key, part] of Object.entries(reportConfig.parts)) {
@@ -223,6 +265,7 @@
       }
     }
     overviewContainer.innerHTML = overviewHTML;
+    
     const overallOptionsGrid = document.getElementById('overallOptionsGrid');
     let overallOptsHTML = '';
     if (reportConfig.overallOptions && Array.isArray(reportConfig.overallOptions)) {
@@ -231,12 +274,14 @@
       });
     }
     overallOptionsGrid.innerHTML = overallOptsHTML;
+    
     const techContainer = document.getElementById('technicalPartsContainer');
     let techHTML = '';
     for (const [key, part] of Object.entries(reportConfig.parts)) {
       let optionsHTML = '';
-      part.options.forEach(opt => {
-        optionsHTML += `<label class="custom-check"><input type="checkbox" name="${key}" value="${opt}" onchange="updateAttachedComments()"> ${opt}</label>`;
+      const opts = (part.options || []).map(normalizeOption);
+      opts.forEach(opt => {
+        optionsHTML += `<label class="custom-check" style="background-color: ${opt.bgColor}; color: ${opt.textColor}; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="${key}" value="${opt.label}" onchange="updateAttachedComments()"> ${opt.label}</label>`;
       });
       techHTML += `<div class="part-item-card" data-key="${key}" data-title="${part.title}"><div class="part-header"><span class="part-title-text">${part.title}</span></div><div class="image-preview-box"><img src="${part.image}" alt="${part.title}"></div><div class="options-grid">${optionsHTML}</div><div class="upload-zone hide-on-pdf" id="zone_${key}"><input type="file" id="pic_${key}" accept="image/*" onchange="handleImageUpload(this, '${part.title}', 'attach_${key}', 'zone_${key}')"><div class="upload-label">📷 Attach Defect Image</div></div></div>`;
     }
@@ -268,12 +313,83 @@
     }
     const container = document.getElementById('editorPartsContainer');
     container.innerHTML = '';
+    
     for (const [key, part] of Object.entries(reportConfig.parts)) {
       const div = document.createElement('div');
+      div.className = 'part-editor-card';
       div.style.cssText = 'background: #F8FAFC; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;';
-      div.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><strong>Part Key: <input type="text" value="${key}" data-oldkey="${key}" class="part-key-input" style="font-weight:bold; width:120px; padding:2px 4px;"></strong><button type="button" onclick="deletePart('${key}')" style="background: #E60012; color: #fff; border:none; padding: 2px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button></div><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;"><label>Display Title: <input type="text" value="${part.title}" data-part="${key}" data-prop="title" style="width:100%"></label><label>Image URL/Path: <div style="display:flex; gap:4px;"><input type="text" value="${part.image}" data-part="${key}" data-prop="image" id="img_path_${key}" style="width:100%"><input type="file" accept="image/*" onchange="uploadPartImage(this, '${key}')" style="font-size:0.7rem; width:80px;"></div></label></div><div style="margin-bottom: 8px;"><label>Options (คั่นด้วยจุลภาค ,):</label><input type="text" value="${part.options.join(', ')}" data-part="${key}" data-prop="options" style="width:100%"></div><div><strong>พิกัดไฮไลต์ (%):</strong><div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px;"><label>Top: <input type="number" step="0.5" value="${part.highlight ? part.highlight.top : 10}" data-part="${key}" data-hl="top" style="width:100%"></label><label>Left: <input type="number" step="0.5" value="${part.highlight ? part.highlight.left : 10}" data-part="${key}" data-hl="left" style="width:100%"></label><label>Width: <input type="number" step="0.5" value="${part.highlight ? part.highlight.width : 15}" data-part="${key}" data-hl="width" style="width:100%"></label><label>Height: <input type="number" step="0.5" value="${part.highlight ? part.highlight.height : 15}" data-part="${key}" data-hl="height" style="width:100%"></label><label>Radius: <input type="text" value="${part.highlight ? part.highlight.radius : '40%'}" data-part="${key}" data-hl="radius" style="width:100%"></label></div></div>`;
+      
+      let optionsEditorHTML = '';
+      const opts = (part.options || []).map(normalizeOption);
+      opts.forEach((opt, idx) => {
+        optionsEditorHTML += `
+          <div class="editor-option-row" id="opt_row_${key}_${idx}">
+            <input type="text" value="${opt.label}" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
+            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
+            <input type="color" value="${opt.bgColor}" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
+            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
+            <input type="color" value="${opt.textColor}" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
+            <button type="button" onclick="removeOptionRow('${key}', ${idx})" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
+          </div>
+        `;
+      });
+
+      div.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <strong>Part Key: <input type="text" value="${key}" data-oldkey="${key}" class="part-key-input" style="font-weight:bold; width:120px; padding:2px 4px;"></strong>
+          <button type="button" onclick="deletePart('${key}')" style="background: #E60012; color: #fff; border:none; padding: 2px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+          <label>Display Title: <input type="text" value="${part.title}" data-part="${key}" data-prop="title" style="width:100%" class="input-control"></label>
+          <label>Image URL/Path: 
+            <div style="display:flex; gap:4px;">
+              <input type="text" value="${part.image}" data-part="${key}" data-prop="image" id="img_path_${key}" style="width:100%" class="input-control">
+              <input type="file" accept="image/*" onchange="uploadPartImage(this, '${key}')" style="font-size:0.7rem; width:80px;">
+            </div>
+          </label>
+        </div>
+        <div style="margin-bottom: 8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <label style="font-weight:600;">ตัวเลือก (Options) & สีเฉพาะตัว:</label>
+            <button type="button" onclick="addOptionRow('${key}')" style="background:var(--success-green); color:#fff; border:none; padding:2px 8px; border-radius:4px; font-size:0.7rem; cursor:pointer;">➕ เพิ่มชอยส์</button>
+          </div>
+          <div id="options_list_${key}">${optionsEditorHTML}</div>
+        </div>
+        <div>
+          <strong>พิกัดไฮไลต์ (%):</strong>
+          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px;">
+            <label>Top: <input type="number" step="0.5" value="${part.highlight ? part.highlight.top : 10}" data-part="${key}" data-hl="top" style="width:100%"></label>
+            <label>Left: <input type="number" step="0.5" value="${part.highlight ? part.highlight.left : 10}" data-part="${key}" data-hl="left" style="width:100%"></label>
+            <label>Width: <input type="number" step="0.5" value="${part.highlight ? part.highlight.width : 15}" data-part="${key}" data-hl="width" style="width:100%"></label>
+            <label>Height: <input type="number" step="0.5" value="${part.highlight ? part.highlight.height : 15}" data-part="${key}" data-hl="height" style="width:100%"></label>
+            <label>Radius: <input type="text" value="${part.highlight ? part.highlight.radius : '40%'}" data-part="${key}" data-hl="radius" style="width:100%"></label>
+          </div>
+        </div>
+      `;
       container.appendChild(div);
     }
+  }
+
+  function addOptionRow(key) {
+    const listContainer = document.getElementById(`options_list_${key}`);
+    const idx = Date.now();
+    const div = document.createElement('div');
+    div.className = 'editor-option-row';
+    div.id = `opt_row_${key}_${idx}`;
+    div.innerHTML = `
+      <input type="text" value="New Option" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
+      <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
+      <input type="color" value="#FEE2E2" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
+      <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
+      <input type="color" value="#991B1B" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
+      <button type="button" onclick="removeOptionRow('${key}', '${idx}')" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
+    `;
+    listContainer.appendChild(div);
+  }
+
+  function removeOptionRow(key, idx) {
+    const row = document.getElementById(`opt_row_${key}_${idx}`);
+    if (row) row.remove();
   }
 
   function uploadOverallImage(input) {
@@ -283,7 +399,7 @@
       reader.readAsDataURL(input.files[0]);
     }
   }
-
+  
   function uploadPartImage(input, key) {
     if (input.files && input.files[0]) {
       const reader = new FileReader();
@@ -294,7 +410,12 @@
 
   function addNewPart() {
     const newKey = 'part_' + Date.now();
-    reportConfig.parts[newKey] = { title: "New Part Name", image: "", options: ["Option 1", "Option 2"], highlight: { top: 10, left: 10, width: 15, height: 15, radius: "40%" } };
+    reportConfig.parts[newKey] = { 
+      title: "New Part Name", 
+      image: "", 
+      options: [{ label: "Option 1", bgColor: "#FEE2E2", textColor: "#991B1B" }], 
+      highlight: { top: 10, left: 10, width: 15, height: 15, radius: "40%" } 
+    };
     renderEditorFields();
   }
 
@@ -320,16 +441,27 @@
       }
     });
     reportConfig.overallOptions = parsedOpts;
-    const partDivs = document.querySelectorAll('#editorPartsContainer > div');
+
+    const partCards = document.querySelectorAll('#editorPartsContainer > div.part-editor-card');
     const newParts = {};
-    partDivs.forEach(div => {
+    partCards.forEach(div => {
       const keyInput = div.querySelector('.part-key-input');
       const oldKey = keyInput.getAttribute('data-oldkey');
       const newKey = keyInput.value.trim() || oldKey;
       const title = div.querySelector(`[data-prop="title"]`).value;
       const image = div.querySelector(`[data-prop="image"]`).value;
-      const optionsRaw = div.querySelector(`[data-prop="options"]`).value;
-      const options = optionsRaw.split(',').map(s => s.trim()).filter(s => s.length > 0);
+
+      const optionRows = div.querySelectorAll('.editor-option-row');
+      const options = [];
+      optionRows.forEach(row => {
+        const label = row.querySelector('.opt-label-input').value.trim();
+        const bgColor = row.querySelector('.opt-bg-picker').value;
+        const textColor = row.querySelector('.opt-text-picker').value;
+        if (label) {
+          options.push({ label, bgColor, textColor });
+        }
+      });
+
       const top = parseFloat(div.querySelector(`[data-hl="top"]`).value) || 0;
       const left = parseFloat(div.querySelector(`[data-hl="left"]`).value) || 0;
       const width = parseFloat(div.querySelector(`[data-hl="width"]`).value) || 10;
