@@ -887,12 +887,15 @@
     }
 
     for (const key of Object.keys(reportConfig.parts)) {
+      const partCfg = reportConfig.parts[key];
       ['vm', 'vcc', 'vsp', 'vfg'].forEach(p => {
         const valElem = document.getElementById(`val_${key}_${p}`);
         const statusElem = document.getElementById(`status_${key}_${p}`);
         if (valElem && valElem.value.trim() !== '') {
           hasAnyComment = true;
-          summaryHTML += `<div class="summary-item-row"><span class="summary-part-name">• ${reportConfig.parts[key].title} (${p.toUpperCase()} Measured):</span> ${valElem.value} [Status: ${statusElem.textContent}]</div>`;
+          // ดึงหน่วย (unit) จาก criteria ของพารามิเตอร์นั้นๆ มาแสดงต่อท้าย
+          const unit = (partCfg.criteria && partCfg.criteria[p] && partCfg.criteria[p].unit) ? partCfg.criteria[p].unit : '';
+          summaryHTML += `<div class="summary-item-row"><span class="summary-part-name">• ${partCfg.title} (${p.toUpperCase()} Measured):</span> ${valElem.value} ${unit} [Status: ${statusElem.textContent}]</div>`;
         }
       });
     }
