@@ -199,7 +199,7 @@
 <button type="button" class="designer-fab hide-on-pdf" onclick="promptEditorMode()" title="Designer Mode">⚙️</button>
 <div id="editorPanel" class="editor-panel-box hide-on-pdf" style="display: none;">
   <h3 style="margin-bottom: 10px; color: var(--primary-red);">Designer &amp; Layout Editor</h3>
-  <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">ปรับแต่งชื่อฟอร์ม, ค่า Resistance Specification, Wire Color (สีสายไฟ), Connector และรูปภาพ Drawing ได้ที่นี่</p>
+  <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">ปรับแต่งชื่อฟอร์ม, ค่า Resistance Specification, Wire Color, Motor Lot Example และรูปภาพ Drawing ได้ที่นี่</p>
   
   <div style="margin-bottom: 14px; background: #F8FAFC; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
     <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 4px;">ชื่อฟอร์ม (Form Title):</label>
@@ -235,6 +235,8 @@
             "label1": "Motor Body & Nameplate View",
             "img2": "images/SSA512T061G(C).jpg",
             "label2": "Connector Wire & Pin View",
+            "vendorImg": "images/vendor_lot_sample.jpg",
+            "vendorLabel": "Motor Lot Number Example",
             "pins": {
                 "vm": { "pin": "6 - 4", "color": "Red - Blue" },
                 "vcc": { "pin": "3 - 4", "color": "Brown - Blue" },
@@ -258,6 +260,8 @@
             "label1": "Motor Body & Nameplate View",
             "img2": "images/SSA512T076BA(C).jpg",
             "label2": "Connector Wire & Pin View",
+            "vendorImg": "images/vendor_lot_sample.jpg",
+            "vendorLabel": "Motor Lot Number Example",
             "pins": {
                 "vm": { "pin": "6 - 4", "color": "Red - Blue" },
                 "vcc": { "pin": "3 - 4", "color": "Brown - Blue" },
@@ -281,6 +285,8 @@
             "label1": "Motor Body & Nameplate View",
             "img2": "images/SSA512T099A(C).jpg",
             "label2": "Connector Wire & Pin View",
+            "vendorImg": "images/vendor_lot_sample.jpg",
+            "vendorLabel": "Motor Lot Number Example",
             "pins": {
                 "vm": { "pin": "1 - 3", "color": "Red - Black" },
                 "vcc": { "pin": "4 - 3", "color": "White - Black" },
@@ -304,6 +310,8 @@
             "label1": "Motor Body View",
             "img2": "images/motor_connector.png",
             "label2": "Connector View",
+            "vendorImg": "images/vendor_lot_sample.jpg",
+            "vendorLabel": "Motor Lot Number Example",
             "pins": {
                 "vm": { "pin": "1 - 3", "color": "Red - Black" },
                 "vcc": { "pin": "4 - 3", "color": "White - Black" },
@@ -321,7 +329,6 @@
 };
   /* CONFIG END */
 
-  // ฟังก์ชันช่วยแปลงชื่อสี (เช่น Red, Blue, White, Black ฯลฯ) ให้แสดงเป็นสีตัวอักษรจริง
   function formatWireColorHtml(colorStr) {
     if (!colorStr) return '-';
     const colorMap = {
@@ -337,7 +344,6 @@
       'gray': '#64748B'
     };
     
-    // แยกคำตามเครื่องหมายขีด เช่น "Red - Black" หรือ "White - Black"
     return colorStr.split('-').map(part => {
       const trimmed = part.trim();
       const lower = trimmed.toLowerCase();
@@ -366,7 +372,6 @@
   }
 
   function updateDynamicMotorSpec() {
-    const part = getActivePartConfig();
     const rawPartNo = document.getElementById('partNo').value.trim();
     const placeholder = document.getElementById('spec_placeholder');
     const specContainer = document.getElementById('spec_container_dynamic');
@@ -374,19 +379,24 @@
     const chkIndoor = document.getElementById('chk_indoor_motor');
     const chkOutdoor = document.getElementById('chk_outdoor_motor');
 
+    if (!rawPartNo) {
+      chkIndoor.checked = false;
+      chkOutdoor.checked = false;
+      placeholder.style.display = 'block';
+      specContainer.style.display = 'none';
+      specContainer.innerHTML = '';
+      updateSummarySection();
+      return;
+    }
+
+    const part = getActivePartConfig();
+
     if (part.motorType === 'outdoor') {
       chkOutdoor.checked = true;
       chkIndoor.checked = false;
     } else {
       chkIndoor.checked = true;
       chkOutdoor.checked = false;
-    }
-
-    if (!rawPartNo) {
-      placeholder.style.display = 'block';
-      specContainer.style.display = 'none';
-      specContainer.innerHTML = '';
-      return;
     }
 
     placeholder.style.display = 'none';
@@ -546,6 +556,23 @@
             </div>
           </div>
 
+          <!-- ส่วน Motor Lot Number (รูปตัวอย่างขนาดเต็ม และช่องกรอกข้อมูล) -->
+          <div style="margin-bottom: 12px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 6px; padding: 12px;">
+            <div style="font-size: 0.85rem; font-weight: 700; color: var(--primary-black); margin-bottom: 8px;">Motor Lot Number</div>
+            
+            <div class="image-preview-box" style="margin-bottom: 10px;">
+              <div class="img-container">
+                <img src="${part.vendorImg || 'images/vendor_lot_sample.jpg'}" alt="${part.vendorLabel || 'Motor Lot Number Example'}">
+              </div>
+              <div class="img-caption">${part.vendorLabel || 'Motor Lot Number Example'}</div>
+            </div>
+
+            <div class="input-group">
+              <label for="val_${key}_lot">Lot Number Value:</label>
+              <input type="text" id="val_${key}_lot" class="input-control" placeholder="ระบุค่า Lot Number..." style="background:#fff;" oninput="updateSummarySection()">
+            </div>
+          </div>
+
           <table class="measure-table">
             <thead>
               <tr>
@@ -660,6 +687,10 @@
           <label>ชื่อรูป 2: <input type="text" value="${part.label2 || ''}" data-part="${key}" data-prop="label2" style="width:100%"></label>
           <label>Path รูป 2: <input type="text" value="${part.img2 || ''}" data-part="${key}" data-prop="img2" style="width:100%"></label>
         </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>Motor Lot Image Path: <input type="text" value="${part.vendorImg || ''}" data-part="${key}" data-prop="vendorImg" style="width:100%"></label>
+          <label>Motor Lot Image Label: <input type="text" value="${part.vendorLabel || ''}" data-part="${key}" data-prop="vendorLabel" style="width:100%"></label>
+        </div>
         <div style="display: grid; grid-template-columns: 1fr; gap: 6px; margin-bottom: 6px;">
           <label>Drawing Path: <input type="text" value="${part.drawingImg || ''}" data-part="${key}" data-prop="drawingImg" style="width:100%"></label>
         </div>
@@ -701,6 +732,8 @@
       label1: "Motor Body View",
       img2: "images/motor_connector.png",
       label2: "Connector View",
+      vendorImg: "images/vendor_lot_sample.jpg",
+      vendorLabel: "Motor Lot Number Example",
       pins: {
         vm: { pin: "1 - 3", color: "Red - Black" },
         vcc: { pin: "4 - 3", color: "White - Black" },
@@ -739,6 +772,8 @@
       const label2 = div.querySelector(`[data-prop="label2"]`).value;
       const img2 = div.querySelector(`[data-prop="img2"]`).value;
       const drawingImg = div.querySelector(`[data-prop="drawingImg"]`).value;
+      const vendorImg = div.querySelector(`[data-prop="vendorImg"]`).value;
+      const vendorLabel = div.querySelector(`[data-prop="vendorLabel"]`).value;
 
       const wireVm = div.querySelector(`[data-prop="wire_vm"]`).value;
       const wireVcc = div.querySelector(`[data-prop="wire_vcc"]`).value;
@@ -761,6 +796,8 @@
         label1,
         img2,
         label2,
+        vendorImg,
+        vendorLabel,
         pins: {
           vm: { pin: motorType === 'outdoor' ? "6 - 4" : "1 - 3", color: wireVm },
           vcc: { pin: motorType === 'outdoor' ? "3 - 4" : "4 - 3", color: wireVcc },
@@ -901,6 +938,13 @@
 
     for (const key of Object.keys(reportConfig.parts)) {
       const partCfg = reportConfig.parts[key];
+      
+      const lotElem = document.getElementById(`val_${key}_lot`);
+      if (lotElem && lotElem.value.trim() !== '') {
+        hasAnyComment = true;
+        summaryHTML += `<div class="summary-item-row"><span class="summary-part-name">• ${partCfg.title} (Motor Lot Number):</span> ${lotElem.value}</div>`;
+      }
+
       ['vm', 'vcc', 'vsp', 'vfg'].forEach(p => {
         const valElem = document.getElementById(`val_${key}_${p}`);
         const statusElem = document.getElementById(`status_${key}_${p}`);
