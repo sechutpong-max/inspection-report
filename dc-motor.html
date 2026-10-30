@@ -173,7 +173,7 @@
         <div id="spec_container_dynamic" class="dynamic-spec-card"></div>
       </section>
 
-      <!-- Technical Inspection & Defect Locations (ซ่อนโดยเริ่มต้น จนกว่าจะเลือก Motor Type) -->
+      <!-- Technical Inspection & Defect Locations -->
       <section class="section-card hide-on-pdf" id="section_technical" style="display: none;">
         <div class="section-title"><span>Technical Inspection &amp; Defect Locations</span></div>
         <div class="parts-container" id="technicalPartsContainer"></div>
@@ -529,7 +529,6 @@
     const chkIndoor = document.getElementById('chk_indoor_motor');
     const chkOutdoor = document.getElementById('chk_outdoor_motor');
 
-    // ตรวจสอบว่าได้เลือก DC Motor Type หรือยัง ถ้ายังไม่ได้เลือกให้ซ่อน Section นี้ไว้
     if (!chkIndoor.checked && !chkOutdoor.checked) {
       sectionTechnical.style.display = 'none';
       return;
@@ -583,20 +582,23 @@
             </div>
           </div>
 
-          <!-- ส่วน Motor Lot Number (รูปตัวอย่างขนาดเต็ม และช่องกรอกข้อมูล) -->
+          <!-- ส่วน Motor Lot Number (ซ้าย: รูปตัวอย่างขยายเต็มสูง / ขวา: ช่องกรอกข้อมูล) -->
           <div style="margin-bottom: 12px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 6px; padding: 12px;">
             <div style="font-size: 0.85rem; font-weight: 700; color: var(--primary-black); margin-bottom: 8px;">Motor Lot Number</div>
             
-            <div class="image-preview-box" style="margin-bottom: 10px;">
-              <div class="img-container">
-                <img src="${part.vendorImg || 'images/vendor_lot_sample.jpg'}" alt="${part.vendorLabel || 'Motor Lot Number Example'}">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch;">
+              <div class="image-preview-box" style="margin-bottom: 0; min-height: 260px;">
+                <div class="img-container" style="padding: 4px;">
+                  <img src="${part.vendorImg || 'images/vendor_lot_sample.jpg'}" alt="${part.vendorLabel || 'Motor Lot Number Example'}" style="max-height: 220px;">
+                </div>
+                <div class="img-caption">${part.vendorLabel || 'Motor Lot Number Example'}</div>
               </div>
-              <div class="img-caption">${part.vendorLabel || 'Motor Lot Number Example'}</div>
-            </div>
-
-            <div class="input-group">
-              <label for="val_${key}_lot">Lot Number Value:</label>
-              <input type="text" id="val_${key}_lot" class="input-control" placeholder="ระบุค่า Lot Number..." style="background:#fff;" oninput="updateSummarySection()">
+              <div style="display: flex; flex-direction: column; justify-content: center;">
+                <div class="input-group">
+                  <label for="val_${key}_lot">Lot Number Value:</label>
+                  <input type="text" id="val_${key}_lot" class="input-control" placeholder="ระบุค่า Lot Number..." style="background:#fff; padding: 12px;" oninput="updateSummarySection()">
+                </div>
+              </div>
             </div>
           </div>
 
