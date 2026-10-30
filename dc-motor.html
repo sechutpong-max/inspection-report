@@ -120,8 +120,8 @@
         <div class="section-title">Symptom (DC Motor)</div>
         <div style="margin-bottom: 10px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
           <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary-black);">DC Motor Type:</span>
-          <label class="custom-check"><input type="checkbox" id="chk_indoor_motor" name="motor_type" value="Indoor motor" onchange="updateSummarySection();"> Indoor motor</label>
-          <label class="custom-check"><input type="checkbox" id="chk_outdoor_motor" name="motor_type" value="Outdoor motor" onchange="updateSummarySection();"> Outdoor motor</label>
+          <label class="custom-check"><input type="checkbox" id="chk_indoor_motor" name="motor_type" value="Indoor motor" onchange="toggleMotorType('indoor'); updateSummarySection();"> Indoor motor</label>
+          <label class="custom-check"><input type="checkbox" id="chk_outdoor_motor" name="motor_type" value="Outdoor motor" onchange="toggleMotorType('outdoor'); updateSummarySection();"> Outdoor motor</label>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -173,8 +173,8 @@
         <div id="spec_container_dynamic" class="dynamic-spec-card"></div>
       </section>
 
-      <!-- Technical Inspection & Defect Locations -->
-      <section class="section-card hide-on-pdf" id="section_technical" style="display: block;">
+      <!-- Technical Inspection & Defect Locations (ซ่อนโดยเริ่มต้น จนกว่าจะเลือก Motor Type) -->
+      <section class="section-card hide-on-pdf" id="section_technical" style="display: none;">
         <div class="section-title"><span>Technical Inspection &amp; Defect Locations</span></div>
         <div class="parts-container" id="technicalPartsContainer"></div>
       </section>
@@ -365,6 +365,19 @@
     }
   }
 
+  function toggleMotorType(type) {
+    const chkIndoor = document.getElementById('chk_indoor_motor');
+    const chkOutdoor = document.getElementById('chk_outdoor_motor');
+
+    if (type === 'indoor' && chkIndoor.checked) {
+      chkOutdoor.checked = false;
+    } else if (type === 'outdoor' && chkOutdoor.checked) {
+      chkIndoor.checked = false;
+    }
+
+    renderTechnicalParts();
+  }
+
   function getActivePartConfig() {
     const rawPartNo = document.getElementById('partNo').value.trim().toUpperCase();
     const inputPartNo = rawPartNo.substring(0, 10);
@@ -385,6 +398,7 @@
       placeholder.style.display = 'block';
       specContainer.style.display = 'none';
       specContainer.innerHTML = '';
+      renderTechnicalParts();
       updateSummarySection();
       return;
     }
@@ -469,6 +483,7 @@
         </table>
       </div>
     `;
+    renderTechnicalParts();
     updateSummarySection();
   }
 
@@ -510,6 +525,18 @@
   }
 
   function renderTechnicalParts() {
+    const sectionTechnical = document.getElementById('section_technical');
+    const chkIndoor = document.getElementById('chk_indoor_motor');
+    const chkOutdoor = document.getElementById('chk_outdoor_motor');
+
+    // ตรวจสอบว่าได้เลือก DC Motor Type หรือยัง ถ้ายังไม่ได้เลือกให้ซ่อน Section นี้ไว้
+    if (!chkIndoor.checked && !chkOutdoor.checked) {
+      sectionTechnical.style.display = 'none';
+      return;
+    }
+
+    sectionTechnical.style.display = 'block';
+
     const rawPartNo = document.getElementById('partNo').value.trim().toUpperCase();
     const inputPartNo = rawPartNo.substring(0, 10);
     const techContainer = document.getElementById('technicalPartsContainer');
