@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="pageHeaderTitle">Checking Part Report (DC Motor)</title>
@@ -166,17 +165,151 @@
           <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">(แสดงผลอัตโนมัติตาม Part No ที่เลือก)</span>
         </div>
 
-        <div id="spec_placeholder" style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 0.85rem; background: #F8FAFC; border-radius: 6px; border: 1px dashed var(--border-color);">
+        <div id="spec_placeholder" style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 0.85rem; background: rgb(248, 250, 252); border-radius: 6px; border: 1px dashed var(--border-color); display: none;">
           👉 กรุณากรอก Part No. ด้านบน เพื่อแสดง Drawing และตารางสเปคความต้านทานที่ตรงกัน
         </div>
 
-        <div id="spec_container_dynamic" class="dynamic-spec-card"></div>
+        <div id="spec_container_dynamic" class="dynamic-spec-card" style="display: block;">
+      <div class="part-item-card" style="margin-bottom: 12px;">
+        <div class="part-header"><span class="part-title-text" style="color: #0284C7;">Indoor DC Motor Inspection (Connector Type A)</span></div>
+        <div class="image-preview-box">
+          <div class="img-container">
+            <img src="images/Indoor DC Motor.jpg" alt="DC Motor Drawing">
+          </div>
+          <div class="img-caption">DC Motor Wiring Drawing (Type A)</div>
+        </div>
+      </div>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: center;">
+          <thead>
+            <tr style="background: #F8FAFC; border-bottom: 1px solid var(--border-color);">
+              <th style="padding: 6px; border: 1px solid var(--border-color);">Motor</th>
+              <th style="padding: 6px; border: 1px solid var(--border-color);">Terminal</th>
+              <th style="padding: 6px; border: 1px solid var(--border-color);">Vm - Gnd</th>
+              <th style="padding: 6px; border: 1px solid var(--border-color);">Vcc - Gnd</th>
+              <th style="padding: 6px; border: 1px solid var(--border-color);">Vsp - Gnd</th>
+              <th style="padding: 6px; border: 1px solid var(--border-color);">Vfg - Gnd</th>
+              <th style="padding: 6px; border: 1px solid var(--border-color);">Connector</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 6px; border: 1px solid var(--border-color); font-weight: 600; color: #0284C7;">Indoor</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">Pin No.</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">1 - 3</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">4 - 3</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">5 - 3</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">6 - 3</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color); color: #0284C7; font-weight: 700;" rowspan="3">Type A</td>
+            </tr>
+            <tr style="background: #FAFAFA;">
+              <td style="padding: 6px; border: 1px solid var(--border-color); font-weight: 600;" colspan="2">Wire color</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);"><span style="color: #DC2626; font-weight: 600;">Red</span> - <span style="color: #111111; font-weight: 600;">Black</span></td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);"><span style="color: #334155; background: #E2E8F0; padding: 1px 4px; border-radius: 3px;; font-weight: 600;">White</span> - <span style="color: #111111; font-weight: 600;">Black</span></td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);"><span style="color: #CA8A04; font-weight: 600;">Yellow</span> - <span style="color: #111111; font-weight: 600;">Black</span></td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);"><span style="color: #2563EB; font-weight: 600;">Blue</span> - <span style="color: #111111; font-weight: 600;">Black</span></td>
+            </tr>
+            <tr style="background: #FAFAFA;">
+              <td style="padding: 6px; border: 1px solid var(--border-color); font-weight: 600;" colspan="2">Resistance (Ω)</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">&gt; 1 MΩ</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">50 kΩ ± 5%</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">150 kΩ ± 5%</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">4 MΩ ± 5%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
       </section>
 
       <!-- Technical Inspection & Defect Locations -->
-      <section class="section-card hide-on-pdf" id="section_technical" style="display: none;">
+      <section class="section-card hide-on-pdf" id="section_technical" style="display: block;">
         <div class="section-title"><span>Technical Inspection &amp; Defect Locations</span></div>
-        <div class="parts-container" id="technicalPartsContainer"></div>
+        <div class="parts-container" id="technicalPartsContainer">
+        <div class="part-item-card" data-key="SSA512T099" data-title="Indoor DC Motor Inspection">
+          <div class="part-header">
+            <span class="part-title-text">Indoor DC Motor Inspection</span>
+            <span style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Matched (First 10 chars): SSA512T099</span>
+          </div>
+
+          <div class="dual-image-grid">
+            <div class="image-preview-box">
+              <div class="img-container">
+                <img src="images/SSA512T099A(M).jpg" alt="Motor Body &amp; Nameplate View">
+              </div>
+              <div class="img-caption">Motor Body &amp; Nameplate View</div>
+            </div>
+            <div class="image-preview-box">
+              <div class="img-container">
+                <img src="images/SSA512T099A(C).jpg" alt="Connector Wire &amp; Pin View">
+              </div>
+              <div class="img-caption">Connector Wire &amp; Pin View</div>
+            </div>
+          </div>
+
+          <!-- ส่วน Motor Lot Number (ซ้าย: รูปตัวอย่างขยายเต็มสูง / ขวา: ช่องกรอกข้อมูล) -->
+          <div style="margin-bottom: 12px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 6px; padding: 12px;">
+            <div style="font-size: 0.85rem; font-weight: 700; color: var(--primary-black); margin-bottom: 8px;">Motor Lot Number</div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch;">
+              <div class="image-preview-box" style="margin-bottom: 0; min-height: 260px;">
+                <div class="img-container" style="padding: 4px;">
+                  <img src="images/NidecLot.jpg" alt="Motor Lot Number Example" style="max-height: 220px;">
+                </div>
+                <div class="img-caption">Motor Lot Number Example</div>
+              </div>
+              <div style="display: flex; flex-direction: column; justify-content: center;">
+                <div class="input-group">
+                  <label for="val_SSA512T099_lot">Lot Number Value:</label>
+                  <input type="text" id="val_SSA512T099_lot" class="input-control" placeholder="ระบุค่า Lot Number..." style="background:#fff; padding: 12px;" oninput="updateSummarySection()">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <table class="measure-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Standard Criteria</th>
+                <th>Measured Value</th>
+                <th>Result Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Vm - Gnd</b></td>
+                <td>&gt; 1 MΩ</td>
+                <td><input type="number" step="0.1" id="val_SSA512T099_vm" class="input-control" placeholder="ระบุค่าวัด" oninput="evaluateMeasurement('SSA512T099', 'vm')"></td>
+                <td><span id="status_SSA512T099_vm" class="status-badge">-</span></td>
+              </tr>
+              <tr>
+                <td><b>Vcc - Gnd</b></td>
+                <td>50 kΩ ± 5%</td>
+                <td><input type="number" step="0.1" id="val_SSA512T099_vcc" class="input-control" placeholder="ระบุค่าวัด" oninput="evaluateMeasurement('SSA512T099', 'vcc')"></td>
+                <td><span id="status_SSA512T099_vcc" class="status-badge">-</span></td>
+              </tr>
+              <tr>
+                <td><b>Vsp - Gnd</b></td>
+                <td>150 kΩ ± 5%</td>
+                <td><input type="number" step="0.1" id="val_SSA512T099_vsp" class="input-control" placeholder="ระบุค่าวัด" oninput="evaluateMeasurement('SSA512T099', 'vsp')"></td>
+                <td><span id="status_SSA512T099_vsp" class="status-badge">-</span></td>
+              </tr>
+              <tr>
+                <td><b>Vfg - Gnd</b></td>
+                <td>4 MΩ ± 5%</td>
+                <td><input type="number" step="0.1" id="val_SSA512T099_vfg" class="input-control" placeholder="ระบุค่าวัด" oninput="evaluateMeasurement('SSA512T099', 'vfg')"></td>
+                <td><span id="status_SSA512T099_vfg" class="status-badge">-</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="upload-zone hide-on-pdf" id="zone_SSA512T099">
+            <input type="file" id="pic_SSA512T099" accept="image/*" onchange="handleImageUpload(this, 'Indoor DC Motor Inspection', 'attach_SSA512T099', 'zone_SSA512T099')">
+            <div class="upload-label">📷 Attach Motor Nameplate Image</div>
+          </div>
+        </div>
+      </div>
       </section>
 
       <section class="section-card" id="section_attached_pictures" style="display: none;">
@@ -184,9 +317,9 @@
         <div class="attached-grid" id="attached_container"></div>
       </section>
 
-      <section class="section-card" id="section_inspection_summary" style="display: none;">
+      <section class="section-card" id="section_inspection_summary" style="display: block;">
         <div class="section-title">Inspection Summary &amp; Comments</div>
-        <div class="summary-comment-box" id="summary_comment_content"></div>
+        <div class="summary-comment-box" id="summary_comment_content"><div class="summary-item-row"><span class="summary-part-name">• DC Motor Type:</span> Indoor motor</div></div>
       </section>
 
       <div class="action-container hide-on-pdf">
@@ -210,7 +343,211 @@
     <strong>รายการ Parts ใน Technical Inspection &amp; Specification (Matched 10 ตัวแรก):</strong>
     <button type="button" onclick="addNewPart()" style="background: var(--success-green); color: #fff; border:none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor:pointer;">➕ เพิ่ม Part ใหม่</button>
   </div>
-  <div id="editorPartsContainer" style="display: flex; flex-direction: column; gap: 10px; max-height: 480px; overflow-y: auto; margin-bottom: 15px; padding-right: 4px;"></div>
+  <div id="editorPartsContainer" style="display: flex; flex-direction: column; gap: 10px; max-height: 480px; overflow-y: auto; margin-bottom: 15px; padding-right: 4px;"><div style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <strong>Part No Key (10 ตัวแรก): <input type="text" value="SSA512T061" data-oldkey="SSA512T061" class="part-key-input" style="font-weight:bold; width:140px; padding:2px 4px;"></strong>
+          <button type="button" onclick="deletePart('SSA512T061')" style="background: #E60012; color: #fff; border:none; padding: 2px 6px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>Display Title: <input type="text" value="Outdoor DC Motor Inspection" data-part="SSA512T061" data-prop="title" style="width:100%"></label>
+          <label>Motor Type: 
+            <select data-part="SSA512T061" data-prop="motorType" style="width:100%; padding:2px;">
+              <option value="indoor">Indoor</option>
+              <option value="outdoor" selected="">Outdoor</option>
+            </select>
+          </label>
+          <label>Connector: <input type="text" value="Type D" data-part="SSA512T061" data-prop="connectorType" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>ชื่อรูป 1: <input type="text" value="Motor Body &amp; Nameplate View" data-part="SSA512T061" data-prop="label1" style="width:100%"></label>
+          <label>Path รูป 1: <input type="text" value="images/SSA512T061G(M).jpg" data-part="SSA512T061" data-prop="img1" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>ชื่อรูป 2: <input type="text" value="Connector Wire &amp; Pin View" data-part="SSA512T061" data-prop="label2" style="width:100%"></label>
+          <label>Path รูป 2: <input type="text" value="images/SSA512T061G(C).jpg" data-part="SSA512T061" data-prop="img2" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>Motor Lot Image Path: <input type="text" value="images/vendor_lot_sample.jpg" data-part="SSA512T061" data-prop="vendorImg" style="width:100%"></label>
+          <label>Motor Lot Image Label: <input type="text" value="Motor Lot Number Example" data-part="SSA512T061" data-prop="vendorLabel" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>Drawing Path: <input type="text" value="images/Outdoor DC Motor.jpg" data-part="SSA512T061" data-prop="drawingImg" style="width:100%"></label>
+        </div>
+
+        <div style="margin-top: 8px; padding-top: 6px; border-top: 1px dashed var(--border-color);">
+          <strong style="font-size:0.75rem; color:var(--primary-black); display:block; margin-bottom:4px;">Wire Color Specification:</strong>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 6px;">
+            <label style="font-size:0.7rem;">Vm Wire: <input type="text" value="Red - Blue" data-part="SSA512T061" data-prop="wire_vm" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vcc Wire: <input type="text" value="Brown - Blue" data-part="SSA512T061" data-prop="wire_vcc" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vsp Wire: <input type="text" value="Orange - Blue" data-part="SSA512T061" data-prop="wire_vsp" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vfg Wire: <input type="text" value="White - Blue" data-part="SSA512T061" data-prop="wire_vfg" style="width:100%"></label>
+          </div>
+        </div>
+        
+        <div style="margin-top: 4px; padding-top: 6px; border-top: 1px dashed var(--border-color);">
+          <strong style="font-size:0.75rem; color:var(--primary-black); display:block; margin-bottom:4px;">Resistance Criteria Specification:</strong>
+          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;">
+            <label style="font-size:0.7rem;">Vm Min (MΩ): <input type="number" step="0.1" value="1" data-part="SSA512T061" data-prop="vm_min" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vcc Target (kΩ): <input type="number" step="0.1" value="50" data-part="SSA512T061" data-prop="vcc_target" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vsp Target (kΩ): <input type="number" step="0.1" value="150" data-part="SSA512T061" data-prop="vsp_target" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vfg Target (MΩ): <input type="number" step="0.1" value="4" data-part="SSA512T061" data-prop="vfg_target" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Tolerance (±%): <input type="number" step="0.1" value="5" data-part="SSA512T061" data-prop="tolerance" style="width:100%"></label>
+          </div>
+        </div>
+      </div><div style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <strong>Part No Key (10 ตัวแรก): <input type="text" value="SSA512T076" data-oldkey="SSA512T076" class="part-key-input" style="font-weight:bold; width:140px; padding:2px 4px;"></strong>
+          <button type="button" onclick="deletePart('SSA512T076')" style="background: #E60012; color: #fff; border:none; padding: 2px 6px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>Display Title: <input type="text" value="Outdoor DC Motor Inspection" data-part="SSA512T076" data-prop="title" style="width:100%"></label>
+          <label>Motor Type: 
+            <select data-part="SSA512T076" data-prop="motorType" style="width:100%; padding:2px;">
+              <option value="indoor">Indoor</option>
+              <option value="outdoor" selected="">Outdoor</option>
+            </select>
+          </label>
+          <label>Connector: <input type="text" value="Type D" data-part="SSA512T076" data-prop="connectorType" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>ชื่อรูป 1: <input type="text" value="Motor Body &amp; Nameplate View" data-part="SSA512T076" data-prop="label1" style="width:100%"></label>
+          <label>Path รูป 1: <input type="text" value="images/SSA512T076BA(M).jpg" data-part="SSA512T076" data-prop="img1" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>ชื่อรูป 2: <input type="text" value="Connector Wire &amp; Pin View" data-part="SSA512T076" data-prop="label2" style="width:100%"></label>
+          <label>Path รูป 2: <input type="text" value="images/SSA512T076BA(C).jpg" data-part="SSA512T076" data-prop="img2" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>Motor Lot Image Path: <input type="text" value="images/vendor_lot_sample.jpg" data-part="SSA512T076" data-prop="vendorImg" style="width:100%"></label>
+          <label>Motor Lot Image Label: <input type="text" value="Motor Lot Number Example" data-part="SSA512T076" data-prop="vendorLabel" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>Drawing Path: <input type="text" value="images/Outdoor DC Motor.jpg" data-part="SSA512T076" data-prop="drawingImg" style="width:100%"></label>
+        </div>
+
+        <div style="margin-top: 8px; padding-top: 6px; border-top: 1px dashed var(--border-color);">
+          <strong style="font-size:0.75rem; color:var(--primary-black); display:block; margin-bottom:4px;">Wire Color Specification:</strong>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 6px;">
+            <label style="font-size:0.7rem;">Vm Wire: <input type="text" value="Red - Blue" data-part="SSA512T076" data-prop="wire_vm" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vcc Wire: <input type="text" value="Brown - Blue" data-part="SSA512T076" data-prop="wire_vcc" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vsp Wire: <input type="text" value="Orange - Blue" data-part="SSA512T076" data-prop="wire_vsp" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vfg Wire: <input type="text" value="White - Blue" data-part="SSA512T076" data-prop="wire_vfg" style="width:100%"></label>
+          </div>
+        </div>
+        
+        <div style="margin-top: 4px; padding-top: 6px; border-top: 1px dashed var(--border-color);">
+          <strong style="font-size:0.75rem; color:var(--primary-black); display:block; margin-bottom:4px;">Resistance Criteria Specification:</strong>
+          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;">
+            <label style="font-size:0.7rem;">Vm Min (MΩ): <input type="number" step="0.1" value="1" data-part="SSA512T076" data-prop="vm_min" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vcc Target (kΩ): <input type="number" step="0.1" value="50" data-part="SSA512T076" data-prop="vcc_target" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vsp Target (kΩ): <input type="number" step="0.1" value="150" data-part="SSA512T076" data-prop="vsp_target" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vfg Target (MΩ): <input type="number" step="0.1" value="4" data-part="SSA512T076" data-prop="vfg_target" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Tolerance (±%): <input type="number" step="0.1" value="5" data-part="SSA512T076" data-prop="tolerance" style="width:100%"></label>
+          </div>
+        </div>
+      </div><div style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <strong>Part No Key (10 ตัวแรก): <input type="text" value="SSA512T099" data-oldkey="SSA512T099" class="part-key-input" style="font-weight:bold; width:140px; padding:2px 4px;"></strong>
+          <button type="button" onclick="deletePart('SSA512T099')" style="background: #E60012; color: #fff; border:none; padding: 2px 6px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>Display Title: <input type="text" value="Indoor DC Motor Inspection" data-part="SSA512T099" data-prop="title" style="width:100%"></label>
+          <label>Motor Type: 
+            <select data-part="SSA512T099" data-prop="motorType" style="width:100%; padding:2px;">
+              <option value="indoor" selected="">Indoor</option>
+              <option value="outdoor">Outdoor</option>
+            </select>
+          </label>
+          <label>Connector: <input type="text" value="Type A" data-part="SSA512T099" data-prop="connectorType" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>ชื่อรูป 1: <input type="text" value="Motor Body &amp; Nameplate View" data-part="SSA512T099" data-prop="label1" style="width:100%"></label>
+          <label>Path รูป 1: <input type="text" value="images/SSA512T099A(M).jpg" data-part="SSA512T099" data-prop="img1" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>ชื่อรูป 2: <input type="text" value="Connector Wire &amp; Pin View" data-part="SSA512T099" data-prop="label2" style="width:100%"></label>
+          <label>Path รูป 2: <input type="text" value="images/SSA512T099A(C).jpg" data-part="SSA512T099" data-prop="img2" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>Motor Lot Image Path: <input type="text" value="images/vendor_lot_sample.jpg" data-part="SSA512T099" data-prop="vendorImg" style="width:100%"></label>
+          <label>Motor Lot Image Label: <input type="text" value="Motor Lot Number Example" data-part="SSA512T099" data-prop="vendorLabel" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>Drawing Path: <input type="text" value="images/Indoor DC Motor.jpg" data-part="SSA512T099" data-prop="drawingImg" style="width:100%"></label>
+        </div>
+
+        <div style="margin-top: 8px; padding-top: 6px; border-top: 1px dashed var(--border-color);">
+          <strong style="font-size:0.75rem; color:var(--primary-black); display:block; margin-bottom:4px;">Wire Color Specification:</strong>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 6px;">
+            <label style="font-size:0.7rem;">Vm Wire: <input type="text" value="Red - Black" data-part="SSA512T099" data-prop="wire_vm" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vcc Wire: <input type="text" value="White - Black" data-part="SSA512T099" data-prop="wire_vcc" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vsp Wire: <input type="text" value="Yellow - Black" data-part="SSA512T099" data-prop="wire_vsp" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vfg Wire: <input type="text" value="Blue - Black" data-part="SSA512T099" data-prop="wire_vfg" style="width:100%"></label>
+          </div>
+        </div>
+        
+        <div style="margin-top: 4px; padding-top: 6px; border-top: 1px dashed var(--border-color);">
+          <strong style="font-size:0.75rem; color:var(--primary-black); display:block; margin-bottom:4px;">Resistance Criteria Specification:</strong>
+          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;">
+            <label style="font-size:0.7rem;">Vm Min (MΩ): <input type="number" step="0.1" value="1" data-part="SSA512T099" data-prop="vm_min" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vcc Target (kΩ): <input type="number" step="0.1" value="50" data-part="SSA512T099" data-prop="vcc_target" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vsp Target (kΩ): <input type="number" step="0.1" value="150" data-part="SSA512T099" data-prop="vsp_target" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vfg Target (MΩ): <input type="number" step="0.1" value="4" data-part="SSA512T099" data-prop="vfg_target" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Tolerance (±%): <input type="number" step="0.1" value="5" data-part="SSA512T099" data-prop="tolerance" style="width:100%"></label>
+          </div>
+        </div>
+      </div><div style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <strong>Part No Key (10 ตัวแรก): <input type="text" value="DEFAULT" data-oldkey="DEFAULT" class="part-key-input" style="font-weight:bold; width:140px; padding:2px 4px;"></strong>
+          <span style="font-size:0.7rem; color:var(--text-muted);">(ค่าเริ่มต้น)</span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>Display Title: <input type="text" value="General DC Motor Technical Inspection" data-part="DEFAULT" data-prop="title" style="width:100%"></label>
+          <label>Motor Type: 
+            <select data-part="DEFAULT" data-prop="motorType" style="width:100%; padding:2px;">
+              <option value="indoor" selected="">Indoor</option>
+              <option value="outdoor">Outdoor</option>
+            </select>
+          </label>
+          <label>Connector: <input type="text" value="Type A" data-part="DEFAULT" data-prop="connectorType" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>ชื่อรูป 1: <input type="text" value="Motor Body View" data-part="DEFAULT" data-prop="label1" style="width:100%"></label>
+          <label>Path รูป 1: <input type="text" value="images/motor_body.png" data-part="DEFAULT" data-prop="img1" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>ชื่อรูป 2: <input type="text" value="Connector View" data-part="DEFAULT" data-prop="label2" style="width:100%"></label>
+          <label>Path รูป 2: <input type="text" value="images/motor_connector.png" data-part="DEFAULT" data-prop="img2" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>Motor Lot Image Path: <input type="text" value="images/vendor_lot_sample.jpg" data-part="DEFAULT" data-prop="vendorImg" style="width:100%"></label>
+          <label>Motor Lot Image Label: <input type="text" value="Motor Lot Number Example" data-part="DEFAULT" data-prop="vendorLabel" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>Drawing Path: <input type="text" value="images/Indoor DC Motor.jpg" data-part="DEFAULT" data-prop="drawingImg" style="width:100%"></label>
+        </div>
+
+        <div style="margin-top: 8px; padding-top: 6px; border-top: 1px dashed var(--border-color);">
+          <strong style="font-size:0.75rem; color:var(--primary-black); display:block; margin-bottom:4px;">Wire Color Specification:</strong>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 6px;">
+            <label style="font-size:0.7rem;">Vm Wire: <input type="text" value="Red - Black" data-part="DEFAULT" data-prop="wire_vm" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vcc Wire: <input type="text" value="White - Black" data-part="DEFAULT" data-prop="wire_vcc" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vsp Wire: <input type="text" value="Yellow - Black" data-part="DEFAULT" data-prop="wire_vsp" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vfg Wire: <input type="text" value="Blue - Black" data-part="DEFAULT" data-prop="wire_vfg" style="width:100%"></label>
+          </div>
+        </div>
+        
+        <div style="margin-top: 4px; padding-top: 6px; border-top: 1px dashed var(--border-color);">
+          <strong style="font-size:0.75rem; color:var(--primary-black); display:block; margin-bottom:4px;">Resistance Criteria Specification:</strong>
+          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;">
+            <label style="font-size:0.7rem;">Vm Min (MΩ): <input type="number" step="0.1" value="1" data-part="DEFAULT" data-prop="vm_min" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vcc Target (kΩ): <input type="number" step="0.1" value="50" data-part="DEFAULT" data-prop="vcc_target" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vsp Target (kΩ): <input type="number" step="0.1" value="150" data-part="DEFAULT" data-prop="vsp_target" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vfg Target (MΩ): <input type="number" step="0.1" value="4" data-part="DEFAULT" data-prop="vfg_target" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Tolerance (±%): <input type="number" step="0.1" value="5" data-part="DEFAULT" data-prop="tolerance" style="width:100%"></label>
+          </div>
+        </div>
+      </div></div>
   
   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
     <button type="button" onclick="saveLayoutChanges()" style="background: var(--success-green); color: #fff; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">💾 บันทึกชั่วคราว</button>
@@ -221,7 +558,7 @@
 
 <script>
   const uploadedImages = {};
-  /* CONFIG START */
+    /* CONFIG START */
   let reportConfig = {
     "formTitle": "Checking Part Report (DC Motor)",
     "parts": {
@@ -235,19 +572,47 @@
             "label1": "Motor Body & Nameplate View",
             "img2": "images/SSA512T061G(C).jpg",
             "label2": "Connector Wire & Pin View",
-            "vendorImg": "images/vendor_lot_sample.jpg",
+            "vendorImg": "images/NidecLot.jpg",
             "vendorLabel": "Motor Lot Number Example",
             "pins": {
-                "vm": { "pin": "6 - 4", "color": "Red - Blue" },
-                "vcc": { "pin": "3 - 4", "color": "Brown - Blue" },
-                "vsp": { "pin": "2 - 4", "color": "Orange - Blue" },
-                "vfg": { "pin": "1 - 4", "color": "White - Blue" }
+                "vm": {
+                    "pin": "6 - 4",
+                    "color": "Red - Blue"
+                },
+                "vcc": {
+                    "pin": "3 - 4",
+                    "color": "Brown - Blue"
+                },
+                "vsp": {
+                    "pin": "2 - 4",
+                    "color": "Orange - Blue"
+                },
+                "vfg": {
+                    "pin": "1 - 4",
+                    "color": "White - Blue"
+                }
             },
             "criteria": {
-                "vm": { "min": 1, "max": 999, "unit": "MΩ" },
-                "vcc": { "target": 50, "tolerancePercent": 5, "unit": "kΩ" },
-                "vsp": { "target": 150, "tolerancePercent": 5, "unit": "kΩ" },
-                "vfg": { "target": 4, "tolerancePercent": 5, "unit": "MΩ" }
+                "vm": {
+                    "min": 1,
+                    "max": 999,
+                    "unit": "MΩ"
+                },
+                "vcc": {
+                    "target": 50,
+                    "tolerancePercent": 5,
+                    "unit": "kΩ"
+                },
+                "vsp": {
+                    "target": 150,
+                    "tolerancePercent": 5,
+                    "unit": "kΩ"
+                },
+                "vfg": {
+                    "target": 4,
+                    "tolerancePercent": 5,
+                    "unit": "MΩ"
+                }
             }
         },
         "SSA512T076": {
@@ -260,19 +625,47 @@
             "label1": "Motor Body & Nameplate View",
             "img2": "images/SSA512T076BA(C).jpg",
             "label2": "Connector Wire & Pin View",
-            "vendorImg": "images/vendor_lot_sample.jpg",
+            "vendorImg": "images/NidecLot.jpg",
             "vendorLabel": "Motor Lot Number Example",
             "pins": {
-                "vm": { "pin": "6 - 4", "color": "Red - Blue" },
-                "vcc": { "pin": "3 - 4", "color": "Brown - Blue" },
-                "vsp": { "pin": "2 - 4", "color": "Orange - Blue" },
-                "vfg": { "pin": "1 - 4", "color": "White - Blue" }
+                "vm": {
+                    "pin": "6 - 4",
+                    "color": "Red - Blue"
+                },
+                "vcc": {
+                    "pin": "3 - 4",
+                    "color": "Brown - Blue"
+                },
+                "vsp": {
+                    "pin": "2 - 4",
+                    "color": "Orange - Blue"
+                },
+                "vfg": {
+                    "pin": "1 - 4",
+                    "color": "White - Blue"
+                }
             },
             "criteria": {
-                "vm": { "min": 1, "max": 999, "unit": "MΩ" },
-                "vcc": { "target": 50, "tolerancePercent": 5, "unit": "kΩ" },
-                "vsp": { "target": 150, "tolerancePercent": 5, "unit": "kΩ" },
-                "vfg": { "target": 4, "tolerancePercent": 5, "unit": "MΩ" }
+                "vm": {
+                    "min": 1,
+                    "max": 999,
+                    "unit": "MΩ"
+                },
+                "vcc": {
+                    "target": 50,
+                    "tolerancePercent": 5,
+                    "unit": "kΩ"
+                },
+                "vsp": {
+                    "target": 150,
+                    "tolerancePercent": 5,
+                    "unit": "kΩ"
+                },
+                "vfg": {
+                    "target": 4,
+                    "tolerancePercent": 5,
+                    "unit": "MΩ"
+                }
             }
         },
         "SSA512T099": {
@@ -285,19 +678,47 @@
             "label1": "Motor Body & Nameplate View",
             "img2": "images/SSA512T099A(C).jpg",
             "label2": "Connector Wire & Pin View",
-            "vendorImg": "images/vendor_lot_sample.jpg",
+            "vendorImg": "images/NidecLot.jpg",
             "vendorLabel": "Motor Lot Number Example",
             "pins": {
-                "vm": { "pin": "1 - 3", "color": "Red - Black" },
-                "vcc": { "pin": "4 - 3", "color": "White - Black" },
-                "vsp": { "pin": "5 - 3", "color": "Yellow - Black" },
-                "vfg": { "pin": "6 - 3", "color": "Blue - Black" }
+                "vm": {
+                    "pin": "1 - 3",
+                    "color": "Red - Black"
+                },
+                "vcc": {
+                    "pin": "4 - 3",
+                    "color": "White - Black"
+                },
+                "vsp": {
+                    "pin": "5 - 3",
+                    "color": "Yellow - Black"
+                },
+                "vfg": {
+                    "pin": "6 - 3",
+                    "color": "Blue - Black"
+                }
             },
             "criteria": {
-                "vm": { "min": 1, "max": 999, "unit": "MΩ" },
-                "vcc": { "target": 50, "tolerancePercent": 5, "unit": "kΩ" },
-                "vsp": { "target": 150, "tolerancePercent": 5, "unit": "kΩ" },
-                "vfg": { "target": 4, "tolerancePercent": 5, "unit": "MΩ" }
+                "vm": {
+                    "min": 1,
+                    "max": 999,
+                    "unit": "MΩ"
+                },
+                "vcc": {
+                    "target": 50,
+                    "tolerancePercent": 5,
+                    "unit": "kΩ"
+                },
+                "vsp": {
+                    "target": 150,
+                    "tolerancePercent": 5,
+                    "unit": "kΩ"
+                },
+                "vfg": {
+                    "target": 4,
+                    "tolerancePercent": 5,
+                    "unit": "MΩ"
+                }
             }
         },
         "DEFAULT": {
@@ -310,19 +731,47 @@
             "label1": "Motor Body View",
             "img2": "images/motor_connector.png",
             "label2": "Connector View",
-            "vendorImg": "images/vendor_lot_sample.jpg",
+            "vendorImg": "images/NidecLot.jpg",
             "vendorLabel": "Motor Lot Number Example",
             "pins": {
-                "vm": { "pin": "1 - 3", "color": "Red - Black" },
-                "vcc": { "pin": "4 - 3", "color": "White - Black" },
-                "vsp": { "pin": "5 - 3", "color": "Yellow - Black" },
-                "vfg": { "pin": "6 - 3", "color": "Blue - Black" }
+                "vm": {
+                    "pin": "1 - 3",
+                    "color": "Red - Black"
+                },
+                "vcc": {
+                    "pin": "4 - 3",
+                    "color": "White - Black"
+                },
+                "vsp": {
+                    "pin": "5 - 3",
+                    "color": "Yellow - Black"
+                },
+                "vfg": {
+                    "pin": "6 - 3",
+                    "color": "Blue - Black"
+                }
             },
             "criteria": {
-                "vm": { "min": 1.0, "max": 999.0, "unit": "MΩ" },
-                "vcc": { "target": 50, "tolerancePercent": 5, "unit": "kΩ" },
-                "vsp": { "target": 150, "tolerancePercent": 5, "unit": "kΩ" },
-                "vfg": { "target": 4, "tolerancePercent": 5, "unit": "MΩ" }
+                "vm": {
+                    "min": 1,
+                    "max": 999,
+                    "unit": "MΩ"
+                },
+                "vcc": {
+                    "target": 50,
+                    "tolerancePercent": 5,
+                    "unit": "kΩ"
+                },
+                "vsp": {
+                    "target": 150,
+                    "tolerancePercent": 5,
+                    "unit": "kΩ"
+                },
+                "vfg": {
+                    "target": 4,
+                    "tolerancePercent": 5,
+                    "unit": "MΩ"
+                }
             }
         }
     }
@@ -1018,5 +1467,6 @@
     renderForm();
   });
 </script>
-</body>
-</html>
+
+
+</body></html>
