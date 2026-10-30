@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="pageHeaderTitle">Checking Part Report (DC Motor)</title>
@@ -109,7 +110,7 @@
           <div class="input-group"><label for="SN">Serial No. (S/N)</label><input type="text" id="SN" class="input-control" placeholder="Serial number"></div>
           <div class="input-group">
             <label for="partNo">Part No.</label>
-            <input type="text" id="partNo" class="input-control" placeholder="e.g. SSA512T061G" oninput="renderTechnicalParts()">
+            <input type="text" id="partNo" class="input-control" placeholder="e.g. SSA512T061G" oninput="renderTechnicalParts(); updateDynamicMotorSpec();">
           </div>
         </div>
       </section>
@@ -119,8 +120,8 @@
         <div class="section-title">Symptom (DC Motor)</div>
         <div style="margin-bottom: 10px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
           <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary-black);">DC Motor Type:</span>
-          <label class="custom-check"><input type="checkbox" id="chk_indoor_motor" name="motor_type" value="Indoor motor" onchange="updateDynamicMotorSpec(); updateSummarySection();"> Indoor motor</label>
-          <label class="custom-check"><input type="checkbox" id="chk_outdoor_motor" name="motor_type" value="Outdoor motor" onchange="updateDynamicMotorSpec(); updateSummarySection();"> Outdoor motor</label>
+          <label class="custom-check"><input type="checkbox" id="chk_indoor_motor" name="motor_type" value="Indoor motor" onchange="updateSummarySection();"> Indoor motor</label>
+          <label class="custom-check"><input type="checkbox" id="chk_outdoor_motor" name="motor_type" value="Outdoor motor" onchange="updateSummarySection();"> Outdoor motor</label>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -162,118 +163,14 @@
       <section class="section-card">
         <div class="section-title">
           <span>DC Motor Wiring &amp; Resistance Specification</span>
-          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">(แสดงผลอัตโนมัติตามรุ่นที่เลือก)</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">(แสดงผลอัตโนมัติตาม Part No ที่เลือก)</span>
         </div>
 
         <div id="spec_placeholder" style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 0.85rem; background: #F8FAFC; border-radius: 6px; border: 1px dashed var(--border-color);">
-          👉 กรุณาเลือกประเภท DC Motor (Indoor motor หรือ Outdoor motor) ด้านบน เพื่อแสดง Drawing และตารางสเปค
+          👉 กรุณากรอก Part No. ด้านบน เพื่อแสดง Drawing และตารางสเปคความต้านทานที่ตรงกัน
         </div>
 
-        <!-- Indoor Motor Spec -->
-        <div id="spec_indoor" class="dynamic-spec-card">
-          <div class="part-item-card" style="margin-bottom: 12px;">
-            <div class="part-header"><span class="part-title-text" style="color: #0284C7;">Indoor DC Motor (Connector Type A)</span></div>
-            <div class="image-preview-box">
-              <div class="img-container">
-                <img id="img_indoor_drawing" src="images/Indoor DC Motor.jpg" alt="Indoor DC Motor Drawing">
-              </div>
-              <div class="img-caption">Indoor DC Motor Drawing</div>
-            </div>
-          </div>
-          <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: center;">
-              <thead>
-                <tr style="background: #F8FAFC; border-bottom: 1px solid var(--border-color);">
-                  <th style="padding: 6px; border: 1px solid var(--border-color);">Motor</th>
-                  <th style="padding: 6px; border: 1px solid var(--border-color);">Terminal</th>
-                  <th style="padding: 6px; border: 1px solid var(--border-color);">Vm - Gnd</th>
-                  <th style="padding: 6px; border: 1px solid var(--border-color);">Vcc - Gnd</th>
-                  <th style="padding: 6px; border: 1px solid var(--border-color);">Vsp - Gnd</th>
-                  <th style="padding: 6px; border: 1px solid var(--border-color);">Vfg - Gnd</th>
-                  <th style="padding: 6px; border: 1px solid var(--border-color);">Connector</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="padding: 6px; border: 1px solid var(--border-color); font-weight: 600; color: #0284C7;">Indoor</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">Pin No.</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">1 - 3</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">4 - 3</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">5 - 3</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">6 - 3</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color); color: #0284C7; font-weight: 700;" rowspan="3">Type A</td>
-                </tr>
-                <tr style="background: #FAFAFA;">
-                  <td style="padding: 6px; border: 1px solid var(--border-color); font-weight: 600;" colspan="2">Wire color</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);"><span style="color: #DC2626; font-weight: 600;">Red</span> - <span style="color: #111111; font-weight: 600;">Black</span></td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);"><span style="color: #334155; background: #E2E8F0; padding: 1px 4px; border-radius: 3px; font-weight: 600;">White</span> - <span style="color: #111111; font-weight: 600;">Black</span></td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);"><span style="color: #CA8A04; font-weight: 600;">Yellow</span> - <span style="color: #111111; font-weight: 600;">Black</span></td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);"><span style="color: #2563EB; font-weight: 600;">Blue</span> - <span style="color: #111111; font-weight: 600;">Black</span></td>
-                </tr>
-                <tr style="background: #FAFAFA;">
-                  <td style="padding: 6px; border: 1px solid var(--border-color); font-weight: 600;" colspan="2">Resistance (Ω)</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">&gt; 1 MΩ</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">50 kΩ ± 5%</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">150 kΩ ± 5%</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">4 MΩ ± 5%</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Outdoor Motor Spec -->
-        <div id="spec_outdoor" class="dynamic-spec-card">
-          <div class="part-item-card" style="margin-bottom: 12px;">
-            <div class="part-header"><span class="part-title-text" style="color: #DC2626;">Outdoor DC Motor (Connector Type D)</span></div>
-            <div class="image-preview-box">
-              <div class="img-container">
-                <img id="img_outdoor_drawing" src="images/Outdoor DC Motor.jpg" alt="Outdoor DC Motor Drawing">
-              </div>
-              <div class="img-caption">Outdoor DC Motor Drawing</div>
-            </div>
-          </div>
-          <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: center;">
-              <thead>
-                <tr style="background: #F8FAFC; border-bottom: 1px solid var(--border-color);">
-                  <th style="padding: 6px; border: 1px solid var(--border-color);">Motor</th>
-                  <th style="padding: 6px; border: 1px solid var(--border-color);">Terminal</th>
-                  <th style="padding: 6px; border: 1px solid var(--border-color);">Vm - Gnd</th>
-                  <th style="padding: 6px; border: 1px solid var(--border-color);">Vcc - Gnd</th>
-                  <th style="padding: 6px; border: 1px solid var(--border-color);">Vsp - Gnd</th>
-                  <th style="padding: 6px; border: 1px solid var(--border-color);">Vfg - Gnd</th>
-                  <th style="padding: 6px; border: 1px solid var(--border-color);">Connector</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="padding: 6px; border: 1px solid var(--border-color); font-weight: 600; color: #DC2626;">Outdoor</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">Pin No.</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">6 - 4</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">3 - 4</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">2 - 4</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">1 - 4</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color); color: #DC2626; font-weight: 700;" rowspan="3">Type D</td>
-                </tr>
-                <tr style="background: #FAFAFA;">
-                  <td style="padding: 6px; border: 1px solid var(--border-color); font-weight: 600;" colspan="2">Wire color</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);"><span style="color: #DC2626; font-weight: 600;">Red</span> - <span style="color: #2563EB; font-weight: 600;">Blue</span></td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);"><span style="color: #78350F; font-weight: 600;">Brown</span> - <span style="color: #2563EB; font-weight: 600;">Blue</span></td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);"><span style="color: #D97706; font-weight: 600;">Orange</span> - <span style="color: #2563EB; font-weight: 600;">Blue</span></td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);"><span style="color: #334155; background: #E2E8F0; padding: 1px 4px; border-radius: 3px; font-weight: 600;">White</span> - <span style="color: #2563EB; font-weight: 600;">Blue</span></td>
-                </tr>
-                <tr style="background: #FAFAFA;">
-                  <td style="padding: 6px; border: 1px solid var(--border-color); font-weight: 600;" colspan="2">Resistance (Ω)</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">&gt; 1 MΩ</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">50 kΩ ± 5%</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">150 kΩ ± 5%</td>
-                  <td style="padding: 6px; border: 1px solid var(--border-color);">4 MΩ ± 5%</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <div id="spec_container_dynamic" class="dynamic-spec-card"></div>
       </section>
 
       <!-- Technical Inspection & Defect Locations -->
@@ -302,77 +199,18 @@
 <button type="button" class="designer-fab hide-on-pdf" onclick="promptEditorMode()" title="Designer Mode">⚙️</button>
 <div id="editorPanel" class="editor-panel-box hide-on-pdf" style="display: none;">
   <h3 style="margin-bottom: 10px; color: var(--primary-red);">Designer &amp; Layout Editor</h3>
-  <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">ปรับแต่งชื่อฟอร์ม, รูป Drawing สเปค, จัดการข้อมูล Part และ Standard Criteria ได้ที่นี่</p>
+  <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">ปรับแต่งชื่อฟอร์ม, ค่า Resistance Specification, Wire Color (สีสายไฟ), Connector และรูปภาพ Drawing ได้ที่นี่</p>
   
   <div style="margin-bottom: 14px; background: #F8FAFC; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
     <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 4px;">ชื่อฟอร์ม (Form Title):</label>
     <input type="text" id="editFormTitle" class="input-control" style="background:#fff;">
   </div>
 
-  <div style="margin-bottom: 14px; background: #F8FAFC; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
-    <strong style="font-size: 0.85rem; display: block; margin-bottom: 6px;">รูป Drawing สเปคมอเตอร์ (Wiring &amp; Resistance):</strong>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-      <label style="font-size: 0.75rem;">Indoor Drawing Path: <input type="text" id="editIndoorDrawing" class="input-control" style="background:#fff;"></label>
-      <label style="font-size: 0.75rem;">Outdoor Drawing Path: <input type="text" id="editOutdoorDrawing" class="input-control" style="background:#fff;"></label>
-    </div>
-  </div>
-  
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-    <strong>รายการ Parts ใน Technical Inspection (Matched 10 ตัวแรก):</strong>
+    <strong>รายการ Parts ใน Technical Inspection &amp; Specification (Matched 10 ตัวแรก):</strong>
     <button type="button" onclick="addNewPart()" style="background: var(--success-green); color: #fff; border:none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor:pointer;">➕ เพิ่ม Part ใหม่</button>
   </div>
-  <div id="editorPartsContainer" style="display: flex; flex-direction: column; gap: 10px; max-height: 350px; overflow-y: auto; margin-bottom: 15px; padding-right: 4px;"><div style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <strong>Part No Key (10 ตัวแรก): <input type="text" value="SSA512T061" data-oldkey="SSA512T061" class="part-key-input" style="font-weight:bold; width:140px; padding:2px 4px;"></strong>
-          <button type="button" onclick="deletePart('SSA512T061')" style="background: #E60012; color: #fff; border:none; padding: 2px 6px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
-          <label>Display Title: <input type="text" value="DC Motor Inspection (Part No: SSA512T061G)" data-part="SSA512T061" data-prop="title" style="width:100%"></label>
-          <label>Match Prefix (10 chars): <input type="text" value="SSA512T061" data-part="SSA512T061" data-prop="partNoMatch" style="width:100%"></label>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
-          <label>ชื่อรูป 1: <input type="text" value="Motor Body &amp; Nameplate View" data-part="SSA512T061" data-prop="label1" style="width:100%"></label>
-          <label>Path รูป 1: <input type="text" value="images/motor_body.png" data-part="SSA512T061" data-prop="img1" style="width:100%"></label>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
-          <label>ชื่อรูป 2: <input type="text" value="Connector Wire &amp; Pin View" data-part="SSA512T061" data-prop="label2" style="width:100%"></label>
-          <label>Path รูป 2: <input type="text" value="images/motor_connector.png" data-part="SSA512T061" data-prop="img2" style="width:100%"></label>
-        </div>
-      </div><div style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <strong>Part No Key (10 ตัวแรก): <input type="text" value="DEFAULT" data-oldkey="DEFAULT" class="part-key-input" style="font-weight:bold; width:140px; padding:2px 4px;"></strong>
-          <span style="font-size:0.7rem; color:var(--text-muted);">(ค่าเริ่มต้นเมื่อไม่ตรง 10 ตัวแรก)</span>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
-          <label>Display Title: <input type="text" value="General DC Motor Technical Inspection" data-part="DEFAULT" data-prop="title" style="width:100%"></label>
-          <label>Match Prefix (10 chars): <input type="text" value="DEFAULT" data-part="DEFAULT" data-prop="partNoMatch" style="width:100%"></label>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
-          <label>ชื่อรูป 1: <input type="text" value="Motor Body View" data-part="DEFAULT" data-prop="label1" style="width:100%"></label>
-          <label>Path รูป 1: <input type="text" value="images/motor_body.png" data-part="DEFAULT" data-prop="img1" style="width:100%"></label>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
-          <label>ชื่อรูป 2: <input type="text" value="Connector View" data-part="DEFAULT" data-prop="label2" style="width:100%"></label>
-          <label>Path รูป 2: <input type="text" value="images/motor_connector.png" data-part="DEFAULT" data-prop="img2" style="width:100%"></label>
-        </div>
-      </div><div style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <strong>Part No Key (10 ตัวแรก): <input type="text" value="PART_47956068" data-oldkey="PART_47956068" class="part-key-input" style="font-weight:bold; width:140px; padding:2px 4px;"></strong>
-          <button type="button" onclick="deletePart('PART_47956068')" style="background: #E60012; color: #fff; border:none; padding: 2px 6px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
-          <label>Display Title: <input type="text" value="New DC Motor Part" data-part="PART_47956068" data-prop="title" style="width:100%"></label>
-          <label>Match Prefix (10 chars): <input type="text" value="PART_47956068" data-part="PART_47956068" data-prop="partNoMatch" style="width:100%"></label>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
-          <label>ชื่อรูป 1: <input type="text" value="Motor Body View" data-part="PART_47956068" data-prop="label1" style="width:100%"></label>
-          <label>Path รูป 1: <input type="text" value="images/motor_body.png" data-part="PART_47956068" data-prop="img1" style="width:100%"></label>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
-          <label>ชื่อรูป 2: <input type="text" value="Connector View" data-part="PART_47956068" data-prop="label2" style="width:100%"></label>
-          <label>Path รูป 2: <input type="text" value="images/motor_connector.png" data-part="PART_47956068" data-prop="img2" style="width:100%"></label>
-        </div>
-      </div></div>
+  <div id="editorPartsContainer" style="display: flex; flex-direction: column; gap: 10px; max-height: 480px; overflow-y: auto; margin-bottom: 15px; padding-right: 4px;"></div>
   
   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
     <button type="button" onclick="saveLayoutChanges()" style="background: var(--success-green); color: #fff; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">💾 บันทึกชั่วคราว</button>
@@ -383,105 +221,130 @@
 
 <script>
   const uploadedImages = {};
-    /* CONFIG START */
+  /* CONFIG START */
   let reportConfig = {
     "formTitle": "Checking Part Report (DC Motor)",
-    "indoorDrawing": "images/Indoor DC Motor.jpg",
-    "outdoorDrawing": "images/Outdoor DC Motor.jpg",
     "parts": {
         "SSA512T061": {
             "title": "Outdoor DC Motor Inspection",
             "partNoMatch": "SSA512T061",
+            "motorType": "outdoor",
+            "connectorType": "Type D",
+            "drawingImg": "images/Outdoor DC Motor.jpg",
             "img1": "images/SSA512T061G(M).jpg",
             "label1": "Motor Body & Nameplate View",
             "img2": "images/SSA512T061G(C).jpg",
             "label2": "Connector Wire & Pin View",
+            "pins": {
+                "vm": { "pin": "6 - 4", "color": "Red - Blue" },
+                "vcc": { "pin": "3 - 4", "color": "Brown - Blue" },
+                "vsp": { "pin": "2 - 4", "color": "Orange - Blue" },
+                "vfg": { "pin": "1 - 4", "color": "White - Blue" }
+            },
             "criteria": {
-                "vm": {
-                    "min": 1,
-                    "max": 999,
-                    "unit": "MΩ"
-                },
-                "vcc": {
-                    "target": 50,
-                    "tolerancePercent": 5,
-                    "unit": "kΩ"
-                },
-                "vsp": {
-                    "target": 150,
-                    "tolerancePercent": 5,
-                    "unit": "kΩ"
-                },
-                "vfg": {
-                    "target": 4,
-                    "tolerancePercent": 5,
-                    "unit": "MΩ"
-                }
+                "vm": { "min": 1, "max": 999, "unit": "MΩ" },
+                "vcc": { "target": 50, "tolerancePercent": 5, "unit": "kΩ" },
+                "vsp": { "target": 150, "tolerancePercent": 5, "unit": "kΩ" },
+                "vfg": { "target": 4, "tolerancePercent": 5, "unit": "MΩ" }
             }
         },
         "SSA512T076": {
             "title": "Outdoor DC Motor Inspection",
             "partNoMatch": "SSA512T076",
+            "motorType": "outdoor",
+            "connectorType": "Type D",
+            "drawingImg": "images/Outdoor DC Motor.jpg",
             "img1": "images/SSA512T076BA(M).jpg",
             "label1": "Motor Body & Nameplate View",
             "img2": "images/SSA512T076BA(C).jpg",
             "label2": "Connector Wire & Pin View",
+            "pins": {
+                "vm": { "pin": "6 - 4", "color": "Red - Blue" },
+                "vcc": { "pin": "3 - 4", "color": "Brown - Blue" },
+                "vsp": { "pin": "2 - 4", "color": "Orange - Blue" },
+                "vfg": { "pin": "1 - 4", "color": "White - Blue" }
+            },
             "criteria": {
-                "vm": {
-                    "min": 1,
-                    "max": 999,
-                    "unit": "MΩ"
-                },
-                "vcc": {
-                    "target": 50,
-                    "tolerancePercent": 5,
-                    "unit": "kΩ"
-                },
-                "vsp": {
-                    "target": 150,
-                    "tolerancePercent": 5,
-                    "unit": "kΩ"
-                },
-                "vfg": {
-                    "target": 4,
-                    "tolerancePercent": 5,
-                    "unit": "MΩ"
-                }
+                "vm": { "min": 1, "max": 999, "unit": "MΩ" },
+                "vcc": { "target": 50, "tolerancePercent": 5, "unit": "kΩ" },
+                "vsp": { "target": 150, "tolerancePercent": 5, "unit": "kΩ" },
+                "vfg": { "target": 4, "tolerancePercent": 5, "unit": "MΩ" }
             }
         },
         "SSA512T099": {
             "title": "Indoor DC Motor Inspection",
             "partNoMatch": "SSA512T099",
+            "motorType": "indoor",
+            "connectorType": "Type A",
+            "drawingImg": "images/Indoor DC Motor.jpg",
             "img1": "images/SSA512T099A(M).jpg",
             "label1": "Motor Body & Nameplate View",
             "img2": "images/SSA512T099A(C).jpg",
             "label2": "Connector Wire & Pin View",
+            "pins": {
+                "vm": { "pin": "1 - 3", "color": "Red - Black" },
+                "vcc": { "pin": "4 - 3", "color": "White - Black" },
+                "vsp": { "pin": "5 - 3", "color": "Yellow - Black" },
+                "vfg": { "pin": "6 - 3", "color": "Blue - Black" }
+            },
             "criteria": {
-                "vm": {
-                    "min": 1,
-                    "max": 999,
-                    "unit": "MΩ"
-                },
-                "vcc": {
-                    "target": 50,
-                    "tolerancePercent": 5,
-                    "unit": "kΩ"
-                },
-                "vsp": {
-                    "target": 150,
-                    "tolerancePercent": 5,
-                    "unit": "kΩ"
-                },
-                "vfg": {
-                    "target": 4,
-                    "tolerancePercent": 5,
-                    "unit": "MΩ"
-                }
+                "vm": { "min": 1, "max": 999, "unit": "MΩ" },
+                "vcc": { "target": 50, "tolerancePercent": 5, "unit": "kΩ" },
+                "vsp": { "target": 150, "tolerancePercent": 5, "unit": "kΩ" },
+                "vfg": { "target": 4, "tolerancePercent": 5, "unit": "MΩ" }
+            }
+        },
+        "DEFAULT": {
+            "title": "General DC Motor Technical Inspection",
+            "partNoMatch": "DEFAULT",
+            "motorType": "indoor",
+            "connectorType": "Type A",
+            "drawingImg": "images/Indoor DC Motor.jpg",
+            "img1": "images/motor_body.png",
+            "label1": "Motor Body View",
+            "img2": "images/motor_connector.png",
+            "label2": "Connector View",
+            "pins": {
+                "vm": { "pin": "1 - 3", "color": "Red - Black" },
+                "vcc": { "pin": "4 - 3", "color": "White - Black" },
+                "vsp": { "pin": "5 - 3", "color": "Yellow - Black" },
+                "vfg": { "pin": "6 - 3", "color": "Blue - Black" }
+            },
+            "criteria": {
+                "vm": { "min": 1.0, "max": 999.0, "unit": "MΩ" },
+                "vcc": { "target": 50, "tolerancePercent": 5, "unit": "kΩ" },
+                "vsp": { "target": 150, "tolerancePercent": 5, "unit": "kΩ" },
+                "vfg": { "target": 4, "tolerancePercent": 5, "unit": "MΩ" }
             }
         }
     }
 };
   /* CONFIG END */
+
+  // ฟังก์ชันช่วยแปลงชื่อสี (เช่น Red, Blue, White, Black ฯลฯ) ให้แสดงเป็นสีตัวอักษรจริง
+  function formatWireColorHtml(colorStr) {
+    if (!colorStr) return '-';
+    const colorMap = {
+      'red': '#DC2626',
+      'blue': '#2563EB',
+      'black': '#111111',
+      'white': '#334155; background: #E2E8F0; padding: 1px 4px; border-radius: 3px;',
+      'yellow': '#CA8A04',
+      'orange': '#D97706',
+      'brown': '#78350F',
+      'green': '#10B981',
+      'grey': '#64748B',
+      'gray': '#64748B'
+    };
+    
+    // แยกคำตามเครื่องหมายขีด เช่น "Red - Black" หรือ "White - Black"
+    return colorStr.split('-').map(part => {
+      const trimmed = part.trim();
+      const lower = trimmed.toLowerCase();
+      const cssStyle = colorMap[lower] ? `color: ${colorMap[lower]}; font-weight: 600;` : 'font-weight: 650;';
+      return `<span style="${cssStyle}">${trimmed}</span>`;
+    }).join(' - ');
+  }
 
   function toggleSubOptions(checkboxId, subBoxId) {
     const cb = document.getElementById(checkboxId);
@@ -496,22 +359,107 @@
     }
   }
 
-  function updateDynamicMotorSpec() {
-    const isIndoor = document.getElementById('chk_indoor_motor').checked;
-    const isOutdoor = document.getElementById('chk_outdoor_motor').checked;
-    const placeholder = document.getElementById('spec_placeholder');
-    const indoorCard = document.getElementById('spec_indoor');
-    const outdoorCard = document.getElementById('spec_outdoor');
+  function getActivePartConfig() {
+    const rawPartNo = document.getElementById('partNo').value.trim().toUpperCase();
+    const inputPartNo = rawPartNo.substring(0, 10);
+    return reportConfig.parts[inputPartNo] || reportConfig.parts['DEFAULT'];
+  }
 
-    if (!isIndoor && !isOutdoor) {
-      placeholder.style.display = 'block';
-      indoorCard.style.display = 'none';
-      outdoorCard.style.display = 'none';
+  function updateDynamicMotorSpec() {
+    const part = getActivePartConfig();
+    const rawPartNo = document.getElementById('partNo').value.trim();
+    const placeholder = document.getElementById('spec_placeholder');
+    const specContainer = document.getElementById('spec_container_dynamic');
+
+    const chkIndoor = document.getElementById('chk_indoor_motor');
+    const chkOutdoor = document.getElementById('chk_outdoor_motor');
+
+    if (part.motorType === 'outdoor') {
+      chkOutdoor.checked = true;
+      chkIndoor.checked = false;
     } else {
-      placeholder.style.display = 'none';
-      indoorCard.style.display = isIndoor ? 'block' : 'none';
-      outdoorCard.style.display = isOutdoor ? 'block' : 'none';
+      chkIndoor.checked = true;
+      chkOutdoor.checked = false;
     }
+
+    if (!rawPartNo) {
+      placeholder.style.display = 'block';
+      specContainer.style.display = 'none';
+      specContainer.innerHTML = '';
+      return;
+    }
+
+    placeholder.style.display = 'none';
+    specContainer.style.display = 'block';
+
+    const formatCritValue = (c) => {
+      if (c.target !== undefined && c.tolerancePercent !== undefined) {
+        return `${c.target} ${c.unit} ± ${c.tolerancePercent}%`;
+      } else {
+        return `> ${c.min} ${c.unit}`;
+      }
+    };
+
+    const pins = part.pins || {
+      vm: { pin: "1 - 3", color: "Red - Black" },
+      vcc: { pin: "4 - 3", color: "White - Black" },
+      vsp: { pin: "5 - 3", color: "Yellow - Black" },
+      vfg: { pin: "6 - 3", color: "Blue - Black" }
+    };
+    const crit = part.criteria;
+
+    specContainer.innerHTML = `
+      <div class="part-item-card" style="margin-bottom: 12px;">
+        <div class="part-header"><span class="part-title-text" style="color: ${part.motorType === 'outdoor' ? '#DC2626' : '#0284C7'};">${part.title} (Connector ${part.connectorType || 'Type A'})</span></div>
+        <div class="image-preview-box">
+          <div class="img-container">
+            <img src="${part.drawingImg || 'images/Indoor DC Motor.jpg'}" alt="DC Motor Drawing">
+          </div>
+          <div class="img-caption">DC Motor Wiring Drawing (${part.connectorType || 'Type A'})</div>
+        </div>
+      </div>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: center;">
+          <thead>
+            <tr style="background: #F8FAFC; border-bottom: 1px solid var(--border-color);">
+              <th style="padding: 6px; border: 1px solid var(--border-color);">Motor</th>
+              <th style="padding: 6px; border: 1px solid var(--border-color);">Terminal</th>
+              <th style="padding: 6px; border: 1px solid var(--border-color);">Vm - Gnd</th>
+              <th style="padding: 6px; border: 1px solid var(--border-color);">Vcc - Gnd</th>
+              <th style="padding: 6px; border: 1px solid var(--border-color);">Vsp - Gnd</th>
+              <th style="padding: 6px; border: 1px solid var(--border-color);">Vfg - Gnd</th>
+              <th style="padding: 6px; border: 1px solid var(--border-color);">Connector</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 6px; border: 1px solid var(--border-color); font-weight: 600; color: ${part.motorType === 'outdoor' ? '#DC2626' : '#0284C7'};">${part.motorType === 'outdoor' ? 'Outdoor' : 'Indoor'}</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">Pin No.</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">${pins.vm.pin}</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">${pins.vcc.pin}</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">${pins.vsp.pin}</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">${pins.vfg.pin}</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color); color: ${part.motorType === 'outdoor' ? '#DC2626' : '#0284C7'}; font-weight: 700;" rowspan="3">${part.connectorType || 'Type A'}</td>
+            </tr>
+            <tr style="background: #FAFAFA;">
+              <td style="padding: 6px; border: 1px solid var(--border-color); font-weight: 600;" colspan="2">Wire color</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">${formatWireColorHtml(pins.vm.color)}</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">${formatWireColorHtml(pins.vcc.color)}</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">${formatWireColorHtml(pins.vsp.color)}</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">${formatWireColorHtml(pins.vfg.color)}</td>
+            </tr>
+            <tr style="background: #FAFAFA;">
+              <td style="padding: 6px; border: 1px solid var(--border-color); font-weight: 600;" colspan="2">Resistance (Ω)</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">${formatCritValue(crit.vm)}</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">${formatCritValue(crit.vcc)}</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">${formatCritValue(crit.vsp)}</td>
+              <td style="padding: 6px; border: 1px solid var(--border-color);">${formatCritValue(crit.vfg)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    `;
+    updateSummarySection();
   }
 
   function evaluateMeasurement(partKey, param) {
@@ -566,12 +514,7 @@
       const part = reportConfig.parts[key] || reportConfig.parts['DEFAULT'];
       if (!part) return;
 
-      const crit = part.criteria || {
-        vm: { min: 1.0, max: 999.0, unit: 'MΩ' },
-        vcc: { target: 50, tolerancePercent: 5, unit: 'kΩ' },
-        vsp: { target: 150, tolerancePercent: 5, unit: 'kΩ' },
-        vfg: { target: 4, tolerancePercent: 5, unit: 'MΩ' }
-      };
+      const crit = part.criteria;
 
       const formatCritText = (c) => {
         if (c.target !== undefined && c.tolerancePercent !== undefined) {
@@ -653,9 +596,8 @@
   function renderForm() {
     document.getElementById('displayFormTitle').textContent = reportConfig.formTitle;
     document.getElementById('pageHeaderTitle').textContent = reportConfig.formTitle;
-    document.getElementById('img_indoor_drawing').src = reportConfig.indoorDrawing || 'images/indoor_motor_drawing.png';
-    document.getElementById('img_outdoor_drawing').src = reportConfig.outdoorDrawing || 'images/outdoor_motor_drawing.png';
     renderTechnicalParts();
+    updateDynamicMotorSpec();
   }
 
   function promptEditorMode() {
@@ -676,22 +618,39 @@
 
   function renderEditorFields() {
     document.getElementById('editFormTitle').value = reportConfig.formTitle;
-    document.getElementById('editIndoorDrawing').value = reportConfig.indoorDrawing || 'images/indoor_motor_drawing.png';
-    document.getElementById('editOutdoorDrawing').value = reportConfig.outdoorDrawing || 'images/outdoor_motor_drawing.png';
     
     const container = document.getElementById('editorPartsContainer');
     container.innerHTML = '';
     for (const [key, part] of Object.entries(reportConfig.parts)) {
+      const crit = part.criteria || { 
+        vm: { min: 1, max: 999, unit: "MΩ" }, 
+        vcc: { target: 50, tolerancePercent: 5, unit: "kΩ" }, 
+        vsp: { target: 150, tolerancePercent: 5, unit: "kΩ" }, 
+        vfg: { target: 4, tolerancePercent: 5, unit: "MΩ" } 
+      };
+      const pins = part.pins || {
+        vm: { pin: "1 - 3", color: "Red - Black" },
+        vcc: { pin: "4 - 3", color: "White - Black" },
+        vsp: { pin: "5 - 3", color: "Yellow - Black" },
+        vfg: { pin: "6 - 3", color: "Blue - Black" }
+      };
+      
       const div = document.createElement('div');
       div.style.cssText = 'background: #F8FAFC; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;';
       div.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
           <strong>Part No Key (10 ตัวแรก): <input type="text" value="${key}" data-oldkey="${key}" class="part-key-input" style="font-weight:bold; width:140px; padding:2px 4px;"></strong>
-          ${key !== 'DEFAULT' ? `<button type="button" onclick="deletePart('${key}')" style="background: #E60012; color: #fff; border:none; padding: 2px 6px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button>` : '<span style="font-size:0.7rem; color:var(--text-muted);">(ค่าเริ่มต้นเมื่อไม่ตรง 10 ตัวแรก)</span>'}
+          ${key !== 'DEFAULT' ? `<button type="button" onclick="deletePart('${key}')" style="background: #E60012; color: #fff; border:none; padding: 2px 6px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button>` : '<span style="font-size:0.7rem; color:var(--text-muted);">(ค่าเริ่มต้น)</span>'}
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 6px;">
           <label>Display Title: <input type="text" value="${part.title}" data-part="${key}" data-prop="title" style="width:100%"></label>
-          <label>Match Prefix (10 chars): <input type="text" value="${part.partNoMatch || key}" data-part="${key}" data-prop="partNoMatch" style="width:100%"></label>
+          <label>Motor Type: 
+            <select data-part="${key}" data-prop="motorType" style="width:100%; padding:2px;">
+              <option value="indoor" ${part.motorType === 'indoor' ? 'selected' : ''}>Indoor</option>
+              <option value="outdoor" ${part.motorType === 'outdoor' ? 'selected' : ''}>Outdoor</option>
+            </select>
+          </label>
+          <label>Connector: <input type="text" value="${part.connectorType || 'Type A'}" data-part="${key}" data-prop="connectorType" style="width:100%"></label>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
           <label>ชื่อรูป 1: <input type="text" value="${part.label1 || ''}" data-part="${key}" data-prop="label1" style="width:100%"></label>
@@ -700,6 +659,30 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
           <label>ชื่อรูป 2: <input type="text" value="${part.label2 || ''}" data-part="${key}" data-prop="label2" style="width:100%"></label>
           <label>Path รูป 2: <input type="text" value="${part.img2 || ''}" data-part="${key}" data-prop="img2" style="width:100%"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr; gap: 6px; margin-bottom: 6px;">
+          <label>Drawing Path: <input type="text" value="${part.drawingImg || ''}" data-part="${key}" data-prop="drawingImg" style="width:100%"></label>
+        </div>
+
+        <div style="margin-top: 8px; padding-top: 6px; border-top: 1px dashed var(--border-color);">
+          <strong style="font-size:0.75rem; color:var(--primary-black); display:block; margin-bottom:4px;">Wire Color Specification:</strong>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 6px;">
+            <label style="font-size:0.7rem;">Vm Wire: <input type="text" value="${pins.vm.color}" data-part="${key}" data-prop="wire_vm" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vcc Wire: <input type="text" value="${pins.vcc.color}" data-part="${key}" data-prop="wire_vcc" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vsp Wire: <input type="text" value="${pins.vsp.color}" data-part="${key}" data-prop="wire_vsp" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vfg Wire: <input type="text" value="${pins.vfg.color}" data-part="${key}" data-prop="wire_vfg" style="width:100%"></label>
+          </div>
+        </div>
+        
+        <div style="margin-top: 4px; padding-top: 6px; border-top: 1px dashed var(--border-color);">
+          <strong style="font-size:0.75rem; color:var(--primary-black); display:block; margin-bottom:4px;">Resistance Criteria Specification:</strong>
+          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;">
+            <label style="font-size:0.7rem;">Vm Min (MΩ): <input type="number" step="0.1" value="${crit.vm ? (crit.vm.min !== undefined ? crit.vm.min : 1) : 1}" data-part="${key}" data-prop="vm_min" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vcc Target (kΩ): <input type="number" step="0.1" value="${crit.vcc ? (crit.vcc.target !== undefined ? crit.vcc.target : 50) : 50}" data-part="${key}" data-prop="vcc_target" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vsp Target (kΩ): <input type="number" step="0.1" value="${crit.vsp ? (crit.vsp.target !== undefined ? crit.vsp.target : 150) : 150}" data-part="${key}" data-prop="vsp_target" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Vfg Target (MΩ): <input type="number" step="0.1" value="${crit.vfg ? (crit.vfg.target !== undefined ? crit.vfg.target : 4) : 4}" data-part="${key}" data-prop="vfg_target" style="width:100%"></label>
+            <label style="font-size:0.7rem;">Tolerance (±%): <input type="number" step="0.1" value="${crit.vcc ? (crit.vcc.tolerancePercent !== undefined ? crit.vcc.tolerancePercent : 5) : 5}" data-part="${key}" data-prop="tolerance" style="width:100%"></label>
+          </div>
         </div>
       `;
       container.appendChild(div);
@@ -711,10 +694,19 @@
     reportConfig.parts[newKey] = {
       title: "New DC Motor Part",
       partNoMatch: newKey,
+      motorType: "indoor",
+      connectorType: "Type A",
+      drawingImg: "images/Indoor DC Motor.jpg",
       img1: "images/motor_body.png",
       label1: "Motor Body View",
       img2: "images/motor_connector.png",
       label2: "Connector View",
+      pins: {
+        vm: { pin: "1 - 3", color: "Red - Black" },
+        vcc: { pin: "4 - 3", color: "White - Black" },
+        vsp: { pin: "5 - 3", color: "Yellow - Black" },
+        vfg: { pin: "6 - 3", color: "Blue - Black" }
+      },
       criteria: {
         vm: { min: 1.0, max: 999.0, unit: "MΩ" },
         vcc: { target: 50, tolerancePercent: 5, unit: "kΩ" },
@@ -732,33 +724,54 @@
 
   function saveLayoutChangesFromEditor() {
     reportConfig.formTitle = document.getElementById('editFormTitle').value;
-    reportConfig.indoorDrawing = document.getElementById('editIndoorDrawing').value;
-    reportConfig.outdoorDrawing = document.getElementById('editOutdoorDrawing').value;
 
     const newParts = {};
     document.querySelectorAll('#editorPartsContainer > div').forEach(div => {
       const keyInput = div.querySelector('.part-key-input');
       const oldKey = keyInput.getAttribute('data-oldkey');
       const newKey = keyInput.value.trim().toUpperCase().substring(0, 10) || oldKey;
+      
       const title = div.querySelector(`[data-prop="title"]`).value;
-      const partNoMatch = div.querySelector(`[data-prop="partNoMatch"]`).value.trim().toUpperCase().substring(0, 10);
+      const motorType = div.querySelector(`[data-prop="motorType"]`).value;
+      const connectorType = div.querySelector(`[data-prop="connectorType"]`).value;
       const label1 = div.querySelector(`[data-prop="label1"]`).value;
       const img1 = div.querySelector(`[data-prop="img1"]`).value;
       const label2 = div.querySelector(`[data-prop="label2"]`).value;
       const img2 = div.querySelector(`[data-prop="img2"]`).value;
+      const drawingImg = div.querySelector(`[data-prop="drawingImg"]`).value;
+
+      const wireVm = div.querySelector(`[data-prop="wire_vm"]`).value;
+      const wireVcc = div.querySelector(`[data-prop="wire_vcc"]`).value;
+      const wireVsp = div.querySelector(`[data-prop="wire_vsp"]`).value;
+      const wireVfg = div.querySelector(`[data-prop="wire_vfg"]`).value;
+
+      const vmMin = parseFloat(div.querySelector(`[data-prop="vm_min"]`).value) || 1.0;
+      const vccTarget = parseFloat(div.querySelector(`[data-prop="vcc_target"]`).value) || 50;
+      const vspTarget = parseFloat(div.querySelector(`[data-prop="vsp_target"]`).value) || 150;
+      const vfgTarget = parseFloat(div.querySelector(`[data-prop="vfg_target"]`).value) || 4;
+      const tolerance = parseFloat(div.querySelector(`[data-prop="tolerance"]`).value) || 5;
 
       newParts[newKey] = {
         title,
-        partNoMatch,
+        partNoMatch: newKey,
+        motorType,
+        connectorType,
+        drawingImg,
         img1,
         label1,
         img2,
         label2,
-        criteria: (reportConfig.parts[oldKey] && reportConfig.parts[oldKey].criteria) ? reportConfig.parts[oldKey].criteria : {
-          vm: { min: 1.0, max: 999.0, unit: "MΩ" },
-          vcc: { target: 50, tolerancePercent: 5, unit: "kΩ" },
-          vsp: { target: 150, tolerancePercent: 5, unit: "kΩ" },
-          vfg: { target: 4, tolerancePercent: 5, unit: "MΩ" }
+        pins: {
+          vm: { pin: motorType === 'outdoor' ? "6 - 4" : "1 - 3", color: wireVm },
+          vcc: { pin: motorType === 'outdoor' ? "3 - 4" : "4 - 3", color: wireVcc },
+          vsp: { pin: motorType === 'outdoor' ? "2 - 4" : "5 - 3", color: wireVsp },
+          vfg: { pin: motorType === 'outdoor' ? "1 - 4" : "6 - 3", color: wireVfg }
+        },
+        criteria: {
+          vm: { min: vmMin, max: 999.0, unit: "MΩ" },
+          vcc: { target: vccTarget, tolerancePercent: tolerance, unit: "kΩ" },
+          vsp: { target: vspTarget, tolerancePercent: tolerance, unit: "kΩ" },
+          vfg: { target: vfgTarget, tolerancePercent: tolerance, unit: "MΩ" }
         }
       };
     });
@@ -893,7 +906,6 @@
         const statusElem = document.getElementById(`status_${key}_${p}`);
         if (valElem && valElem.value.trim() !== '') {
           hasAnyComment = true;
-          // ดึงหน่วย (unit) จาก criteria ของพารามิเตอร์นั้นๆ มาแสดงต่อท้าย
           const unit = (partCfg.criteria && partCfg.criteria[p] && partCfg.criteria[p].unit) ? partCfg.criteria[p].unit : '';
           summaryHTML += `<div class="summary-item-row"><span class="summary-part-name">• ${partCfg.title} (${p.toUpperCase()} Measured):</span> ${valElem.value} ${unit} [Status: ${statusElem.textContent}]</div>`;
         }
@@ -933,6 +945,5 @@
     renderForm();
   });
 </script>
-
-
-</body></html>
+</body>
+</html>
