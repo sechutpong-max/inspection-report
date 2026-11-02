@@ -15,7 +15,7 @@
     .brand-header{background:#FFFFFF;padding:16px 24px;border-bottom:3px solid var(--primary-red);display:flex;justify-content:space-between;align-items:center;gap:16px;}
     .brand-logo-img{height:36px;width:auto;object-fit:contain;}
     .report-badge{background-color:#F8FAFC;border:1px solid var(--border-color);padding:6px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;color:var(--text-muted);display:flex;align-items:center;gap:8px;white-space:nowrap;}
-    .report-badge input{border:none;background:transparent;font-weight:700;color:var(--primary-black);font-size:0.9rem;outline:none;width:130px;}
+    .report-badge input{border:none;background:transparent;font-weight:700;color:var(--primary-black);font-size:0.9rem;outline:none;width:130px;text-transform:uppercase;}
     .form-body{padding:20px 24px;}
     .page-title{font-size:1.25rem;font-weight:700;color:var(--primary-black);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
     .page-title::before{content:'';display:inline-block;width:5px;height:22px;background-color:var(--primary-red);border-radius:3px;}
@@ -24,7 +24,7 @@
     .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
     .input-group{display:flex;flex-direction:column;gap:4px;width:100%;}
     .input-group label{font-size:0.8rem;font-weight:600;color:var(--text-main);}
-    .input-control{width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:6px;font-size:0.85rem;color:var(--text-main);background-color:#FAFAFA;box-sizing:border-box;}
+    .input-control{width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:6px;font-size:0.85rem;color:var(--text-main);background-color:#FAFAFA;box-sizing:border-box;text-transform:uppercase;}
     .parts-container{display:flex;flex-direction:column;gap:16px;}
     .part-item-card{background:#FFFFFF;border:1px solid var(--border-color);border-radius:8px;padding:16px;break-inside:avoid;page-break-inside:avoid;}
     .part-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:6px;border-bottom:1px dashed var(--border-color);}
@@ -92,7 +92,7 @@
 <div class="app-container" id="reportContent">
   <header class="brand-header">
     <div class="brand-logo-container"><img src="images/Picture1.png" alt="Mitsubishi Heavy Industries" class="brand-logo-img"></div>
-    <div class="report-badge"><span>Service Report No:</span><input type="text" id="serviceReportNo" placeholder="Ref.Job No." value="" required=""></div>
+    <div class="report-badge"><span>Service Report No:</span><input type="text" id="serviceReportNo" placeholder="Ref.Job No." value="" required="" oninput="this.value = this.value.toUpperCase()"></div>
   </header>
   <main class="form-body">
     <h1 class="page-title" id="displayFormTitle">Checking Part Report (DC Motor)</h1>
@@ -100,11 +100,11 @@
       <section class="section-card">
         <div class="section-title">General Information</div>
         <div class="grid-3">
-          <div class="input-group"><label for="Model">Model</label><input type="text" id="Model" class="input-control" placeholder="Model number"></div>
-          <div class="input-group"><label for="SN">Serial No. (S/N)</label><input type="text" id="SN" class="input-control" placeholder="Serial number"></div>
+          <div class="input-group"><label for="Model">Model</label><input type="text" id="Model" class="input-control" placeholder="Model number" oninput="this.value = this.value.toUpperCase()"></div>
+          <div class="input-group"><label for="SN">Serial No. (S/N)</label><input type="text" id="SN" class="input-control" placeholder="Serial number" oninput="this.value = this.value.toUpperCase()"></div>
           <div class="input-group">
             <label for="partNo">Part No.</label>
-            <input type="text" id="partNo" class="input-control" placeholder="e.g. SSA512T061G" oninput="renderTechnicalParts(); updateDynamicMotorSpec();">
+            <input type="text" id="partNo" class="input-control" placeholder="e.g. SSA512T061G" oninput="this.value = this.value.toUpperCase(); renderTechnicalParts(); updateDynamicMotorSpec();">
           </div>
         </div>
       </section>
@@ -240,7 +240,7 @@
   <div style="margin-bottom: 14px; background: #F8FAFC; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
     <div style="flex: 1; min-width: 250px;">
       <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 4px;">ชื่อฟอร์ม (Form Title):</label>
-      <input type="text" id="editFormTitle" class="input-control" style="background:#fff;">
+      <input type="text" id="editFormTitle" class="input-control" style="background:#fff; text-transform:none;">
     </div>
     <div>
       <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 4px;">อัปเดตข้อมูลผ่านไฟล์ Excel / CSV:</label>
@@ -250,7 +250,10 @@
 
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
     <strong>รายการ Parts ใน Technical Inspection & Specification:</strong>
-    <button type="button" onclick="addNewPart()" style="background: var(--success-green); color: #fff; border:none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor:pointer;">➕ เพิ่ม Part ใหม่</button>
+    <div style="display: flex; gap: 6px;">
+      <button type="button" onclick="addNewPart()" style="background: var(--success-green); color: #fff; border:none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor:pointer;">➕ เพิ่ม Part ใหม่</button>
+      <button type="button" onclick="deleteAllParts()" style="background: #E60012; color: #fff; border:none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor:pointer;">🗑️ ลบทั้งหมด</button>
+    </div>
   </div>
   <div id="editorPartsContainer" style="margin-bottom: 15px;"></div>
   
@@ -651,7 +654,7 @@
               <div style="display: flex; flex-direction: column; justify-content: center;">
                 <div class="input-group">
                   <label for="val_${key}_lot">Lot Number Value:</label>
-                  <input type="text" id="val_${key}_lot" class="input-control" placeholder="ระบุค่า Lot Number..." style="background:#fff; padding: 12px;" oninput="updateSummarySection()">
+                  <input type="text" id="val_${key}_lot" class="input-control" placeholder="ระบุค่า Lot Number..." style="background:#fff; padding: 12px;" oninput="this.value = this.value.toUpperCase(); updateSummarySection()">
                 </div>
               </div>
             </div>
@@ -739,7 +742,7 @@
 
       tableHTML += `
         <tr data-row-key="${key}">
-          <td><input type="text" value="${key}" data-oldkey="${key}" class="part-key-input" style="font-weight:bold; width:130px;"></td>
+          <td><input type="text" value="${key}" data-oldkey="${key}" class="part-key-input" style="font-weight:bold; width:130px; text-transform:uppercase;" oninput="this.value = this.value.toUpperCase()"></td>
           <td><input type="text" value="${part.title}" data-prop="title" style="width:160px;"></td>
           <td>
             <select data-prop="motorType" style="width:90px;">
@@ -784,7 +787,7 @@
             </div>
           </td>
           <td style="text-align:center;">
-            ${key !== 'DEFAULT' ? `<button type="button" onclick="deletePart('${key}')" style="background: #E60012; color: #fff; border:none; padding: 4px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ</button>` : '<span style="color:var(--text-muted); font-size:0.7rem;">(ค่าเริ่มต้น)</span>'}
+            <button type="button" onclick="deletePart('${key}')" style="background: #E60012; color: #fff; border:none; padding: 4px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ</button>
           </td>
         </tr>
       `;
@@ -807,7 +810,7 @@
       label1: "Motor Body View",
       img2: "images/motor_connector.png",
       label2: "Connector View",
-      vendorImg: "images/vendor_lot_sample.jpg",
+      vendorImg: "images/NidecLot.jpg",
       vendorLabel: "Motor Lot Number Example",
       pins: {
         vm: "1 - 3",
@@ -828,6 +831,13 @@
   function deletePart(key) {
     delete reportConfig.parts[key];
     renderEditorFields();
+  }
+
+  function deleteAllParts() {
+    if (confirm("คุณต้องการลบข้อมูล Parts ทั้งหมดใช่หรือไม่?")) {
+      reportConfig.parts = {};
+      renderEditorFields();
+    }
   }
 
   function importPartsFromExcel(event) {
