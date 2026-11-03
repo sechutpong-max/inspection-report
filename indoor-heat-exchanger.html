@@ -127,7 +127,7 @@
   </main>
 </div>
 <button type="button" class="designer-fab hide-on-pdf" onclick="promptEditorMode()" title="Designer Mode">⚙️</button>
-<div id="editorPanel" class="editor-panel-box hide-on-pdf">
+<div id="editorPanel" class="editor-panel-box hide-on-pdf" style="display: none;">
   <h3 style="margin-bottom: 10px; color: var(--primary-red);">Designer &amp; Layout Editor</h3>
   <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">ปรับแต่งชื่อฟอร์ม, รูปภาพ Overall, เพิ่ม/ลดตัวเลือก Overall, และจัดการ Parts พร้อมกำหนดสีรายชอยส์ได้อย่างอิสระ</p>
   <div style="margin-bottom: 14px; background: #F8FAFC; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
@@ -633,7 +633,7 @@
     setTimeout(() => { window.print(); }, 100);
   }
 
-  // ฟังก์ชันช่วยแปลงค่าใน input ที่มีคลาส auto-upper เป็นตัวพิมพ์ใหญ่แบบอัตโนมัติ
+  // ฟังก์ชันแปลงค่าในช่องที่มีคลาส auto-upper เป็นตัวพิมพ์ใหญ่แบบอัตโนมัติขณะพิมพ์
   document.addEventListener('input', function (e) {
     if (e.target.classList.contains('auto-upper')) {
       const start = e.target.selectionStart;
