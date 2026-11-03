@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="pageHeaderTitle">Checking Part Report (Outdoor Heat Exchanger)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
   <style>
     :root {
@@ -102,13 +101,13 @@
       <section class="section-card">
         <div class="section-title">Drawing Overall</div>
         <div style="text-align: center; margin-bottom: 12px;">
-          <div class="highlight-overlay-container" id="overviewContainer"><img src="images/OutdoorOV.png" alt="Drawing Overall" id="overviewImage"></div>
+          <div class="highlight-overlay-container" id="overviewContainer"><img src="images/OutdoorOV.png" alt="Drawing Overall" id="overviewImage"><div class="map-highlight" id="hl_hairpin" style="top: 2%; left: 3%; width: 6%; height: 85%; border-radius: 20%; display: none;"></div><div class="map-highlight" id="hl_ubend" style="top: 12%; left: 24%; width: 8%; height: 90%; border-radius: 20%; display: none;"></div><div class="map-highlight" id="hl_Heat Exchanger" style="top: 2%; left: 10%; width: 13%; height: 90%; border-radius: 20%; display: none;"></div><div class="map-highlight" id="hl_distributor" style="top: 53%; left: 69%; width: 32%; height: 46%; border-radius: 20%; display: none;"></div><div class="map-highlight" id="hl_header" style="top: 2%; left: 69%; width: 32%; height: 46%; border-radius: 20%; display: none;"></div><div class="map-highlight" id="hl_pipe" style="top: 1.5%; left: 35%; width: 14%; height: 98%; border-radius: 20%; display: none;"></div><div class="map-highlight" id="hl_expansion" style="top: 2%; left: 50%; width: 18%; height: 96%; border-radius: 20%; display: none;"></div></div>
         </div>
-        <div class="options-grid" id="overallOptionsGrid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));"></div>
+        <div class="options-grid" id="overallOptionsGrid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));"><label class="custom-check"><input type="checkbox" name="overall_part" value="hairpin" onchange="filterInspectionSections()"> Hair-pin tube side</label><label class="custom-check"><input type="checkbox" name="overall_part" value="ubend" onchange="filterInspectionSections()"> U-bend tube side</label><label class="custom-check"><input type="checkbox" name="overall_part" value="Heat Exchanger" onchange="filterInspectionSections()"> Middle coil</label><label class="custom-check"><input type="checkbox" name="overall_part" value="distributor" onchange="filterInspectionSections()"> Distributor</label><label class="custom-check"><input type="checkbox" name="overall_part" value="header" onchange="filterInspectionSections()"> Header</label><label class="custom-check"><input type="checkbox" name="overall_part" value="pipe" onchange="filterInspectionSections()"> Pipe Assy</label><label class="custom-check"><input type="checkbox" name="overall_part" value="expansion" onchange="filterInspectionSections()"> Expansion pipe</label></div>
       </section>
       <section class="section-card hide-on-pdf" id="section_technical" style="display: block;">
         <div class="section-title"><span>Technical Inspection &amp; Defect Locations</span></div>
-        <div class="parts-container" id="technicalPartsContainer"></div>
+        <div class="parts-container" id="technicalPartsContainer"><div class="part-item-card" data-key="hairpin" data-title="Hair-pin tube side" style="display: block;"><div class="part-header"><span class="part-title-text">Hair-pin tube side</span></div><div class="image-preview-box"><img src="images/Out hair-pin.png" alt="Hair-pin tube side"></div><div class="options-grid"><label class="custom-check" style="background-color: #e5fcff; color: #217aa6; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="hairpin" value="(A) Arc of hair-pin tube" onchange="updateAttachedComments()"> (A) Arc of hair-pin tube</label><label class="custom-check" style="background-color: #fee2e2; color: #991b1b; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="hairpin" value="(B) Point which is touched with the metal plate" onchange="updateAttachedComments()"> (B) Point which is touched with the metal plate</label></div><div class="upload-zone hide-on-pdf" id="zone_hairpin"><input type="file" id="pic_hairpin" accept="image/*" onchange="handleImageUpload(this, 'Hair-pin tube side', 'attach_hairpin', 'zone_hairpin')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="ubend" data-title="U-bend tube side" style="display: block;"><div class="part-header"><span class="part-title-text">U-bend tube side</span></div><div class="image-preview-box"><img src="images/Out u-bend.png" alt="U-bend tube side"></div><div class="options-grid"><label class="custom-check" style="background-color: #fee2e2; color: #991b1b; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="ubend" value="(C) Arc of U-bend tube" onchange="updateAttachedComments()"> (C) Arc of U-bend tube</label><label class="custom-check" style="background-color: #e5fcff; color: #217aa6; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="ubend" value="(D) Brazing point of U-bend tube" onchange="updateAttachedComments()"> (D) Brazing point of U-bend tube</label><label class="custom-check" style="background-color: #fef3c7; color: #92400e; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="ubend" value="(E) Point which is touched with the metal plate" onchange="updateAttachedComments()"> (E) Point which is touched with the metal plate</label><label class="custom-check" style="background-color: #dcfce7; color: #166534; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="ubend" value="(F) Brazing point of pipe component" onchange="updateAttachedComments()"> (F) Brazing point of pipe component</label></div><div class="upload-zone hide-on-pdf" id="zone_ubend"><input type="file" id="pic_ubend" accept="image/*" onchange="handleImageUpload(this, 'U-bend tube side', 'attach_ubend', 'zone_ubend')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="Heat Exchanger" data-title="Middle coil" style="display: block;"><div class="part-header"><span class="part-title-text">Middle coil</span></div><div class="image-preview-box"><img src="images/Out inside heat exchanger.png" alt="Middle coil"></div><div class="options-grid"><label class="custom-check" style="background-color: #fee2e2; color: #991b1b; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="Heat Exchanger" value="(G) The flat back of Heat Exchanger" onchange="updateAttachedComments()"> (G) The flat back of Heat Exchanger</label><label class="custom-check" style="background-color: #e0e7ff; color: #3730a3; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="Heat Exchanger" value="(H) The flat side of Heat Exchanger" onchange="updateAttachedComments()"> (H) The flat side of Heat Exchanger</label><label class="custom-check" style="background-color: #fff2e0; color: #e66814; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="Heat Exchanger" value="(I) The curved area of Heat Exchanger" onchange="updateAttachedComments()"> (I) The curved area of Heat Exchanger</label></div><div class="upload-zone hide-on-pdf" id="zone_Heat Exchanger"><input type="file" id="pic_Heat Exchanger" accept="image/*" onchange="handleImageUpload(this, 'Middle coil', 'attach_Heat Exchanger', 'zone_Heat Exchanger')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="distributor" data-title="Distributor" style="display: block;"><div class="part-header"><span class="part-title-text">Distributor</span></div><div class="image-preview-box"><img src="images/Outdistributor.png" alt="Distributor"></div><div class="options-grid"><label class="custom-check" style="background-color: #fee2e2; color: #991b1b; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="distributor" value="(J) Cap tube" onchange="updateAttachedComments()"> (J) Cap tube</label><label class="custom-check" style="background-color: #e5fcff; color: #217aa6; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="distributor" value="(K) Brazing(brass)" onchange="updateAttachedComments()"> (K) Brazing(brass)</label><label class="custom-check" style="background-color: #dcfcdd; color: #166534; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="distributor" value="(L) Brazing point" onchange="updateAttachedComments()"> (L) Brazing point</label></div><div class="upload-zone hide-on-pdf" id="zone_distributor"><input type="file" id="pic_distributor" accept="image/*" onchange="handleImageUpload(this, 'Distributor', 'attach_distributor', 'zone_distributor')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="header" data-title="Header" style="display: block;"><div class="part-header"><span class="part-title-text">Header</span></div><div class="image-preview-box"><img src="images/Outheader.png" alt="Header"></div><div class="options-grid"><label class="custom-check" style="background-color: #fee2e2; color: #991b1b; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="header" value="(M) Brazing point" onchange="updateAttachedComments()"> (M) Brazing point</label><label class="custom-check" style="background-color: #dcfcdd; color: #166534; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="header" value="(N) Burring" onchange="updateAttachedComments()"> (N) Burring</label><label class="custom-check" style="background-color: #e0e7ff; color: #3730a3; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="header" value="(O) Spinding" onchange="updateAttachedComments()"> (O) Spinding</label></div><div class="upload-zone hide-on-pdf" id="zone_header"><input type="file" id="pic_header" accept="image/*" onchange="handleImageUpload(this, 'Header', 'attach_header', 'zone_header')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="pipe" data-title="Pipe Assy" style="display: block;"><div class="part-header"><span class="part-title-text">Pipe Assy</span></div><div class="image-preview-box"><img src="images/Outpipeassy.png" alt="Pipe Assy"></div><div class="options-grid"><label class="custom-check" style="background-color: #e5fcff; color: #217aa6; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="pipe" value="(P) Sensor holder" onchange="updateAttachedComments()"> (P) Sensor holder</label><label class="custom-check" style="background-color: #fee2e2; color: #991b1b; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="pipe" value="(Q) Discharge pipe" onchange="updateAttachedComments()"> (Q) Discharge pipe</label><label class="custom-check" style="background-color: #e0e7ff; color: #3730a3; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="pipe" value="(R) Suction pipe" onchange="updateAttachedComments()"> (R) Suction pipe</label></div><div class="upload-zone hide-on-pdf" id="zone_pipe"><input type="file" id="pic_pipe" accept="image/*" onchange="handleImageUpload(this, 'Pipe Assy', 'attach_pipe', 'zone_pipe')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="expansion" data-title="Expansion pipe" style="display: block;"><div class="part-header"><span class="part-title-text">Expansion pipe</span></div><div class="image-preview-box"><img src="images/Outexpansion.png" alt="Expansion pipe"></div><div class="options-grid"><label class="custom-check" style="background-color: #fee2e2; color: #991b1b; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="expansion" value="(S) Valve body" onchange="updateAttachedComments()"> (S) Valve body</label><label class="custom-check" style="background-color: #fef3c7; color: #92400e; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="expansion" value="(T) Strainer" onchange="updateAttachedComments()"> (T) Strainer</label><label class="custom-check" style="background-color: #e0e7ff; color: #3730a3; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="expansion" value="(U) Cap tube" onchange="updateAttachedComments()"> (U) Cap tube</label></div><div class="upload-zone hide-on-pdf" id="zone_expansion"><input type="file" id="pic_expansion" accept="image/*" onchange="handleImageUpload(this, 'Expansion pipe', 'attach_expansion', 'zone_expansion')"><div class="upload-label">📷 Attach Defect Image</div></div></div></div>
       </section>
       <section class="section-card" id="section_attached_pictures" style="display: none;">
         <div class="section-title">Attached Defect Pictures</div>
@@ -159,85 +158,232 @@
     "formTitle": "Checking Part Report (Outdoor Heat Exchanger)",
     "overallImage": "images/OutdoorOV.png",
     "overallOptions": [
-      { "key": "hairpin", "label": "Hair-pin tube side" },
-      { "key": "ubend", "label": "U-bend tube side" },
-      { "key": "Heat Exchanger", "label": "Middle coil" },
-      { "key": "distributor", "label": "Distributor" },
-      { "key": "header", "label": "Header" },
-      { "key": "pipe", "label": "Pipe Assy" },
-      { "key": "expansion", "label": "Expansion pipe" }
+        {
+            "key": "hairpin",
+            "label": "Hair-pin tube side"
+        },
+        {
+            "key": "ubend",
+            "label": "U-bend tube side"
+        },
+        {
+            "key": "Heat Exchanger",
+            "label": "Middle coil"
+        },
+        {
+            "key": "distributor",
+            "label": "Distributor"
+        },
+        {
+            "key": "header",
+            "label": "Header"
+        },
+        {
+            "key": "pipe",
+            "label": "Pipe Assy"
+        },
+        {
+            "key": "expansion",
+            "label": "Expansion pipe"
+        }
     ],
     "parts": {
-      "hairpin": {
-        "title": "Hair-pin tube side",
-        "image": "images/Out hair-pin.png",
-        "options": [
-          { "label": "(A) Arc of hair-pin tube", "bgColor": "#e5fcff", "textColor": "#217aa6" },
-          { "label": "(B) Point which is touched with the metal plate", "bgColor": "#fee2e2", "textColor": "#991b1b" }
-        ],
-        "highlight": { "top": 2, "left": 3, "width": 6, "height": 85, "radius": "20%" }
-      },
-      "ubend": {
-        "title": "U-bend tube side",
-        "image": "images/Out u-bend.png",
-        "options": [
-          { "label": "(C) Arc of U-bend tube", "bgColor": "#fee2e2", "textColor": "#991b1b" },
-          { "label": "(D) Brazing point of U-bend tube", "bgColor": "#e5fcff", "textColor": "#217aa6" },
-          { "label": "(E) Point which is touched with the metal plate", "bgColor": "#fef3c7", "textColor": "#92400e" },
-          { "label": "(F) Brazing point of pipe component", "bgColor": "#dcfce7", "textColor": "#166534" }
-        ],
-        "highlight": { "top": 12, "left": 24, "width": 8, "height": 90, "radius": "20%" }
-      },
-      "Heat Exchanger": {
-        "title": "Middle coil",
-        "image": "images/Out inside heat exchanger.png",
-        "options": [
-          { "label": "(G) The flat back of Heat Exchanger", "bgColor": "#fee2e2", "textColor": "#991b1b" },
-          { "label": "(H) The flat side of Heat Exchanger", "bgColor": "#e0e7ff", "textColor": "#3730a3" },
-          { "label": "(I) The curved area of Heat Exchanger", "bgColor": "#fff2e0", "textColor": "#e66814" }
-        ],
-        "highlight": { "top": 2, "left": 10, "width": 13, "height": 90, "radius": "20%" }
-      },
-      "distributor": {
-        "title": "Distributor",
-        "image": "images/Outdistributor.png",
-        "options": [
-          { "label": "(J) Cap tube", "bgColor": "#fee2e2", "textColor": "#991b1b" },
-          { "label": "(K) Brazing(brass)", "bgColor": "#e5fcff", "textColor": "#217aa6" },
-          { "label": "(L) Brazing point", "bgColor": "#dcfcdd", "textColor": "#166534" }
-        ],
-        "highlight": { "top": 53, "left": 69, "width": 32, "height": 46, "radius": "20%" }
-      },
-      "header": {
-        "title": "Header",
-        "image": "images/Outheader.png",
-        "options": [
-          { "label": "(M) Brazing point", "bgColor": "#fee2e2", "textColor": "#991b1b" },
-          { "label": "(N) Burring", "bgColor": "#dcfcdd", "textColor": "#166534" },
-          { "label": "(O) Spinding", "bgColor": "#e0e7ff", "textColor": "#3730a3" }
-        ],
-        "highlight": { "top": 2, "left": 69, "width": 32, "height": 46, "radius": "20%" }
-      },
-      "pipe": {
-        "title": "Pipe Assy",
-        "image": "images/Outpipeassy.png",
-        "options": [
-          { "label": "(P) Sensor holder", "bgColor": "#e5fcff", "textColor": "#217aa6" },
-          { "label": "(Q) Discharge pipe", "bgColor": "#fee2e2", "textColor": "#991b1b" },
-          { "label": "(R) Suction pipe", "bgColor": "#e0e7ff", "textColor": "#3730a3" }
-        ],
-        "highlight": { "top": 1.5, "left": 35, "width": 14, "height": 98, "radius": "20%" }
-      },
-      "expansion": {
-        "title": "Expansion pipe",
-        "image": "images/Outexpansion.png",
-        "options": [
-          { "label": "(S) Valve body", "bgColor": "#fee2e2", "textColor": "#991b1b" },
-          { "label": "(T) Strainer", "bgColor": "#fef3c7", "textColor": "#92400e" },
-          { "label": "(U) Cap tube", "bgColor": "#e0e7ff", "textColor": "#3730a3" }
-        ],
-        "highlight": { "top": 2, "left": 50, "width": 18, "height": 96, "radius": "20%" }
-      }
+        "hairpin": {
+            "title": "Hair-pin tube side",
+            "image": "images/Out hair-pin.png",
+            "options": [
+                {
+                    "label": "(A) Arc of hair-pin tube",
+                    "bgColor": "#e5fcff",
+                    "textColor": "#217aa6"
+                },
+                {
+                    "label": "(B) Point which is touched with the metal plate",
+                    "bgColor": "#fee2e2",
+                    "textColor": "#991b1b"
+                }
+            ],
+            "highlight": {
+                "top": 2,
+                "left": 3,
+                "width": 6,
+                "height": 85,
+                "radius": "20%"
+            }
+        },
+        "ubend": {
+            "title": "U-bend tube side",
+            "image": "images/Out u-bend.png",
+            "options": [
+                {
+                    "label": "(C) Arc of U-bend tube",
+                    "bgColor": "#fee2e2",
+                    "textColor": "#991b1b"
+                },
+                {
+                    "label": "(D) Brazing point of U-bend tube",
+                    "bgColor": "#e5fcff",
+                    "textColor": "#217aa6"
+                },
+                {
+                    "label": "(E) Point which is touched with the metal plate",
+                    "bgColor": "#fef3c7",
+                    "textColor": "#92400e"
+                },
+                {
+                    "label": "(F) Brazing point of pipe component",
+                    "bgColor": "#dcfce7",
+                    "textColor": "#166534"
+                }
+            ],
+            "highlight": {
+                "top": 12,
+                "left": 24,
+                "width": 8,
+                "height": 90,
+                "radius": "20%"
+            }
+        },
+        "Heat Exchanger": {
+            "title": "Middle coil",
+            "image": "images/Out inside heat exchanger.png",
+            "options": [
+                {
+                    "label": "(G) The flat back of Heat Exchanger",
+                    "bgColor": "#fee2e2",
+                    "textColor": "#991b1b"
+                },
+                {
+                    "label": "(H) The flat side of Heat Exchanger",
+                    "bgColor": "#e0e7ff",
+                    "textColor": "#3730a3"
+                },
+                {
+                    "label": "(I) The curved area of Heat Exchanger",
+                    "bgColor": "#fff2e0",
+                    "textColor": "#e66814"
+                }
+            ],
+            "highlight": {
+                "top": 2,
+                "left": 10,
+                "width": 13,
+                "height": 90,
+                "radius": "20%"
+            }
+        },
+        "distributor": {
+            "title": "Distributor",
+            "image": "images/Outdistributor.png",
+            "options": [
+                {
+                    "label": "(J) Cap tube",
+                    "bgColor": "#fee2e2",
+                    "textColor": "#991b1b"
+                },
+                {
+                    "label": "(K) Brazing(brass)",
+                    "bgColor": "#e5fcff",
+                    "textColor": "#217aa6"
+                },
+                {
+                    "label": "(L) Brazing point",
+                    "bgColor": "#dcfcdd",
+                    "textColor": "#166534"
+                }
+            ],
+            "highlight": {
+                "top": 53,
+                "left": 69,
+                "width": 32,
+                "height": 46,
+                "radius": "20%"
+            }
+        },
+        "header": {
+            "title": "Header",
+            "image": "images/Outheader.png",
+            "options": [
+                {
+                    "label": "(M) Brazing point",
+                    "bgColor": "#fee2e2",
+                    "textColor": "#991b1b"
+                },
+                {
+                    "label": "(N) Burring",
+                    "bgColor": "#dcfcdd",
+                    "textColor": "#166534"
+                },
+                {
+                    "label": "(O) Spinding",
+                    "bgColor": "#e0e7ff",
+                    "textColor": "#3730a3"
+                }
+            ],
+            "highlight": {
+                "top": 2,
+                "left": 69,
+                "width": 32,
+                "height": 46,
+                "radius": "20%"
+            }
+        },
+        "pipe": {
+            "title": "Pipe Assy",
+            "image": "images/Outpipeassy.png",
+            "options": [
+                {
+                    "label": "(P) Sensor holder",
+                    "bgColor": "#e5fcff",
+                    "textColor": "#217aa6"
+                },
+                {
+                    "label": "(Q) Discharge pipe",
+                    "bgColor": "#fee2e2",
+                    "textColor": "#991b1b"
+                },
+                {
+                    "label": "(R) Suction pipe",
+                    "bgColor": "#e0e7ff",
+                    "textColor": "#3730a3"
+                }
+            ],
+            "highlight": {
+                "top": 1.5,
+                "left": 35,
+                "width": 14,
+                "height": 98,
+                "radius": "20%"
+            }
+        },
+        "expansion": {
+            "title": "Expansion pipe",
+            "image": "images/Outexpansion.png",
+            "options": [
+                {
+                    "label": "(S) Valve body",
+                    "bgColor": "#fee2e2",
+                    "textColor": "#991b1b"
+                },
+                {
+                    "label": "(T) Strainer",
+                    "bgColor": "#fef3c7",
+                    "textColor": "#92400e"
+                },
+                {
+                    "label": "(U) Cap tube",
+                    "bgColor": "#e0e7ff",
+                    "textColor": "#3730a3"
+                }
+            ],
+            "highlight": {
+                "top": 2,
+                "left": 50,
+                "width": 18,
+                "height": 96,
+                "radius": "20%"
+            }
+        }
     }
   };
   /* CONFIG END */
@@ -650,5 +796,5 @@
     renderForm();
   });
 </script>
-</body>
-</html>
+
+</body></html>
