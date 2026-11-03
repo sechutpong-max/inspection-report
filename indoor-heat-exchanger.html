@@ -33,7 +33,11 @@
     .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .input-group { display: flex; flex-direction: column; gap: 4px; width: 100%; }
     .input-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
-    .input-control { width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; color: var(--text-main); background-color: #FAFAFA; box-sizing: border-box; font-family: 'Tahoma', 'Inter', sans-serif !important; text-transform: uppercase; }
+    .input-control { width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; color: var(--text-main); background-color: #FAFAFA; box-sizing: border-box; font-family: 'Tahoma', 'Inter', sans-serif !important; }
+    
+    /* คลาสพิเศษสำหรับบังคับเฉพาะช่องที่ต้องการให้เป็นตัวพิมพ์ใหญ่ */
+    .auto-upper { text-transform: uppercase; }
+
     .parts-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .part-item-card { background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; break-inside: avoid; page-break-inside: avoid; }
     .part-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
@@ -633,7 +637,7 @@
     setTimeout(() => { window.print(); }, 100);
   }
 
-  // ฟังก์ชันแปลงค่าในช่องที่มีคลาส auto-upper เป็นตัวพิมพ์ใหญ่แบบอัตโนมัติขณะพิมพ์
+  // แปลงเฉพาะช่องที่มีคลาส auto-upper เป็นตัวพิมพ์ใหญ่อัตโนมัติขณะพิมพ์
   document.addEventListener('input', function (e) {
     if (e.target.classList.contains('auto-upper')) {
       const start = e.target.selectionStart;
