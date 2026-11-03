@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="pageHeaderTitle">Checking Part Report (Indoor Heat Exchanger)</title>
@@ -23,7 +24,7 @@
     .brand-header { background: #FFFFFF; padding: 16px 24px; border-bottom: 3px solid var(--primary-red); display: flex; justify-content: space-between; align-items: center; gap: 16px; }
     .brand-logo-img { height: 36px; width: auto; object-fit: contain; }
     .report-badge { background-color: #F8FAFC; border: 1px solid var(--border-color); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
-    .report-badge input { border: none; background: transparent; font-weight: 700; color: var(--primary-black); font-size: 0.9rem; outline: none; width: 130px; }
+    .report-badge input { border: none; background: transparent; font-weight: 700; color: var(--primary-black); font-size: 0.9rem; outline: none; width: 130px; text-transform: uppercase; }
     .form-body { padding: 20px 24px; }
     .page-title { font-size: 1.25rem; font-weight: 700; color: var(--primary-black); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
     .page-title::before { content: ''; display: inline-block; width: 5px; height: 22px; background-color: var(--primary-red); border-radius: 3px; }
@@ -32,7 +33,7 @@
     .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .input-group { display: flex; flex-direction: column; gap: 4px; width: 100%; }
     .input-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
-    .input-control { width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; color: var(--text-main); background-color: #FAFAFA; box-sizing: border-box; font-family: 'Tahoma', 'Inter', sans-serif !important; }
+    .input-control { width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; color: var(--text-main); background-color: #FAFAFA; box-sizing: border-box; font-family: 'Tahoma', 'Inter', sans-serif !important; text-transform: uppercase; }
     .parts-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .part-item-card { background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; break-inside: avoid; page-break-inside: avoid; }
     .part-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
@@ -64,7 +65,6 @@
     .designer-fab:hover { opacity: 1; transform: scale(1.08); }
     .editor-panel-box { display: none; background: #FFFFFF; border: 2px solid var(--primary-red); padding: 16px; margin: 16px auto; max-width: 980px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
     
-    /* สไตล์จานสีและรายการ Option ใน Designer Panel */
     .editor-option-row { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; background: #FFF; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 6px; }
     .color-picker-btn { width: 28px; height: 28px; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0; cursor: pointer; background: none; }
 
@@ -88,7 +88,7 @@
 <div class="app-container" id="reportContent">
   <header class="brand-header">
     <div class="brand-logo-container"><img src="images/Picture1.png" alt="Mitsubishi Heavy Industries" class="brand-logo-img"></div>
-    <div class="report-badge"><span>Service Report No:</span><input type="text" id="serviceReportNo" placeholder="Ref.Job No." value="" required=""></div>
+    <div class="report-badge"><span>Service Report No:</span><input type="text" id="serviceReportNo" class="auto-upper" placeholder="Ref.Job No." value="" required=""></div>
   </header>
   <main class="form-body">
     <h1 class="page-title" id="displayFormTitle">Checking Part Report (Indoor Heat Exchanger)</h1>
@@ -96,21 +96,21 @@
       <section class="section-card">
         <div class="section-title">General Information</div>
         <div class="grid-3">
-          <div class="input-group"><label for="Model">Model</label><input type="text" id="Model" class="input-control" placeholder="Model number"></div>
-          <div class="input-group"><label for="SN">Serial No. (S/N)</label><input type="text" id="SN" class="input-control" placeholder="Serial number"></div>
-          <div class="input-group"><label for="partNo">Part No.</label><input type="text" id="partNo" class="input-control" placeholder="Part No. (e.g. RKX-101)"></div>
+          <div class="input-group"><label for="Model">Model</label><input type="text" id="Model" class="input-control auto-upper" placeholder="Model number"></div>
+          <div class="input-group"><label for="SN">Serial No. (S/N)</label><input type="text" id="SN" class="input-control auto-upper" placeholder="Serial number"></div>
+          <div class="input-group"><label for="partNo">Part No.</label><input type="text" id="partNo" class="input-control auto-upper" placeholder="Part No. (e.g. RKX-101)"></div>
         </div>
       </section>
       <section class="section-card">
         <div class="section-title">Drawing Overall</div>
         <div style="text-align: center; margin-bottom: 12px;">
-          <div class="highlight-overlay-container" id="overviewContainer"><img src="images/Ovinheat.jpg" alt="Drawing Overall" id="overviewImage"><div class="map-highlight" id="hl_hairpin" style="top: 16.8%; left: 0.5%; width: 10%; height: 58.6%; border-radius: 40%; display: none;"></div><div class="map-highlight" id="hl_ubend" style="top: 12%; left: 75%; width: 10%; height: 65%; border-radius: 50%; display: none;"></div><div class="map-highlight" id="hl_distributor" style="top: 52%; left: 87%; width: 13%; height: 43%; border-radius: 40%; display: none;"></div><div class="map-highlight" id="hl_union" style="top: 72%; left: 38%; width: 15%; height: 26%; border-radius: 40%; display: none;"></div><div class="map-highlight" id="hl_header" style="top: 3%; left: 87%; width: 13%; height: 46%; border-radius: 40%; display: none;"></div><div class="map-highlight" id="hl_middlecoils" style="top: 10%; left: 20%; width: 38%; height: 63%; border-radius: 50%; display: none;"></div></div>
+          <div class="highlight-overlay-container" id="overviewContainer"></div>
         </div>
-        <div class="options-grid" id="overallOptionsGrid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));"><label class="custom-check"><input type="checkbox" name="overall_part" value="hairpin" onchange="filterInspectionSections()"> Hair-pin</label><label class="custom-check"><input type="checkbox" name="overall_part" value="ubend" onchange="filterInspectionSections()"> U-bend</label><label class="custom-check"><input type="checkbox" name="overall_part" value="distributor" onchange="filterInspectionSections()"> Distributor part</label><label class="custom-check"><input type="checkbox" name="overall_part" value="union" onchange="filterInspectionSections()"> Union</label><label class="custom-check"><input type="checkbox" name="overall_part" value="header" onchange="filterInspectionSections()"> Header</label><label class="custom-check"><input type="checkbox" name="overall_part" value="middlecoils" onchange="filterInspectionSections()"> Middle coil</label></div>
+        <div class="options-grid" id="overallOptionsGrid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));"></div>
       </section>
       <section class="section-card hide-on-pdf" id="section_technical" style="display: block;">
         <div class="section-title"><span>Technical Inspection &amp; Defect Locations</span></div>
-        <div class="parts-container" id="technicalPartsContainer"><div class="part-item-card" data-key="hairpin" data-title="Hair-pin" style="display: block;"><div class="part-header"><span class="part-title-text">Hair-pin</span></div><div class="image-preview-box"><img src="images/Hair-pin tube side.png" alt="Hair-pin"></div><div class="options-grid"><label class="custom-check" style="background-color: #fee2e2; color: #991b1b; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="hairpin" value="(A) Hair-pin" onchange="updateAttachedComments()"> (A) Hair-pin</label></div><div class="upload-zone hide-on-pdf" id="zone_hairpin"><input type="file" id="pic_hairpin" accept="image/*" onchange="handleImageUpload(this, 'Hair-pin', 'attach_hairpin', 'zone_hairpin')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="ubend" data-title="U-bend" style="display: block;"><div class="part-header"><span class="part-title-text">U-bend</span></div><div class="image-preview-box"><img src="images/U-bend part.png" alt="U-bend"></div><div class="options-grid"><label class="custom-check" style="background-color: #fee2e2; color: #991b1b; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="ubend" value="(B) U-bend" onchange="updateAttachedComments()"> (B) U-bend</label><label class="custom-check" style="background-color: #fef3c7; color: #92400e; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="ubend" value="(C) Brazing point of U-bend" onchange="updateAttachedComments()"> (C) Brazing point of U-bend</label><label class="custom-check" style="background-color: #dcfce7; color: #166534; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="ubend" value="(D) Hair-pin plate side" onchange="updateAttachedComments()"> (D) Hair-pin plate side</label><label class="custom-check" style="background-color: #e5fcff; color: #217aa6; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="ubend" value="(E) Hair-pin near plate side" onchange="updateAttachedComments()"> (E) Hair-pin near plate side</label></div><div class="upload-zone hide-on-pdf" id="zone_ubend"><input type="file" id="pic_ubend" accept="image/*" onchange="handleImageUpload(this, 'U-bend', 'attach_ubend', 'zone_ubend')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="distributor" data-title="Distributor part" style="display: block;"><div class="part-header"><span class="part-title-text">Distributor part</span></div><div class="image-preview-box"><img src="images/Distributor part.png" alt="Distributor part"></div><div class="options-grid"><label class="custom-check" style="background-color: #fee2e2; color: #991b1b; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="distributor" value="(F) Brazing point" onchange="updateAttachedComments()"> (F) Brazing point</label><label class="custom-check" style="background-color: #fef3c7; color: #92400e; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="distributor" value="(G) Burring" onchange="updateAttachedComments()"> (G) Burring</label><label class="custom-check" style="background-color: #dcfce7; color: #166534; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="distributor" value="(H) Spinding" onchange="updateAttachedComments()"> (H) Spinding</label><label class="custom-check" style="background-color: #efe4f7; color: #6645eb; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="distributor" value="(I) Brazing(brass)" onchange="updateAttachedComments()"> (I) Brazing(brass)</label><label class="custom-check" style="background-color: #abd0f7; color: #0359e2; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="distributor" value="(J) Cap tube" onchange="updateAttachedComments()"> (J) Cap tube</label></div><div class="upload-zone hide-on-pdf" id="zone_distributor"><input type="file" id="pic_distributor" accept="image/*" onchange="handleImageUpload(this, 'Distributor part', 'attach_distributor', 'zone_distributor')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="union" data-title="Union" style="display: block;"><div class="part-header"><span class="part-title-text">Union</span></div><div class="image-preview-box"><img src="images/Union part.png" alt="Union"></div><div class="options-grid"><label class="custom-check" style="background-color: #efe4f7; color: #6645eb; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="union" value="(K) Brazing point of gas pipe" onchange="updateAttachedComments()"> (K) Brazing point of gas pipe</label><label class="custom-check" style="background-color: #fee2e2; color: #991b1b; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="union" value="(L) Brazing point of liquid pipe" onchange="updateAttachedComments()"> (L) Brazing point of liquid pipe</label><label class="custom-check" style="background-color: #dcfce7; color: #166534; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="union" value="(M1) Flare surface of gas pipe" onchange="updateAttachedComments()"> (M1) Flare surface of gas pipe</label><label class="custom-check" style="background-color: #e5fcff; color: #217aa6; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="union" value="(N1) Flare nut of gas pipe" onchange="updateAttachedComments()"> (N1) Flare nut of gas pipe</label><label class="custom-check" style="background-color: #dcfce7; color: #166534; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="union" value="(M2) Flare surface of liquid pipe" onchange="updateAttachedComments()"> (M2) Flare surface of liquid pipe</label><label class="custom-check" style="background-color: #e5fcff; color: #217aa6; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="union" value="(N2) Flare nut of liquid pipe" onchange="updateAttachedComments()"> (N2) Flare nut of liquid pipe</label></div><div class="upload-zone hide-on-pdf" id="zone_union"><input type="file" id="pic_union" accept="image/*" onchange="handleImageUpload(this, 'Union', 'attach_union', 'zone_union')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="header" data-title="Header" style="display: block;"><div class="part-header"><span class="part-title-text">Header</span></div><div class="image-preview-box"><img src="images/Header part.png" alt="Header"></div><div class="options-grid"><label class="custom-check" style="background-color: #fef3c7; color: #92400e; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="header" value="(O) Spinding" onchange="updateAttachedComments()"> (O) Spinding</label><label class="custom-check" style="background-color: #fee2e2; color: #991b1b; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="header" value="(P) Brazing point of header" onchange="updateAttachedComments()"> (P) Brazing point of header</label><label class="custom-check" style="background-color: #dcfce7; color: #166534; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="header" value="(Q) Burring of header" onchange="updateAttachedComments()"> (Q) Burring of header</label><label class="custom-check" style="background-color: #e5fcff; color: #217aa6; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="header" value="(R) Body of pipe connector" onchange="updateAttachedComments()"> (R) Body of pipe connector</label><label class="custom-check" style="background-color: #efe4f7; color: #6645eb; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="header" value="(S) Burring of pipe connector" onchange="updateAttachedComments()"> (S) Burring of pipe connector</label></div><div class="upload-zone hide-on-pdf" id="zone_header"><input type="file" id="pic_header" accept="image/*" onchange="handleImageUpload(this, 'Header', 'attach_header', 'zone_header')"><div class="upload-label">📷 Attach Defect Image</div></div></div><div class="part-item-card" data-key="middlecoils" data-title="Middle coil" style="display: block;"><div class="part-header"><span class="part-title-text">Middle coil</span></div><div class="image-preview-box"><img src="images/Middle coil.png" alt="Middle coil"></div><div class="options-grid"><label class="custom-check" style="background-color: #fee2e2; color: #991b1b; border-color: rgba(0,0,0,0.08);"><input type="checkbox" name="middlecoils" value="(T) Middle coil" onchange="updateAttachedComments()"> (T) Middle coil</label></div><div class="upload-zone hide-on-pdf" id="zone_middlecoils"><input type="file" id="pic_middlecoils" accept="image/*" onchange="handleImageUpload(this, 'Middle coil', 'attach_middlecoils', 'zone_middlecoils')"><div class="upload-label">📷 Attach Defect Image</div></div></div></div>
+        <div class="parts-container" id="technicalPartsContainer"></div>
       </section>
       <section class="section-card" id="section_attached_pictures" style="display: none;">
         <div class="section-title">Attached Defect Pictures</div>
@@ -127,7 +127,7 @@
   </main>
 </div>
 <button type="button" class="designer-fab hide-on-pdf" onclick="promptEditorMode()" title="Designer Mode">⚙️</button>
-<div id="editorPanel" class="editor-panel-box hide-on-pdf" style="display: none;">
+<div id="editorPanel" class="editor-panel-box hide-on-pdf">
   <h3 style="margin-bottom: 10px; color: var(--primary-red);">Designer &amp; Layout Editor</h3>
   <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">ปรับแต่งชื่อฟอร์ม, รูปภาพ Overall, เพิ่ม/ลดตัวเลือก Overall, และจัดการ Parts พร้อมกำหนดสีรายชอยส์ได้อย่างอิสระ</p>
   <div style="margin-bottom: 14px; background: #F8FAFC; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
@@ -145,620 +145,96 @@
     <strong>รายการ Parts ทั้งหมดใน Technical Inspection:</strong>
     <button type="button" onclick="addNewPart()" style="background: var(--success-green); color: #fff; border:none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor:pointer;">➕ เพิ่ม Part ใหม่</button>
   </div>
-  <div id="editorPartsContainer" style="display: flex; flex-direction: column; gap: 10px; max-height: 380px; overflow-y: auto; margin-bottom: 15px; padding-right: 4px;"><div class="part-editor-card" style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <strong>Part Key: <input type="text" value="hairpin" data-oldkey="hairpin" class="part-key-input" style="font-weight:bold; width:120px; padding:2px 4px;"></strong>
-          <button type="button" onclick="deletePart('hairpin')" style="background: #E60012; color: #fff; border:none; padding: 2px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-          <label>Display Title: <input type="text" value="Hair-pin" data-part="hairpin" data-prop="title" style="width:100%" class="input-control"></label>
-          <label>Image URL/Path: 
-            <div style="display:flex; gap:4px;">
-              <input type="text" value="images/Hair-pin tube side.png" data-part="hairpin" data-prop="image" id="img_path_hairpin" style="width:100%" class="input-control">
-              <input type="file" accept="image/*" onchange="uploadPartImage(this, 'hairpin')" style="font-size:0.7rem; width:80px;">
-            </div>
-          </label>
-        </div>
-        <div style="margin-bottom: 8px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <label style="font-weight:600;">ตัวเลือก (Options) &amp; สีเฉพาะตัว:</label>
-            <button type="button" onclick="addOptionRow('hairpin')" style="background:var(--success-green); color:#fff; border:none; padding:2px 8px; border-radius:4px; font-size:0.7rem; cursor:pointer;">➕ เพิ่มชอยส์</button>
-          </div>
-          <div id="options_list_hairpin">
-          <div class="editor-option-row" id="opt_row_hairpin_0">
-            <input type="text" value="(A) Hair-pin" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#fee2e2" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#991b1b" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('hairpin', 0)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        </div>
-        </div>
-        <div>
-          <strong>พิกัดไฮไลต์ (%):</strong>
-          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px;">
-            <label>Top: <input type="number" step="0.5" value="16.8" data-part="hairpin" data-hl="top" style="width:100%"></label>
-            <label>Left: <input type="number" step="0.5" value="0.5" data-part="hairpin" data-hl="left" style="width:100%"></label>
-            <label>Width: <input type="number" step="0.5" value="10" data-part="hairpin" data-hl="width" style="width:100%"></label>
-            <label>Height: <input type="number" step="0.5" value="58.6" data-part="hairpin" data-hl="height" style="width:100%"></label>
-            <label>Radius: <input type="text" value="40%" data-part="hairpin" data-hl="radius" style="width:100%"></label>
-          </div>
-        </div>
-      </div><div class="part-editor-card" style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <strong>Part Key: <input type="text" value="ubend" data-oldkey="ubend" class="part-key-input" style="font-weight:bold; width:120px; padding:2px 4px;"></strong>
-          <button type="button" onclick="deletePart('ubend')" style="background: #E60012; color: #fff; border:none; padding: 2px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-          <label>Display Title: <input type="text" value="U-bend" data-part="ubend" data-prop="title" style="width:100%" class="input-control"></label>
-          <label>Image URL/Path: 
-            <div style="display:flex; gap:4px;">
-              <input type="text" value="images/U-bend part.png" data-part="ubend" data-prop="image" id="img_path_ubend" style="width:100%" class="input-control">
-              <input type="file" accept="image/*" onchange="uploadPartImage(this, 'ubend')" style="font-size:0.7rem; width:80px;">
-            </div>
-          </label>
-        </div>
-        <div style="margin-bottom: 8px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <label style="font-weight:600;">ตัวเลือก (Options) &amp; สีเฉพาะตัว:</label>
-            <button type="button" onclick="addOptionRow('ubend')" style="background:var(--success-green); color:#fff; border:none; padding:2px 8px; border-radius:4px; font-size:0.7rem; cursor:pointer;">➕ เพิ่มชอยส์</button>
-          </div>
-          <div id="options_list_ubend">
-          <div class="editor-option-row" id="opt_row_ubend_0">
-            <input type="text" value="(B) U-bend" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#fee2e2" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#991b1b" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('ubend', 0)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        
-          <div class="editor-option-row" id="opt_row_ubend_1">
-            <input type="text" value="(C) Brazing point of U-bend" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#fef3c7" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#92400e" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('ubend', 1)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        
-          <div class="editor-option-row" id="opt_row_ubend_2">
-            <input type="text" value="(D) Hair-pin plate side" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#dcfce7" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#166534" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('ubend', 2)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        
-          <div class="editor-option-row" id="opt_row_ubend_3">
-            <input type="text" value="(E) Hair-pin near plate side" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#e5fcff" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#217aa6" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('ubend', 3)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        </div>
-        </div>
-        <div>
-          <strong>พิกัดไฮไลต์ (%):</strong>
-          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px;">
-            <label>Top: <input type="number" step="0.5" value="12" data-part="ubend" data-hl="top" style="width:100%"></label>
-            <label>Left: <input type="number" step="0.5" value="75" data-part="ubend" data-hl="left" style="width:100%"></label>
-            <label>Width: <input type="number" step="0.5" value="10" data-part="ubend" data-hl="width" style="width:100%"></label>
-            <label>Height: <input type="number" step="0.5" value="65" data-part="ubend" data-hl="height" style="width:100%"></label>
-            <label>Radius: <input type="text" value="50%" data-part="ubend" data-hl="radius" style="width:100%"></label>
-          </div>
-        </div>
-      </div><div class="part-editor-card" style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <strong>Part Key: <input type="text" value="distributor" data-oldkey="distributor" class="part-key-input" style="font-weight:bold; width:120px; padding:2px 4px;"></strong>
-          <button type="button" onclick="deletePart('distributor')" style="background: #E60012; color: #fff; border:none; padding: 2px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-          <label>Display Title: <input type="text" value="Distributor part" data-part="distributor" data-prop="title" style="width:100%" class="input-control"></label>
-          <label>Image URL/Path: 
-            <div style="display:flex; gap:4px;">
-              <input type="text" value="images/Distributor part.png" data-part="distributor" data-prop="image" id="img_path_distributor" style="width:100%" class="input-control">
-              <input type="file" accept="image/*" onchange="uploadPartImage(this, 'distributor')" style="font-size:0.7rem; width:80px;">
-            </div>
-          </label>
-        </div>
-        <div style="margin-bottom: 8px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <label style="font-weight:600;">ตัวเลือก (Options) &amp; สีเฉพาะตัว:</label>
-            <button type="button" onclick="addOptionRow('distributor')" style="background:var(--success-green); color:#fff; border:none; padding:2px 8px; border-radius:4px; font-size:0.7rem; cursor:pointer;">➕ เพิ่มชอยส์</button>
-          </div>
-          <div id="options_list_distributor">
-          <div class="editor-option-row" id="opt_row_distributor_0">
-            <input type="text" value="(F) Brazing point" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#fee2e2" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#991b1b" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('distributor', 0)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        
-          <div class="editor-option-row" id="opt_row_distributor_1">
-            <input type="text" value="(G) Burring" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#fef3c7" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#92400e" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('distributor', 1)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        
-          <div class="editor-option-row" id="opt_row_distributor_2">
-            <input type="text" value="(H) Spinding" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#dcfce7" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#166534" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('distributor', 2)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        
-          <div class="editor-option-row" id="opt_row_distributor_3">
-            <input type="text" value="(I) Brazing(brass)" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#efe4f7" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#6645eb" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('distributor', 3)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        
-          <div class="editor-option-row" id="opt_row_distributor_4">
-            <input type="text" value="(J) Cap tube" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#abd0f7" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#0359e2" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('distributor', 4)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        </div>
-        </div>
-        <div>
-          <strong>พิกัดไฮไลต์ (%):</strong>
-          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px;">
-            <label>Top: <input type="number" step="0.5" value="52" data-part="distributor" data-hl="top" style="width:100%"></label>
-            <label>Left: <input type="number" step="0.5" value="87" data-part="distributor" data-hl="left" style="width:100%"></label>
-            <label>Width: <input type="number" step="0.5" value="13" data-part="distributor" data-hl="width" style="width:100%"></label>
-            <label>Height: <input type="number" step="0.5" value="43" data-part="distributor" data-hl="height" style="width:100%"></label>
-            <label>Radius: <input type="text" value="40%" data-part="distributor" data-hl="radius" style="width:100%"></label>
-          </div>
-        </div>
-      </div><div class="part-editor-card" style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <strong>Part Key: <input type="text" value="union" data-oldkey="union" class="part-key-input" style="font-weight:bold; width:120px; padding:2px 4px;"></strong>
-          <button type="button" onclick="deletePart('union')" style="background: #E60012; color: #fff; border:none; padding: 2px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-          <label>Display Title: <input type="text" value="Union" data-part="union" data-prop="title" style="width:100%" class="input-control"></label>
-          <label>Image URL/Path: 
-            <div style="display:flex; gap:4px;">
-              <input type="text" value="images/Union part.png" data-part="union" data-prop="image" id="img_path_union" style="width:100%" class="input-control">
-              <input type="file" accept="image/*" onchange="uploadPartImage(this, 'union')" style="font-size:0.7rem; width:80px;">
-            </div>
-          </label>
-        </div>
-        <div style="margin-bottom: 8px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <label style="font-weight:600;">ตัวเลือก (Options) &amp; สีเฉพาะตัว:</label>
-            <button type="button" onclick="addOptionRow('union')" style="background:var(--success-green); color:#fff; border:none; padding:2px 8px; border-radius:4px; font-size:0.7rem; cursor:pointer;">➕ เพิ่มชอยส์</button>
-          </div>
-          <div id="options_list_union">
-          <div class="editor-option-row" id="opt_row_union_0">
-            <input type="text" value="(K) Brazing point of gas pipe" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#efe4f7" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#6645eb" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('union', 0)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        
-          <div class="editor-option-row" id="opt_row_union_1">
-            <input type="text" value="(L) Brazing point of liquid pipe" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#fee2e2" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#991b1b" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('union', 1)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        
-          <div class="editor-option-row" id="opt_row_union_2">
-            <input type="text" value="(M1) Flare surface of gas pipe" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#dcfce7" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#166534" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('union', 2)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        
-          <div class="editor-option-row" id="opt_row_union_3">
-            <input type="text" value="(N1) Flare nut of gas pipe" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#e5fcff" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#217aa6" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('union', 3)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        
-          <div class="editor-option-row" id="opt_row_union_4">
-            <input type="text" value="(M2) Flare surface of liquid pipe" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#dcfce7" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#166534" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('union', 4)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        
-          <div class="editor-option-row" id="opt_row_union_5">
-            <input type="text" value="(N2) Flare nut of liquid pipe" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#e5fcff" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#217aa6" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('union', 5)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        </div>
-        </div>
-        <div>
-          <strong>พิกัดไฮไลต์ (%):</strong>
-          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px;">
-            <label>Top: <input type="number" step="0.5" value="72" data-part="union" data-hl="top" style="width:100%"></label>
-            <label>Left: <input type="number" step="0.5" value="38" data-part="union" data-hl="left" style="width:100%"></label>
-            <label>Width: <input type="number" step="0.5" value="15" data-part="union" data-hl="width" style="width:100%"></label>
-            <label>Height: <input type="number" step="0.5" value="26" data-part="union" data-hl="height" style="width:100%"></label>
-            <label>Radius: <input type="text" value="40%" data-part="union" data-hl="radius" style="width:100%"></label>
-          </div>
-        </div>
-      </div><div class="part-editor-card" style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <strong>Part Key: <input type="text" value="header" data-oldkey="header" class="part-key-input" style="font-weight:bold; width:120px; padding:2px 4px;"></strong>
-          <button type="button" onclick="deletePart('header')" style="background: #E60012; color: #fff; border:none; padding: 2px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-          <label>Display Title: <input type="text" value="Header" data-part="header" data-prop="title" style="width:100%" class="input-control"></label>
-          <label>Image URL/Path: 
-            <div style="display:flex; gap:4px;">
-              <input type="text" value="images/Header part.png" data-part="header" data-prop="image" id="img_path_header" style="width:100%" class="input-control">
-              <input type="file" accept="image/*" onchange="uploadPartImage(this, 'header')" style="font-size:0.7rem; width:80px;">
-            </div>
-          </label>
-        </div>
-        <div style="margin-bottom: 8px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <label style="font-weight:600;">ตัวเลือก (Options) &amp; สีเฉพาะตัว:</label>
-            <button type="button" onclick="addOptionRow('header')" style="background:var(--success-green); color:#fff; border:none; padding:2px 8px; border-radius:4px; font-size:0.7rem; cursor:pointer;">➕ เพิ่มชอยส์</button>
-          </div>
-          <div id="options_list_header">
-          <div class="editor-option-row" id="opt_row_header_0">
-            <input type="text" value="(O) Spinding" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#fef3c7" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#92400e" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('header', 0)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        
-          <div class="editor-option-row" id="opt_row_header_1">
-            <input type="text" value="(P) Brazing point of header" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#fee2e2" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#991b1b" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('header', 1)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        
-          <div class="editor-option-row" id="opt_row_header_2">
-            <input type="text" value="(Q) Burring of header" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#dcfce7" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#166534" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('header', 2)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        
-          <div class="editor-option-row" id="opt_row_header_3">
-            <input type="text" value="(R) Body of pipe connector" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#e5fcff" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#217aa6" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('header', 3)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        
-          <div class="editor-option-row" id="opt_row_header_4">
-            <input type="text" value="(S) Burring of pipe connector" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#efe4f7" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#6645eb" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('header', 4)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        </div>
-        </div>
-        <div>
-          <strong>พิกัดไฮไลต์ (%):</strong>
-          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px;">
-            <label>Top: <input type="number" step="0.5" value="3" data-part="header" data-hl="top" style="width:100%"></label>
-            <label>Left: <input type="number" step="0.5" value="87" data-part="header" data-hl="left" style="width:100%"></label>
-            <label>Width: <input type="number" step="0.5" value="13" data-part="header" data-hl="width" style="width:100%"></label>
-            <label>Height: <input type="number" step="0.5" value="46" data-part="header" data-hl="height" style="width:100%"></label>
-            <label>Radius: <input type="text" value="40%" data-part="header" data-hl="radius" style="width:100%"></label>
-          </div>
-        </div>
-      </div><div class="part-editor-card" style="background: rgb(248, 250, 252); padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <strong>Part Key: <input type="text" value="middlecoils" data-oldkey="middlecoils" class="part-key-input" style="font-weight:bold; width:120px; padding:2px 4px;"></strong>
-          <button type="button" onclick="deletePart('middlecoils')" style="background: #E60012; color: #fff; border:none; padding: 2px 8px; border-radius: 4px; cursor:pointer; font-size:0.7rem;">🗑️ ลบ Part นี้</button>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-          <label>Display Title: <input type="text" value="Middle coil" data-part="middlecoils" data-prop="title" style="width:100%" class="input-control"></label>
-          <label>Image URL/Path: 
-            <div style="display:flex; gap:4px;">
-              <input type="text" value="images/Middle coil.png" data-part="middlecoils" data-prop="image" id="img_path_middlecoils" style="width:100%" class="input-control">
-              <input type="file" accept="image/*" onchange="uploadPartImage(this, 'middlecoils')" style="font-size:0.7rem; width:80px;">
-            </div>
-          </label>
-        </div>
-        <div style="margin-bottom: 8px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <label style="font-weight:600;">ตัวเลือก (Options) &amp; สีเฉพาะตัว:</label>
-            <button type="button" onclick="addOptionRow('middlecoils')" style="background:var(--success-green); color:#fff; border:none; padding:2px 8px; border-radius:4px; font-size:0.7rem; cursor:pointer;">➕ เพิ่มชอยส์</button>
-          </div>
-          <div id="options_list_middlecoils">
-          <div class="editor-option-row" id="opt_row_middlecoils_0">
-            <input type="text" value="(T) Middle coil" class="opt-label-input input-control" style="flex:1; background:#fff;" placeholder="ชื่อตัวเลือก">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Bg:</span>
-            <input type="color" value="#fee2e2" class="opt-bg-picker color-picker-btn" title="เลือกสีพื้นหลังชอยส์">
-            <span style="font-size:0.7rem; color:var(--text-muted);">Text:</span>
-            <input type="color" value="#991b1b" class="opt-text-picker color-picker-btn" title="เลือกสีตัวอักษรชอยส์">
-            <button type="button" onclick="removeOptionRow('middlecoils', 0)" style="background:#CBD5E1; color:#334155; border:none; border-radius:4px; padding:2px 6px; cursor:pointer;">✖</button>
-          </div>
-        </div>
-        </div>
-        <div>
-          <strong>พิกัดไฮไลต์ (%):</strong>
-          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px;">
-            <label>Top: <input type="number" step="0.5" value="10" data-part="middlecoils" data-hl="top" style="width:100%"></label>
-            <label>Left: <input type="number" step="0.5" value="20" data-part="middlecoils" data-hl="left" style="width:100%"></label>
-            <label>Width: <input type="number" step="0.5" value="38" data-part="middlecoils" data-hl="width" style="width:100%"></label>
-            <label>Height: <input type="number" step="0.5" value="63" data-part="middlecoils" data-hl="height" style="width:100%"></label>
-            <label>Radius: <input type="text" value="50%" data-part="middlecoils" data-hl="radius" style="width:100%"></label>
-          </div>
-        </div>
-      </div></div>
+  <div id="editorPartsContainer" style="display: flex; flex-direction: column; gap: 10px; max-height: 380px; overflow-y: auto; margin-bottom: 15px; padding-right: 4px;"></div>
   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
     <button type="button" onclick="saveLayoutChanges()" style="background: var(--success-green); color: #fff; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">💾 บันทึกชั่วคราว</button>
     <button type="button" onclick="updateHtmlFile()" style="background: #E60012; color: #fff; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">⚡ อัปเดตโค้ด HTML</button>
     <button type="button" onclick="resetLayoutChanges()" style="background: var(--text-muted); color: #fff; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">🔄 รีเซ็ตค่าเดิม</button>
   </div>
 </div>
+
 <script>
   const uploadedImages = {};
-    /* CONFIG START */
+  
+  /* CONFIG START */
   let reportConfig = {
     "formTitle": "Checking Part Report (Indoor Heat Exchanger)",
     "overallImage": "images/Ovinheat.jpg",
     "overallOptions": [
-        {
-            "key": "hairpin",
-            "label": "Hair-pin"
-        },
-        {
-            "key": "ubend",
-            "label": "U-bend"
-        },
-        {
-            "key": "distributor",
-            "label": "Distributor part"
-        },
-        {
-            "key": "union",
-            "label": "Union"
-        },
-        {
-            "key": "header",
-            "label": "Header"
-        },
-        {
-            "key": "middlecoils",
-            "label": "Middle coil"
-        }
+        { "key": "hairpin", "label": "Hair-pin" },
+        { "key": "ubend", "label": "U-bend" },
+        { "key": "distributor", "label": "Distributor part" },
+        { "key": "union", "label": "Union" },
+        { "key": "header", "label": "Header" },
+        { "key": "middlecoils", "label": "Middle coil" }
     ],
     "parts": {
         "hairpin": {
             "title": "Hair-pin",
             "image": "images/Hair-pin tube side.png",
             "options": [
-                {
-                    "label": "(A) Hair-pin",
-                    "bgColor": "#fee2e2",
-                    "textColor": "#991b1b"
-                }
+                { "label": "(A) Hair-pin", "bgColor": "#fee2e2", "textColor": "#991b1b" }
             ],
-            "highlight": {
-                "top": 16.8,
-                "left": 0.5,
-                "width": 10,
-                "height": 58.6,
-                "radius": "40%"
-            }
+            "highlight": { "top": 16.8, "left": 0.5, "width": 10, "height": 58.6, "radius": "40%" }
         },
         "ubend": {
             "title": "U-bend",
             "image": "images/U-bend part.png",
             "options": [
-                {
-                    "label": "(B) U-bend",
-                    "bgColor": "#fee2e2",
-                    "textColor": "#991b1b"
-                },
-                {
-                    "label": "(C) Brazing point of U-bend",
-                    "bgColor": "#fef3c7",
-                    "textColor": "#92400e"
-                },
-                {
-                    "label": "(D) Hair-pin plate side",
-                    "bgColor": "#dcfce7",
-                    "textColor": "#166534"
-                },
-                {
-                    "label": "(E) Hair-pin near plate side",
-                    "bgColor": "#e5fcff",
-                    "textColor": "#217aa6"
-                }
+                { "label": "(B) U-bend", "bgColor": "#fee2e2", "textColor": "#991b1b" },
+                { "label": "(C) Brazing point of U-bend", "bgColor": "#fef3c7", "textColor": "#92400e" },
+                { "label": "(D) Hair-pin plate side", "bgColor": "#dcfce7", "textColor": "#166534" },
+                { "label": "(E) Hair-pin near plate side", "bgColor": "#e5fcff", "textColor": "#217aa6" }
             ],
-            "highlight": {
-                "top": 12,
-                "left": 75,
-                "width": 10,
-                "height": 65,
-                "radius": "50%"
-            }
+            "highlight": { "top": 12, "left": 75, "width": 10, "height": 65, "radius": "50%" }
         },
         "distributor": {
             "title": "Distributor part",
             "image": "images/Distributor part.png",
             "options": [
-                {
-                    "label": "(F) Brazing point",
-                    "bgColor": "#fee2e2",
-                    "textColor": "#991b1b"
-                },
-                {
-                    "label": "(G) Burring",
-                    "bgColor": "#fef3c7",
-                    "textColor": "#92400e"
-                },
-                {
-                    "label": "(H) Spinding",
-                    "bgColor": "#dcfce7",
-                    "textColor": "#166534"
-                },
-                {
-                    "label": "(I) Brazing(brass)",
-                    "bgColor": "#efe4f7",
-                    "textColor": "#6645eb"
-                },
-                {
-                    "label": "(J) Cap tube",
-                    "bgColor": "#abd0f7",
-                    "textColor": "#0359e2"
-                }
+                { "label": "(F) Brazing point", "bgColor": "#fee2e2", "textColor": "#991b1b" },
+                { "label": "(G) Burring", "bgColor": "#fef3c7", "textColor": "#92400e" },
+                { "label": "(H) Spinding", "bgColor": "#dcfce7", "textColor": "#166534" },
+                { "label": "(I) Brazing(brass)", "bgColor": "#efe4f7", "textColor": "#6645eb" },
+                { "label": "(J) Cap tube", "bgColor": "#abd0f7", "textColor": "#0359e2" }
             ],
-            "highlight": {
-                "top": 52,
-                "left": 87,
-                "width": 13,
-                "height": 43,
-                "radius": "40%"
-            }
+            "highlight": { "top": 52, "left": 87, "width": 13, "height": 43, "radius": "40%" }
         },
         "union": {
             "title": "Union",
             "image": "images/Union part.png",
             "options": [
-                {
-                    "label": "(K) Brazing point of liquid pipe",
-                    "bgColor": "#efe4f7",
-                    "textColor": "#6645eb"
-                },
-                {
-                    "label": "(L) Brazing point of gas pipe",
-                    "bgColor": "#fee2e2",
-                    "textColor": "#991b1b"
-                },
-                {
-                    "label": "(M1) Flare nut of gas pipe",
-                    "bgColor": "#dcfce7",
-                    "textColor": "#166534"
-                },
-                {
-                    "label": "(N1) Flare surface of gas pipe",
-                    "bgColor": "#e5fcff",
-                    "textColor": "#217aa6"
-                },
-                {
-                    "label": "(M2) Flare nut of liquid pipe",
-                    "bgColor": "#dcfce7",
-                    "textColor": "#166534"
-                },
-                {
-                    "label": "(N2) Flare surface of liquid pipe",
-                    "bgColor": "#e5fcff",
-                    "textColor": "#217aa6"
-                }
+                { "label": "(K) Brazing point of liquid pipe", "bgColor": "#efe4f7", "textColor": "#6645eb" },
+                { "label": "(L) Brazing point of gas pipe", "bgColor": "#fee2e2", "textColor": "#991b1b" },
+                { "label": "(M1) Flare nut of gas pipe", "bgColor": "#dcfce7", "textColor": "#166534" },
+                { "label": "(N1) Flare surface of gas pipe", "bgColor": "#e5fcff", "textColor": "#217aa6" },
+                { "label": "(M2) Flare nut of liquid pipe", "bgColor": "#dcfce7", "textColor": "#166534" },
+                { "label": "(N2) Flare surface of liquid pipe", "bgColor": "#e5fcff", "textColor": "#217aa6" }
             ],
-            "highlight": {
-                "top": 72,
-                "left": 38,
-                "width": 15,
-                "height": 26,
-                "radius": "40%"
-            }
+            "highlight": { "top": 72, "left": 38, "width": 15, "height": 26, "radius": "40%" }
         },
         "header": {
             "title": "Header",
             "image": "images/Header part.png",
             "options": [
-                {
-                    "label": "(O) Spinding",
-                    "bgColor": "#fef3c7",
-                    "textColor": "#92400e"
-                },
-                {
-                    "label": "(P) Brazing point of header",
-                    "bgColor": "#fee2e2",
-                    "textColor": "#991b1b"
-                },
-                {
-                    "label": "(Q) Burring of header",
-                    "bgColor": "#dcfce7",
-                    "textColor": "#166534"
-                },
-                {
-                    "label": "(R) Body of pipe connector",
-                    "bgColor": "#e5fcff",
-                    "textColor": "#217aa6"
-                },
-                {
-                    "label": "(S) Burring of pipe connector",
-                    "bgColor": "#efe4f7",
-                    "textColor": "#6645eb"
-                }
+                { "label": "(O) Spinding", "bgColor": "#fef3c7", "textColor": "#92400e" },
+                { "label": "(P) Brazing point of header", "bgColor": "#fee2e2", "textColor": "#991b1b" },
+                { "label": "(Q) Burring of header", "bgColor": "#dcfce7", "textColor": "#166534" },
+                { "label": "(R) Body of pipe connector", "bgColor": "#e5fcff", "textColor": "#217aa6" },
+                { "label": "(S) Burring of pipe connector", "bgColor": "#efe4f7", "textColor": "#6645eb" }
             ],
-            "highlight": {
-                "top": 3,
-                "left": 87,
-                "width": 13,
-                "height": 46,
-                "radius": "40%"
-            }
+            "highlight": { "top": 3, "left": 87, "width": 13, "height": 46, "radius": "40%" }
         },
         "middlecoils": {
             "title": "Middle coil",
             "image": "images/Middle coil.png",
             "options": [
-                {
-                    "label": "(T) Middle coil",
-                    "bgColor": "#fee2e2",
-                    "textColor": "#991b1b"
-                }
+                { "label": "(T) Middle coil", "bgColor": "#fee2e2", "textColor": "#991b1b" }
             ],
-            "highlight": {
-                "top": 10,
-                "left": 20,
-                "width": 38,
-                "height": 63,
-                "radius": "50%"
-            }
+            "highlight": { "top": 10, "left": 20, "width": 38, "height": 63, "radius": "50%" }
         }
     }
-};
+  };
   /* CONFIG END */
 
   function normalizeOption(opt) {
@@ -1157,6 +633,16 @@
     setTimeout(() => { window.print(); }, 100);
   }
 
+  // ฟังก์ชันช่วยแปลงค่าใน input ที่มีคลาส auto-upper เป็นตัวพิมพ์ใหญ่แบบอัตโนมัติ
+  document.addEventListener('input', function (e) {
+    if (e.target.classList.contains('auto-upper')) {
+      const start = e.target.selectionStart;
+      const end = e.target.selectionEnd;
+      e.target.value = e.target.value.toUpperCase();
+      e.target.setSelectionRange(start, end);
+    }
+  });
+
   window.addEventListener('DOMContentLoaded', () => {
     const savedConfig = localStorage.getItem('reportConfig');
     if (savedConfig) {
@@ -1169,6 +655,5 @@
     renderForm();
   });
 </script>
-
-
-</body></html>
+</body>
+</html>
