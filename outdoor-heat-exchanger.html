@@ -32,7 +32,9 @@
     .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .input-group { display: flex; flex-direction: column; gap: 4px; width: 100%; }
     .input-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
-    .input-control { width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; color: var(--text-main); background-color: #FAFAFA; box-sizing: border-box; font-family: 'Tahoma', 'Inter', sans-serif !important; text-transform: uppercase; }
+    /* บังคับเฉพาะ input ทั่วไปที่เป็นฟอร์มหลักให้เป็นตัวพิมพ์ใหญ่ */
+    .input-control { width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; color: var(--text-main); background-color: #FAFAFA; box-sizing: border-box; font-family: 'Tahoma', 'Inter', sans-serif !important; }
+    .uppercase-input { text-transform: uppercase; }
     .parts-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .part-item-card { background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; break-inside: avoid; page-break-inside: avoid; }
     .part-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
@@ -93,9 +95,9 @@
       <section class="section-card">
         <div class="section-title">General Information</div>
         <div class="grid-3">
-          <div class="input-group"><label for="Model">Model</label><input type="text" id="Model" class="input-control" placeholder="Model number" oninput="this.value = this.value.toUpperCase()"></div>
-          <div class="input-group"><label for="SN">Serial No. (S/N)</label><input type="text" id="SN" class="input-control" placeholder="Serial number" oninput="this.value = this.value.toUpperCase()"></div>
-          <div class="input-group"><label for="partNo">Part No.</label><input type="text" id="partNo" class="input-control" placeholder="Part No. (e.g. RKX-101)" oninput="this.value = this.value.toUpperCase()"></div>
+          <div class="input-group"><label for="Model">Model</label><input type="text" id="Model" class="input-control uppercase-input" placeholder="Model number" oninput="this.value = this.value.toUpperCase()"></div>
+          <div class="input-group"><label for="SN">Serial No. (S/N)</label><input type="text" id="SN" class="input-control uppercase-input" placeholder="Serial number" oninput="this.value = this.value.toUpperCase()"></div>
+          <div class="input-group"><label for="partNo">Part No.</label><input type="text" id="partNo" class="input-control uppercase-input" placeholder="Part No. (e.g. RKX-101)" oninput="this.value = this.value.toUpperCase()"></div>
         </div>
       </section>
       <section class="section-card">
