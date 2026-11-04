@@ -120,7 +120,7 @@
     .excel-editor-table input[type="text"], .excel-editor-table input[type="number"], .excel-editor-table select { width: 100%; padding: 4px 6px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.75rem; background: #FFF; box-sizing: border-box; }
     .excel-editor-table input:focus, .excel-editor-table select:focus { border-color: var(--primary-red); outline: none; }
 
-    /* Custom Style for New Action Buttons */
+    /* Custom Action Buttons */
     .btn-edit-temp { background-color: #34D399; color: #FFFFFF; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
     .btn-edit-temp:hover { background-color: #10B981; }
     .btn-edit-update { background-color: #E60012; color: #FFFFFF; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
@@ -327,30 +327,28 @@
 
 <!-- Designer / Edit Mode Floating Button & Panel -->
 <button type="button" class="designer-fab hide-on-pdf" onclick="promptEditorMode()" title="Designer Mode">⚙️</button>
-
 <div id="editorPanel" class="editor-panel-box hide-on-pdf" style="display: none;">
   <h3 style="margin-bottom: 10px; color: var(--primary-red);">Designer &amp; Layout Editor</h3>
-  <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">ปรับแต่งชื่อฟอร์ม, ค่า Resistance Specification, Pin No., Motor Lot Example และรูปภาพ Drawing หรือเลือกอัปโหลดไฟล์ Excel เพื่ออัปเดตข้อมูลหลายรายการพร้อมกัน</p>
+  <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Customize Form Title, Resistance Specifications, Pin Numbers, Motor Lot Examples, Drawing Paths, or upload an Excel file to batch update items.</p>
   
   <div style="margin-bottom: 14px; background: #F8FAFC; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
     <div style="flex: 1; min-width: 250px;">
-      <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 4px;">ชื่อฟอร์ม (Form Title):</label>
+      <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 4px;">Form Title:</label>
       <input type="text" id="editFormTitle" class="input-control" style="background:#fff; text-transform:none;">
     </div>
     <div>
-      <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 4px;">อัปเดตข้อมูลผ่านไฟล์ Excel / CSV:</label>
+      <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 4px;">Update via Excel / CSV File:</label>
       <input type="file" id="excelFileImport" accept=".xlsx, .xls, .csv" onchange="importPartsFromExcel(event)" style="font-size: 0.8rem; padding: 4px; background: #fff; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer;">
     </div>
   </div>
 
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-    <strong>รายการ Parts ใน Technical Inspection &amp; Specification:</strong>
+    <strong>Part Items in Technical Inspection &amp; Specification:</strong>
     <div style="display: flex; gap: 6px;">
-      <button type="button" onclick="addNewPart()" style="background: var(--success-green); color: #fff; border:none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor:pointer;">➕ เพิ่ม Part ใหม่</button>
-      <button type="button" onclick="deleteAllParts()" style="background: #E60012; color: #fff; border:none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor:pointer;">🗑️ ลบทั้งหมด</button>
+      <button type="button" onclick="addNewPart()" style="background: var(--success-green); color: #fff; border:none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor:pointer;">➕ Add New Part</button>
+      <button type="button" onclick="deleteAllParts()" style="background: #E60012; color: #fff; border:none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor:pointer;">🗑️ Delete All</button>
     </div>
   </div>
-  
   <div id="editorPartsContainer" style="margin-bottom: 15px;">
     <div style="overflow-x: auto; max-height: 500px; border: 1px solid var(--border-color); border-radius: 6px;">
       <table class="excel-editor-table">
@@ -562,21 +560,7 @@
     partsData = newPartsData;
   }
 
-  function syncDOMInputValues() {
-    const inputs = document.querySelectorAll('#editorPanel input, #editorPanel select');
-    inputs.forEach(el => {
-      if (el.tagName === 'SELECT') {
-        const options = el.querySelectorAll('option');
-        options.forEach(opt => {
-          if (opt.value === el.value) opt.setAttribute('selected', 'selected');
-          else opt.removeAttribute('selected');
-        });
-      } else {
-        el.setAttribute('value', el.value);
-      }
-    });
-  }
-
+  // ปุ่ม 1: 💾 บันทึกชั่วคราว
   function saveEditorTemp() {
     collectEditorData();
     updateDynamicMotorSpec();
@@ -584,17 +568,23 @@
     alert("บันทึกข้อมูลชั่วคราวเรียบร้อยแล้ว!");
   }
 
+  // ปุ่ม 2: ⚡ อัปเดตโค้ด HTML -> สั่งอัปเดตค่าและส่งออกเป็นไฟล์ HTML ที่สมบูรณ์
   function saveEditorChanges() {
     collectEditorData();
     updateDynamicMotorSpec();
     renderTechnicalParts();
-    syncDOMInputValues();
 
+    // ปิด Panel ก่อนสร้าง HTML เพื่อให้ไฟล์ที่ดาวน์โหลดไปเริ่มต้นที่โหมดปกติ
     const panel = document.getElementById('editorPanel');
     if (panel) panel.style.display = 'none';
 
+    // ล้างเนื้อหาใน editorTableBody เพื่อให้ไฟล์ดาวน์โหลดมี Clean DOM State เมื่อเปิดใหม่จะเรนเดอร์สด
+    const tbody = document.getElementById('editorTableBody');
+    if (tbody) tbody.innerHTML = '';
+
     let htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
 
+    // อัปเดตค่า partsData และ initialPartsData เข้าไปในไฟล์ดาวน์โหลด
     const partsDataRegex = /let partsData = {[\s\S]*?};/;
     const initialPartsDataRegex = /let initialPartsData = {[\s\S]*?};/;
     const updatedPartsDataJS = "let partsData = " + JSON.stringify(partsData, null, 2) + ";";
@@ -603,6 +593,10 @@
     htmlContent = htmlContent.replace(partsDataRegex, updatedPartsDataJS);
     htmlContent = htmlContent.replace(initialPartsDataRegex, updatedInitialPartsDataJS);
 
+    // คืนค่าตารางบนหน้าจอหลักที่ใช้งานอยู่
+    initEditorTable();
+
+    // สร้าง Blob และ Trigger การดาวน์โหลด
     const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -612,9 +606,10 @@
     document.body.removeChild(link);
     URL.revokeObjectURL(link.href);
 
-    alert("อัปเดตและบันทึกไฟล์ HTML เรียบร้อยแล้ว! (สามารถเปิดไฟล์ที่ดาวน์โหลดและใช้งาน Edit Mode ต่อได้ปกติ)");
+    alert("อัปเดตและดาวน์โหลดไฟล์ HTML เรียบร้อยแล้ว! (ไฟล์ใหม่ใช้งานปุ่ม ⚙️ Edit Mode ได้สมบูรณ์)");
   }
 
+  // ปุ่ม 3: 🔄 รีเซ็ตค่าเดิม
   function resetEditorDefault() {
     if (confirm("คุณต้องการรีเซ็ตกลับเป็นค่าเริ่มต้นเดิมใช่หรือไม่?")) {
       partsData = JSON.parse(JSON.stringify(initialPartsData));
