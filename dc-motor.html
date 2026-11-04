@@ -326,7 +326,7 @@
 
 <!-- Designer / Edit Mode Floating Button & Panel -->
 <button type="button" class="designer-fab hide-on-pdf" onclick="promptEditorMode()" title="Designer Mode">⚙️</button>
-<div id="editorPanel" class="editor-panel-box hide-on-pdf" style="display: block;">
+<div id="editorPanel" class="editor-panel-box hide-on-pdf" style="display: none;">
   <h3 style="margin-bottom: 10px; color: var(--primary-red);">Designer &amp; Layout Editor</h3>
   <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Customize Form Title, Resistance Specifications, Pin Numbers, Motor Lot Examples, Drawing Paths, or upload an Excel file to batch update items.</p>
   
@@ -368,45 +368,45 @@
         </thead>
         <tbody id="editorTableBody"><tr data-row-key="SSA512T061G">
         <td><input type="text" value="SSA512T061G" data-oldkey="SSA512T061G" class="part-key-input" style="font-weight:bold; width:130px; text-transform:uppercase;" oninput="this.value = this.value.toUpperCase()"></td>
-        <td><input type="text" value="images/Drawing Type D.jpg" data-prop="title" style="width:160px;"></td>
+        <td><input type="text" value="Outdoor DC Motor Inspection" data-prop="title" style="width:160px;"></td>
         <td>
           <select data-prop="motorType" style="width:90px;">
             <option value="indoor">Indoor</option>
-            <option value="outdoor">Outdoor</option>
+            <option value="outdoor" selected="">Outdoor</option>
           </select>
         </td>
-        <td><input type="text" value="outdoor" data-prop="connectorType" style="width:70px;"></td>
-        <td><input type="text" value="images/DC motor nameplate.jpg" data-prop="drawingImg" style="width:140px;"></td>
+        <td><input type="text" value="Type D" data-prop="connectorType" style="width:70px;"></td>
+        <td><input type="text" value="images/Drawing Type D.jpg" data-prop="drawingImg" style="width:140px;"></td>
         <td>
           <div style="display:flex; flex-direction:column; gap:2px; min-width:180px;">
-            <input type="text" value="Motor Nameplate Example" data-prop="img1" placeholder="Nameplate Image Path">
+            <input type="text" value="Motor Nameplate Example | images/DC motor nameplate.jpg" data-prop="img1" placeholder="Nameplate Image Path">
             <input type="text" value="Motor Nameplate Example" data-prop="label1" placeholder="Nameplate Image Label">
           </div>
         </td>
         <td>
           <div style="display:flex; flex-direction:column; gap:2px; min-width:180px;">
-            <input type="text" value="images/Con Type D.jpg" data-prop="img2" placeholder="Connector View Path">
+            <input type="text" value="Connector View | images/Con Type D.jpg" data-prop="img2" placeholder="Connector View Path">
             <input type="text" value="Connector View" data-prop="label2" placeholder="Connector View Label">
           </div>
         </td>
         <td>
           <div style="display:flex; flex-direction:column; gap:2px; min-width:160px;">
-            <input type="text" value="Connector View" data-prop="vendorImg" placeholder="Lot Img Path">
+            <input type="text" value="images/NidecLot.jpg | Motor Lot Number Example" data-prop="vendorImg" placeholder="Lot Img Path">
             <input type="text" value="Motor Lot Number Example" data-prop="vendorLabel" placeholder="Lot Label">
           </div>
         </td>
         <td>
           <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:2px; min-width:150px;">
-            <input type="text" value="images/NidecLot.jpg" data-prop="pin_vm" placeholder="Vm Pin">
-            <input type="text" value="Motor Lot Number Example" data-prop="pin_vcc" placeholder="Vcc Pin">
-            <input type="text" value="46118" data-prop="pin_vsp" placeholder="Vsp Pin">
+            <input type="text" value="6 - 4" data-prop="pin_vm" placeholder="Vm Pin">
+            <input type="text" value="3 - 4" data-prop="pin_vcc" placeholder="Vcc Pin">
+            <input type="text" value="2 - 4" data-prop="pin_vsp" placeholder="Vsp Pin">
           </div>
         </td>
         <td>
           <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:2px; min-width:150px;">
-            <input type="number" step="0.1" value="46115" data-prop="vm_val" title="Vm Val">
-            <input type="number" step="0.1" value="46114" data-prop="vcc_val" title="Vcc Val">
-            <input type="number" step="0.1" value="1" data-prop="vsp_val" title="Vsp Val">
+            <input type="number" step="0.1" value="1" data-prop="vm_val" title="Vm Val">
+            <input type="number" step="0.1" value="50" data-prop="vcc_val" title="Vcc Val">
+            <input type="number" step="0.1" value="150" data-prop="vsp_val" title="Vsp Val">
           </div>
         </td>
         <td style="text-align:center;">
@@ -414,45 +414,45 @@
         </td>
       </tr><tr data-row-key="SSA512T076BA">
         <td><input type="text" value="SSA512T076BA" data-oldkey="SSA512T076BA" class="part-key-input" style="font-weight:bold; width:130px; text-transform:uppercase;" oninput="this.value = this.value.toUpperCase()"></td>
-        <td><input type="text" value="images/Drawing Type D.jpg" data-prop="title" style="width:160px;"></td>
+        <td><input type="text" value="Outdoor DC Motor Inspection" data-prop="title" style="width:160px;"></td>
         <td>
           <select data-prop="motorType" style="width:90px;">
             <option value="indoor">Indoor</option>
-            <option value="outdoor">Outdoor</option>
+            <option value="outdoor" selected="">Outdoor</option>
           </select>
         </td>
-        <td><input type="text" value="outdoor" data-prop="connectorType" style="width:70px;"></td>
-        <td><input type="text" value="images/DC motor nameplate.jpg" data-prop="drawingImg" style="width:140px;"></td>
+        <td><input type="text" value="Type D" data-prop="connectorType" style="width:70px;"></td>
+        <td><input type="text" value="images/Drawing Type D.jpg" data-prop="drawingImg" style="width:140px;"></td>
         <td>
           <div style="display:flex; flex-direction:column; gap:2px; min-width:180px;">
-            <input type="text" value="Motor Nameplate Example" data-prop="img1" placeholder="Nameplate Image Path">
+            <input type="text" value="Motor Nameplate Example | images/DC motor nameplate.jpg" data-prop="img1" placeholder="Nameplate Image Path">
             <input type="text" value="Motor Nameplate Example" data-prop="label1" placeholder="Nameplate Image Label">
           </div>
         </td>
         <td>
           <div style="display:flex; flex-direction:column; gap:2px; min-width:180px;">
-            <input type="text" value="images/Con Type D.jpg" data-prop="img2" placeholder="Connector View Path">
+            <input type="text" value="Connector View | images/Con Type D.jpg" data-prop="img2" placeholder="Connector View Path">
             <input type="text" value="Connector View" data-prop="label2" placeholder="Connector View Label">
           </div>
         </td>
         <td>
           <div style="display:flex; flex-direction:column; gap:2px; min-width:160px;">
-            <input type="text" value="Connector View" data-prop="vendorImg" placeholder="Lot Img Path">
+            <input type="text" value="images/NidecLot.jpg | Motor Lot Number Example" data-prop="vendorImg" placeholder="Lot Img Path">
             <input type="text" value="Motor Lot Number Example" data-prop="vendorLabel" placeholder="Lot Label">
           </div>
         </td>
         <td>
           <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:2px; min-width:150px;">
-            <input type="text" value="images/NidecLot.jpg" data-prop="pin_vm" placeholder="Vm Pin">
-            <input type="text" value="Motor Lot Number Example" data-prop="pin_vcc" placeholder="Vcc Pin">
-            <input type="text" value="46118" data-prop="pin_vsp" placeholder="Vsp Pin">
+            <input type="text" value="6 - 4" data-prop="pin_vm" placeholder="Vm Pin">
+            <input type="text" value="3 - 4" data-prop="pin_vcc" placeholder="Vcc Pin">
+            <input type="text" value="2 - 4" data-prop="pin_vsp" placeholder="Vsp Pin">
           </div>
         </td>
         <td>
           <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:2px; min-width:150px;">
-            <input type="number" step="0.1" value="46115" data-prop="vm_val" title="Vm Val">
-            <input type="number" step="0.1" value="46114" data-prop="vcc_val" title="Vcc Val">
-            <input type="number" step="0.1" value="1" data-prop="vsp_val" title="Vsp Val">
+            <input type="number" step="0.1" value="1" data-prop="vm_val" title="Vm Val">
+            <input type="number" step="0.1" value="50" data-prop="vcc_val" title="Vcc Val">
+            <input type="number" step="0.1" value="150" data-prop="vsp_val" title="Vsp Val">
           </div>
         </td>
         <td style="text-align:center;">
@@ -460,45 +460,45 @@
         </td>
       </tr><tr data-row-key="SSA512T099A">
         <td><input type="text" value="SSA512T099A" data-oldkey="SSA512T099A" class="part-key-input" style="font-weight:bold; width:130px; text-transform:uppercase;" oninput="this.value = this.value.toUpperCase()"></td>
-        <td><input type="text" value="images/Drawing Type A.jpg" data-prop="title" style="width:160px;"></td>
+        <td><input type="text" value="Indoor DC Motor Inspection" data-prop="title" style="width:160px;"></td>
         <td>
           <select data-prop="motorType" style="width:90px;">
-            <option value="indoor">Indoor</option>
+            <option value="indoor" selected="">Indoor</option>
             <option value="outdoor">Outdoor</option>
           </select>
         </td>
-        <td><input type="text" value="indoor" data-prop="connectorType" style="width:70px;"></td>
-        <td><input type="text" value="images/DC motor nameplate.jpg" data-prop="drawingImg" style="width:140px;"></td>
+        <td><input type="text" value="Type A" data-prop="connectorType" style="width:70px;"></td>
+        <td><input type="text" value="images/Drawing Type A.jpg" data-prop="drawingImg" style="width:140px;"></td>
         <td>
           <div style="display:flex; flex-direction:column; gap:2px; min-width:180px;">
-            <input type="text" value="Motor Nameplate Example" data-prop="img1" placeholder="Nameplate Image Path">
+            <input type="text" value="Motor Nameplate Example | images/DC motor nameplate.jpg" data-prop="img1" placeholder="Nameplate Image Path">
             <input type="text" value="Motor Nameplate Example" data-prop="label1" placeholder="Nameplate Image Label">
           </div>
         </td>
         <td>
           <div style="display:flex; flex-direction:column; gap:2px; min-width:180px;">
-            <input type="text" value="images/Con Type A.jpg" data-prop="img2" placeholder="Connector View Path">
+            <input type="text" value="Connector View | images/Con Type A.jpg" data-prop="img2" placeholder="Connector View Path">
             <input type="text" value="Connector View" data-prop="label2" placeholder="Connector View Label">
           </div>
         </td>
         <td>
           <div style="display:flex; flex-direction:column; gap:2px; min-width:160px;">
-            <input type="text" value="Connector View" data-prop="vendorImg" placeholder="Lot Img Path">
+            <input type="text" value="images/NidecLot.jpg | Motor Lot Number Example" data-prop="vendorImg" placeholder="Lot Img Path">
             <input type="text" value="Motor Lot Number Example" data-prop="vendorLabel" placeholder="Lot Label">
           </div>
         </td>
         <td>
           <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:2px; min-width:150px;">
-            <input type="text" value="images/NidecLot.jpg" data-prop="pin_vm" placeholder="Vm Pin">
-            <input type="text" value="Motor Lot Number Example" data-prop="pin_vcc" placeholder="Vcc Pin">
-            <input type="text" value="46082" data-prop="pin_vsp" placeholder="Vsp Pin">
+            <input type="text" value="1 - 3" data-prop="pin_vm" placeholder="Vm Pin">
+            <input type="text" value="4 - 3" data-prop="pin_vcc" placeholder="Vcc Pin">
+            <input type="text" value="5 - 3" data-prop="pin_vsp" placeholder="Vsp Pin">
           </div>
         </td>
         <td>
           <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:2px; min-width:150px;">
-            <input type="number" step="0.1" value="46085" data-prop="vm_val" title="Vm Val">
-            <input type="number" step="0.1" value="46086" data-prop="vcc_val" title="Vcc Val">
-            <input type="number" step="0.1" value="1" data-prop="vsp_val" title="Vsp Val">
+            <input type="number" step="0.1" value="1" data-prop="vm_val" title="Vm Val">
+            <input type="number" step="0.1" value="25" data-prop="vcc_val" title="Vcc Val">
+            <input type="number" step="0.1" value="100" data-prop="vsp_val" title="Vsp Val">
           </div>
         </td>
         <td style="text-align:center;">
@@ -3315,7 +3315,6 @@
     </div>
   </div>
 
-  <!-- ปุ่มสไตล์ใหม่ -->
   <div style="display: flex; justify-content: flex-start; gap: 10px; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-color);">
     <button type="button" class="btn-edit-temp" onclick="saveEditorTemp()">💾 บันทึกชั่วคราว</button>
     <button type="button" class="btn-edit-update" onclick="saveEditorChanges()">⚡ อัปเดตโค้ด HTML</button>
@@ -3325,10 +3324,1159 @@
 
 <script>
   let initialPartsData = {
-    "SSA512T061G": { title: "Outdoor DC Motor Inspection", motorType: "outdoor", connectorType: "Type D", drawingImg: "images/Drawing Type D.jpg", img1: "images/DC motor nameplate.jpg", label1: "Motor Nameplate Example", img2: "images/Con Type D.jpg", label2: "Connector View", vendorImg: "images/NidecLot.jpg", vendorLabel: "Motor Lot Number Example", pin_vm: "6 - 4", pin_vcc: "3 - 4", pin_vsp: "2 - 4", vm_val: 1, vcc_val: 50, vsp_val: 150 },
-    "SSA512T076BA": { title: "Outdoor DC Motor Inspection", motorType: "outdoor", connectorType: "Type D", drawingImg: "images/Drawing Type D.jpg", img1: "images/DC motor nameplate.jpg", label1: "Motor Nameplate Example", img2: "images/Con Type D.jpg", label2: "Connector View", vendorImg: "images/NidecLot.jpg", vendorLabel: "Motor Lot Number Example", pin_vm: "6 - 4", pin_vcc: "3 - 4", pin_vsp: "2 - 4", vm_val: 1, vcc_val: 50, vsp_val: 150 },
-    "SSA512T099A": { title: "Indoor DC Motor Inspection", motorType: "indoor", connectorType: "Type A", drawingImg: "images/Drawing Type A.jpg", img1: "images/DC motor nameplate.jpg", label1: "Motor Nameplate Example", img2: "images/Con Type A.jpg", label2: "Connector View", vendorImg: "images/NidecLot.jpg", vendorLabel: "Motor Lot Number Example", pin_vm: "1 - 3", pin_vcc: "4 - 3", pin_vsp: "5 - 3", vm_val: 1, vcc_val: 25, vsp_val: 100 }
-  };
+  "SSA512T061G": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type D",
+    "drawingImg": "images/Drawing Type D.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type D.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T076BA": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type D",
+    "drawingImg": "images/Drawing Type D.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type D.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T099A": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "indoor",
+    "connectorType": "Type A",
+    "drawingImg": "images/Drawing Type A.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "1 - 3",
+    "pin_vcc": "4 - 3",
+    "pin_vsp": "5 - 3",
+    "vm_val": 1,
+    "vcc_val": 25,
+    "vsp_val": 100
+  },
+  "SSA512T076AA": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type C",
+    "drawingImg": "images/Drawing Type C.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type C.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "1 - 4",
+    "pin_vcc": "5 - 4",
+    "pin_vsp": "6 - 4",
+    "vm_val": 1,
+    "vcc_val": 25,
+    "vsp_val": 150
+  },
+  "SSA512T076G": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type C",
+    "drawingImg": "images/Drawing Type C.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type C.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "1 - 4",
+    "pin_vcc": "5 - 4",
+    "pin_vsp": "6 - 4",
+    "vm_val": 1,
+    "vcc_val": 25,
+    "vsp_val": 150
+  },
+  "SSA512T076BD": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type C",
+    "drawingImg": "images/Drawing Type C.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type C.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "1 - 4",
+    "pin_vcc": "5 - 4",
+    "pin_vsp": "6 - 4",
+    "vm_val": 1,
+    "vcc_val": 25,
+    "vsp_val": 150
+  },
+  "SSA512T076L": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type C",
+    "drawingImg": "images/Drawing Type C.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type C.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "1 - 4",
+    "pin_vcc": "5 - 4",
+    "pin_vsp": "6 - 4",
+    "vm_val": 1,
+    "vcc_val": 25,
+    "vsp_val": 150
+  },
+  "SSA512T076F": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type C",
+    "drawingImg": "images/Drawing Type C.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type C.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "1 - 4",
+    "pin_vcc": "5 - 4",
+    "pin_vsp": "6 - 4",
+    "vm_val": 1,
+    "vcc_val": 25,
+    "vsp_val": 150
+  },
+  "SSA512T076BL": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type C",
+    "drawingImg": "images/Drawing Type C.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type C.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "1 - 4",
+    "pin_vcc": "5 - 4",
+    "pin_vsp": "6 - 4",
+    "vm_val": 1,
+    "vcc_val": 25,
+    "vsp_val": 150
+  },
+  "SSA512T076BB": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type B (1)",
+    "drawingImg": "images/Drawing Type B (1).jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type B.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 25,
+    "vsp_val": 150
+  },
+  "SSA512T076J": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type B (1)",
+    "drawingImg": "images/Drawing Type B (1).jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type B.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 25,
+    "vsp_val": 150
+  },
+  "SSA512T076BC": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type B (1)",
+    "drawingImg": "images/Drawing Type B (1).jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type B.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 25,
+    "vsp_val": 150
+  },
+  "SSA512T076BH": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type B (1)",
+    "drawingImg": "images/Drawing Type B (1).jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type B.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 25,
+    "vsp_val": 150
+  },
+  "SSA512T076BJ": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type B (2)",
+    "drawingImg": "images/Drawing Type B (2).jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type B.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 25,
+    "vsp_val": 150
+  },
+  "SSA512T076BK": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type B (3)",
+    "drawingImg": "images/Drawing Type B (3).jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type B.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 25,
+    "vsp_val": 150
+  },
+  "SSA512T076BM": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type D",
+    "drawingImg": "images/Drawing Type D.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type D.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T076BN": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type D",
+    "drawingImg": "images/Drawing Type D.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type D.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T076BP": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type D",
+    "drawingImg": "images/Drawing Type D.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type D.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T076Z": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type D",
+    "drawingImg": "images/Drawing Type D.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type D.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T061H": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type D",
+    "drawingImg": "images/Drawing Type D.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type D.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T061F": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type D",
+    "drawingImg": "images/Drawing Type D.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type D.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T061B": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type B (1)",
+    "drawingImg": "images/Drawing Type B (1).jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type B.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 25,
+    "vsp_val": 150
+  },
+  "SSA512T099C": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "indoor",
+    "connectorType": "Type A",
+    "drawingImg": "images/Drawing Type A.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "1 - 3",
+    "pin_vcc": "4 - 3",
+    "pin_vsp": "5 - 3",
+    "vm_val": 1,
+    "vcc_val": 25,
+    "vsp_val": 100
+  },
+  "SSA512T031A": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T038D": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type D ",
+    "drawingImg": "images/Drawing Type D .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type D.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T046A": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T061": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type D ",
+    "drawingImg": "images/Drawing Type D .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type D.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T061A": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type B ",
+    "drawingImg": "images/Drawing Type B .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type B.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T064B": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T069L": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T069M": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T072A": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T072B": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T072C": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T072D": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T075": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type D ",
+    "drawingImg": "images/Drawing Type D .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type D.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T076A": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type B ",
+    "drawingImg": "images/Drawing Type B .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type B.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T076H": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type B ",
+    "drawingImg": "images/Drawing Type B .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type B.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T076K": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type C ",
+    "drawingImg": "images/Drawing Type C .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type C.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T076M": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type B ",
+    "drawingImg": "images/Drawing Type B .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type B.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T076P": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type B ",
+    "drawingImg": "images/Drawing Type B .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type B.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T076R": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type B ",
+    "drawingImg": "images/Drawing Type B .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type B.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T076S": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type B ",
+    "drawingImg": "images/Drawing Type B .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type B.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T076V": {
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type E ",
+    "drawingImg": "images/Drawing Type E .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type E.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T081": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T081B": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T091A": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type D ",
+    "drawingImg": "images/Drawing Type D .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type D.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T092": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T093": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T093A": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T094": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type D ",
+    "drawingImg": "images/Drawing Type D .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type D.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T099": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T120": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T122": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type D ",
+    "drawingImg": "images/Drawing Type D .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type D.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T126": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T126A": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T127": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T127A": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T127B": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T127C": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T127D": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T140": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T143B": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  },
+  "SSA512T143C": {
+    "title": "Indoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type A ",
+    "drawingImg": "images/Drawing Type A .jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
+    "label1": "Motor Nameplate Example",
+    "img2": "Connector View | images/Con Type A.jpg",
+    "label2": "Connector View",
+    "vendorImg": "images/Lot.jpg | Motor Lot Number Example",
+    "vendorLabel": "Motor Lot Number Example",
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
+  }
+};
 
   let partsData = JSON.parse(JSON.stringify(initialPartsData));
 
@@ -3343,7 +4491,6 @@
     renderTechnicalParts();
   });
 
-  /* === 1. กดรูปเฟืองครั้งที่ 2 เป็นการซ่อน / 2. รหัสคือ maco2026 เท่านั้น === */
   function promptEditorMode() {
     const panel = document.getElementById('editorPanel');
     const isVisible = panel && panel.style.display === 'block';
@@ -3456,7 +4603,6 @@
     }
   }
 
-  /* === รวบรวมข้อมูลจากตาราง Edit เข้าสู่ partsData === */
   function collectEditorData() {
     const titleVal = document.getElementById('editFormTitle').value;
     if (titleVal) {
@@ -3514,70 +4660,76 @@
     alert("บันทึกข้อมูลชั่วคราวเรียบร้อยแล้ว!");
   }
 
-  // ปุ่ม 2: ⚡ อัปเดตโค้ด HTML -> ดาวน์โหลดไฟล์ HTML ที่แก้ไขแล้ว
+  // ปุ่ม 2: ⚡ อัปเดตโค้ด HTML -> ปิด Edit Mode แล้วส่งออกไฟล์ HTML ล่าสุด
   function saveEditorChanges() {
     collectEditorData();
     updateDynamicMotorSpec();
     renderTechnicalParts();
 
-    // ดึง HTML ล่าสุดของหน้านี้
+    // 1. ปิด Edit Mode บนหน้าจอหลักก่อน
+    toggleEditorPanel(false);
+
+    // 2. ดึง DOM ปัจจุบัน
     let htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
 
-    // อัปเดตโครงสร้าง partsData ล่าสุดลงไปใน script tag ของไฟล์ที่จะดาวน์โหลด
+    // 3. ปรับแก้ข้อความสั่งให้ซ่อน #editorPanel ชัดเจนในไฟล์ดาวน์โหลด
+    htmlContent = htmlContent.replace('id="editorPanel" class="editor-panel-box hide-on-pdf" style="display: none;"', 'id="editorPanel" class="editor-panel-box hide-on-pdf" style="display: none;"');
+
+    // 4. อัปเดตค่า partsData และ initialPartsData ในชุดซอร์สโค้ดที่จะดาวน์โหลด
     const partsDataRegex = /let partsData = {
   "SSA512T061G": {
-    "title": "images/Drawing Type D.jpg",
-    "motorType": "indoor",
-    "connectorType": "outdoor",
-    "drawingImg": "images/DC motor nameplate.jpg",
-    "img1": "Motor Nameplate Example",
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type D",
+    "drawingImg": "images/Drawing Type D.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
     "label1": "Motor Nameplate Example",
-    "img2": "images/Con Type D.jpg",
+    "img2": "Connector View | images/Con Type D.jpg",
     "label2": "Connector View",
-    "vendorImg": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
     "vendorLabel": "Motor Lot Number Example",
-    "pin_vm": "images/NidecLot.jpg",
-    "pin_vcc": "Motor Lot Number Example",
-    "pin_vsp": "46118",
-    "vm_val": 46115,
-    "vcc_val": 46114,
-    "vsp_val": 1
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
   },
   "SSA512T076BA": {
-    "title": "images/Drawing Type D.jpg",
-    "motorType": "indoor",
-    "connectorType": "outdoor",
-    "drawingImg": "images/DC motor nameplate.jpg",
-    "img1": "Motor Nameplate Example",
+    "title": "Outdoor DC Motor Inspection",
+    "motorType": "outdoor",
+    "connectorType": "Type D",
+    "drawingImg": "images/Drawing Type D.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
     "label1": "Motor Nameplate Example",
-    "img2": "images/Con Type D.jpg",
+    "img2": "Connector View | images/Con Type D.jpg",
     "label2": "Connector View",
-    "vendorImg": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
     "vendorLabel": "Motor Lot Number Example",
-    "pin_vm": "images/NidecLot.jpg",
-    "pin_vcc": "Motor Lot Number Example",
-    "pin_vsp": "46118",
-    "vm_val": 46115,
-    "vcc_val": 46114,
-    "vsp_val": 1
+    "pin_vm": "6 - 4",
+    "pin_vcc": "3 - 4",
+    "pin_vsp": "2 - 4",
+    "vm_val": 1,
+    "vcc_val": 50,
+    "vsp_val": 150
   },
   "SSA512T099A": {
-    "title": "images/Drawing Type A.jpg",
+    "title": "Indoor DC Motor Inspection",
     "motorType": "indoor",
-    "connectorType": "indoor",
-    "drawingImg": "images/DC motor nameplate.jpg",
-    "img1": "Motor Nameplate Example",
+    "connectorType": "Type A",
+    "drawingImg": "images/Drawing Type A.jpg",
+    "img1": "Motor Nameplate Example | images/DC motor nameplate.jpg",
     "label1": "Motor Nameplate Example",
-    "img2": "images/Con Type A.jpg",
+    "img2": "Connector View | images/Con Type A.jpg",
     "label2": "Connector View",
-    "vendorImg": "Connector View",
+    "vendorImg": "images/NidecLot.jpg | Motor Lot Number Example",
     "vendorLabel": "Motor Lot Number Example",
-    "pin_vm": "images/NidecLot.jpg",
-    "pin_vcc": "Motor Lot Number Example",
-    "pin_vsp": "46082",
-    "vm_val": 46085,
-    "vcc_val": 46086,
-    "vsp_val": 1
+    "pin_vm": "1 - 3",
+    "pin_vcc": "4 - 3",
+    "pin_vsp": "5 - 3",
+    "vm_val": 1,
+    "vcc_val": 25,
+    "vsp_val": 100
   },
   "SSA512T076AA": {
     "title": "Outdoor DC Motor Inspection",
@@ -4678,10 +5830,14 @@
     "vsp_val": 150
   }
 };/;
+    const initialPartsDataRegex = /let initialPartsData = {[\s\S]*?};/;
     const updatedPartsDataJS = "let partsData = " + JSON.stringify(partsData, null, 2) + ";";
-    htmlContent = htmlContent.replace(partsDataRegex, updatedPartsDataJS);
+    const updatedInitialPartsDataJS = "let initialPartsData = " + JSON.stringify(partsData, null, 2) + ";";
 
-    // สร้าง Blob และ Trigger การดาวน์โหลด
+    htmlContent = htmlContent.replace(partsDataRegex, updatedPartsDataJS);
+    htmlContent = htmlContent.replace(initialPartsDataRegex, updatedInitialPartsDataJS);
+
+    // 5. สร้างไฟล์และดาวน์โหลด
     const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -4691,8 +5847,7 @@
     document.body.removeChild(link);
     URL.revokeObjectURL(link.href);
 
-    toggleEditorPanel(false);
-    alert("อัปเดตและทำการดาวน์โหลดไฟล์ HTML เรียบร้อยแล้ว!");
+    alert("อัปเดตและทำการดาวน์โหลดไฟล์ HTML (เวอร์ชันล็อก Edit Mode) เรียบร้อยแล้ว!");
   }
 
   // ปุ่ม 3: 🔄 รีเซ็ตค่าเดิม
@@ -4773,7 +5928,6 @@
     reader.readAsArrayBuffer(file);
   }
 
-  /* === CORE FORM LOGIC & COMPUTATIONS === */
   function getSelectedPartKey() {
     const input = document.getElementById('partNo');
     if (!input) return '';
