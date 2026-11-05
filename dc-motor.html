@@ -23,7 +23,7 @@
     * { box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
     body { background-color: var(--bg-gray); color: var(--text-main); padding: 24px 16px; line-height: 1.4; }
     .app-container { width: 100%; max-width: 980px; margin: 0 auto; background: var(--card-bg); border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid var(--border-color); }
-    .brand-header { background: #FFFFFF; padding: 16px 24px; border-bottom: 3px solid var(--primary-red); display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .brand-header { background: #FFFFFF; padding: 16px 24px; border-bottom: 3px solid var(--primary-red); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
     .brand-logo-img { height: 36px; width: auto; object-fit: contain; }
     .report-badge { background-color: #F8FAFC; border: 1px solid var(--border-color); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
     .report-badge input { border: none; background: transparent; font-weight: 700; color: var(--primary-black); font-size: 0.9rem; outline: none; width: 130px; text-transform: uppercase; }
@@ -126,6 +126,31 @@
     .btn-edit-update:hover { background-color: #C0000F; }
     .btn-edit-reset { background-color: #64748B; color: #FFFFFF; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
     .btn-edit-reset:hover { background-color: #475569; }
+
+    /* Responsive Media Query สำหรับมือถือแนวตั้ง (Portrait) */
+    @media screen and (max-width: 768px) {
+      body {
+        padding: 8px 4px !important;
+      }
+      .brand-header {
+        padding: 12px 16px !important;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .form-body {
+        padding: 12px !important;
+      }
+      .grid-3 {
+        grid-template-columns: 1fr !important;
+      }
+      .dual-image-grid, .attached-grid {
+        grid-template-columns: 1fr !important;
+      }
+      /* ปรับเลย์เอาต์ส่วน Symptom บนมือถือให้เรียงแถวเดียว */
+      .section-card .grid-symptom-mobile {
+        grid-template-columns: 1fr !important;
+      }
+    }
 
     @media print {
       @page {
@@ -230,19 +255,18 @@
         <div class="section-title">Symptom (DC Motor)</div>
         <div style="margin-bottom: 12px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
           <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary-black);">DC Motor Type:</span>
-          <!-- ข้อ 2: เลือกให้ Auto และปิดไม่ให้ผู้ใช้กดเปลี่ยน -->
           <label class="custom-check" style="opacity: 0.8; cursor: not-allowed;"><input type="checkbox" id="chk_indoor_motor" name="motor_type" value="Indoor motor" disabled=""> Indoor motor</label>
           <label class="custom-check" style="opacity: 0.8; cursor: not-allowed;"><input type="checkbox" id="chk_outdoor_motor" name="motor_type" value="Outdoor motor" disabled=""> Outdoor motor</label>
         </div>
 
-        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; align-items: start;">
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; align-items: start;" class="grid-symptom-mobile">
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <!-- ข้อ 1: Appearance เปลี่ยนชื่อเป็น Appearance NG -->
+            <!-- Appearance NG -->
             <div style="background: #F8FAFC; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px;">
               <label class="custom-check" style="background: transparent; border: none; font-weight: 600; font-size: 0.82rem; padding: 0;">
                 <input type="checkbox" id="chk_appearance" data-main-symptom="Appearance NG" onchange="toggleSubOptions('chk_appearance', 'sub_appearance_options'); updateSummarySection();"> Appearance NG
               </label>
-              <div id="sub_appearance_options" class="sub-options-box" style="display: none;">
+              <div id="sub_appearance_options" class="sub-options-box">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 6px;">
                   <label class="custom-check"><input type="checkbox" data-parent-symptom="Appearance NG" value="Broken Wire" onchange="updateSummarySection()"> ➡ Broken Wire</label>
                   <label class="custom-check"><input type="checkbox" data-parent-symptom="Appearance NG" value="Bent Shaft" onchange="updateSummarySection()"> ➡ Bent Shaft</label>
@@ -250,17 +274,17 @@
               </div>
             </div>
 
-            <!-- ข้อ 3: Error ถ้าติ๊กให้ขึ้นช่องกรอกเลย เอา Other ออก -->
+            <!-- Error -->
             <div style="background: #F8FAFC; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px;">
               <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                 <label class="custom-check" style="background: transparent; border: none; font-weight: 600; font-size: 0.82rem; padding: 0;">
                   <input type="checkbox" id="chk_error_main" data-main-symptom="Error" onchange="toggleErrorCode(); updateSummarySection();"> Error
                 </label>
-                <input type="text" id="txt_error_code" class="input-control" placeholder="Enter Error Code..." style="width: 180px; padding: 4px 8px; background: #fff; text-transform: uppercase;" oninput="this.value = this.value.toUpperCase(); updateSummarySection();" disabled="">
+                <input type="text" id="txt_error_code" class="input-control" placeholder="Enter Error Code..." style="width: 180px; padding: 4px 8px; background: #fff; text-transform: uppercase;" disabled="" oninput="this.value = this.value.toUpperCase(); updateSummarySection();">
               </div>
             </div>
 
-            <!-- ข้อ 4: Rotate by hand บังคับติ๊กไปเลย และล็อกไว้ -->
+            <!-- Rotate by hand -->
             <div style="background: #F8FAFC; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px;">
               <label class="custom-check" style="background: transparent; border: none; font-weight: 600; font-size: 0.82rem; padding: 0;">
                 <input type="checkbox" id="chk_rotate_by_hand" data-main-symptom="Rotate by hand" checked="" disabled="" onchange="updateSummarySection();"> Rotate by hand
@@ -274,7 +298,7 @@
             </div>
           </div>
 
-          <!-- Sample Operation Test Image placed on the right of Symptom -->
+          <!-- Sample Operation Test Image -->
           <div class="image-preview-box" style="margin-bottom: 0; min-height: 180px;">
             <div class="img-container" style="padding: 4px;">
               <img src="images/DC Motor Operated test help start by hand.jpg" alt="Sample (Operated test help start by hand)" style="max-height: 130px;">
@@ -310,7 +334,7 @@
       <!-- Section 6: Inspection Summary & Comments -->
       <section class="section-card" id="section_inspection_summary" style="display: block;">
         <div class="section-title">Inspection Summary &amp; Comments</div>
-        <div class="summary-comment-box" id="summary_comment_content"><div class="summary-item-row"><span class="summary-part-name">• Symptom:</span> Rotate by hand</div></div>
+        <div class="summary-comment-box" id="summary_comment_content"><div style="color:var(--text-muted);">No inspection summary available</div></div>
       </section>
 
       <div class="action-container hide-on-pdf">
@@ -1738,7 +1762,7 @@
             <div class="img-caption">${img1Parsed.label}</div>
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: center;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: center;" class="dual-image-grid">
           <div class="upload-zone hide-on-pdf" id="zone_${partKey}">
             <input type="file" id="pic_${partKey}" accept="image/*" onchange="handleImageUpload(this, '${data.title}', 'attach_${partKey}', 'zone_${partKey}')">
             <div class="upload-label">📷 Attach Motor Nameplate Image</div>
@@ -1781,21 +1805,23 @@
           <span class="part-title-text">${data.title}</span>
           <span style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Matched: ${partKey}</span>
         </div>
-        <table class="measure-table">
-          <thead>
-            <tr>
-              <th>Parameter</th>
-              <th>Standard Criteria</th>
-              <th>Measured Value &amp; Unit</th>
-              <th>Result Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${renderMeasureRow(partKey, 'vm', 'Vm - Gnd', `≥ ${data.vm_val} MΩ`, 'MΩ')}
-            ${renderMeasureRow(partKey, 'vcc', 'Vcc - Gnd', `> ${data.vcc_val} kΩ`, 'kΩ')}
-            ${renderMeasureRow(partKey, 'vsp', 'Vsp - Gnd', `> ${data.vsp_val} kΩ`, 'kΩ')}
-          </tbody>
-        </table>
+        <div style="overflow-x: auto;">
+          <table class="measure-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Standard Criteria</th>
+                <th>Measured Value &amp; Unit</th>
+                <th>Result Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${renderMeasureRow(partKey, 'vm', 'Vm - Gnd', `≥ ${data.vm_val} MΩ`, 'MΩ')}
+              ${renderMeasureRow(partKey, 'vcc', 'Vcc - Gnd', `> ${data.vcc_val} kΩ`, 'kΩ')}
+              ${renderMeasureRow(partKey, 'vsp', 'Vsp - Gnd', `> ${data.vsp_val} kΩ`, 'kΩ')}
+            </tbody>
+          </table>
+        </div>
 
         <!-- Operation Test Section at the bottom of Technical Inspection -->
         <div style="background: #F8FAFC; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; margin-top: 12px;">
