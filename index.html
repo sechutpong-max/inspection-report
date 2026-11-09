@@ -168,6 +168,23 @@
       font-size: 0.75rem;
     }
 
+    /* Staff Name Clickable Trigger */
+    .staff-name {
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.2s ease;
+    }
+
+    .staff-name:hover {
+      text-decoration: underline;
+    }
+
+    /* เมื่ออยู่ใน Edit Mode ตัวหนังสือ Engineer Staff เป็นสีแดง */
+    body.is-editing .staff-name {
+      color: var(--primary-red) !important;
+      font-weight: 700;
+    }
+
     /* Main Container */
     .main-container {
       max-width: 1200px;
@@ -195,22 +212,48 @@
       color: #CBD5E1;
     }
 
-    /* Category Section */
+    /* Category Section Header */
     .category-section {
       margin-bottom: 36px;
+    }
+
+    .category-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 2px solid var(--primary-red);
+      padding-bottom: 6px;
     }
 
     .category-title {
       font-size: 1.25rem;
       font-weight: 700;
       color: #FFFFFF;
-      margin-bottom: 16px;
-      padding-bottom: 6px;
-      border-bottom: 2px solid var(--primary-red);
+    }
+
+    .add-card-btn {
+      display: none;
+      background: #2563EB;
+      color: #FFFFFF;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.775rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .add-card-btn:hover {
+      background: #1D4ED8;
+    }
+
+    body.is-editing .add-card-btn {
       display: inline-block;
     }
 
-    /* Dashboard Grid (Desktop) */
+    /* Dashboard Grid */
     .portal-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -232,6 +275,7 @@
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
       position: relative;
       overflow: hidden;
+      cursor: pointer;
     }
 
     .portal-card::before {
@@ -251,6 +295,16 @@
 
     .portal-card:hover::before {
       background: var(--primary-red);
+    }
+
+    /* Locked Card Styling */
+    .portal-card.is-locked {
+      opacity: 0.75;
+    }
+
+    .portal-card.is-locked .card-icon-box {
+      background: rgba(255,255,255,0.2) !important;
+      color: #CBD5E1 !important;
     }
 
     .card-icon-box {
@@ -273,11 +327,19 @@
       margin-bottom: 6px;
     }
 
+    .portal-card.is-locked .card-title {
+      color: #FFFFFF;
+    }
+
     .card-desc {
       font-size: 0.825rem;
       color: var(--text-muted);
       line-height: 1.5;
       margin-bottom: 16px;
+    }
+
+    .portal-card.is-locked .card-desc {
+      color: #94A3B8;
     }
 
     .card-footer {
@@ -291,12 +353,104 @@
       border-top: 1px solid rgba(0, 0, 0, 0.06);
     }
 
+    .portal-card.is-locked .card-footer {
+      color: #94A3B8;
+    }
+
     .card-arrow {
       transition: transform 0.2s ease;
     }
 
     .portal-card:hover .card-arrow {
       transform: translateX(4px);
+    }
+
+    /* Delete Card Button */
+    .card-delete-btn {
+      display: none;
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #EF4444;
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .card-delete-btn:hover {
+      background: #DC2626;
+    }
+
+    /* Edit Form Fields inside Card */
+    .card-edit-fields {
+      display: none;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed #3B82F6;
+      font-size: 0.75rem;
+      text-align: left;
+    }
+
+    .card-edit-fields label {
+      display: block;
+      color: #1E293B;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .card-edit-fields input[type="text"] {
+      width: 100%;
+      padding: 5px 8px;
+      font-size: 0.75rem;
+      border: 1px solid #94A3B8;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      background: #FFFFFF;
+      color: #0F172A;
+    }
+
+    .card-edit-fields .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      color: #475569;
+      font-weight: 500;
+    }
+
+    /* Edit Mode Styles */
+    body.is-editing .portal-card {
+      border: 2px dashed #3B82F6 !important;
+      cursor: default;
+    }
+
+    body.is-editing .card-delete-btn {
+      display: flex;
+    }
+
+    body.is-editing .card-edit-fields {
+      display: block;
+    }
+
+    body.is-editing .card-title,
+    body.is-editing .card-desc,
+    body.is-editing .card-icon-box {
+      background: rgba(59, 130, 246, 0.15);
+      outline: 1px solid #3B82F6;
+      border-radius: 4px;
+      padding: 2px 4px;
+    }
+
+    body.is-editing .portal-card:hover {
+      transform: none;
     }
 
     /* Footer */
@@ -316,7 +470,7 @@
       color: #94A3B8;
     }
 
-    /* Mobile Responsive (แสดงผลแบบ 2 คอลัมน์) */
+    /* Mobile Responsive (2 Columns) */
     @media (max-width: 768px) {
       .navbar {
         padding: 12px 16px;
@@ -345,10 +499,8 @@
 
       .category-title {
         font-size: 1.05rem;
-        margin-bottom: 12px;
       }
 
-      /* ปรับให้แสดงผลแบบ 2 คอลัมน์คู่กันบนมือถือ */
       .portal-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
@@ -418,7 +570,7 @@
     </div>
     <div class="user-profile">
       <div class="user-avatar">EN</div>
-      <span>Engineer Staff</span>
+      <span class="staff-name" onclick="toggleEditMode()" title="Click to toggle Edit Mode">Engineer Staff</span>
     </div>
   </header>
 
@@ -438,214 +590,406 @@
 
     <!-- 1. RAC System Section -->
     <div class="category-section" id="rac-section">
-      <h2 class="category-title">RAC (Residential Air Conditioning)</h2>
-      <div class="portal-grid">
+      <div class="category-header">
+        <h2 class="category-title">RAC (Residential Air Conditioning)</h2>
+        <button class="add-card-btn" onclick="addNewCard('rac-grid')">➕ Add Card</button>
+      </div>
+      <div class="portal-grid" id="rac-grid">
         
         <!-- 1. PSH & PSL -->
-        <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('Module coming soon!');">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">📊</div>
-            <h2 class="card-title" style="color: #FFFFFF;">PSH & PSL</h2>
-            <p class="card-desc" style="color: #94A3B8;">Pressure switch high and low evaluation and testing report module.</p>
+            <div class="card-icon-box">📊</div>
+            <h2 class="card-title">PSH & PSL</h2>
+            <p class="card-desc">Pressure switch high and low evaluation and testing report module.</p>
           </div>
-          <div class="card-footer" style="color: #94A3B8;"><span>Coming Soon</span><span>🔒</span></div>
-        </a>
+          <div class="card-footer">
+            <span class="footer-text">Coming Soon</span>
+            <span class="card-arrow">🔒</span>
+          </div>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
 
         <!-- 2. Outdoor Heat Exchanger -->
-        <a href="outdoor-heat-exchanger.html" class="portal-card">
+        <div class="portal-card" data-href="outdoor-heat-exchanger.html" data-locked="false" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">☀️</div>
             <h2 class="card-title">Outdoor Heat Exchanger</h2>
             <p class="card-desc">Comprehensive checking report for outdoor coils, fins, and heat transfer efficiency.</p>
           </div>
           <div class="card-footer">
-            <span>Open Report Form</span>
+            <span class="footer-text">Open Report Form</span>
             <span class="card-arrow">➔</span>
           </div>
-        </a>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="outdoor-heat-exchanger.html" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
 
         <!-- 3. Indoor Heat Exchanger -->
-        <a href="indoor-heat-exchanger.html" class="portal-card">
+        <div class="portal-card" data-href="indoor-heat-exchanger.html" data-locked="false" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">❄</div>
             <h2 class="card-title">Indoor Heat Exchanger</h2>
             <p class="card-desc">Advanced checking part report module for indoor unit heat exchangers, defect locations, and evaluation assessment.</p>
           </div>
           <div class="card-footer">
-            <span>Open Report Form</span>
+            <span class="footer-text">Open Report Form</span>
             <span class="card-arrow">➔</span>
           </div>
-        </a>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="indoor-heat-exchanger.html" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
 
         <!-- 4. Thermistor -->
-        <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('Module coming soon!');">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">🌡️</div>
-            <h2 class="card-title" style="color: #FFFFFF;">Thermistor</h2>
-            <p class="card-desc" style="color: #94A3B8;">Temperature sensor resistance and accuracy testing report module.</p>
+            <div class="card-icon-box">🌡️</div>
+            <h2 class="card-title">Thermistor</h2>
+            <p class="card-desc">Temperature sensor resistance and accuracy testing report module.</p>
           </div>
-          <div class="card-footer" style="color: #94A3B8;"><span>Coming Soon</span><span>🔒</span></div>
-        </a>
+          <div class="card-footer">
+            <span class="footer-text">Coming Soon</span>
+            <span class="card-arrow">🔒</span>
+          </div>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
 
         <!-- 5. DC Motor -->
-        <a href="dc-motor.html" class="portal-card">
+        <div class="portal-card" data-href="dc-motor.html" data-locked="false" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">⚙</div>
             <h2 class="card-title">DC Motor</h2>
             <p class="card-desc">Direct current brushless fan motor feedback and control signal inspection.</p>
           </div>
           <div class="card-footer">
-            <span>Open Report Form</span>
+            <span class="footer-text">Open Report Form</span>
             <span class="card-arrow">➔</span>
           </div>
-        </a>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="dc-motor.html" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
 
         <!-- 6. AC Motor -->
-        <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('Module coming soon!');">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">🌀</div>
-            <h2 class="card-title" style="color: #FFFFFF;">AC Motor</h2>
-            <p class="card-desc" style="color: #94A3B8;">Alternating current fan motor status, bearing, and winding report.</p>
+            <div class="card-icon-box">🌀</div>
+            <h2 class="card-title">AC Motor</h2>
+            <p class="card-desc">Alternating current fan motor status, bearing, and winding report.</p>
           </div>
-          <div class="card-footer" style="color: #94A3B8;"><span>Coming Soon</span><span>🔒</span></div>
-        </a>
+          <div class="card-footer">
+            <span class="footer-text">Coming Soon</span>
+            <span class="card-arrow">🔒</span>
+          </div>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
 
         <!-- 7. EEV -->
-        <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('Module coming soon!');">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">⚙</div>
-            <h2 class="card-title" style="color: #FFFFFF;">EEV (Electronic Expansion Valve)</h2>
-            <p class="card-desc" style="color: #94A3B8;">Electronic expansion valve pulse response and leakage inspection.</p>
+            <div class="card-icon-box">⚙</div>
+            <h2 class="card-title">EEV (Electronic Expansion Valve)</h2>
+            <p class="card-desc">Electronic expansion valve pulse response and leakage inspection.</p>
           </div>
-          <div class="card-footer" style="color: #94A3B8;"><span>Coming Soon</span><span>🔒</span></div>
-        </a>
+          <div class="card-footer">
+            <span class="footer-text">Coming Soon</span>
+            <span class="card-arrow">🔒</span>
+          </div>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
 
         <!-- 8. Stepping Motor -->
-        <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('Module coming soon!');">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">🔄</div>
-            <h2 class="card-title" style="color: #FFFFFF;">Stepping Motor</h2>
-            <p class="card-desc" style="color: #94A3B8;">Louver and vane stepping motor winding resistance and movement analysis.</p>
+            <div class="card-icon-box">🔄</div>
+            <h2 class="card-title">Stepping Motor</h2>
+            <p class="card-desc">Louver and vane stepping motor winding resistance and movement analysis.</p>
           </div>
-          <div class="card-footer" style="color: #94A3B8;"><span>Coming Soon</span><span>🔒</span></div>
-        </a>
+          <div class="card-footer">
+            <span class="footer-text">Coming Soon</span>
+            <span class="card-arrow">🔒</span>
+          </div>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
 
         <!-- 9. IPM (PS21245-EP) -->
-        <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('Module coming soon!');">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">🔌</div>
-            <h2 class="card-title" style="color: #FFFFFF;">IPM (PS21245-EP)</h2>
-            <p class="card-desc" style="color: #94A3B8;">Intelligent Power Module testing and voltage drop diagnostic checklist.</p>
+            <div class="card-icon-box">🔌</div>
+            <h2 class="card-title">IPM (PS21245-EP)</h2>
+            <p class="card-desc">Intelligent Power Module testing and voltage drop diagnostic checklist.</p>
           </div>
-          <div class="card-footer" style="color: #94A3B8;"><span>Coming Soon</span><span>🔒</span></div>
-        </a>
+          <div class="card-footer">
+            <span class="footer-text">Coming Soon</span>
+            <span class="card-arrow">🔒</span>
+          </div>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
 
         <!-- 10. IPM FSBB15(20)CH60C -->
-        <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('Module coming soon!');">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">🔌</div>
-            <h2 class="card-title" style="color: #FFFFFF;">IPM FSBB15(20)CH60C</h2>
-            <p class="card-desc" style="color: #94A3B8;">Motion SPM 3 series power module diagnostic inspection report.</p>
+            <div class="card-icon-box">🔌</div>
+            <h2 class="card-title">IPM FSBB15(20)CH60C</h2>
+            <p class="card-desc">Motion SPM 3 series power module diagnostic inspection report.</p>
           </div>
-          <div class="card-footer" style="color: #94A3B8;"><span>Coming Soon</span><span>🔒</span></div>
-        </a>
+          <div class="card-footer">
+            <span class="footer-text">Coming Soon</span>
+            <span class="card-arrow">🔒</span>
+          </div>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
 
         <!-- 11. IPM (PS219A3-C) -->
-        <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('Module coming soon!');">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">🔌</div>
-            <h2 class="card-title" style="color: #FFFFFF;">IPM (PS219A3-C)</h2>
-            <p class="card-desc" style="color: #94A3B8;">DIPIPM Ver.4 series power semiconductor evaluation form.</p>
+            <div class="card-icon-box">🔌</div>
+            <h2 class="card-title">IPM (PS219A3-C)</h2>
+            <p class="card-desc">DIPIPM Ver.4 series power semiconductor evaluation form.</p>
           </div>
-          <div class="card-footer" style="color: #94A3B8;"><span>Coming Soon</span><span>🔒</span></div>
-        </a>
+          <div class="card-footer">
+            <span class="footer-text">Coming Soon</span>
+            <span class="card-arrow">🔒</span>
+          </div>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
 
         <!-- 12. IPM (PS219B3-CST) -->
-        <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('Module coming soon!');">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">🔌</div>
-            <h2 class="card-title" style="color: #FFFFFF;">IPM (PS219B3-CST)</h2>
-            <p class="card-desc" style="color: #94A3B8;">Compact dual-in-line intelligent power module status checking sheet.</p>
+            <div class="card-icon-box">🔌</div>
+            <h2 class="card-title">IPM (PS219B3-CST)</h2>
+            <p class="card-desc">Compact dual-in-line intelligent power module status checking sheet.</p>
           </div>
-          <div class="card-footer" style="color: #94A3B8;"><span>Coming Soon</span><span>🔒</span></div>
-        </a>
+          <div class="card-footer">
+            <span class="footer-text">Coming Soon</span>
+            <span class="card-arrow">🔒</span>
+          </div>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
 
         <!-- 13. Running Capacitor -->
-        <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('Module coming soon!');">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">🔋</div>
-            <h2 class="card-title" style="color: #FFFFFF;">Running Capacitor</h2>
-            <p class="card-desc" style="color: #94A3B8;">Capacitance value, microfarad testing, and degradation assessment.</p>
+            <div class="card-icon-box">🔋</div>
+            <h2 class="card-title">Running Capacitor</h2>
+            <p class="card-desc">Capacitance value, microfarad testing, and degradation assessment.</p>
           </div>
-          <div class="card-footer" style="color: #94A3B8;"><span>Coming Soon</span><span>🔒</span></div>
-        </a>
+          <div class="card-footer">
+            <span class="footer-text">Coming Soon</span>
+            <span class="card-arrow">🔒</span>
+          </div>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
 
         <!-- 14. Rectifier -->
-        <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('Module coming soon!');">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">⚡</div>
-            <h2 class="card-title" style="color: #FFFFFF;">Rectifier</h2>
-            <p class="card-desc" style="color: #94A3B8;">Diode bridge rectifier circuit continuity and breakdown test module.</p>
+            <div class="card-icon-box">⚡</div>
+            <h2 class="card-title">Rectifier</h2>
+            <p class="card-desc">Diode bridge rectifier circuit continuity and breakdown test module.</p>
           </div>
-          <div class="card-footer" style="color: #94A3B8;"><span>Coming Soon</span><span>🔒</span></div>
-        </a>
+          <div class="card-footer">
+            <span class="footer-text">Coming Soon</span>
+            <span class="card-arrow">🔒</span>
+          </div>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
 
         <!-- 15. SSR -->
-        <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('Module coming soon!');">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">🎛️</div>
-            <h2 class="card-title" style="color: #FFFFFF;">SSR (Solid State Relay)</h2>
-            <p class="card-desc" style="color: #94A3B8;">Solid state relay switching performance and output load inspection.</p>
+            <div class="card-icon-box">🎛️</div>
+            <h2 class="card-title">SSR (Solid State Relay)</h2>
+            <p class="card-desc">Solid state relay switching performance and output load inspection.</p>
           </div>
-          <div class="card-footer" style="color: #94A3B8;"><span>Coming Soon</span><span>🔒</span></div>
-        </a>
+          <div class="card-footer">
+            <span class="footer-text">Coming Soon</span>
+            <span class="card-arrow">🔒</span>
+          </div>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
 
         <!-- 16. Compressor -->
-        <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('Module coming soon!');">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">🔧</div>
-            <h2 class="card-title" style="color: #FFFFFF;">Compressor</h2>
-            <p class="card-desc" style="color: #94A3B8;">Inverter/fixed compressor electrical winding, insulation, and mechanical check.</p>
+            <div class="card-icon-box">🔧</div>
+            <h2 class="card-title">Compressor</h2>
+            <p class="card-desc">Inverter/fixed compressor electrical winding, insulation, and mechanical check.</p>
           </div>
-          <div class="card-footer" style="color: #94A3B8;"><span>Coming Soon</span><span>🔒</span></div>
-        </a>
+          <div class="card-footer">
+            <span class="footer-text">Coming Soon</span>
+            <span class="card-arrow">🔒</span>
+          </div>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
 
       </div>
     </div>
 
     <!-- 2. PAC System Section -->
     <div class="category-section" id="pac-section">
-      <h2 class="category-title">PAC (Package Air Conditioning)</h2>
-      <div class="portal-grid">
-        <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('PAC Module coming soon!');">
+      <div class="category-header">
+        <h2 class="category-title">PAC (Package Air Conditioning)</h2>
+        <button class="add-card-btn" onclick="addNewCard('pac-grid')">➕ Add Card</button>
+      </div>
+      <div class="portal-grid" id="pac-grid">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">🏢</div>
-            <h2 class="card-title" style="color: #FFFFFF;">PAC Inspection Module</h2>
-            <p class="card-desc" style="color: #94A3B8;">Diagnostic tools and reporting platform for package air conditioning systems.</p>
+            <div class="card-icon-box">🏢</div>
+            <h2 class="card-title">PAC Inspection Module</h2>
+            <p class="card-desc">Diagnostic tools and reporting platform for package air conditioning systems.</p>
           </div>
-          <div class="card-footer" style="color: #94A3B8;">
-            <span>Coming Soon</span>
-            <span>🔒</span>
+          <div class="card-footer">
+            <span class="footer-text">Coming Soon</span>
+            <span class="card-arrow">🔒</span>
           </div>
-        </a>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- 3. KX System Section -->
     <div class="category-section" id="kx-section">
-      <h2 class="category-title">KX (VRF / Multi-Split System)</h2>
-      <div class="portal-grid">
-        <a href="#" class="portal-card" style="opacity: 0.7; cursor: not-allowed;" onclick="event.preventDefault(); alert('KX Module coming soon!');">
+      <div class="category-header">
+        <h2 class="category-title">KX (VRF / Multi-Split System)</h2>
+        <button class="add-card-btn" onclick="addNewCard('kx-grid')">➕ Add Card</button>
+      </div>
+      <div class="portal-grid" id="kx-grid">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
-            <div class="card-icon-box" style="background: rgba(255,255,255,0.2); color: #CBD5E1;">🏢</div>
-            <h2 class="card-title" style="color: #FFFFFF;">KX Inspection Module</h2>
-            <p class="card-desc" style="color: #94A3B8;">Advanced diagnostic and performance analysis tools for commercial VRF systems.</p>
+            <div class="card-icon-box">🏢</div>
+            <h2 class="card-title">KX Inspection Module</h2>
+            <p class="card-desc">Advanced diagnostic and performance analysis tools for commercial VRF systems.</p>
           </div>
-          <div class="card-footer" style="color: #94A3B8;">
-            <span>Coming Soon</span>
-            <span>🔒</span>
+          <div class="card-footer">
+            <span class="footer-text">Coming Soon</span>
+            <span class="card-arrow">🔒</span>
           </div>
-        </a>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -660,7 +1004,7 @@
     </div>
   </footer>
 
-  <!-- Script ป้องกันการนับเบิ้ล 2 ครั้งเด็ดขาดด้วย sessionStorage -->
+  <!-- Visitor Badge Counter Script -->
   <script>
     (function() {
       window.addEventListener('pageshow', function (event) {
@@ -674,7 +1018,6 @@
 
           if (!lastRun || (now - lastRun > 1000)) {
             sessionStorage.setItem('last_badge_update', now);
-            
             setTimeout(function() {
               var badge = document.getElementById('visitor-badge');
               if (badge) {
@@ -686,6 +1029,215 @@
         }
       });
     })();
+  </script>
+
+  <!-- Logic: Authenticated Edit Mode / Auto Unlock / Persistence -->
+  <script>
+    let isEditing = false;
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadSavedPortalData();
+    });
+
+    // สลับ Edit Mode (ต้องใส่รหัสเฉพาะตอนเข้า)
+    function toggleEditMode() {
+      const body = document.body;
+      const editables = document.querySelectorAll('.card-title, .card-desc, .card-icon-box');
+
+      if (!isEditing) {
+        // เข้าสู่โหมดแก้ไข -> ถามรหัสผ่าน
+        const pass = prompt('กรุณากรอกรหัสผ่านเพื่อเข้าสู่ Edit Mode:');
+        if (pass !== 'maco2026') {
+          if (pass !== null) alert('รหัสผ่านไม่ถูกต้อง!');
+          return;
+        }
+
+        isEditing = true;
+        body.classList.add('is-editing');
+
+        editables.forEach(el => {
+          el.setAttribute('contenteditable', 'true');
+        });
+      } else {
+        // ออกจากโหมดแก้ไข -> บันทึกข้อมูลและไม่ต้องกรอกรหัสผ่าน
+        isEditing = false;
+        body.classList.remove('is-editing');
+
+        editables.forEach(el => {
+          el.removeAttribute('contenteditable');
+        });
+
+        savePortalData();
+        alert('บันทึกการแก้ไขเรียบร้อยแล้ว!');
+      }
+    }
+
+    // จัดการการคลิกการ์ด (บล็อกตอนแก้ / สลับไปยังลิงก์ หรือแจ้ง alert ตอนปกติ)
+    function handleCardClick(event, card) {
+      if (isEditing) return;
+
+      const isLocked = card.getAttribute('data-locked') === 'true';
+      const href = card.getAttribute('data-href');
+
+      if (isLocked || !href || href === '#') {
+        alert('Module coming soon!');
+      } else {
+        window.location.href = href;
+      }
+    }
+
+    // Auto Unlock อัตโนมัติเมื่อมีการพิมพ์ Link URL
+    function handleUrlChange(input) {
+      const card = input.closest('.portal-card');
+      const checkbox = card.querySelector('.card-locked-check');
+      const val = input.value.trim();
+
+      if (val !== '' && val !== '#') {
+        checkbox.checked = false;
+      } else {
+        checkbox.checked = true;
+      }
+      updateCardState(checkbox);
+    }
+
+    // อัปเดต UI ของการ์ดเมื่อสถานะการล็อกเปลี่ยน
+    function updateCardState(checkbox) {
+      const card = checkbox.closest('.portal-card');
+      const footerText = card.querySelector('.footer-text');
+      const cardArrow = card.querySelector('.card-arrow');
+      const urlInput = card.querySelector('.card-url-input');
+
+      const hrefVal = urlInput ? urlInput.value.trim() : '#';
+      card.setAttribute('data-href', hrefVal);
+
+      if (checkbox.checked) {
+        card.setAttribute('data-locked', 'true');
+        card.classList.add('is-locked');
+        if (footerText) footerText.innerText = 'Coming Soon';
+        if (cardArrow) cardArrow.innerText = '🔒';
+      } else {
+        card.setAttribute('data-locked', 'false');
+        card.classList.remove('is-locked');
+        if (footerText) footerText.innerText = 'Open Report Form';
+        if (cardArrow) cardArrow.innerText = '➔';
+      }
+    }
+
+    // เพิ่มการ์ดใหม่
+    function addNewCard(gridId) {
+      const grid = document.getElementById(gridId);
+      if (!grid) return;
+
+      const newCard = document.createElement('div');
+      newCard.className = 'portal-card is-locked';
+      newCard.setAttribute('data-href', '#');
+      newCard.setAttribute('data-locked', 'true');
+      newCard.onclick = function(e) { handleCardClick(e, this); };
+
+      newCard.innerHTML = `
+        <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
+        <div>
+          <div class="card-icon-box" ${isEditing ? 'contenteditable="true"' : ''}>⚙</div>
+          <h2 class="card-title" ${isEditing ? 'contenteditable="true"' : ''}>New Module Title</h2>
+          <p class="card-desc" ${isEditing ? 'contenteditable="true"' : ''}>Description of technical inspection report module.</p>
+        </div>
+        <div class="card-footer">
+          <span class="footer-text">Coming Soon</span>
+          <span class="card-arrow">🔒</span>
+        </div>
+        <div class="card-edit-fields" onclick="event.stopPropagation()">
+          <label>Link URL:</label>
+          <input type="text" class="card-url-input" value="#" placeholder="e.g. form-url.html" oninput="handleUrlChange(this)">
+          <label class="checkbox-label">
+            <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
+          </label>
+        </div>
+      `;
+
+      grid.appendChild(newCard);
+    }
+
+    // ลบการ์ด
+    function deleteCard(event, btn) {
+      event.stopPropagation();
+      if (confirm('คุณต้องการลบรายการนี้ใช่หรือไม่?')) {
+        const card = btn.closest('.portal-card');
+        if (card) card.remove();
+      }
+    }
+
+    // บันทึกข้อมูลทั้งหมดลง localStorage
+    function savePortalData() {
+      const portalData = {};
+      const sections = ['rac-grid', 'pac-grid', 'kx-grid'];
+
+      sections.forEach(secId => {
+        const grid = document.getElementById(secId);
+        if (!grid) return;
+
+        const cardsData = [];
+        grid.querySelectorAll('.portal-card').forEach(card => {
+          const icon = card.querySelector('.card-icon-box')?.innerText || '⚙';
+          const title = card.querySelector('.card-title')?.innerText || '';
+          const desc = card.querySelector('.card-desc')?.innerText || '';
+          const urlInput = card.querySelector('.card-url-input');
+          const href = urlInput ? urlInput.value.trim() : card.getAttribute('data-href') || '#';
+          const isLocked = card.querySelector('.card-locked-check')?.checked || false;
+
+          cardsData.push({ icon, title, desc, href, isLocked });
+        });
+
+        portalData[secId] = cardsData;
+      });
+
+      localStorage.setItem('mhi_portal_data_v6', JSON.stringify(portalData));
+    }
+
+    // โหลดข้อมูลจาก localStorage
+    function loadSavedPortalData() {
+      const saved = localStorage.getItem('mhi_portal_data_v6');
+      if (!saved) return;
+
+      const portalData = JSON.parse(saved);
+      const sections = ['rac-grid', 'pac-grid', 'kx-grid'];
+
+      sections.forEach(secId => {
+        const grid = document.getElementById(secId);
+        if (!grid || !portalData[secId]) return;
+
+        grid.innerHTML = '';
+
+        portalData[secId].forEach(item => {
+          const card = document.createElement('div');
+          card.className = `portal-card ${item.isLocked ? 'is-locked' : ''}`;
+          card.setAttribute('data-href', item.href);
+          card.setAttribute('data-locked', item.isLocked ? 'true' : 'false');
+          card.onclick = function(e) { handleCardClick(e, this); };
+
+          card.innerHTML = `
+            <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
+            <div>
+              <div class="card-icon-box">${item.icon}</div>
+              <h2 class="card-title">${item.title}</h2>
+              <p class="card-desc">${item.desc}</p>
+            </div>
+            <div class="card-footer">
+              <span class="footer-text">${item.isLocked ? 'Coming Soon' : 'Open Report Form'}</span>
+              <span class="card-arrow">${item.isLocked ? '🔒' : '➔'}</span>
+            </div>
+            <div class="card-edit-fields" onclick="event.stopPropagation()">
+              <label>Link URL:</label>
+              <input type="text" class="card-url-input" value="${item.href}" oninput="handleUrlChange(this)">
+              <label class="checkbox-label">
+                <input type="checkbox" class="card-locked-check" ${item.isLocked ? 'checked' : ''} onchange="updateCardState(this)"> Locked (Coming Soon)
+              </label>
+            </div>
+          `;
+
+          grid.appendChild(card);
+        });
+      });
+    }
   </script>
 
 </body>
