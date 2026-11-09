@@ -179,7 +179,7 @@
       .input-control { font-size: 0.8rem; padding: 6px 8px; }
     }
 
-    /* Save PDF / Print Settings (Fixed Full Page Match Window Preview with Technical Data Reference Hidden) */
+    /* Save PDF / Print Settings (Fixed Full Page Fit for Mobile Portrait & Landscape) */
     @media print {
       @page { 
         size: A4 portrait; 
@@ -190,12 +190,14 @@
         padding: 0 !important; 
         margin: 0 !important; 
         width: 100% !important;
+        min-width: 100% !important;
         -webkit-print-color-adjust: exact !important; 
         print-color-adjust: exact !important; 
       }
       .app-container { 
         width: 100% !important;
         max-width: 100% !important; 
+        min-width: 100% !important;
         box-shadow: none !important; 
         border: none !important; 
         border-radius: 0 !important; 
@@ -203,6 +205,11 @@
         margin: 0 !important;
       }
       
+      /* บังคับกริดในมือถือให้ขยายเต็มหน้าตอนพิมพ์ PDF เสมอ */
+      .grid-3 { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 12px !important; }
+      .tech-ref-grid { display: grid !important; grid-template-columns: 1fr 1.3fr !important; gap: 16px !important; }
+      .attached-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+
       /* ซ่อน Technical Data Reference, ปุ่มกด, แผงแต่งหน้าเว็บ และปุ่มลบรูปภาพตอนพิมพ์ PDF */
       .hide-on-pdf, #section_technical_reference, .designer-fab, #editorPanel, .remove-img-btn { display: none !important; }
       
