@@ -122,15 +122,15 @@
       .section-card { padding: 10px 8px !important; margin-bottom: 10px; }
     }
 
-    /* Strict A4 PDF Layout (Same in Portrait & Landscape on Mobile) */
+    /* Fixed Standard A4 PDF Output (Identical Layout for Portrait & Landscape mode) */
     @media print {
       @page {
         size: A4 portrait;
         margin: 0 !important;
       }
       html, body {
-        width: 210mm !important;
-        height: 297mm !important;
+        width: 100% !important;
+        height: auto !important;
         background-color: #FFFFFF !important;
         padding: 0 !important;
         margin: 0 !important;
@@ -138,16 +138,17 @@
         print-color-adjust: exact !important;
       }
       .app-container {
-        width: 100% !important;
-        max-width: 100% !important;
+        width: 794px !important;
+        max-width: 794px !important;
         box-shadow: none !important;
         border: none !important;
         border-radius: 0 !important;
         padding: 10mm 12mm !important;
-        margin: 0 !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
       }
       
-      /* Hide elements from PDF */
+      /* Hide Unnecessary Sections */
       .hide-on-pdf, 
       #section_technical_reference, 
       #section_technical_inspection, 
@@ -157,7 +158,14 @@
         display: none !important; 
       }
       
-      .brand-header { padding: 0 0 12px 0 !important; border-bottom: 2px solid var(--primary-red) !important; }
+      .brand-header { 
+        padding: 0 0 12px 0 !important; 
+        border-bottom: 2px solid var(--primary-red) !important; 
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+      }
       .form-body { padding: 16px 0 0 0 !important; }
       .grid-3 { grid-template-columns: repeat(3, 1fr) !important; gap: 12px !important; }
       
@@ -212,7 +220,7 @@
         </div></div>
       </section>
 
-      <!-- Section 3: Technical data reference (ซ่อนเมื่อ Save PDF) -->
+      <!-- Section 3: Technical Data Reference (ซ่อนใน PDF) -->
       <section class="section-card hide-on-pdf" id="section_technical_reference">
         <div class="section-title">Technical data reference</div>
         <div class="tech-ref-grid">
@@ -280,7 +288,7 @@
         </div>
       </section>
 
-      <!-- Section 4: Technical Inspection (ซ่อนเมื่อ Save PDF) -->
+      <!-- Section 4: Technical Inspection (ซ่อนใน PDF) -->
       <section class="section-card hide-on-pdf" id="section_technical_inspection">
         <div class="section-title">Technical Inspection &amp; Defect Locations</div>
         
@@ -928,7 +936,20 @@
     }
 
     prepareDOMForPDF();
-    window.print();
+
+    // Force viewport to fixed width temporarily during print call for mobile rendering consistency
+    const viewportMeta = document.querySelector('meta[name="viewport"]');
+    const originalContent = viewportMeta ? viewportMeta.getAttribute('content') : '';
+    if (viewportMeta) {
+      viewportMeta.setAttribute('content', 'width=1024');
+    }
+
+    setTimeout(() => {
+      window.print();
+      if (viewportMeta && originalContent) {
+        viewportMeta.setAttribute('content', originalContent);
+      }
+    }, 100);
   }
 </script>
 </body>
