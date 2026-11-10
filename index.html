@@ -113,38 +113,6 @@
       padding-left: 12px;
     }
 
-    /* Quick Jump Navigation Bar */
-    .quick-nav {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 10px 24px;
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      position: sticky;
-      top: 57px;
-      z-index: 999;
-    }
-
-    .quick-nav a {
-      color: #CBD5E1;
-      text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 5px 14px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      transition: all 0.2s ease;
-    }
-
-    .quick-nav a:hover {
-      background: var(--primary-red);
-      color: #FFFFFF;
-      border-color: var(--primary-red);
-    }
-
     .user-profile {
       display: flex;
       align-items: center;
@@ -178,7 +146,7 @@
       text-decoration: underline;
     }
 
-    /* เมื่ออยู่ใน Edit Mode ตัวหนังสือ Engineer Staff เป็นสีแดง */
+    /* Edit Mode Active */
     body.is-editing .staff-name {
       color: var(--primary-red) !important;
       font-weight: 700;
@@ -306,6 +274,11 @@
       color: #CBD5E1 !important;
     }
 
+    /* Hidden Card Styling (Normal Mode) */
+    .portal-card.is-hidden {
+      display: none;
+    }
+
     .card-icon-box {
       width: 42px;
       height: 42px;
@@ -423,12 +396,21 @@
       cursor: pointer;
       color: #475569;
       font-weight: 500;
+      margin-bottom: 6px;
     }
 
     /* Edit Mode Styles */
     body.is-editing .portal-card {
       border: 2px dashed #3B82F6 !important;
       cursor: default;
+    }
+
+    /* Hidden Cards visible in Edit Mode */
+    body.is-editing .portal-card.is-hidden {
+      display: flex !important;
+      opacity: 0.55;
+      background: rgba(241, 245, 249, 0.9);
+      border: 2px dashed #64748B !important;
     }
 
     body.is-editing .card-delete-btn {
@@ -446,6 +428,13 @@
       outline: 1px solid #3B82F6;
       border-radius: 4px;
       padding: 2px 4px;
+    }
+
+    body.is-editing .portal-card.is-hidden .card-title,
+    body.is-editing .portal-card.is-hidden .card-desc,
+    body.is-editing .portal-card.is-hidden .card-icon-box {
+      background: rgba(100, 116, 139, 0.15);
+      outline: 1px solid #64748B;
     }
 
     body.is-editing .portal-card:hover {
@@ -469,47 +458,38 @@
       color: #94A3B8;
     }
 
-    /* Mobile Responsive (2 Columns) */
+    /* Mobile Responsive */
     @media (max-width: 768px) {
       .navbar {
         padding: 12px 16px;
       }
-
       .main-container {
         margin: 16px auto;
         padding: 0 10px;
       }
-
       .hero-section {
         margin-bottom: 18px;
       }
-
       .hero-title {
         font-size: 1.3rem;
       }
-
       .hero-subtitle {
         font-size: 0.8rem;
       }
-
       .category-section {
         margin-bottom: 24px;
       }
-
       .category-title {
         font-size: 1.05rem;
       }
-
       .portal-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
       }
-
       .portal-card {
         padding: 12px 10px;
         border-radius: 10px;
       }
-
       .card-icon-box {
         width: 32px;
         height: 32px;
@@ -517,35 +497,19 @@
         margin-bottom: 8px;
         border-radius: 6px;
       }
-
       .card-title {
         font-size: 0.85rem;
         margin-bottom: 4px;
         line-height: 1.25;
       }
-
       .card-desc {
         font-size: 0.725rem;
         margin-bottom: 10px;
         line-height: 1.35;
       }
-
       .card-footer {
         padding-top: 8px;
         font-size: 0.7rem;
-      }
-
-      .quick-nav {
-        justify-content: flex-start;
-        overflow-x: auto;
-        padding: 8px 12px;
-        top: 52px;
-      }
-
-      .quick-nav a {
-        font-size: 0.75rem;
-        padding: 4px 10px;
-        white-space: nowrap;
       }
     }
   </style>
@@ -573,13 +537,6 @@
     </div>
   </header>
 
-  <!-- Quick Navigation Bar -->
-  <nav class="quick-nav">
-    <a href="#rac-section">❄ RAC System</a>
-    <a href="#pac-section">🏢 PAC System</a>
-    <a href="#kx-section">⚡ KX System</a>
-  </nav>
-
   <!-- Main Content -->
   <main class="main-container">
     <div class="hero-section">
@@ -587,16 +544,18 @@
       <p class="hero-subtitle">Next-generation diagnostic tools and automated reporting platform.</p>
     </div>
 
-    <!-- 1. RAC System Section -->
-    <div class="category-section" id="rac-section">
+    <!-- Main Grid Section -->
+    <div class="category-section" id="all-modules-section">
       <div class="category-header">
-        <h2 class="category-title">RAC (Residential Air Conditioning)</h2>
-        <button class="add-card-btn" onclick="addNewCard('rac-grid')">➕ Add Card</button>
+        <h2 class="category-title">All Inspection Modules</h2>
+        <button class="add-card-btn" onclick="addNewCard('main-grid')">➕ Add Card</button>
       </div>
-      <div class="portal-grid" id="rac-grid">
+      
+      <!-- Single Unified Grid -->
+      <div class="portal-grid" id="main-grid">
         
         <!-- 1. PSH & PSL -->
-        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">📊</div>
@@ -613,11 +572,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" checked="checked" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
 
         <!-- 2. Outdoor Heat Exchanger -->
-        <div class="portal-card" data-href="outdoor-heat-exchanger.html" data-locked="false" onclick="handleCardClick(event, this)">
+        <div class="portal-card" data-href="outdoor-heat-exchanger.html" data-locked="false" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">☀️</div>
@@ -634,11 +596,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
 
         <!-- 3. Indoor Heat Exchanger -->
-        <div class="portal-card" data-href="indoor-heat-exchanger.html" data-locked="false" onclick="handleCardClick(event, this)">
+        <div class="portal-card" data-href="indoor-heat-exchanger.html" data-locked="false" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">❄</div>
@@ -655,11 +620,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
 
         <!-- 4. Thermistor -->
-        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🌡️</div>
@@ -676,11 +644,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" checked="checked" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
 
         <!-- 5. DC Motor -->
-        <div class="portal-card" data-href="dc-motor.html" data-locked="false" onclick="handleCardClick(event, this)">
+        <div class="portal-card" data-href="dc-motor.html" data-locked="false" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">⚙</div>
@@ -697,11 +668,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
 
         <!-- 6. AC Motor -->
-        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🌀</div>
@@ -718,11 +692,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" checked="checked" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
 
         <!-- 7. EEV -->
-        <div class="portal-card" data-href="EEV.html" data-locked="false" onclick="handleCardClick(event, this)">
+        <div class="portal-card" data-href="EEV.html" data-locked="false" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">⚙</div>
@@ -739,11 +716,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
 
         <!-- 8. Stepping Motor -->
-        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🔄</div>
@@ -760,11 +740,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" checked="checked" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
 
         <!-- 9. IPM (PS21245-EP) -->
-        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🔌</div>
@@ -781,11 +764,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" checked="checked" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
 
         <!-- 10. IPM FSBB15(20)CH60C -->
-        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🔌</div>
@@ -802,11 +788,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" checked="checked" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
 
         <!-- 11. IPM (PS219A3-C) -->
-        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🔌</div>
@@ -823,11 +812,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" checked="checked" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
 
         <!-- 12. IPM (PS219B3-CST) -->
-        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🔌</div>
@@ -844,11 +836,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" checked="checked" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
 
         <!-- 13. Running Capacitor -->
-        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🔋</div>
@@ -865,11 +860,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" checked="checked" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
 
         <!-- 14. Rectifier -->
-        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">⚡</div>
@@ -886,11 +884,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" checked="checked" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
 
         <!-- 15. SSR -->
-        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🎛️</div>
@@ -907,11 +908,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" checked="checked" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
 
         <!-- 16. Compressor -->
-        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+        <div class="portal-card is-locked" data-href="#" data-locked="true" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🔧</div>
@@ -928,20 +932,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" checked="checked" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
 
-      </div>
-    </div>
-
-    <!-- 2. PAC System Section -->
-    <div class="category-section" id="pac-section">
-      <div class="category-header">
-        <h2 class="category-title">PAC (Package Air Conditioning)</h2>
-        <button class="add-card-btn" onclick="addNewCard('pac-grid')">➕ Add Card</button>
-      </div>
-      <div class="portal-grid" id="pac-grid">
-        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+        <!-- 17. PAC Inspection Module -->
+        <div class="portal-card is-locked" data-href="#" data-locked="true" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🏢</div>
@@ -958,19 +956,14 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" checked="checked" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- 3. KX System Section -->
-    <div class="category-section" id="kx-section">
-      <div class="category-header">
-        <h2 class="category-title">KX (VRF / Multi-Split System)</h2>
-        <button class="add-card-btn" onclick="addNewCard('kx-grid')">➕ Add Card</button>
-      </div>
-      <div class="portal-grid" id="kx-grid">
-        <div class="portal-card is-locked" data-href="#" data-locked="true" onclick="handleCardClick(event, this)">
+        <!-- 18. KX Inspection Module -->
+        <div class="portal-card is-locked" data-href="#" data-locked="true" data-hidden="false" onclick="handleCardClick(event, this)">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🏢</div>
@@ -987,8 +980,12 @@
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" checked="checked" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
           </div>
         </div>
+
       </div>
     </div>
 
@@ -999,7 +996,7 @@
     <div>© 2026 Mitsubishi Heavy Industries. All rights reserved. Service Engineering Division.</div>
     <div class="visitor-counter">
       Visitor Views: 
-      <img id="visitor-badge" src="https://visitor-badge.laobi.icu/badge?page_id=sechutpong-max.inspection-report-v2&amp;left_text=&amp;color=1e293b&amp;_t=1794277127219" alt="visitor count" style="vertical-align: middle; height: 16px;">
+      <img id="visitor-badge" src="https://visitor-badge.laobi.icu/badge?page_id=sechutpong-max.inspection-report-v2&amp;left_text=&amp;color=1e293b" alt="visitor count" style="vertical-align: middle; height: 16px;">
     </div>
   </footer>
 
@@ -1070,7 +1067,7 @@
         document.querySelectorAll('.card-url-input').forEach(input => {
           input.setAttribute('value', input.value.trim());
         });
-        document.querySelectorAll('.card-locked-check').forEach(chk => {
+        document.querySelectorAll('.card-locked-check, .card-hidden-check').forEach(chk => {
           if (chk.checked) {
             chk.setAttribute('checked', 'checked');
           } else {
@@ -1150,6 +1147,18 @@
       }
     }
 
+    // อัปเดต UI ของการ์ดเมื่อตั้งค่าการซ่อนเปลี่ยน
+    function updateVisibilityState(checkbox) {
+      const card = checkbox.closest('.portal-card');
+      if (checkbox.checked) {
+        card.classList.add('is-hidden');
+        card.setAttribute('data-hidden', 'true');
+      } else {
+        card.classList.remove('is-hidden');
+        card.setAttribute('data-hidden', 'false');
+      }
+    }
+
     // เพิ่มการ์ดใหม่
     function addNewCard(gridId) {
       const grid = document.getElementById(gridId);
@@ -1159,6 +1168,7 @@
       newCard.className = 'portal-card is-locked';
       newCard.setAttribute('data-href', '#');
       newCard.setAttribute('data-locked', 'true');
+      newCard.setAttribute('data-hidden', 'false');
       newCard.onclick = function(e) { handleCardClick(e, this); };
 
       newCard.innerHTML = `
@@ -1178,6 +1188,9 @@
           <label class="checkbox-label">
             <input type="checkbox" class="card-locked-check" checked onchange="updateCardState(this)"> Locked (Coming Soon)
           </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+          </label>
         </div>
       `;
 
@@ -1196,77 +1209,72 @@
     // บันทึกข้อมูลทั้งหมดลง localStorage
     function savePortalData() {
       const portalData = {};
-      const sections = ['rac-grid', 'pac-grid', 'kx-grid'];
+      const grid = document.getElementById('main-grid');
+      if (!grid) return;
 
-      sections.forEach(secId => {
-        const grid = document.getElementById(secId);
-        if (!grid) return;
+      const cardsData = [];
+      grid.querySelectorAll('.portal-card').forEach(card => {
+        const icon = card.querySelector('.card-icon-box')?.innerText || '⚙';
+        const title = card.querySelector('.card-title')?.innerText || '';
+        const desc = card.querySelector('.card-desc')?.innerText || '';
+        const urlInput = card.querySelector('.card-url-input');
+        const href = urlInput ? urlInput.value.trim() : card.getAttribute('data-href') || '#';
+        const isLocked = card.querySelector('.card-locked-check')?.checked || false;
+        const isHidden = card.querySelector('.card-hidden-check')?.checked || false;
 
-        const cardsData = [];
-        grid.querySelectorAll('.portal-card').forEach(card => {
-          const icon = card.querySelector('.card-icon-box')?.innerText || '⚙';
-          const title = card.querySelector('.card-title')?.innerText || '';
-          const desc = card.querySelector('.card-desc')?.innerText || '';
-          const urlInput = card.querySelector('.card-url-input');
-          const href = urlInput ? urlInput.value.trim() : card.getAttribute('data-href') || '#';
-          const isLocked = card.querySelector('.card-locked-check')?.checked || false;
-
-          cardsData.push({ icon, title, desc, href, isLocked });
-        });
-
-        portalData[secId] = cardsData;
+        cardsData.push({ icon, title, desc, href, isLocked, isHidden });
       });
 
-      localStorage.setItem('mhi_portal_data_v8', JSON.stringify(portalData));
+      portalData['main-grid'] = cardsData;
+      // เปลี่ยน Key ใหม่เป็น v9 ป้องกันการชนกับข้อมูลเก่าที่บันทึกแยก 3 grids ไว้
+      localStorage.setItem('mhi_portal_data_v9', JSON.stringify(portalData));
     }
 
     // โหลดข้อมูลจาก localStorage
     function loadSavedPortalData() {
-      const saved = localStorage.getItem('mhi_portal_data_v8');
+      const saved = localStorage.getItem('mhi_portal_data_v9');
       if (!saved) return;
 
       const portalData = JSON.parse(saved);
-      const sections = ['rac-grid', 'pac-grid', 'kx-grid'];
+      const grid = document.getElementById('main-grid');
+      if (!grid || !portalData['main-grid']) return;
 
-      sections.forEach(secId => {
-        const grid = document.getElementById(secId);
-        if (!grid || !portalData[secId]) return;
+      grid.innerHTML = '';
 
-        grid.innerHTML = '';
+      portalData['main-grid'].forEach(item => {
+        const card = document.createElement('div');
+        card.className = `portal-card ${item.isLocked ? 'is-locked' : ''} ${item.isHidden ? 'is-hidden' : ''}`;
+        card.setAttribute('data-href', item.href);
+        card.setAttribute('data-locked', item.isLocked ? 'true' : 'false');
+        card.setAttribute('data-hidden', item.isHidden ? 'true' : 'false');
+        card.onclick = function(e) { handleCardClick(e, this); };
 
-        portalData[secId].forEach(item => {
-          const card = document.createElement('div');
-          card.className = `portal-card ${item.isLocked ? 'is-locked' : ''}`;
-          card.setAttribute('data-href', item.href);
-          card.setAttribute('data-locked', item.isLocked ? 'true' : 'false');
-          card.onclick = function(e) { handleCardClick(e, this); };
+        card.innerHTML = `
+          <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
+          <div>
+            <div class="card-icon-box">${item.icon}</div>
+            <h2 class="card-title">${item.title}</h2>
+            <p class="card-desc">${item.desc}</p>
+          </div>
+          <div class="card-footer">
+            <span class="footer-text">${item.isLocked ? 'Coming Soon' : 'Open Report Form'}</span>
+            <span class="card-arrow">${item.isLocked ? '🔒' : '➔'}</span>
+          </div>
+          <div class="card-edit-fields" onclick="event.stopPropagation()">
+            <label>Link URL:</label>
+            <input type="text" class="card-url-input" value="${item.href}" oninput="handleUrlChange(this)">
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-locked-check" ${item.isLocked ? 'checked' : ''} onchange="updateCardState(this)"> Locked (Coming Soon)
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" class="card-hidden-check" ${item.isHidden ? 'checked' : ''} onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+            </label>
+          </div>
+        `;
 
-          card.innerHTML = `
-            <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
-            <div>
-              <div class="card-icon-box">${item.icon}</div>
-              <h2 class="card-title">${item.title}</h2>
-              <p class="card-desc">${item.desc}</p>
-            </div>
-            <div class="card-footer">
-              <span class="footer-text">${item.isLocked ? 'Coming Soon' : 'Open Report Form'}</span>
-              <span class="card-arrow">${item.isLocked ? '🔒' : '➔'}</span>
-            </div>
-            <div class="card-edit-fields" onclick="event.stopPropagation()">
-              <label>Link URL:</label>
-              <input type="text" class="card-url-input" value="${item.href}" oninput="handleUrlChange(this)">
-              <label class="checkbox-label">
-                <input type="checkbox" class="card-locked-check" ${item.isLocked ? 'checked' : ''} onchange="updateCardState(this)"> Locked (Coming Soon)
-              </label>
-            </div>
-          `;
-
-          grid.appendChild(card);
-        });
+        grid.appendChild(card);
       });
     }
   </script>
-
-
 
 </body></html>
