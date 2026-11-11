@@ -42,10 +42,15 @@
     .input-group { display: flex; flex-direction: column; gap: 4px; width: 100%; }
     .input-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
     .input-control { width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; color: var(--text-main); background-color: #FAFAFA; box-sizing: border-box; }
-    .custom-check { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.78rem; cursor: pointer; user-select: none; }
+
+    /* Custom Symptom Equal Grid */
+    .symptom-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; align-items: center; }
+    .custom-check { display: flex; align-items: center; justify-content: flex-start; gap: 6px; padding: 6px 10px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.78rem; cursor: pointer; user-select: none; width: 100%; box-sizing: border-box; }
     .custom-check input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border: 1.5px solid #CBD5E1; border-radius: 3.5px; outline: none; background-color: #FFFFFF; cursor: pointer; display: inline-grid; place-content: center; margin: 0; flex-shrink: 0; }
     .custom-check input[type="checkbox"]:checked { background-color: var(--primary-red); border-color: var(--primary-red); }
     .custom-check input[type="checkbox"]:checked::before { content: "✔"; font-size: 9px; color: #FFFFFF; font-weight: bold; }
+    .others-wrapper { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+    
     .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-weight: 700; font-size: 0.8rem; text-align: center; }
     .status-ok { background-color: var(--success-bg); color: var(--success-green); border: 1px solid var(--success-green); }
     .status-ng { background-color: var(--danger-bg); color: var(--danger-red); border: 1px solid var(--danger-red); }
@@ -112,8 +117,6 @@
     .btn-designer-reset { background: #475569; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     .btn-designer-reset:hover { background: #334155; }
 
-    .symptom-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; align-items: center; }
-
     @media screen and (max-width: 768px) {
       body { padding: 6px 4px !important; }
       .brand-header { padding: 10px 12px !important; flex-direction: column; align-items: flex-start; gap: 8px; }
@@ -123,6 +126,7 @@
       .canvas-body-box { height: 260px !important; }
       .section-card { padding: 10px 8px !important; margin-bottom: 10px; }
       .designer-btn-group { flex-direction: column; }
+      .symptom-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     /* Save PDF / Print Settings (Fixed Full Page Fit for Mobile Portrait & Landscape) */
@@ -151,13 +155,12 @@
         margin: 0 !important;
       }
       
-      /* บังคับกริดและคอนโทรลให้ขยายเต็มหน้าตอนพิมพ์ PDF เสมอ */
       .grid-3 { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 12px !important; }
       .grid-2 { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
       .single-row-controls { display: grid !important; grid-template-columns: 130px 160px 1fr 80px !important; gap: 8px !important; }
       .canvas-body-box { height: 280px !important; }
+      .symptom-grid { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 8px !important; }
       
-      /* ซ่อนปุ่มกด, แผงแต่งหน้าเว็บ และปุ่มลบรูปภาพตอนพิมพ์ PDF */
       .hide-on-pdf, .designer-fab, #editorPanel, .remove-img-btn { display: none !important; }
     }
   </style>
@@ -212,16 +215,16 @@
           </div>
         </div>
 
-        <!-- Symptom Checkboxes -->
-        <div style="font-size: 0.8rem; font-weight: 600; margin-bottom: 6px;">Symptom</div>
+        <!-- Equal Width Symptom Checkboxes -->
+        <div style="font-size: 0.8rem; font-weight: 600; margin-bottom: 8px;">Symptom</div>
         <div class="symptom-grid" id="symptomContainer">
           <label class="custom-check"><input type="checkbox" id="chk_sym_0" data-symptom="Short" onchange="updateSummarySection()"><span>Short</span></label>
           <label class="custom-check"><input type="checkbox" id="chk_sym_1" data-symptom="Open" onchange="updateSummarySection()"><span>Open</span></label>
           <label class="custom-check"><input type="checkbox" id="chk_sym_2" data-symptom="Error value" onchange="updateSummarySection()"><span>Error value</span></label>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <label class="custom-check" style="flex-shrink: 0;"><input type="checkbox" id="chk_others" data-symptom="Others" onchange="toggleOthersInput(); updateSummarySection();"><span>Others</span></label>
-            <input type="text" id="txt_others" class="input-control" placeholder="Specify other symptom..." style="display: none; background: #fff;" oninput="updateSummarySection();">
-          </div>
+          <label class="custom-check"><input type="checkbox" id="chk_others" data-symptom="Others" onchange="toggleOthersInput(); updateSummarySection();"><span>Others</span></label>
+        </div>
+        <div class="others-wrapper" id="others_input_wrapper" style="display: none;">
+          <input type="text" id="txt_others" class="input-control" placeholder="Specify other symptom..." style="background: #fff;" oninput="updateSummarySection();">
         </div>
       </section>
 
@@ -794,9 +797,10 @@
 
   function toggleOthersInput() {
     const chkOthers = document.getElementById('chk_others');
+    const wrapper = document.getElementById('others_input_wrapper');
     const txtOthers = document.getElementById('txt_others');
-    if (chkOthers && txtOthers) {
-      txtOthers.style.display = chkOthers.checked ? 'block' : 'none';
+    if (chkOthers && wrapper && txtOthers) {
+      wrapper.style.display = chkOthers.checked ? 'flex' : 'none';
       if (!chkOthers.checked) txtOthers.value = '';
     }
   }
