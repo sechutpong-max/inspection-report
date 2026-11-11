@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageHeaderTitle">Checking Part Report (Thermistor)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- MathJax Library for Mathematical Equations Rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+  <style>
+    :root {
+      --primary-red: #E60012;
+      --primary-black: #111111;
+      --bg-gray: #F4F6F9;
+      --card-bg: #FFFFFF;
+      --border-color: #E2E8F0;
+      --text-main: #1E293B;
+      --text-muted: #64748B;
+      --success-green: #10B981;
+      --success-bg: #ECFDF5;
+      --danger-red: #EF4444;
+      --danger-bg: #FEF2F2;
+    }
+    * { box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
+    html, body { width: 100%; max-width: 100vw; overflow-x: hidden; }
+    body { background-color: var(--bg-gray); color: var(--text-main); padding: 24px 16px; line-height: 1.4; }
+    .app-container { width: 100%; max-width: 980px; margin: 0 auto; background: var(--card-bg); border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid var(--border-color); }
+    .brand-header { background: #FFFFFF; padding: 16px 24px; border-bottom: 3px solid var(--primary-red); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .brand-logo-img { height: 36px; width: auto; object-fit: contain; }
+    .report-badge { background-color: #F8FAFC; border: 1px solid var(--border-color); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+    .report-badge input { border: none; background: transparent; font-weight: 700; color: var(--primary-black); font-size: 0.9rem; outline: none; width: 130px; text-transform: uppercase; }
+    .report-badge input::placeholder, .input-control.red-asterisk-placeholder::placeholder { color: #F87171 !important; opacity: 0.85; font-weight: 400; }
+    .form-body { padding: 20px 24px; }
+    .page-title { font-size: 1.25rem; font-weight: 700; color: var(--primary-black); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .page-title::before { content: ''; display: inline-block; width: 5px; height: 22px; background-color: var(--primary-red); border-radius: 3px; }
+    .section-card { background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; margin-bottom: 16px; break-inside: avoid; page-break-inside: avoid; }
+    .section-title { font-size: 0.875rem; font-weight: 700; color: var(--primary-black); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .input-group { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+    .input-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
+    .input-control { width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; color: var(--text-main); background-color: #FAFAFA; box-sizing: border-box; }
+    .custom-check { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.78rem; cursor: pointer; user-select: none; }
+    .custom-check input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border: 1.5px solid #CBD5E1; border-radius: 3.5px; outline: none; background-color: #FFFFFF; cursor: pointer; display: inline-grid; place-content: center; margin: 0; flex-shrink: 0; }
+    .custom-check input[type="checkbox"]:checked { background-color: var(--primary-red); border-color: var(--primary-red); }
+    .custom-check input[type="checkbox"]:checked::before { content: "✔"; font-size: 9px; color: #FFFFFF; font-weight: bold; }
+    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-weight: 700; font-size: 0.8rem; text-align: center; }
+    .status-ok { background-color: var(--success-bg); color: var(--success-green); border: 1px solid var(--success-green); }
+    .status-ng { background-color: var(--danger-bg); color: var(--danger-red); border: 1px solid var(--danger-red); }
+
+    /* Control Range Bar */
+    .chart-scroll-wrapper { width: 100%; overflow-x: auto; padding: 2px 0; }
+    .chart-cell-container { position: relative; width: 100%; min-width: 140px; height: 42px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 6px; display: flex; flex-direction: column; justify-content: center; user-select: none; }
+    .chart-bar-bg { position: relative; width: 100%; height: 8px; background: #E2E8F0; border-radius: 4px; cursor: pointer; }
+    .chart-spec-range { position: absolute; top: 0; left: 15%; width: 70%; height: 100%; background: rgba(16, 185, 129, 0.35); border-left: 2px solid var(--success-green); border-right: 2px solid var(--success-green); border-radius: 2px; }
+    .chart-center-line { position: absolute; top: -2px; left: 50%; width: 2px; height: 12px; background: #0284C7; transform: translateX(-50%); }
+    .chart-point { position: absolute; top: -4px; left: 50%; width: 16px; height: 16px; border-radius: 50%; background: var(--success-green); border: 2px solid #FFFFFF; box-shadow: 0 1px 5px rgba(0,0,0,0.3); transform: translateX(-50%); cursor: grab; touch-action: none; display: none; z-index: 10; }
+    .chart-point.ng { background: var(--danger-red); }
+    .chart-labels { position: relative; width: 100%; height: 16px; margin-top: 4px; font-size: 0.65rem; color: var(--text-muted); font-weight: 600; }
+    .chart-label-min { position: absolute; left: 15%; transform: translateX(-50%); white-space: nowrap; }
+    .chart-label-std { position: absolute; left: 50%; transform: translateX(-50%); color: #0284C7; white-space: nowrap; }
+    .chart-label-max { position: absolute; right: 15%; transform: translateX(50%); white-space: nowrap; }
+
+    /* Canvas Full Width Dashboard Box */
+    .canvas-card-wrapper { width: 100%; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .canvas-header-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+    .canvas-title { font-size: 0.88rem; font-weight: 700; color: var(--primary-black); }
+    .math-formula-box { background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; color: var(--text-main); }
+    
+    .canvas-body-box { position: relative; width: 100%; height: 320px; background: #FAFAFA; border: 1px solid #CBD5E1; border-radius: 8px; overflow: hidden; }
+    canvas { display: block; width: 100%; height: 100%; }
+
+    .graph-legend-bar { display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 10px; font-size: 0.73rem; color: var(--text-muted); font-weight: 600; }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-box { width: 12px; height: 12px; border-radius: 2px; }
+    .legend-line { width: 16px; height: 3px; border-radius: 2px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* Single Row Controls Layout */
+    .single-row-controls { display: grid; grid-template-columns: 140px 180px 1fr 90px; gap: 12px; align-items: center; background: #FFFFFF; border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; }
+
+    .upload-zone { position: relative; border: 1px dashed #CBD5E1; border-radius: 6px; padding: 10px; background: #FAFAFA; text-align: center; cursor: pointer; overflow: hidden; display: block; margin-bottom: 12px; }
+    .upload-zone input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10; }
+    .upload-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; pointer-events: none; }
+    .attached-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .attached-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background: #FAFAFA; break-inside: avoid; page-break-inside: avoid; position: relative; }
+    .attached-card-title { font-size: 0.85rem; font-weight: 600; color: var(--primary-black); margin-bottom: 6px; }
+    .attached-img-box { width: 100%; height: 160px; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .attached-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .remove-img-btn { position: absolute; top: 6px; right: 6px; background: rgba(239,68,68,0.9); color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 5; }
+    .summary-comment-box { width: 100%; min-height: 40px; border: 1px solid var(--border-color); border-radius: 6px; background: #FAFAFA; padding: 10px; font-size: 0.85rem; color: var(--text-main); }
+    .summary-item-row { margin-bottom: 6px; }
+    .action-container { margin-top: 20px; }
+    .btn-submit-primary { width: 100%; background-color: var(--primary-red); color: #FFFFFF; border: none; border-radius: 8px; padding: 12px 20px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .btn-submit-primary:hover { background-color: #C0000F; }
+
+    /* Designer FAB & Original Layout Style Panel */
+    .designer-fab { position: fixed; bottom: 16px; right: 16px; z-index: 9999; background: #111111; color: #FFFFFF; width: 44px; height: 44px; border-radius: 50%; border: 2px solid #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); opacity: 0.85; transition: transform 0.2s, opacity 0.2s; }
+    .designer-fab:hover { transform: scale(1.08); opacity: 1; }
+    
+    .editor-panel-box { display: none; background: #FFFFFF; border: 2px solid var(--primary-red); padding: 20px; margin: 20px auto; max-width: 980px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
+    .designer-card-yellow { background: #FFFDF0; border: 1px solid #FCD34D; border-radius: 8px; padding: 14px; margin-bottom: 12px; }
+    .designer-card-blue { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px; margin-bottom: 16px; }
+    
+    .designer-btn-group { display: flex; gap: 12px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-color); }
+    .btn-designer-save { background: #22C55E; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .btn-designer-save:hover { background: #16A34A; }
+    .btn-designer-update { background: var(--primary-red); color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .btn-designer-update:hover { background: #C0000F; }
+    .btn-designer-reset { background: #475569; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .btn-designer-reset:hover { background: #334155; }
+
+    .symptom-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; align-items: center; }
+
+    @media screen and (max-width: 768px) {
+      body { padding: 6px 4px !important; }
+      .brand-header { padding: 10px 12px !important; flex-direction: column; align-items: flex-start; gap: 8px; }
+      .form-body { padding: 10px 8px !important; }
+      .grid-3, .grid-2, .attached-grid { grid-template-columns: 1fr !important; gap: 8px; }
+      .single-row-controls { grid-template-columns: 1fr !important; gap: 10px; }
+      .canvas-body-box { height: 260px !important; }
+      .section-card { padding: 10px 8px !important; margin-bottom: 10px; }
+      .designer-btn-group { flex-direction: column; }
+    }
+
+    @media print {
+      @page { size: A4 portrait; margin: 5mm; }
+      html, body { background-color: #FFFFFF !important; padding: 0 !important; margin: 0 !important; }
+      .app-container { width: 100% !important; max-width: 100% !important; box-shadow: none !important; border: none !important; }
+      .grid-3 { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; }
+      .grid-2 { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; }
+      .single-row-controls { display: grid !important; grid-template-columns: 130px 160px 1fr 80px !important; gap: 8px !important; }
+      .canvas-body-box { height: 280px !important; }
+      .hide-on-pdf, .designer-fab, #editorPanel, .remove-img-btn { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container" id="reportContent">
+  <header class="brand-header">
+    <div class="brand-logo-container"><img src="images/Picture1.png" alt="Mitsubishi Heavy Industries" class="brand-logo-img"></div>
+    <div class="report-badge"><span>Service Report No:</span><input type="text" id="serviceReportNo" placeholder="*Ref.Job No.*" value="" required oninput="this.value = this.value.toUpperCase()"></div>
+  </header>
+  <main class="form-body">
+    <h1 class="page-title" id="displayFormTitle">Checking Part Report (Thermistor)</h1>
+    <form id="inspectionForm">
+      
+      <!-- Section 1: General Information -->
+      <section class="section-card">
+        <div class="section-title">General Information</div>
+        <div class="grid-3">
+          <div class="input-group">
+            <label for="Model">Model</label>
+            <input type="text" id="Model" class="input-control" placeholder="MODEL NUMBER" oninput="this.value = this.value.toUpperCase()">
+          </div>
+          <div class="input-group">
+            <label for="SN">Serial No. (S/N)</label>
+            <input type="text" id="SN" class="input-control" placeholder="SERIAL NUMBER" oninput="this.value = this.value.toUpperCase()">
+          </div>
+          <div class="input-group">
+            <label for="partNo">Part No.</label>
+            <input type="text" id="partNo" class="input-control red-asterisk-placeholder" placeholder="*PART NUMBER*" oninput="this.value = this.value.toUpperCase(); updateSummarySection();">
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Thermistor Selection & Symptom -->
+      <section class="section-card">
+        <div class="section-title">Thermistor Type &amp; Symptom</div>
+        <div class="grid-2" style="margin-bottom: 14px;">
+          <div class="input-group">
+            <label for="seriesSelect">Category / Series</label>
+            <select id="seriesSelect" class="input-control" onchange="onCategoryOrPositionChange()">
+              <option value="" selected>-- Select Category --</option>
+              <option value="RAC">RAC (Room Air Conditioner)</option>
+              <option value="PAC">PAC (Packaged Air Conditioner)</option>
+              <option value="KX">KX (VRF System)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="positionSelect">Sensor Position</label>
+            <select id="positionSelect" class="input-control" onchange="onCategoryOrPositionChange()">
+              <option value="" selected>-- Select Position --</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Symptom Checkboxes -->
+        <div style="font-size: 0.8rem; font-weight: 600; margin-bottom: 6px;">Symptom</div>
+        <div class="symptom-grid" id="symptomContainer">
+          <label class="custom-check"><input type="checkbox" id="chk_sym_0" data-symptom="Short" onchange="updateSummarySection()"><span>Short</span></label>
+          <label class="custom-check"><input type="checkbox" id="chk_sym_1" data-symptom="Open" onchange="updateSummarySection()"><span>Open</span></label>
+          <label class="custom-check"><input type="checkbox" id="chk_sym_2" data-symptom="Error value" onchange="updateSummarySection()"><span>Error value</span></label>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <label class="custom-check" style="flex-shrink: 0;"><input type="checkbox" id="chk_others" data-symptom="Others" onchange="toggleOthersInput(); updateSummarySection();"><span>Others</span></label>
+            <input type="text" id="txt_others" class="input-control" placeholder="Specify other symptom..." style="display: none; background: #fff;" oninput="updateSummarySection();">
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Technical Inspection & Resistance Check -->
+      <section class="section-card" id="section_technical_inspection">
+        <div class="section-title">Technical Inspection &amp; Resistance Check</div>
+        
+        <!-- Full Width Dynamic Canvas Graph Card -->
+        <div class="canvas-card-wrapper">
+          <div class="canvas-header-bar">
+            <div class="canvas-title" id="graphHeaderTitle">Thermistor Characteristic Curve Reference</div>
+            <div class="math-formula-box">
+              $$R(T) = R_{25} \cdot e^{B \left( \frac{1}{T + 273.15} - \frac{1}{298.15} \right)}$$
+            </div>
+          </div>
+
+          <div class="canvas-body-box">
+            <canvas id="ntcGraphCanvas"></canvas>
+          </div>
+
+          <div class="graph-legend-bar">
+            <div class="legend-item"><div class="legend-line" style="background:#0284C7;"></div><span>Nominal Curve</span></div>
+            <div class="legend-item"><div class="legend-box" style="background:rgba(16,185,129,0.3); border:1px solid #10B981;"></div><span>Tolerance Band (±<span id="lbl_legend_tol">5</span>%)</span></div>
+            <div class="legend-item"><div class="legend-line" style="border-top:2px dashed #EA580C;"></div><span>Ambient Temp</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#10B981;"></div><span>Measured (OK/NG)</span></div>
+          </div>
+        </div>
+
+        <!-- Single Row Controls: Ambient Temp, Measured Resistance, Specification Bar & Judgement -->
+        <div class="single-row-controls">
+          <div class="input-group">
+            <label for="ambientTemp">Ambient Temp (°C)</label>
+            <input type="number" id="ambientTemp" class="input-control" placeholder="e.g. 25" value="25" step="1" oninput="calculateStandardResistance()">
+          </div>
+
+          <div class="input-group">
+            <label for="measuredRes">Measured Resistance</label>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <input type="number" step="0.01" id="measuredRes" class="input-control" placeholder="0.00" style="text-align: right;" oninput="evaluateResistance()">
+              <select id="resUnitSelect" class="input-control" style="width: 65px; padding: 8px 4px; font-weight: 700;" onchange="evaluateResistance()">
+                <option value="Ω" selected>Ω</option>
+                <option value="kΩ">kΩ</option>
+                <option value="MΩ">MΩ</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Specification Range (Control)</label>
+            <div class="chart-scroll-wrapper">
+              <div class="chart-cell-container" id="chart_container">
+                <div class="chart-bar-bg" id="chart_bar">
+                  <div class="chart-spec-range" id="chart_spec_range"></div>
+                  <div class="chart-center-line"></div>
+                  <div class="chart-point" id="chart_point" style="display: none;"></div>
+                </div>
+                <div class="chart-labels">
+                  <span class="chart-label-min" id="lbl_min">Min -</span>
+                  <span class="chart-label-std" id="lbl_std">Std -</span>
+                  <span class="chart-label-max" id="lbl_max">Max -</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group" style="align-items: center;">
+            <label>Judgement</label>
+            <span id="judge_badge" class="status-badge" style="margin-top: 4px;">-</span>
+          </div>
+        </div>
+
+        <!-- Tolerance Remark Text -->
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;" id="displayToleranceRemark">
+          • Standard tolerance control range: ±<span id="lbl_tolerance_val">5</span>% from nominal specification.
+        </div>
+      </section>
+
+      <!-- Section 4: Attached Pictures -->
+      <section class="section-card" id="section_attached_pictures">
+        <div class="section-title">Attached Pictures (In case of failure/inspection)</div>
+        <div class="upload-zone hide-on-pdf">
+          <input type="file" id="appearance_img_input" accept="image/*" multiple onchange="handleAppearanceImages(this)">
+          <div class="upload-label">📷 Attach Pictures (Photos of Thermistor or Multimeter reading)</div>
+        </div>
+        <div class="attached-grid" id="appearance_img_container"></div>
+      </section>
+
+      <!-- Section 5: Inspection Summary & Comments -->
+      <section class="section-card" id="section_inspection_summary">
+        <div class="section-title">Inspection Summary &amp; Comments</div>
+        <div class="summary-comment-box" id="summary_comment_content"><div style="color:var(--text-muted);">No inspection summary available</div></div>
+      </section>
+
+      <div class="action-container hide-on-pdf">
+        <button type="button" class="btn-submit-primary" onclick="generatePDF()"><span>🖨 Save as PDF Report</span></button>
+      </div>
+    </form>
+  </main>
+</div>
+
+<!-- Designer Mode Password FAB & Original Layout Style Panel -->
+<button type="button" class="designer-fab hide-on-pdf" onclick="promptEditorMode()" title="Designer Mode">⚙️</button>
+
+<div id="editorPanel" class="editor-panel-box hide-on-pdf">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+    <h3 style="color: var(--primary-red); margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+      🛠 Designer &amp; Layout Editor (Thermistor Report)
+    </h3>
+    <button type="button" onclick="document.getElementById('editorPanel').style.display='none'" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-muted);">✕</button>
+  </div>
+  
+  <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">ปรับแต่งหัวข้อรายงาน ค่า Tolerance % และบันทึกอัปเดตไฟล์โค้ดได้โดยตรงที่นี่</p>
+
+  <!-- Yellow Form Title Box (Matching Original Design) -->
+  <div class="designer-card-yellow">
+    <label style="font-size: 0.82rem; font-weight: 700; color: #B45309; display: block; margin-bottom: 6px;">Form Title (ชื่อหัวข้อรายงาน):</label>
+    <input type="text" id="editFormTitle" class="input-control" value="Checking Part Report (Thermistor)" style="background:#fff; font-weight:600;">
+  </div>
+
+  <!-- Blue/Gray Tolerance % Box (Matching Original Design) -->
+  <div class="designer-card-blue">
+    <label style="font-size: 0.82rem; font-weight: 700; color: var(--primary-black); display: block; margin-bottom: 6px;">Standard Tolerance Control Range (%):</label>
+    <input type="number" id="editTolerancePercent" class="input-control" value="5" step="1" style="background:#fff; width: 100%; font-weight:600;">
+  </div>
+
+  <!-- Designer Action Buttons Bar (Matching Original Design) -->
+  <div class="designer-btn-group">
+    <button type="button" class="btn-designer-save" onclick="applyEditorChanges()">💾 บันทึกชั่วคราว</button>
+    <button type="button" class="btn-designer-update" onclick="exportHTMLFile()">⚡ อัปเดตโค้ด HTML</button>
+    <button type="button" class="btn-designer-reset" onclick="resetEditorChanges()">🔄 รีเซ็ตค่าเดิม</button>
+  </div>
+</div>
+
+<script>
+  const SENSOR_DATABASE = {
+    'RAC': [
+      { id: 'Thi-A', name: 'Thi-A (Indoor Room Air)', curveType: '5k', desc: 'Standard 5 kΩ at 25°C', xMax: 50, yMax: 15 },
+      { id: 'Thi-R', name: 'Thi-R (Indoor Return Pipe)', curveType: '5k', desc: 'Standard 5 kΩ at 25°C', xMax: 50, yMax: 15 },
+      { id: 'Tho-A', name: 'Tho-A (Outdoor Air)', curveType: '5k', desc: 'Standard 5 kΩ at 25°C', xMax: 50, yMax: 15 },
+      { id: 'Tho-R', name: 'Tho-R (Outdoor Liquid Pipe)', curveType: '5k', desc: 'Standard 5 kΩ at 25°C', xMax: 50, yMax: 15 },
+      { id: 'Tho-D', name: 'Tho-D (Discharge Temp)', curveType: '100k_RAC', desc: 'Discharge Curve (RAC)', xMax: 140, yMax: 100 }
+    ],
+    'PAC': [
+      { id: 'Thi-A', name: 'Thi-A (Indoor Room Air)', curveType: '5k', desc: 'Standard 5 kΩ at 25°C', xMax: 50, yMax: 15 },
+      { id: 'Thi-R', name: 'Thi-R (Indoor Return Pipe)', curveType: '5k', desc: 'Standard 5 kΩ at 25°C', xMax: 50, yMax: 15 },
+      { id: 'Tho-R', name: 'Tho-R (Outdoor Liquid Pipe)', curveType: '5k', desc: 'Standard 5 kΩ at 25°C', xMax: 50, yMax: 15 },
+      { id: 'Tho-S', name: 'Tho-S (Suction Pipe)', curveType: '5k', desc: 'Standard 5 kΩ at 25°C', xMax: 50, yMax: 15 },
+      { id: 'Tho-C', name: 'Tho-C (Condenser Pipe)', curveType: '5k', desc: 'Standard 5 kΩ at 25°C', xMax: 50, yMax: 15 },
+      { id: 'Tho-D', name: 'Tho-D (Discharge Temp)', curveType: '200k_PAC', desc: 'Discharge Curve 200 kΩ (PAC)', xMax: 160, yMax: 200 },
+      { id: 'Tho-A', name: 'Tho-A (Outdoor Air)', curveType: '100k_THOA', desc: 'Outdoor Air Curve (PAC)', xMax: 50, yMax: 100, xMin: -20 }
+    ],
+    'KX': [
+      { id: 'Thi-A', name: 'Thi-A (Indoor Room Air)', curveType: '5k', desc: 'Standard 5 kΩ at 25°C', xMax: 50, yMax: 15 },
+      { id: 'Thi-R', name: 'Thi-R (Indoor Return Pipe)', curveType: '5k', desc: 'Standard 5 kΩ at 25°C', xMax: 50, yMax: 15 },
+      { id: 'Tho-R', name: 'Tho-R (Outdoor Liquid Pipe)', curveType: '5k', desc: 'Standard 5 kΩ at 25°C', xMax: 50, yMax: 15 },
+      { id: 'Tho-S', name: 'Tho-S (Suction Pipe)', curveType: '5k', desc: 'Standard 5 kΩ at 25°C', xMax: 50, yMax: 15 },
+      { id: 'Tho-SC', name: 'Tho-SC (Sub-cool Pipe)', curveType: '5k', desc: 'Standard 5 kΩ at 25°C', xMax: 50, yMax: 15 },
+      { id: 'Tho-H', name: 'Tho-H (High Temp Pipe)', curveType: '5k', desc: 'Standard 5 kΩ at 25°C', xMax: 50, yMax: 15 },
+      { id: 'Tho-D', name: 'Tho-D (Discharge Pipe)', curveType: '200k_PAC', desc: 'High Temp Curve 200 kΩ (KX)', xMax: 160, yMax: 200 },
+      { id: 'Tho-C', name: 'Tho-C (Condenser Pipe)', curveType: '200k_PAC', desc: 'High Temp Curve 200 kΩ (KX)', xMax: 160, yMax: 200 },
+      { id: 'Tho-P', name: 'Tho-P (Oil Equalizer)', curveType: '200k_PAC', desc: 'High Temp Curve 200 kΩ (KX)', xMax: 160, yMax: 200 },
+      { id: 'Tho-A', name: 'Tho-A (Outdoor Air)', curveType: '100k_THOA', desc: 'Outdoor Air Curve (KX)', xMax: 50, yMax: 100, xMin: -20 }
+    ]
+  };
+
+  let currentTolerance = 5;
+  let currentSpec = { min: 0, std: 0, max: 0, unit: 'kΩ' };
+  let currentGraphConfig = { xMin: 0, xMax: 50, yMax: 15, curveType: '5k' };
+  const uploadedAppearanceImages = [];
+
+  window.addEventListener('DOMContentLoaded', () => {
+    initDragSlider();
+    window.addEventListener('resize', () => evaluateResistance());
+  });
+
+  function onCategoryOrPositionChange() {
+    const seriesSelect = document.getElementById('seriesSelect');
+    const series = seriesSelect.value;
+    const posSelect = document.getElementById('positionSelect');
+    
+    if (!series) {
+      posSelect.innerHTML = '<option value="" selected>-- Select Position --</option>';
+      posSelect.removeAttribute('data-current-series');
+      return;
+    }
+
+    if (posSelect.getAttribute('data-current-series') !== series) {
+      posSelect.innerHTML = '<option value="" selected>-- Select Position --</option>';
+      SENSOR_DATABASE[series].forEach((item) => {
+        const opt = document.createElement('option');
+        opt.value = item.curveType;
+        opt.textContent = item.name;
+        opt.setAttribute('data-id', item.id);
+        opt.setAttribute('data-desc', item.desc);
+        opt.setAttribute('data-xmin', item.xMin || 0);
+        opt.setAttribute('data-xmax', item.xMax || 50);
+        opt.setAttribute('data-ymax', item.yMax || 15);
+        posSelect.appendChild(opt);
+      });
+      posSelect.setAttribute('data-current-series', series);
+    }
+
+    const selectedOption = posSelect.options[posSelect.selectedIndex];
+    if (!selectedOption || !selectedOption.value) return;
+
+    currentGraphConfig = {
+      curveType: selectedOption.value,
+      xMin: parseFloat(selectedOption.getAttribute('data-xmin')),
+      xMax: parseFloat(selectedOption.getAttribute('data-xmax')),
+      yMax: parseFloat(selectedOption.getAttribute('data-ymax'))
+    };
+
+    calculateStandardResistance();
+  }
+
+  function calculateStandardResistance() {
+    const temp = parseFloat(document.getElementById('ambientTemp').value) || 25;
+    const tolPercent = currentTolerance;
+    const curveType = currentGraphConfig.curveType;
+
+    let R_std = getNTCResistance(temp, curveType);
+
+    R_std = Math.round(R_std * 100) / 100;
+    const minVal = Math.round((R_std * (1 - tolPercent / 100)) * 100) / 100;
+    const maxVal = Math.round((R_std * (1 + tolPercent / 100)) * 100) / 100;
+
+    currentSpec = { min: minVal, std: R_std, max: maxVal, unit: 'kΩ' };
+
+    document.getElementById('lbl_min').textContent = `Min ${minVal}`;
+    document.getElementById('lbl_std').textContent = `Std ${R_std}`;
+    document.getElementById('lbl_max').textContent = `Max ${maxVal}`;
+
+    evaluateResistance();
+  }
+
+  function getNTCResistance(tempC, curveType) {
+    let R_25 = 5.0, B = 3950;
+    if (curveType === '100k_RAC') { R_25 = 50.0; B = 4100; }
+    else if (curveType === '200k_PAC') { R_25 = 60.0; B = 4200; }
+    else if (curveType === '100k_THOA') { R_25 = 20.0; B = 3800; }
+    
+    return R_25 * Math.exp(B * ((1 / (tempC + 273.15)) - (1 / 298.15)));
+  }
+
+  function getMeasuredValueInKiloOhms() {
+    const input = document.getElementById('measuredRes');
+    const unit = document.getElementById('resUnitSelect').value;
+    if (!input || input.value.trim() === '' || isNaN(input.value)) return null;
+
+    let rawVal = parseFloat(input.value);
+    if (unit === 'Ω') return rawVal / 1000.0;
+    if (unit === 'MΩ') return rawVal * 1000.0;
+    return rawVal; // kΩ
+  }
+
+  function evaluateResistance() {
+    const input = document.getElementById('measuredRes');
+    const badge = document.getElementById('judge_badge');
+    const point = document.getElementById('chart_point');
+
+    if (!input || !badge) return;
+
+    const valInKohm = getMeasuredValueInKiloOhms();
+    const hasValue = valInKohm !== null;
+
+    const isOk = hasValue && (valInKohm >= currentSpec.min && valInKohm <= currentSpec.max);
+
+    if (!hasValue) {
+      badge.textContent = '-';
+      badge.className = 'status-badge';
+      if (point) point.style.display = 'none';
+    } else if (isOk) {
+      badge.textContent = 'OK';
+      badge.className = 'status-badge status-ok';
+    } else {
+      badge.textContent = 'NG';
+      badge.className = 'status-badge status-ng';
+    }
+
+    const SPEC_RANGE_PERCENT = 0.70;
+    const SPEC_MARGIN_PERCENT = 0.15;
+    const totalRange = (currentSpec.max - currentSpec.min) / SPEC_RANGE_PERCENT;
+    const scaleMin = currentSpec.min - (totalRange * SPEC_MARGIN_PERCENT);
+    const scaleMax = currentSpec.max + (totalRange * SPEC_MARGIN_PERCENT);
+
+    if (point && hasValue) {
+      let posPercent = ((valInKohm - scaleMin) / (scaleMax - scaleMin)) * 100;
+      if (posPercent < 1) posPercent = 1;
+      if (posPercent > 99) posPercent = 99;
+
+      point.style.left = posPercent + '%';
+      point.style.display = 'block';
+
+      if (isOk) point.classList.remove('ng');
+      else point.classList.add('ng');
+    }
+
+    drawNTCGraphCanvas(valInKohm, isOk);
+    updateSummarySection();
+  }
+
+  function drawNTCGraphCanvas(measuredValKohm, isOk) {
+    const canvas = document.getElementById('ntcGraphCanvas');
+    if (!canvas) return;
+    const container = canvas.parentElement;
+
+    const dpr = window.devicePixelRatio || 1;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    ctx.clearRect(0, 0, width, height);
+
+    const margin = { top: 35, right: 35, bottom: 50, left: 65 };
+    const graphWidth = width - margin.left - margin.right;
+    const graphHeight = height - margin.top - margin.bottom;
+
+    const xMin = currentGraphConfig.xMin;
+    const xMax = currentGraphConfig.xMax;
+    const yMax = currentGraphConfig.yMax;
+    const yMin = 0;
+
+    const mapX = (x) => margin.left + ((x - xMin) / (xMax - xMin)) * graphWidth;
+    const mapY = (y) => margin.top + graphHeight - ((y - yMin) / (yMax - yMin)) * graphHeight;
+
+    ctx.strokeStyle = '#F1F5F9'; 
+    ctx.lineWidth = 1;
+
+    const xStep = (xMax - xMin) / 10;
+    for (let x = xMin; x <= xMax; x += xStep) {
+      const px = mapX(x);
+      ctx.beginPath(); ctx.moveTo(px, margin.top); ctx.lineTo(px, margin.top + graphHeight); ctx.stroke();
+    }
+
+    const xLabelStep = (xMax - xMin) / 5;
+    for (let x = xMin; x <= xMax; x += xLabelStep) {
+      const px = mapX(x);
+      ctx.fillStyle = '#64748B'; ctx.font = '600 11px Inter'; ctx.textAlign = 'center';
+      ctx.fillText(Math.round(x) + '°C', px, margin.top + graphHeight + 18);
+    }
+
+    const yStep = yMax / 5;
+    for (let y = 0; y <= yMax; y += yStep) {
+      const py = mapY(y);
+      ctx.beginPath(); ctx.moveTo(margin.left, py); ctx.lineTo(margin.left + graphWidth, py); ctx.stroke();
+      ctx.fillStyle = '#64748B'; ctx.font = '600 11px Inter'; ctx.textAlign = 'right';
+      ctx.fillText(Math.round(y) + ' kΩ', margin.left - 10, py + 4);
+    }
+
+    ctx.strokeStyle = '#94A3B8'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); 
+    ctx.moveTo(margin.left, margin.top); 
+    ctx.lineTo(margin.left, margin.top + graphHeight); 
+    ctx.lineTo(margin.left + graphWidth, margin.top + graphHeight); 
+    ctx.stroke();
+
+    ctx.fillStyle = '#334155'; 
+    ctx.font = '700 12px Inter'; 
+    ctx.textAlign = 'center';
+
+    const xTitleX = margin.left + (graphWidth / 2);
+    const xTitleY = height - 10;
+    ctx.fillText('Temperature (°C)', xTitleX, xTitleY);
+
+    ctx.save();
+    const yTitleX = 20;
+    const yTitleY = margin.top + (graphHeight / 2);
+    ctx.translate(yTitleX, yTitleY);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Resistance (kΩ)', 0, 0);
+    ctx.restore();
+
+    const tolPercent = currentTolerance;
+    const bandGradient = ctx.createLinearGradient(0, margin.top, 0, margin.top + graphHeight);
+    bandGradient.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+    bandGradient.addColorStop(1, 'rgba(16, 185, 129, 0.08)');
+
+    ctx.fillStyle = bandGradient;
+    ctx.beginPath();
+    for (let x = xMin; x <= xMax; x += 0.5) {
+      const rStd = getNTCResistance(x, currentGraphConfig.curveType);
+      const rMax = rStd * (1 + tolPercent / 100);
+      const px = mapX(x), py = mapY(rMax);
+      if (x === xMin) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    for (let x = xMax; x >= xMin; x -= 0.5) {
+      const rStd = getNTCResistance(x, currentGraphConfig.curveType);
+      const rMin = rStd * (1 - tolPercent / 100);
+      const px = mapX(x), py = mapY(rMin);
+      ctx.lineTo(px, py);
+    }
+    ctx.closePath(); ctx.fill();
+
+    ctx.save();
+    ctx.shadowColor = 'rgba(2, 132, 199, 0.35)';
+    ctx.shadowBlur = 6;
+    ctx.strokeStyle = '#0284C7'; 
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    for (let x = xMin; x <= xMax; x += 0.5) {
+      const rStd = getNTCResistance(x, currentGraphConfig.curveType);
+      const px = mapX(x), py = mapY(rStd);
+      if (x === xMin) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.restore();
+
+    const ambTemp = parseFloat(document.getElementById('ambientTemp').value) || 25;
+    if (ambTemp >= xMin && ambTemp <= xMax) {
+      const pxAmb = mapX(ambTemp);
+      ctx.setLineDash([5, 4]); 
+      ctx.strokeStyle = '#EA580C'; 
+      ctx.lineWidth = 2;
+      ctx.beginPath(); 
+      ctx.moveTo(pxAmb, margin.top); 
+      ctx.lineTo(pxAmb, margin.top + graphHeight); 
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#EA580C';
+      ctx.font = '700 11px Inter'; ctx.textAlign = 'center';
+      ctx.fillText(`Ambient: ${ambTemp}°C`, pxAmb, margin.top - 12);
+    }
+
+    if (measuredValKohm !== null && ambTemp >= xMin && ambTemp <= xMax) {
+      const px = mapX(ambTemp);
+      const py = mapY(measuredValKohm);
+      const rawVal = document.getElementById('measuredRes').value;
+      const unit = document.getElementById('resUnitSelect').value;
+
+      ctx.save();
+      ctx.shadowColor = isOk ? 'rgba(16, 185, 129, 0.5)' : 'rgba(239, 68, 68, 0.5)';
+      ctx.shadowBlur = 10;
+      ctx.fillStyle = isOk ? '#10B981' : '#EF4444';
+      ctx.strokeStyle = '#FFFFFF'; 
+      ctx.lineWidth = 2.5;
+      ctx.beginPath(); 
+      ctx.arc(px, py, 7, 0, 2 * Math.PI); 
+      ctx.fill(); 
+      ctx.stroke();
+      ctx.restore();
+
+      const tagText = `${rawVal} ${unit} (${isOk ? 'OK' : 'NG'})`;
+      ctx.font = '700 11px Inter';
+      const textWidth = ctx.measureText(tagText).width;
+
+      let tagX = px + 12;
+      let tagY = py - 8;
+      if (tagX + textWidth + 14 > width - margin.right) tagX = px - textWidth - 20;
+
+      ctx.fillStyle = isOk ? '#ECFDF5' : '#FEF2F2';
+      ctx.strokeStyle = isOk ? '#10B981' : '#EF4444';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(tagX, tagY - 14, textWidth + 12, 20, 4);
+      ctx.fill(); ctx.stroke();
+
+      ctx.fillStyle = isOk ? '#065F46' : '#991B1B';
+      ctx.textAlign = 'left';
+      ctx.fillText(tagText, tagX + 6, tagY);
+    }
+  }
+
+  function initDragSlider() {
+    const container = document.getElementById('chart_container');
+    const bar = document.getElementById('chart_bar');
+    const input = document.getElementById('measuredRes');
+    const unitSelect = document.getElementById('resUnitSelect');
+
+    if (!container || !bar || !input) return;
+
+    let isDragging = false;
+
+    const updateFromPointer = (e) => {
+      const rect = bar.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      let offsetX = clientX - rect.left;
+      
+      if (offsetX < 0) offsetX = 0;
+      if (offsetX > rect.width) offsetX = rect.width;
+
+      const SPEC_RANGE_PERCENT = 0.70;
+      const SPEC_MARGIN_PERCENT = 0.15;
+      const totalRange = (currentSpec.max - currentSpec.min) / SPEC_RANGE_PERCENT;
+      const scaleMin = currentSpec.min - (totalRange * SPEC_MARGIN_PERCENT);
+      const scaleMax = currentSpec.max + (totalRange * SPEC_MARGIN_PERCENT);
+
+      const percent = offsetX / rect.width;
+      let calculatedKohm = scaleMin + (percent * (scaleMax - scaleMin));
+      
+      const unit = unitSelect.value;
+      if (unit === 'Ω') {
+        input.value = Math.round(calculatedKohm * 1000);
+      } else if (unit === 'MΩ') {
+        input.value = Math.round((calculatedKohm / 1000.0) * 1000) / 1000;
+      } else {
+        input.value = Math.round(calculatedKohm * 100) / 100;
+      }
+
+      evaluateResistance();
+    };
+
+    const startDrag = (e) => { isDragging = true; updateFromPointer(e); };
+    const doDrag = (e) => { if (isDragging) { e.preventDefault(); updateFromPointer(e); } };
+    const stopDrag = () => { isDragging = false; };
+
+    container.addEventListener('mousedown', startDrag);
+    window.addEventListener('mousemove', doDrag);
+    window.addEventListener('mouseup', stopDrag);
+
+    container.addEventListener('touchstart', startDrag, { passive: false });
+    window.addEventListener('touchmove', doDrag, { passive: false });
+    window.addEventListener('touchend', stopDrag);
+  }
+
+  function handleAppearanceImages(input) {
+    const files = Array.from(input.files);
+    if (!files || files.length === 0) return;
+
+    files.forEach(file => {
+      const processFile = (fileObj) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedAppearanceImages.push(e.target.result);
+          renderAppearanceImages();
+        };
+        reader.readAsDataURL(fileObj);
+      };
+
+      if (file.name.toLowerCase().endsWith('.heic')) {
+        heic2any({ blob: file, toType: "image/jpeg" }).then(resultBlob => {
+          processFile(resultBlob);
+        }).catch(err => {
+          alert("Failed to convert HEIC file: " + err.message);
+        });
+      } else {
+        processFile(file);
+      }
+    });
+
+    input.value = '';
+  }
+
+  function removeAppearanceImage(index) {
+    uploadedAppearanceImages.splice(index, 1);
+    renderAppearanceImages();
+  }
+
+  function renderAppearanceImages() {
+    const container = document.getElementById('appearance_img_container');
+    if (!container) return;
+
+    container.innerHTML = '';
+    uploadedAppearanceImages.forEach((src, idx) => {
+      const card = document.createElement('div');
+      card.className = 'attached-card';
+      card.innerHTML = `
+        <button type="button" class="remove-img-btn hide-on-pdf" onclick="removeAppearanceImage(${idx})" title="Remove image">✕</button>
+        <div class="attached-card-title">Attachment Image ${idx + 1}</div>
+        <div class="attached-img-box"><img src="${src}" alt="Inspection image ${idx + 1}"></div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function toggleOthersInput() {
+    const chkOthers = document.getElementById('chk_others');
+    const txtOthers = document.getElementById('txt_others');
+    if (chkOthers && txtOthers) {
+      txtOthers.style.display = chkOthers.checked ? 'block' : 'none';
+      if (!chkOthers.checked) txtOthers.value = '';
+    }
+  }
+
+  function updateSummarySection() {
+    const box = document.getElementById('summary_comment_content');
+    if (!box) return;
+
+    let html = '';
+    const partNo = document.getElementById('partNo')?.value.trim();
+    if (partNo) {
+      html += `<div class="summary-item-row"><span style="font-weight:600;">• Part No:</span> ${partNo}</div>`;
+    }
+
+    const series = document.getElementById('seriesSelect').value;
+    const posSelect = document.getElementById('positionSelect');
+    const posText = posSelect.options[posSelect.selectedIndex]?.textContent || '';
+    if (series && posSelect.value) {
+      html += `<div class="summary-item-row"><span style="font-weight:600;">• Category & Position:</span> ${series} (${posText})</div>`;
+    }
+
+    const selectedSymptoms = [];
+    const symptomCheckboxes = document.querySelectorAll('#symptomContainer input[type="checkbox"]:checked');
+    symptomCheckboxes.forEach(chk => {
+      const labelText = chk.getAttribute('data-symptom');
+      if (labelText === 'Others') {
+        const txtVal = document.getElementById('txt_others')?.value.trim();
+        selectedSymptoms.push(txtVal ? `Others (${txtVal})` : 'Others');
+      } else {
+        selectedSymptoms.push(labelText);
+      }
+    });
+
+    if (selectedSymptoms.length > 0) {
+      html += `<div class="summary-item-row"><span style="font-weight:600;">• Symptom:</span> ${selectedSymptoms.join(', ')}</div>`;
+    }
+
+    const val = document.getElementById('measuredRes')?.value.trim();
+    const unit = document.getElementById('resUnitSelect')?.value;
+    const badgeText = document.getElementById('judge_badge')?.textContent;
+    const temp = document.getElementById('ambientTemp')?.value;
+
+    if (badgeText === 'NG') {
+      html += `<div class="summary-item-row" style="color: var(--danger-red); font-weight: 600;">• Resistance Check: ${val || 'No Value'} ${unit} at ${temp}°C (NG - Out of Range ${currentSpec.min} ~ ${currentSpec.max} kΩ)</div>`;
+    }
+
+    box.innerHTML = html || '<div style="color:var(--text-muted);">No inspection summary available</div>';
+  }
+
+  function promptEditorMode() {
+    const panel = document.getElementById('editorPanel');
+    const isVisible = panel && panel.style.display === 'block';
+
+    if (isVisible) {
+      panel.style.display = 'none';
+    } else {
+      const pwd = prompt("Enter Designer Mode password:");
+      if (pwd === "maco2026") {
+        panel.style.display = 'block';
+        document.getElementById('editTolerancePercent').value = currentTolerance;
+      } else if (pwd !== null) {
+        alert("Incorrect password!");
+      }
+    }
+  }
+
+  // 1. ปุ่มบันทึกชั่วคราว: คำนวณและอัปเดตหน้าจอทันที ไม่ดาวน์โหลดไฟล์
+  function applyEditorChanges() {
+    const titleVal = document.getElementById('editFormTitle').value.trim();
+    if (titleVal) {
+      document.getElementById('displayFormTitle').textContent = titleVal;
+      document.getElementById('pageHeaderTitle').textContent = titleVal;
+    }
+
+    const tolVal = parseFloat(document.getElementById('editTolerancePercent').value) || 5;
+    currentTolerance = tolVal;
+    document.getElementById('lbl_tolerance_val').textContent = tolVal;
+    document.getElementById('lbl_legend_tol').textContent = tolVal;
+
+    calculateStandardResistance();
+    alert("บันทึกการตั้งค่าลงหน้าจอเรียบร้อยแล้ว");
+  }
+
+  // 2. ปุ่มอัปเดตโค้ด HTML: อัปเดตการตั้งค่าและดาวน์โหลดไฟล์ HTML ใหม่
+  function exportHTMLFile() {
+    applyEditorChanges();
+    document.getElementById('editorPanel').style.display = 'none';
+
+    let htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "Checking_Part_Report_Thermistor.html";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+  }
+
+  // 3. ปุ่มรีเซ็ตค่าเดิม: คืนค่ามาตรฐานตั้งต้น
+  function resetEditorChanges() {
+    document.getElementById('editFormTitle').value = "Checking Part Report (Thermistor)";
+    document.getElementById('editTolerancePercent').value = 5;
+    applyEditorChanges();
+  }
+
+  function generatePDF() {
+    const serviceReportInput = document.getElementById('serviceReportNo');
+    const reportVal = serviceReportInput ? serviceReportInput.value.trim() : '';
+
+    if (!reportVal || reportVal === '-') {
+      alert("กรุณากรอก Service Report No. ก่อนทำการบันทึก PDF");
+      if (serviceReportInput) serviceReportInput.focus();
+      return;
+    }
+
+    const checkables = document.querySelectorAll('input[type="checkbox"]');
+    checkables.forEach(input => {
+      if (input.checked) input.setAttribute('checked', 'checked');
+      else input.removeAttribute('checked');
+    });
+
+    const inputs = document.querySelectorAll('input[type="text"], input[type="number"], select');
+    inputs.forEach(input => input.setAttribute('value', input.value));
+
+    window.print();
+  }
+</script>
+</body>
+</html>
