@@ -125,14 +125,39 @@
       .designer-btn-group { flex-direction: column; }
     }
 
+    /* Save PDF / Print Settings (Fixed Full Page Fit for Mobile Portrait & Landscape) */
     @media print {
-      @page { size: A4 portrait; margin: 5mm; }
-      html, body { background-color: #FFFFFF !important; padding: 0 !important; margin: 0 !important; }
-      .app-container { width: 100% !important; max-width: 100% !important; box-shadow: none !important; border: none !important; }
-      .grid-3 { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; }
-      .grid-2 { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; }
+      @page { 
+        size: A4 portrait; 
+        margin: 5mm; 
+      }
+      html, body { 
+        background-color: #FFFFFF !important; 
+        padding: 0 !important; 
+        margin: 0 !important; 
+        width: 100% !important;
+        min-width: 100% !important;
+        -webkit-print-color-adjust: exact !important; 
+        print-color-adjust: exact !important; 
+      }
+      .app-container { 
+        width: 100% !important;
+        max-width: 100% !important; 
+        min-width: 100% !important;
+        box-shadow: none !important; 
+        border: none !important; 
+        border-radius: 0 !important; 
+        padding: 0 !important; 
+        margin: 0 !important;
+      }
+      
+      /* บังคับกริดและคอนโทรลให้ขยายเต็มหน้าตอนพิมพ์ PDF เสมอ */
+      .grid-3 { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 12px !important; }
+      .grid-2 { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
       .single-row-controls { display: grid !important; grid-template-columns: 130px 160px 1fr 80px !important; gap: 8px !important; }
       .canvas-body-box { height: 280px !important; }
+      
+      /* ซ่อนปุ่มกด, แผงแต่งหน้าเว็บ และปุ่มลบรูปภาพตอนพิมพ์ PDF */
       .hide-on-pdf, .designer-fab, #editorPanel, .remove-img-btn { display: none !important; }
     }
   </style>
@@ -838,7 +863,6 @@
     }
   }
 
-  // 1. ปุ่มบันทึกชั่วคราว: คำนวณและอัปเดตหน้าจอทันที ไม่ดาวน์โหลดไฟล์
   function applyEditorChanges() {
     const titleVal = document.getElementById('editFormTitle').value.trim();
     if (titleVal) {
@@ -855,7 +879,6 @@
     alert("บันทึกการตั้งค่าลงหน้าจอเรียบร้อยแล้ว");
   }
 
-  // 2. ปุ่มอัปเดตโค้ด HTML: อัปเดตการตั้งค่าและดาวน์โหลดไฟล์ HTML ใหม่
   function exportHTMLFile() {
     applyEditorChanges();
     document.getElementById('editorPanel').style.display = 'none';
@@ -871,7 +894,6 @@
     URL.revokeObjectURL(link.href);
   }
 
-  // 3. ปุ่มรีเซ็ตค่าเดิม: คืนค่ามาตรฐานตั้งต้น
   function resetEditorChanges() {
     document.getElementById('editFormTitle').value = "Checking Part Report (Thermistor)";
     document.getElementById('editTolerancePercent').value = 5;
