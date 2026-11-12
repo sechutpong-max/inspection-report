@@ -639,8 +639,8 @@
         <td style="font-weight: 600; text-align: left;">${sensor.name}</td>
         <td>
           <div class="res-input-flex">
-            <input type="number" step="0.01" id="res_val_${key}" class="input-control res-val-input" placeholder="0.00" oninput="evaluateSingleRow('${key}', ${JSON.stringify(sensor).replace(/'/g, "&apos;")})">
-            <select id="res_unit_${key}" class="input-control res-unit-select" onchange="evaluateSingleRow('${key}', ${JSON.stringify(sensor).replace(/'/g, "&apos;")})">
+            <input type="number" step="0.01" id="res_val_${key}" class="input-control res-val-input" placeholder="0.00">
+            <select id="res_unit_${key}" class="input-control res-unit-select">
               <option value="Ω">Ω</option>
               <option value="kΩ" selected>kΩ</option>
               <option value="MΩ">MΩ</option>
@@ -667,6 +667,11 @@
         <td id="attach_cell_${key}" class="hide-on-pdf"></td>
       `;
       tbody.appendChild(tr);
+
+      const resInput = document.getElementById(`res_val_${key}`);
+      const resUnit = document.getElementById(`res_unit_${key}`);
+      if (resInput) resInput.addEventListener('input', () => evaluateSingleRow(key, sensor));
+      if (resUnit) resUnit.addEventListener('change', () => evaluateSingleRow(key, sensor));
 
       renderRowAttachCell(key, getSensorUniqueId(sensor), false);
       initRowDragSlider(key, sensor);
