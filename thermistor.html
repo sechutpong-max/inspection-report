@@ -514,36 +514,36 @@
 
 <script>
   const MASTER_SENSOR_DB = [
-    // INDOOR SENSORS (5 kΩ at 25°C)
-    { unitType: 'Indoor', series: 'RAC', id: 'Thi-A', name: 'Thi-A (Indoor Room Air)', curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Curve (Indoor)' },
-    { unitType: 'Indoor', series: 'RAC', id: 'Thi-R', name: 'Thi-R (Indoor Heat Exchanger)', curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Curve (Indoor)' },
+    // INDOOR SENSORS (15 kΩ Curve)
+    { unitType: 'Indoor', series: 'RAC', id: 'Thi-A', name: 'Thi-A (Indoor Room Air)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (Indoor Thi-A)' },
+    { unitType: 'Indoor', series: 'RAC', id: 'Thi-R', name: 'Thi-R (Indoor Heat Exchanger)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (Indoor Thi-R)' },
     
-    { unitType: 'Indoor', series: 'PAC', id: 'Thi-A', name: 'Thi-A (Indoor Return Air)', curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Curve (Indoor)' },
-    { unitType: 'Indoor', series: 'PAC', id: 'Thi-R', name: 'Thi-R (Indoor Return Pipe)', curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Curve (Indoor)' },
+    { unitType: 'Indoor', series: 'PAC', id: 'Thi-A', name: 'Thi-A (Indoor Return Air)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (Indoor Thi-A)' },
+    { unitType: 'Indoor', series: 'PAC', id: 'Thi-R', name: 'Thi-R (Indoor Return Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (Indoor Thi-R)' },
     
-    { unitType: 'Indoor', series: 'KX', id: 'Thi-A', name: 'Thi-A (Indoor Return Air)', curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Curve (Indoor)' },
-    { unitType: 'Indoor', series: 'KX', id: 'Thi-R1', name: 'Thi-R1 (Indoor Main Liquid Pipe)', curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Curve (Indoor)' },
-    { unitType: 'Indoor', series: 'KX', id: 'Thi-R2', name: 'Thi-R2 (Indoor Gas Pipe)', curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Curve (Indoor)' },
+    { unitType: 'Indoor', series: 'KX', id: 'Thi-A', name: 'Thi-A (Indoor Return Air)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (Indoor Thi-A)' },
+    { unitType: 'Indoor', series: 'KX', id: 'Thi-R1', name: 'Thi-R1 (Indoor Main Liquid Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (Indoor Thi-R1)' },
+    { unitType: 'Indoor', series: 'KX', id: 'Thi-R2', name: 'Thi-R2 (Indoor Gas Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (Indoor Thi-R2)' },
 
     // OUTDOOR SENSORS
     // RAC Outdoor
-    { unitType: 'Outdoor', series: 'RAC', id: 'Tho-A', name: 'Tho-A (Outdoor Air)', curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Curve (Outdoor)' },
-    { unitType: 'Outdoor', series: 'RAC', id: 'Tho-R', name: 'Tho-R (Outdoor Liquid Pipe)', curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Curve (Outdoor)' },
+    { unitType: 'Outdoor', series: 'RAC', id: 'Tho-A', name: 'Tho-A (Outdoor Air)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (RAC Tho-A)' },
+    { unitType: 'Outdoor', series: 'RAC', id: 'Tho-R', name: 'Tho-R (Outdoor Liquid Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (RAC Tho-R)' },
     { unitType: 'Outdoor', series: 'RAC', id: 'Tho-D', name: 'Tho-D (Discharge Temp)', curveType: '100k_RAC', xMin: 0, xMax: 140, yMax: 100, title: '100 kΩ Discharge Curve (RAC Tho-D)' },
 
     // PAC Outdoor
     { unitType: 'Outdoor', series: 'PAC', id: 'Tho-A', name: 'Tho-A (Outdoor Air)', curveType: '100k_THOA', xMin: -20, xMax: 50, yMax: 100, title: '100 kΩ Outdoor Air Curve (PAC Tho-A)' },
-    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-R', name: 'Tho-R (Outdoor Liquid Pipe)', curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Curve (PAC)' },
-    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-S', name: 'Tho-S (Suction Pipe)', curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Curve (PAC)' },
-    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-C', name: 'Tho-C (Condenser Pipe)', curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Curve (PAC)' },
+    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-R', name: 'Tho-R (Outdoor Liquid Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (PAC Tho-R)' },
+    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-S', name: 'Tho-S (Suction Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (PAC Tho-S)' },
+    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-C', name: 'Tho-C (Condenser Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (PAC Tho-C)' },
     { unitType: 'Outdoor', series: 'PAC', id: 'Tho-D', name: 'Tho-D (Discharge Pipe)', curveType: '200k_PAC', xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Curve (PAC Tho-D)' },
 
     // KX Outdoor
     { unitType: 'Outdoor', series: 'KX', id: 'Tho-A', name: 'Tho-A (Outdoor Air)', curveType: '100k_THOA', xMin: -20, xMax: 50, yMax: 100, title: '100 kΩ Outdoor Air Curve (KX Tho-A)' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-R', name: 'Tho-R (Outdoor Liquid Pipe)', curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Curve (KX)' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-S', name: 'Tho-S (Suction Pipe)', curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Curve (KX)' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-SC', name: 'Tho-SC (Sub-cool Pipe)', curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Curve (KX)' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-H', name: 'Tho-H (High Temp Pipe)', curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Curve (KX)' },
+    { unitType: 'Outdoor', series: 'KX', id: 'Tho-R', name: 'Tho-R (Outdoor Liquid Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (KX Tho-R)' },
+    { unitType: 'Outdoor', series: 'KX', id: 'Tho-S', name: 'Tho-S (Suction Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (KX Tho-S)' },
+    { unitType: 'Outdoor', series: 'KX', id: 'Tho-SC', name: 'Tho-SC (Sub-cool Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (KX Tho-SC)' },
+    { unitType: 'Outdoor', series: 'KX', id: 'Tho-H', name: 'Tho-H (High Temp Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (KX Tho-H)' },
     { unitType: 'Outdoor', series: 'KX', id: 'Tho-D', name: 'Tho-D (Discharge Pipe)', curveType: '200k_PAC', xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Curve (KX Tho-D)' },
     { unitType: 'Outdoor', series: 'KX', id: 'Tho-C', name: 'Tho-C (Condenser Pipe)', curveType: '200k_PAC', xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Curve (KX Tho-C)' },
     { unitType: 'Outdoor', series: 'KX', id: 'Tho-P', name: 'Tho-P (Oil Equalizer)', curveType: '200k_PAC', xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Curve (KX Tho-P)' }
@@ -937,7 +937,7 @@
 
     const groups = {};
     if (activeSelectedPositions.length === 0) {
-      groups['5k'] = [{ curveType: '5k', xMin: 0, xMax: 50, yMax: 15, title: '5 kΩ Standard Characteristic Curve Reference' }];
+      groups['15k'] = [{ curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve Reference' }];
     } else {
       activeSelectedPositions.forEach(pos => {
         if (!groups[pos.curveType]) groups[pos.curveType] = [];
@@ -984,7 +984,7 @@
   function drawAllGraphs() {
     const groups = {};
     if (activeSelectedPositions.length === 0) {
-      groups['5k'] = [];
+      groups['15k'] = [];
     } else {
       activeSelectedPositions.forEach((pos, originalIdx) => {
         if (!groups[pos.curveType]) groups[pos.curveType] = [];
