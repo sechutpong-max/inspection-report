@@ -49,9 +49,6 @@
     .custom-check input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border: 1.5px solid #CBD5E1; border-radius: 3.5px; outline: none; background-color: #FFFFFF; cursor: pointer; display: inline-grid; place-content: center; margin: 0; flex-shrink: 0; }
     .custom-check input[type="checkbox"]:checked { background-color: var(--primary-red); border-color: var(--primary-red); }
     .custom-check input[type="checkbox"]:checked::before { content: "✔"; font-size: 9px; color: #FFFFFF; font-weight: bold; }
-
-    /* Sub-group Container for R1, R2, R3 (4 columns on desktop) */
-    .sub-group-container { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 1fr; gap: 8px; padding: 12px; background: #F1F5F9; border-radius: 8px; border: 1px dashed #94A3B8; margin-top: 2px; margin-bottom: 6px; }
     
     .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-weight: 700; font-size: 0.8rem; text-align: center; }
     .status-ok { background-color: var(--success-bg); color: var(--success-green); border: 1px solid var(--success-green); }
@@ -137,7 +134,6 @@
       .section-card { padding: 10px 8px !important; margin-bottom: 10px; }
       .designer-btn-group { flex-direction: column; }
       .position-grid { grid-template-columns: 1fr !important; }
-      .sub-group-container { grid-template-columns: repeat(2, 1fr) !important; }
       .ambient-formula-bar { flex-direction: column; align-items: stretch; }
       .ambient-input-box { width: 100%; }
 
@@ -227,7 +223,6 @@
       .canvas-body-box canvas { width: 100% !important; height: 100% !important; }
       
       .position-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; grid-auto-rows: max-content !important; gap: 8px !important; align-items: start !important; }
-      .sub-group-container { grid-template-columns: repeat(4, 1fr) !important; background: transparent !important; border: 1px dashed #94A3B8 !important; }
 
       .ambient-formula-bar { flex-direction: row !important; align-items: flex-end !important; justify-content: space-between !important; }
       .ambient-input-box { width: 160px !important; }
@@ -479,7 +474,8 @@
       return;
     }
 
-    const filtered = MASTER_SENSOR_DB.filter(item => item.unitType === unitType && item.series === series);
+    // Filter only main sensors and group items (exclude direct parentGroup items from main checkboxes)
+    const filtered = MASTER_SENSOR_DB.filter(item => item.unitType === unitType && item.series === series && !item.parentGroup);
 
     if (filtered.length === 0) {
       container.innerHTML = `<div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">No matching positions found.</div>`;
@@ -491,88 +487,50 @@
 
     container.innerHTML = '';
 
-    // First pass: render main items and group placeholders
     filtered.forEach((sensor, idx) => {
-      if (!sensor.parentGroup) {
-        const key = `${sensor.unitType}_${sensor.series}_${sensor.id}_${idx}`;
-        const label = document.createElement('label');
-        label.className = 'custom-check';
-        
-        if (sensor.isGroup) {
-          const chkId = `chk_group_${key}`;
-          const subId = `sub_${key}`;
-          label.innerHTML = `
-            <input type="checkbox" id="${chkId}" onchange="toggleGroup('${chkId}', '${subId}')">
-            <span>${sensor.name}</span>
-          `;
-          container.appendChild(label);
-          
-          const subDiv = document.createElement('div');
-          subDiv.id = subId;
-          subDiv.className = 'sub-group-container';
-          subDiv.style.display = 'none';
-          container.appendChild(subDiv);
-        } else {
-          const safeData = JSON.stringify(sensor).replace(/'/g, "&#39;");
-          label.innerHTML = `
-            <input type="checkbox" class="sensor-checkbox" id="chk_pos_${key}" data-sensor='${safeData}' onchange="onPositionCheckChange()">
-            <span>${sensor.name}</span>
-          `;
-          container.appendChild(label);
-        }
-      }
-    });
+      const key = `${sensor.unitType}_${sensor.series}_${sensor.id}_${idx}`;
+      const label = document.createElement('label');
+      label.className = 'custom-check';
 
-    // Second pass: placing children into their group containers
-    filtered.forEach((sensor, idx) => {
-      if (sensor.parentGroup) {
-        const parentSensor = filtered.find(s => s.id === sensor.parentGroup);
-        if (parentSensor) {
-          const parentIdx = filtered.indexOf(parentSensor);
-          const parentKey = `${parentSensor.unitType}_${parentSensor.series}_${parentSensor.id}_${parentIdx}`;
-          const subDiv = document.getElementById(`sub_${parentKey}`);
-          
-          if (subDiv) {
-            const key = `${sensor.unitType}_${sensor.series}_${sensor.id}_${idx}`;
-            const label = document.createElement('label');
-            label.className = 'custom-check';
-            const safeData = JSON.stringify(sensor).replace(/'/g, "&#39;");
-            label.innerHTML = `
-              <input type="checkbox" class="sensor-checkbox" id="chk_pos_${key}" data-sensor='${safeData}' onchange="onPositionCheckChange()">
-              <span>${sensor.name}</span>
-            `;
-            subDiv.appendChild(label);
-          }
-        }
+      if (sensor.isGroup) {
+        const safeData = JSON.stringify(sensor).replace(/'/g, "&#39;");
+        label.innerHTML = `
+          <input type="checkbox" class="sensor-checkbox group-checkbox" id="chk_pos_${key}" data-sensor='${safeData}' data-groupid="${sensor.id}" onchange="onPositionCheckChange()">
+          <span>${sensor.name}</span>
+        `;
+      } else {
+        const safeData = JSON.stringify(sensor).replace(/'/g, "&#39;");
+        label.innerHTML = `
+          <input type="checkbox" class="sensor-checkbox" id="chk_pos_${key}" data-sensor='${safeData}' onchange="onPositionCheckChange()">
+          <span>${sensor.name}</span>
+        `;
       }
+      container.appendChild(label);
     });
 
     onPositionCheckChange();
   }
 
-  function toggleGroup(chkId, subId) {
-    const chk = document.getElementById(chkId);
-    const sub = document.getElementById(subId);
-    if (chk && sub) {
-      if (chk.checked) {
-        sub.style.display = 'grid';
-      } else {
-        sub.style.display = 'none';
-        // Uncheck all children when folding back
-        const childChks = sub.querySelectorAll('input[type="checkbox"]');
-        childChks.forEach(c => c.checked = false);
-        onPositionCheckChange();
-      }
-    }
-  }
-
   function onPositionCheckChange() {
+    const unitType = document.getElementById('unitTypeSelect').value;
+    const series = document.getElementById('seriesSelect').value;
     const checkedInputs = document.querySelectorAll('#positionContainer input.sensor-checkbox:checked');
     activeSelectedPositions = [];
 
     checkedInputs.forEach(input => {
       const sensorData = JSON.parse(input.getAttribute('data-sensor'));
-      activeSelectedPositions.push(sensorData);
+      
+      if (sensorData.isGroup) {
+        // Automatically fetch all child sensors belonging to this group
+        const groupChildren = MASTER_SENSOR_DB.filter(item => 
+          item.unitType === unitType && item.series === series && item.parentGroup === sensorData.id
+        );
+        groupChildren.forEach(child => {
+          activeSelectedPositions.push(child);
+        });
+      } else {
+        activeSelectedPositions.push(sensorData);
+      }
     });
 
     renderInspectionRows();
