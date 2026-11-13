@@ -95,7 +95,7 @@
 
     /* Ambient Temp & Formula Note Bar */
     .ambient-formula-bar { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; background: #F8FAFC; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color); }
-    .ambient-input-box { width: 180px; flex-shrink: 0; }
+    .ambient-input-box { width: 190px; flex-shrink: 0; }
     .formula-wrapper { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .formula-note-label { font-size: 0.8rem; font-weight: 600; color: var(--text-main); white-space: nowrap; }
     .formula-note-box { display: flex; align-items: center; background: #FFFFFF; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color); }
@@ -311,15 +311,12 @@
       <section class="section-card" id="section_technical_inspection">
         <div class="section-title">2. Technical Inspection &amp; Resistance Check</div>
         
-        <!-- Dynamic Graphs Container Wrapper -->
-        <div id="graphsWrapper" class="graphs-container-grid"></div>
-
-        <!-- Ambient Temperature Input + Ref. Formula (Label outside box) -->
+        <!-- Ambient Temp Input & Formula Bar (Moved Above Graph, Highlighted Ambient Input) -->
         <div class="ambient-formula-bar">
           <div class="ambient-input-box">
             <div class="input-group">
-              <label for="ambientTemp">Ambient Temp (°C)</label>
-              <input type="number" id="ambientTemp" class="input-control" style="background: #FFFFFF;" placeholder="e.g. 25" value="25" step="1" oninput="recalculateAllSelectedPositions()">
+              <label for="ambientTemp" style="color: var(--primary-red); font-weight: 700;">* Ambient Temp (°C) *</label>
+              <input type="number" id="ambientTemp" class="input-control" style="background: #FFFDF0; border: 2px solid var(--primary-red); font-weight: 700; color: var(--primary-red);" placeholder="*Required e.g. 25" value="" step="1" oninput="recalculateAllSelectedPositions()">
             </div>
           </div>
 
@@ -330,6 +327,9 @@
             </div>
           </div>
         </div>
+
+        <!-- Dynamic Graphs Container Wrapper (Hidden until Ambient Temp is entered) -->
+        <div id="graphsWrapper" class="graphs-container-grid" style="display: none;"></div>
 
         <!-- Dynamic Resistance Table Generated From Section 1.3 -->
         <div class="table-responsive-wrapper">
@@ -474,7 +474,6 @@
       return;
     }
 
-    // Filter only main sensors and group items (exclude direct parentGroup items from main checkboxes)
     const filtered = MASTER_SENSOR_DB.filter(item => item.unitType === unitType && item.series === series && !item.parentGroup);
 
     if (filtered.length === 0) {
@@ -521,7 +520,6 @@
       const sensorData = JSON.parse(input.getAttribute('data-sensor'));
       
       if (sensorData.isGroup) {
-        // Automatically fetch all child sensors belonging to this group
         const groupChildren = MASTER_SENSOR_DB.filter(item => 
           item.unitType === unitType && item.series === series && item.parentGroup === sensorData.id
         );
@@ -548,7 +546,8 @@
     }
 
     tbody.innerHTML = '';
-    const temp = parseFloat(document.getElementById('ambientTemp').value) || 25;
+    const tempInput = document.getElementById('ambientTemp').value;
+    const temp = tempInput !== '' ? parseFloat(tempInput) : 25;
 
     activeSelectedPositions.forEach((sensor, idx) => {
       const key = `pos_row_${idx}`;
@@ -576,9 +575,9 @@
                 <div class="chart-point" id="chart_point_${key}" style="display: none;"></div>
               </div>
               <div class="chart-labels">
-                <span class="chart-label-min" id="lbl_min_${key}">Min ${spec.min}</span>
-                <span class="chart-label-std" id="lbl_std_${key}">Std ${spec.std}</span>
-                <span class="chart-label-max" id="lbl_max_${key}">Max ${spec.max}</span>
+                <span class="chart-label-min" id="lbl_min_${key}">${tempInput !== '' ? 'Min ' + spec.min : 'Min -'}</span>
+                <span class="chart-label-std" id="lbl_std_${key}">${tempInput !== '' ? 'Std ' + spec.std : 'Std -'}</span>
+                <span class="chart-label-max" id="lbl_max_${key}">${tempInput !== '' ? 'Max ' + spec.max : 'Max -'}</span>
               </div>
             </div>
           </div>
@@ -597,7 +596,17 @@
   }
 
   function recalculateAllSelectedPositions() {
-    const temp = parseFloat(document.getElementById('ambientTemp').value) || 25;
+    const tempInput = document.getElementById('ambientTemp').value;
+    const graphsWrapper = document.getElementById('graphsWrapper');
+
+    if (tempInput === '') {
+      if (graphsWrapper) graphsWrapper.style.display = 'none';
+    } else {
+      if (graphsWrapper) graphsWrapper.style.display = 'grid';
+    }
+
+    const temp = tempInput !== '' ? parseFloat(tempInput) : 25;
+
     activeSelectedPositions.forEach((sensor, idx) => {
       const key = `pos_row_${idx}`;
       const spec = calculateSensorSpec(temp, sensor.curveType);
@@ -606,12 +615,14 @@
       const lblStd = document.getElementById(`lbl_std_${key}`);
       const lblMax = document.getElementById(`lbl_max_${key}`);
 
-      if (lblMin) lblMin.textContent = `Min ${spec.min}`;
-      if (lblStd) lblStd.textContent = `Std ${spec.std}`;
-      if (lblMax) lblMax.textContent = `Max ${spec.max}`;
+      if (lblMin) lblMin.textContent = tempInput !== '' ? `Min ${spec.min}` : 'Min -';
+      if (lblStd) lblStd.textContent = tempInput !== '' ? `Std ${spec.std}` : 'Std -';
+      if (lblMax) lblMax.textContent = tempInput !== '' ? `Max ${spec.max}` : 'Max -';
 
       evaluateSingleRow(key, sensor);
     });
+
+    drawAllGraphs();
   }
 
   function calculateSensorSpec(tempC, curveType) {
@@ -637,10 +648,18 @@
     const unitSelect = document.getElementById(`res_unit_${key}`);
     const badge = document.getElementById(`judge_badge_${key}`);
     const point = document.getElementById(`chart_point_${key}`);
+    const tempInput = document.getElementById('ambientTemp').value;
 
     if (!input || !badge) return;
 
-    const temp = parseFloat(document.getElementById('ambientTemp').value) || 25;
+    if (tempInput === '') {
+      badge.textContent = '-';
+      badge.className = 'status-badge';
+      if (point) point.style.display = 'none';
+      return;
+    }
+
+    const temp = parseFloat(tempInput);
     const spec = calculateSensorSpec(temp, sensor.curveType);
 
     const valStr = input.value.trim();
@@ -701,6 +720,9 @@
     let isDragging = false;
 
     const updateFromPointer = (e) => {
+      const tempInput = document.getElementById('ambientTemp').value;
+      if (tempInput === '') return; // Don't allow slider dragging if ambient temp is not set
+
       const rect = bar.getBoundingClientRect();
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       let offsetX = clientX - rect.left;
@@ -708,7 +730,7 @@
       if (offsetX < 0) offsetX = 0;
       if (offsetX > rect.width) offsetX = rect.width;
 
-      const temp = parseFloat(document.getElementById('ambientTemp').value) || 25;
+      const temp = parseFloat(tempInput);
       const spec = calculateSensorSpec(temp, sensor.curveType);
 
       const SPEC_RANGE_PERCENT = 0.70;
@@ -748,6 +770,14 @@
   function renderGraphContainers() {
     const wrapper = document.getElementById('graphsWrapper');
     if (!wrapper) return;
+
+    const tempInput = document.getElementById('ambientTemp').value;
+    if (tempInput === '') {
+      wrapper.style.display = 'none';
+      return;
+    } else {
+      wrapper.style.display = 'grid';
+    }
 
     const groups = {};
     if (activeSelectedPositions.length === 0) {
@@ -796,6 +826,9 @@
   }
 
   function drawAllGraphs() {
+    const tempInput = document.getElementById('ambientTemp').value;
+    if (tempInput === '') return;
+
     const groups = {};
     if (activeSelectedPositions.length === 0) {
       groups['15k'] = [];
@@ -918,8 +951,8 @@
     ctx.restore();
 
     // Ambient Temp Line
-    const ambTemp = parseFloat(document.getElementById('ambientTemp').value) || 25;
-    if (ambTemp >= xMin && ambTemp <= xMax) {
+    const ambTemp = parseFloat(document.getElementById('ambientTemp').value);
+    if (!isNaN(ambTemp) && ambTemp >= xMin && ambTemp <= xMax) {
       const pxAmb = mapX(ambTemp);
       ctx.setLineDash([4, 3]); ctx.strokeStyle = '#EA580C'; ctx.lineWidth = 1.8;
       ctx.beginPath(); ctx.moveTo(pxAmb, margin.top); ctx.lineTo(pxAmb, margin.top + graphHeight); ctx.stroke();
@@ -1011,7 +1044,7 @@
       }
     });
 
-    if (ngList.length > 0) {
+    if (ngList.length > 0 && temp !== '') {
       html += `<div class="summary-item-row" style="color: var(--danger-red); font-weight: 600;">• Resistance Check (NG Detected at ${temp}°C): ${ngList.join(', ')}</div>`;
     }
 
