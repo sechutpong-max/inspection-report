@@ -553,8 +553,7 @@
       </div>
       
       <!-- Single Unified Grid -->
-      <div class="portal-grid" id="main-grid">
-        <div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true" onclick="handleCardClick(event, this)">
+      <div class="portal-grid" id="main-grid"><div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">📊</div>
@@ -575,8 +574,7 @@
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card" data-href="outdoor-heat-exchanger.html" data-locked="false" data-hidden="false" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card  " data-href="outdoor-heat-exchanger.html" data-locked="false" data-hidden="false">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">☀️</div>
@@ -597,8 +595,7 @@
               <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card" data-href="indoor-heat-exchanger.html" data-locked="false" data-hidden="false" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card  " data-href="indoor-heat-exchanger.html" data-locked="false" data-hidden="false">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">❄</div>
@@ -619,8 +616,7 @@
               <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card" data-href="thermistor.html" data-locked="false" data-hidden="false" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card is-hidden" data-href="thermistor.html" data-locked="false" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🌡️</div>
@@ -638,11 +634,10 @@
               <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)" checked="checked"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card" data-href="dc-motor.html" data-locked="false" data-hidden="false" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card is-hidden" data-href="dc-motor.html" data-locked="false" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">⚙</div>
@@ -660,11 +655,10 @@
               <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)" checked="checked"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🌀</div>
@@ -685,8 +679,7 @@
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card" data-href="EEV.html" data-locked="false" data-hidden="false" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card is-hidden" data-href="EEV.html" data-locked="false" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">⚙</div>
@@ -704,11 +697,10 @@
               <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)" checked="checked"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card" data-href="stepping-motor.html" data-locked="false" data-hidden="false" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card is-hidden" data-href="stepping motor.html" data-locked="false" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🔄</div>
@@ -721,16 +713,15 @@
           </div>
           <div class="card-edit-fields" onclick="event.stopPropagation()">
             <label>Link URL:</label>
-            <input type="text" class="card-url-input" value="stepping-motor.html" oninput="handleUrlChange(this)">
+            <input type="text" class="card-url-input" value="stepping motor.html" oninput="handleUrlChange(this)">
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
+              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)" checked="checked"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🔌</div>
@@ -751,8 +742,7 @@
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🔌</div>
@@ -773,8 +763,7 @@
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🔌</div>
@@ -795,8 +784,7 @@
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🔌</div>
@@ -817,8 +805,7 @@
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card is-hidden" data-href="running-capacitor.html" data-locked="false" data-hidden="true" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card  is-hidden" data-href="running capacitor.html" data-locked="false" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🔋</div>
@@ -831,7 +818,7 @@
           </div>
           <div class="card-edit-fields" onclick="event.stopPropagation()">
             <label>Link URL:</label>
-            <input type="text" class="card-url-input" value="running-capacitor.html" oninput="handleUrlChange(this)">
+            <input type="text" class="card-url-input" value="running capacitor.html" oninput="handleUrlChange(this)">
             <label class="checkbox-label">
               <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
@@ -839,8 +826,7 @@
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">⚡</div>
@@ -861,8 +847,7 @@
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🎛️</div>
@@ -883,8 +868,7 @@
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🔧</div>
@@ -905,8 +889,7 @@
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🏢</div>
@@ -927,8 +910,7 @@
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-        <div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true" onclick="handleCardClick(event, this)">
+        </div><div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🏢</div>
@@ -949,8 +931,7 @@
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div>
-      </div>
+        </div></div>
     </div>
 
   </main>
@@ -960,7 +941,7 @@
     <div>© 2026 Mitsubishi Heavy Industries. All rights reserved. Service Engineering Division.</div>
     <div class="visitor-counter">
       Visitor Views: 
-      <img id="visitor-badge" src="https://visitor-badge.laobi.icu/badge?page_id=sechutpong-max.inspection-report-v2&amp;left_text=&amp;color=1e293b&amp;_t=1794542935853" alt="visitor count" style="vertical-align: middle; height: 16px;">
+      <img id="visitor-badge" src="https://visitor-badge.laobi.icu/badge?page_id=sechutpong-max.inspection-report-v2&amp;left_text=&amp;color=1e293b&amp;_t=1794563302274" alt="visitor count" style="vertical-align: middle; height: 16px;">
     </div>
   </footer>
 
@@ -1236,5 +1217,6 @@
       });
     }
   </script>
+
 
 </body></html>
