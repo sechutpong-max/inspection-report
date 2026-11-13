@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="pageHeaderTitle">Checking Part Report (Thermistor)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <!-- MathJax Library for Mathematical Equations Rendering -->
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
@@ -43,15 +42,16 @@
     .input-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
     .input-control { width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; color: var(--text-main); background-color: #FAFAFA; box-sizing: border-box; }
 
-    /* Custom Symptom & Position Equal Grid */
-    .symptom-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; align-items: center; }
-    .position-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; align-items: center; }
+    /* Custom Position Grid (กล่องหลักไม่ยืดตามกล่องลูก) */
+    .position-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: max-content; gap: 8px; align-items: start; }
     
-    .custom-check { display: flex; align-items: center; justify-content: flex-start; gap: 6px; padding: 6px 10px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.78rem; cursor: pointer; user-select: none; width: 100%; box-sizing: border-box; }
+    .custom-check { display: flex; align-items: center; justify-content: flex-start; gap: 6px; padding: 8px 10px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.78rem; cursor: pointer; user-select: none; width: 100%; box-sizing: border-box; }
     .custom-check input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border: 1.5px solid #CBD5E1; border-radius: 3.5px; outline: none; background-color: #FFFFFF; cursor: pointer; display: inline-grid; place-content: center; margin: 0; flex-shrink: 0; }
     .custom-check input[type="checkbox"]:checked { background-color: var(--primary-red); border-color: var(--primary-red); }
     .custom-check input[type="checkbox"]:checked::before { content: "✔"; font-size: 9px; color: #FFFFFF; font-weight: bold; }
-    .others-wrapper { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+
+    /* Sub-group Container for R1, R2, R3 (4 columns on desktop) */
+    .sub-group-container { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 1fr; gap: 8px; padding: 12px; background: #F1F5F9; border-radius: 8px; border: 1px dashed #94A3B8; margin-top: 2px; margin-bottom: 6px; }
     
     .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-weight: 700; font-size: 0.8rem; text-align: center; }
     .status-ok { background-color: var(--success-bg); color: var(--success-green); border: 1px solid var(--success-green); }
@@ -66,13 +66,6 @@
     .res-input-flex { display: flex; align-items: center; justify-content: center; gap: 4px; }
     .res-val-input { width: 78px; text-align: right; }
     .res-unit-select { width: 58px; padding: 6px 2px; font-weight: 700; }
-
-    /* Row NG Attached Picture Status Cell (No thumbnails inside table) */
-    .row-attach-box { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
-    .btn-row-attach { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 4px; padding: 5px 10px; background: var(--danger-bg); color: var(--danger-red); border: 1px dashed var(--danger-red); border-radius: 6px; font-size: 0.73rem; font-weight: 600; cursor: pointer; overflow: hidden; white-space: nowrap; transition: background 0.15s; }
-    .btn-row-attach:hover { background: #FEE2E2; }
-    .btn-row-attach input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-    .attach-status-pill { display: inline-flex; align-items: center; gap: 4px; background: #ECFDF5; color: #059669; border: 1px solid #A7F3D0; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
 
     .chart-scroll-wrapper { width: 100%; overflow-x: auto; padding: 2px 0; }
     .chart-cell-container { position: relative; width: 100%; min-width: 130px; height: 40px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 6px; display: flex; flex-direction: column; justify-content: center; user-select: none; }
@@ -111,15 +104,6 @@
     .formula-note-box { display: flex; align-items: center; background: #FFFFFF; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color); }
     .formula-math-render { color: var(--primary-black); font-size: 0.85rem; }
 
-    /* Section 3 Attached Pictures Grid */
-    .attached-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .attached-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background: #FAFAFA; break-inside: avoid; page-break-inside: avoid; position: relative; }
-    .attached-card-title { font-size: 0.82rem; font-weight: 700; color: var(--primary-black); margin-bottom: 6px; padding-right: 24px; }
-    .attached-img-box { width: 100%; height: 175px; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-    .attached-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
-    .remove-img-btn { position: absolute; top: 8px; right: 8px; background: rgba(239,68,68,0.9); color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 5; }
-    .empty-attach-note { grid-column: 1 / -1; color: var(--text-muted); font-size: 0.82rem; padding: 6px 0; }
-
     .summary-comment-box { width: 100%; min-height: 40px; border: 1px solid var(--border-color); border-radius: 6px; background: #FAFAFA; padding: 10px; font-size: 0.85rem; color: var(--text-main); }
     .summary-item-row { margin-bottom: 6px; }
     .action-container { margin-top: 20px; }
@@ -142,18 +126,18 @@
     .btn-designer-reset { background: #475569; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     .btn-designer-reset:hover { background: #334155; }
 
-    /* Mobile Portrait & Small Screen Responsive Layout (No horizontal scroll on table) */
+    /* Mobile Portrait & Small Screen Responsive Layout */
     @media screen and (max-width: 768px) {
       body { padding: 6px 4px !important; }
       .brand-header { padding: 10px 12px !important; flex-direction: column; align-items: flex-start; gap: 8px; }
       .form-body { padding: 10px 8px !important; }
-      .grid-3, .grid-2, .attached-grid { grid-template-columns: 1fr !important; gap: 8px; }
+      .grid-3, .grid-2 { grid-template-columns: 1fr !important; gap: 8px; }
       .graphs-container-grid.multi-graphs { grid-template-columns: 1fr !important; }
       .canvas-body-box { height: 250px !important; }
       .section-card { padding: 10px 8px !important; margin-bottom: 10px; }
       .designer-btn-group { flex-direction: column; }
-      .symptom-grid { grid-template-columns: repeat(2, 1fr); }
-      .position-grid { grid-template-columns: 1fr; }
+      .position-grid { grid-template-columns: 1fr !important; }
+      .sub-group-container { grid-template-columns: repeat(2, 1fr) !important; }
       .ambient-formula-bar { flex-direction: column; align-items: stretch; }
       .ambient-input-box { width: 100%; }
 
@@ -184,19 +168,16 @@
         text-align: center;
         padding: 8px 0;
       }
-      /* 1. Sensor Position */
       .measure-table tbody td:nth-child(1) {
         grid-column: 1 / 2;
         font-size: 0.85rem;
         color: var(--primary-black);
       }
-      /* 4. Judgement Badge (Top Right) */
       .measure-table tbody td:nth-child(4) {
         grid-column: 2 / 3;
         grid-row: 1 / 2;
         text-align: right;
       }
-      /* 2. Measured Resistance Input */
       .measure-table tbody td:nth-child(2) {
         grid-column: 1 / -1;
       }
@@ -212,47 +193,16 @@
         margin-right: 4px;
         white-space: nowrap;
       }
-      .res-val-input {
-        flex: 1;
-        width: auto;
-        background: #FFFFFF;
-      }
-      .res-unit-select {
-        width: 68px;
-        background: #FFFFFF;
-      }
-      /* 3. Specification Range Control (kΩ) Slider */
-      .measure-table tbody td:nth-child(3) {
-        grid-column: 1 / -1;
-      }
+      .res-val-input { flex: 1; width: auto; background: #FFFFFF; }
+      .res-unit-select { width: 68px; background: #FFFFFF; }
+      .measure-table tbody td:nth-child(3) { grid-column: 1 / -1; }
       .chart-scroll-wrapper { overflow-x: visible; padding: 0; }
-      .chart-cell-container {
-        min-width: 0 !important;
-        width: 100% !important;
-        background: #FFFFFF;
-      }
-      /* 5. Attached Picture Action (Visible when NG) */
-      .measure-table tbody td:nth-child(5) {
-        grid-column: 1 / -1;
-      }
-      .measure-table tbody td:nth-child(5):empty {
-        display: none;
-      }
-      .row-attach-box {
-        flex-direction: row;
-        justify-content: flex-start;
-        flex-wrap: wrap;
-        gap: 8px;
-        padding-top: 2px;
-      }
+      .chart-cell-container { min-width: 0 !important; width: 100% !important; background: #FFFFFF; }
     }
 
     /* Save PDF / Print Settings */
     @media print {
-      @page {
-        size: A4 portrait;
-        margin: 0mm !important;
-      }
+      @page { size: A4 portrait; margin: 0mm !important; }
       html, body {
         background-color: #FFFFFF !important;
         width: 210mm !important;
@@ -265,71 +215,37 @@
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
-      .app-container {
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 auto !important;
-        padding: 6mm !important;
-        box-shadow: none !important;
-        border: none !important;
-        border-radius: 0 !important;
-      }
-      .brand-header {
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        padding: 12px 16px !important;
-      }
-      .form-body {
-        padding: 14px 16px !important;
-      }
-      .section-card {
-        padding: 12px 14px !important;
-        margin-bottom: 12px !important;
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-      }
+      .app-container { width: 100% !important; max-width: 100% !important; margin: 0 auto !important; padding: 6mm !important; box-shadow: none !important; border: none !important; border-radius: 0 !important; }
+      .brand-header { flex-direction: row !important; justify-content: space-between !important; align-items: center !important; padding: 12px 16px !important; }
+      .form-body { padding: 14px 16px !important; }
+      .section-card { padding: 12px 14px !important; margin-bottom: 12px !important; break-inside: avoid !important; page-break-inside: avoid !important; }
       .grid-3 { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 12px !important; }
-      .grid-2, .attached-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+      .grid-2 { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
       .graphs-container-grid { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
       .graphs-container-grid.multi-graphs { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
       .canvas-body-box { height: 230px !important; width: 100% !important; }
       .canvas-body-box canvas { width: 100% !important; height: 100% !important; }
-      .symptom-grid { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 8px !important; }
-      .position-grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 8px !important; }
+      
+      .position-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; grid-auto-rows: max-content !important; gap: 8px !important; align-items: start !important; }
+      .sub-group-container { grid-template-columns: repeat(4, 1fr) !important; background: transparent !important; border: 1px dashed #94A3B8 !important; }
+
       .ambient-formula-bar { flex-direction: row !important; align-items: flex-end !important; justify-content: space-between !important; }
       .ambient-input-box { width: 160px !important; }
       
-      /* Restore Desktop Table Layout on Print/PDF */
       .table-responsive-wrapper { overflow: visible !important; }
       .measure-table { display: table !important; width: 100% !important; }
       .measure-table thead { display: table-header-group !important; }
       .measure-table tbody { display: table-row-group !important; }
-      .measure-table tbody tr {
-        display: table-row !important;
-        background: transparent !important;
-        border: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-      }
-      .measure-table th:not(.hide-on-pdf), .measure-table tbody td:not(.hide-on-pdf) {
-        display: table-cell !important;
-        border: 1px solid var(--border-color) !important;
-        padding: 8px !important;
-        text-align: center !important;
-        vertical-align: middle !important;
-      }
-      .measure-table tbody td:nth-child(1) {
-        text-align: left !important;
-        font-size: 0.8rem !important;
-      }
+      .measure-table tbody tr { display: table-row !important; background: transparent !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+      .measure-table th:not(.hide-on-pdf), .measure-table tbody td:not(.hide-on-pdf) { display: table-cell !important; border: 1px solid var(--border-color) !important; padding: 8px !important; text-align: center !important; vertical-align: middle !important; }
+      .measure-table tbody td:nth-child(1) { text-align: left !important; font-size: 0.8rem !important; }
       .res-input-flex { justify-content: center !important; }
       .res-input-flex::before { content: none !important; }
       .res-val-input { flex: none !important; width: 78px !important; }
       .res-unit-select { width: 58px !important; }
       .chart-scroll-wrapper { overflow: visible !important; }
       .chart-cell-container { min-width: 0 !important; width: 100% !important; background: #F8FAFC !important; }
-      .measure-table th.hide-on-pdf, .measure-table tbody td.hide-on-pdf, .hide-on-pdf, .designer-fab, #editorPanel, .remove-img-btn { display: none !important; }
+      .measure-table th.hide-on-pdf, .measure-table tbody td.hide-on-pdf, .hide-on-pdf, .designer-fab, #editorPanel { display: none !important; }
     }
   </style>
 </head>
@@ -362,9 +278,9 @@
         </div>
       </section>
 
-      <!-- Section 2: Thermistor Selection & Symptom -->
+      <!-- Section 2: Thermistor Selection -->
       <section class="section-card">
-        <div class="section-title">1. Thermistor Selection &amp; Symptom</div>
+        <div class="section-title">1. Thermistor Selection</div>
         
         <!-- 1.1 Unit Type & 1.2 Category Filters -->
         <div class="grid-2" style="margin-bottom: 14px;">
@@ -393,18 +309,6 @@
         </div>
         <div class="position-grid" id="positionContainer" style="margin-bottom: 14px;">
           <div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">Please select Unit Type (1.1) and Category (1.2) to load positions.</div>
-        </div>
-
-        <!-- Symptom Checkboxes -->
-        <div style="font-size: 0.8rem; font-weight: 700; margin-bottom: 6px; color: var(--primary-black);">Symptom</div>
-        <div class="symptom-grid" id="symptomContainer">
-          <label class="custom-check"><input type="checkbox" id="chk_sym_0" data-symptom="Short" onchange="updateSummarySection()"><span>Short</span></label>
-          <label class="custom-check"><input type="checkbox" id="chk_sym_1" data-symptom="Open" onchange="updateSummarySection()"><span>Open</span></label>
-          <label class="custom-check"><input type="checkbox" id="chk_sym_2" data-symptom="Error value" onchange="updateSummarySection()"><span>Error value</span></label>
-          <label class="custom-check"><input type="checkbox" id="chk_others" data-symptom="Others" onchange="toggleOthersInput(); updateSummarySection();"><span>Others</span></label>
-        </div>
-        <div class="others-wrapper" id="others_input_wrapper" style="display: none;">
-          <input type="text" id="txt_others" class="input-control" placeholder="Specify other symptom..." style="background: #fff;" oninput="updateSummarySection();">
         </div>
       </section>
 
@@ -437,16 +341,15 @@
           <table class="measure-table">
             <thead>
               <tr>
-                <th style="width: 24%;">Sensor Position</th>
-                <th style="width: 22%;">Measured Resistance</th>
-                <th style="width: 30%;">Specification Range Control (kΩ)</th>
+                <th style="width: 30%;">Sensor Position</th>
+                <th style="width: 25%;">Measured Resistance</th>
+                <th style="width: 35%;">Specification Range Control (kΩ)</th>
                 <th style="width: 10%;">Judgement</th>
-                <th class="hide-on-pdf" style="width: 14%;">Attached Picture</th>
               </tr>
             </thead>
             <tbody id="inspectionTableBody">
               <tr>
-                <td colspan="5" style="color: var(--text-muted); padding: 14px;">No sensor positions selected in Section 1.3</td>
+                <td colspan="4" style="color: var(--text-muted); padding: 14px;">No sensor positions selected in Section 1.3</td>
               </tr>
             </tbody>
           </table>
@@ -458,17 +361,9 @@
         </div>
       </section>
 
-      <!-- Section 4: Attached Pictures (Displays ONLY pictures attached from Section 2 NG rows) -->
-      <section class="section-card" id="section_attached_pictures">
-        <div class="section-title">3. Attached Pictures (In case of failure/inspection)</div>
-        <div class="attached-grid" id="appearance_img_container">
-          <div class="empty-attach-note">No attached pictures from Section 2.</div>
-        </div>
-      </section>
-
-      <!-- Section 5: Inspection Summary & Comments -->
+      <!-- Section 4: Inspection Summary & Comments -->
       <section class="section-card" id="section_inspection_summary">
-        <div class="section-title">4. Inspection Summary &amp; Comments</div>
+        <div class="section-title">3. Inspection Summary &amp; Comments</div>
         <div class="summary-comment-box" id="summary_comment_content"><div style="color:var(--text-muted);">No inspection summary available</div></div>
       </section>
 
@@ -514,49 +409,61 @@
 
 <script>
   const MASTER_SENSOR_DB = [
-    // INDOOR SENSORS (15 kΩ Curve)
-    { unitType: 'Indoor', series: 'RAC', id: 'Thi-A', name: 'Thi-A (Indoor Room Air)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (Indoor Thi-A)' },
-    { unitType: 'Indoor', series: 'RAC', id: 'Thi-R', name: 'Thi-R (Indoor Heat Exchanger)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (Indoor Thi-R)' },
-    
-    { unitType: 'Indoor', series: 'PAC', id: 'Thi-A', name: 'Thi-A (Indoor Return Air)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (Indoor Thi-A)' },
-    { unitType: 'Indoor', series: 'PAC', id: 'Thi-R', name: 'Thi-R (Indoor Return Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (Indoor Thi-R)' },
-    
-    { unitType: 'Indoor', series: 'KX', id: 'Thi-A', name: 'Thi-A (Indoor Return Air)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (Indoor Thi-A)' },
-    { unitType: 'Indoor', series: 'KX', id: 'Thi-R1', name: 'Thi-R1 (Indoor Main Liquid Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (Indoor Thi-R1)' },
-    { unitType: 'Indoor', series: 'KX', id: 'Thi-R2', name: 'Thi-R2 (Indoor Gas Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (Indoor Thi-R2)' },
+    // RAC Indoor
+    { unitType: 'Indoor', series: 'RAC', id: 'Thi-A', name: 'Thi-A (Indoor Air)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Indoor', series: 'RAC', id: 'Thi-R', name: 'Thi-R (Indoor Refrigerant inside Heat Exchanger)', isGroup: true },
+    { unitType: 'Indoor', series: 'RAC', id: 'Thi-R1', name: 'Thi-R1', parentGroup: 'Thi-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Indoor', series: 'RAC', id: 'Thi-R2', name: 'Thi-R2', parentGroup: 'Thi-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
 
-    // OUTDOOR SENSORS
+    // PAC Indoor
+    { unitType: 'Indoor', series: 'PAC', id: 'Thi-A', name: 'Thi-A (Indoor Air)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Indoor', series: 'PAC', id: 'Thi-R', name: 'Thi-R (Indoor Refrigerant inside Heat Exchanger)', isGroup: true },
+    { unitType: 'Indoor', series: 'PAC', id: 'Thi-R1', name: 'Thi-R1', parentGroup: 'Thi-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Indoor', series: 'PAC', id: 'Thi-R2', name: 'Thi-R2', parentGroup: 'Thi-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Indoor', series: 'PAC', id: 'Thi-R3', name: 'Thi-R3', parentGroup: 'Thi-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+
+    // KX Indoor
+    { unitType: 'Indoor', series: 'KX', id: 'Thi-A', name: 'Thi-A (Indoor Air)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Indoor', series: 'KX', id: 'Thi-R', name: 'Thi-R (Indoor Refrigerant inside Heat Exchanger)', isGroup: true },
+    { unitType: 'Indoor', series: 'KX', id: 'Thi-R1', name: 'Thi-R1', parentGroup: 'Thi-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Indoor', series: 'KX', id: 'Thi-R2', name: 'Thi-R2', parentGroup: 'Thi-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Indoor', series: 'KX', id: 'Thi-R3', name: 'Thi-R3', parentGroup: 'Thi-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+
     // RAC Outdoor
-    { unitType: 'Outdoor', series: 'RAC', id: 'Tho-A', name: 'Tho-A (Outdoor Air)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (RAC Tho-A)' },
-    { unitType: 'Outdoor', series: 'RAC', id: 'Tho-R', name: 'Tho-R (Outdoor Liquid Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (RAC Tho-R)' },
-    { unitType: 'Outdoor', series: 'RAC', id: 'Tho-D', name: 'Tho-D (Discharge Temp)', curveType: '100k_RAC', xMin: 0, xMax: 140, yMax: 100, title: '100 kΩ Discharge Curve (RAC Tho-D)' },
+    { unitType: 'Outdoor', series: 'RAC', id: 'Tho-A', name: 'Tho-A (Outdoor Air)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Outdoor', series: 'RAC', id: 'Tho-R', name: 'Tho-R (Outdoor Refrigerant inside Heat Exchanger)', isGroup: true },
+    { unitType: 'Outdoor', series: 'RAC', id: 'Tho-R1', name: 'Tho-R1', parentGroup: 'Tho-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Outdoor', series: 'RAC', id: 'Tho-D', name: 'Tho-D (Discharge Pipe)', curveType: '100k_RAC', xMin: 0, xMax: 140, yMax: 100, title: '100 kΩ Discharge Characteristic Curve' },
 
     // PAC Outdoor
-    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-A', name: 'Tho-A (Outdoor Air)', curveType: '100k_THOA', xMin: -20, xMax: 50, yMax: 100, title: '100 kΩ Outdoor Air Curve (PAC Tho-A)' },
-    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-R', name: 'Tho-R (Outdoor Liquid Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (PAC Tho-R)' },
-    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-S', name: 'Tho-S (Suction Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (PAC Tho-S)' },
-    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-C', name: 'Tho-C (Condenser Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (PAC Tho-C)' },
-    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-D', name: 'Tho-D (Discharge Pipe)', curveType: '200k_PAC', xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Curve (PAC Tho-D)' },
+    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-A', name: 'Tho-A (Outdoor Air)', curveType: '100k_THOA', xMin: -20, xMax: 50, yMax: 100, title: '100 kΩ Outdoor Air Characteristic Curve' },
+    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-R', name: 'Tho-R (Outdoor Refrigerant inside Heat Exchanger)', isGroup: true },
+    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-R1', name: 'Tho-R1', parentGroup: 'Tho-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-S', name: 'Tho-S (Suction Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-C', name: 'Tho-C (Power transistor)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-D', name: 'Tho-D (Discharge Pipe)', curveType: '200k_PAC', xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Characteristic Curve' },
 
     // KX Outdoor
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-A', name: 'Tho-A (Outdoor Air)', curveType: '100k_THOA', xMin: -20, xMax: 50, yMax: 100, title: '100 kΩ Outdoor Air Curve (KX Tho-A)' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-R', name: 'Tho-R (Outdoor Liquid Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (KX Tho-R)' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-S', name: 'Tho-S (Suction Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (KX Tho-S)' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-SC', name: 'Tho-SC (Sub-cool Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (KX Tho-SC)' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-H', name: 'Tho-H (High Temp Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Curve (KX Tho-H)' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-D', name: 'Tho-D (Discharge Pipe)', curveType: '200k_PAC', xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Curve (KX Tho-D)' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-C', name: 'Tho-C (Condenser Pipe)', curveType: '200k_PAC', xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Curve (KX Tho-C)' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-P', name: 'Tho-P (Oil Equalizer)', curveType: '200k_PAC', xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Curve (KX Tho-P)' }
+    { unitType: 'Outdoor', series: 'KX', id: 'Tho-A', name: 'Tho-A (Outdoor Air)', curveType: '100k_THOA', xMin: -20, xMax: 50, yMax: 100, title: '100 kΩ Outdoor Air Characteristic Curve' },
+    { unitType: 'Outdoor', series: 'KX', id: 'Tho-R', name: 'Tho-R (Outdoor Refrigerant inside Heat Exchanger)', isGroup: true },
+    { unitType: 'Outdoor', series: 'KX', id: 'Tho-R1', name: 'Tho-R1', parentGroup: 'Tho-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Outdoor', series: 'KX', id: 'Tho-R2', name: 'Tho-R2', parentGroup: 'Tho-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Outdoor', series: 'KX', id: 'Tho-R3', name: 'Tho-R3', parentGroup: 'Tho-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Outdoor', series: 'KX', id: 'Tho-R4', name: 'Tho-R4', parentGroup: 'Tho-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Outdoor', series: 'KX', id: 'Tho-S', name: 'Tho-S (Suction Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Outdoor', series: 'KX', id: 'Tho-SC', name: 'Tho-SC (Subcooling Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Outdoor', series: 'KX', id: 'Tho-H', name: 'Tho-H (Suction Pipe of Subcool line)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    { unitType: 'Outdoor', series: 'KX', id: 'Tho-D', name: 'Tho-D (Discharge Pipe)', curveType: '200k_PAC', xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Characteristic Curve' },
+    { unitType: 'Outdoor', series: 'KX', id: 'Tho-C', name: 'Tho-C (Compressor)', curveType: '200k_PAC', xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Characteristic Curve' },
+    { unitType: 'Outdoor', series: 'KX', id: 'Tho-P', name: 'Tho-P (Power transistor (IPM))', curveType: '200k_PAC', xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Characteristic Curve' }
   ];
 
   let currentTolerance = 5;
   let activeSelectedPositions = [];
-  const rowAttachedImages = {};
 
   window.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', () => drawAllGraphs());
     renderGraphContainers();
-    renderSection3AttachedPictures();
   });
 
   function filterPositions() {
@@ -569,7 +476,6 @@
       activeSelectedPositions = [];
       renderInspectionRows();
       renderGraphContainers();
-      renderSection3AttachedPictures();
       return;
     }
 
@@ -580,27 +486,88 @@
       activeSelectedPositions = [];
       renderInspectionRows();
       renderGraphContainers();
-      renderSection3AttachedPictures();
       return;
     }
 
     container.innerHTML = '';
+
+    // First pass: render main items and group placeholders
     filtered.forEach((sensor, idx) => {
-      const key = `${sensor.unitType}_${sensor.series}_${sensor.id}_${idx}`;
-      const label = document.createElement('label');
-      label.className = 'custom-check';
-      label.innerHTML = `
-        <input type="checkbox" id="chk_pos_${key}" data-sensor='${JSON.stringify(sensor)}' onchange="onPositionCheckChange()">
-        <span>${sensor.name}</span>
-      `;
-      container.appendChild(label);
+      if (!sensor.parentGroup) {
+        const key = `${sensor.unitType}_${sensor.series}_${sensor.id}_${idx}`;
+        const label = document.createElement('label');
+        label.className = 'custom-check';
+        
+        if (sensor.isGroup) {
+          const chkId = `chk_group_${key}`;
+          const subId = `sub_${key}`;
+          label.innerHTML = `
+            <input type="checkbox" id="${chkId}" onchange="toggleGroup('${chkId}', '${subId}')">
+            <span>${sensor.name}</span>
+          `;
+          container.appendChild(label);
+          
+          const subDiv = document.createElement('div');
+          subDiv.id = subId;
+          subDiv.className = 'sub-group-container';
+          subDiv.style.display = 'none';
+          container.appendChild(subDiv);
+        } else {
+          const safeData = JSON.stringify(sensor).replace(/'/g, "&#39;");
+          label.innerHTML = `
+            <input type="checkbox" class="sensor-checkbox" id="chk_pos_${key}" data-sensor='${safeData}' onchange="onPositionCheckChange()">
+            <span>${sensor.name}</span>
+          `;
+          container.appendChild(label);
+        }
+      }
+    });
+
+    // Second pass: placing children into their group containers
+    filtered.forEach((sensor, idx) => {
+      if (sensor.parentGroup) {
+        const parentSensor = filtered.find(s => s.id === sensor.parentGroup);
+        if (parentSensor) {
+          const parentIdx = filtered.indexOf(parentSensor);
+          const parentKey = `${parentSensor.unitType}_${parentSensor.series}_${parentSensor.id}_${parentIdx}`;
+          const subDiv = document.getElementById(`sub_${parentKey}`);
+          
+          if (subDiv) {
+            const key = `${sensor.unitType}_${sensor.series}_${sensor.id}_${idx}`;
+            const label = document.createElement('label');
+            label.className = 'custom-check';
+            const safeData = JSON.stringify(sensor).replace(/'/g, "&#39;");
+            label.innerHTML = `
+              <input type="checkbox" class="sensor-checkbox" id="chk_pos_${key}" data-sensor='${safeData}' onchange="onPositionCheckChange()">
+              <span>${sensor.name}</span>
+            `;
+            subDiv.appendChild(label);
+          }
+        }
+      }
     });
 
     onPositionCheckChange();
   }
 
+  function toggleGroup(chkId, subId) {
+    const chk = document.getElementById(chkId);
+    const sub = document.getElementById(subId);
+    if (chk && sub) {
+      if (chk.checked) {
+        sub.style.display = 'grid';
+      } else {
+        sub.style.display = 'none';
+        // Uncheck all children when folding back
+        const childChks = sub.querySelectorAll('input[type="checkbox"]');
+        childChks.forEach(c => c.checked = false);
+        onPositionCheckChange();
+      }
+    }
+  }
+
   function onPositionCheckChange() {
-    const checkedInputs = document.querySelectorAll('#positionContainer input[type="checkbox"]:checked');
+    const checkedInputs = document.querySelectorAll('#positionContainer input.sensor-checkbox:checked');
     activeSelectedPositions = [];
 
     checkedInputs.forEach(input => {
@@ -610,12 +577,7 @@
 
     renderInspectionRows();
     renderGraphContainers();
-    renderSection3AttachedPictures();
     updateSummarySection();
-  }
-
-  function getSensorUniqueId(sensor) {
-    return `${sensor.unitType}_${sensor.series}_${sensor.id}`;
   }
 
   function renderInspectionRows() {
@@ -623,7 +585,7 @@
     if (!tbody) return;
 
     if (activeSelectedPositions.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" style="color: var(--text-muted); padding: 14px;">No sensor positions selected in Section 1.3</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="4" style="color: var(--text-muted); padding: 14px;">No sensor positions selected in Section 1.3</td></tr>`;
       return;
     }
 
@@ -664,7 +626,6 @@
           </div>
         </td>
         <td><span id="judge_badge_${key}" class="status-badge">-</span></td>
-        <td id="attach_cell_${key}" class="hide-on-pdf"></td>
       `;
       tbody.appendChild(tr);
 
@@ -673,107 +634,8 @@
       if (resInput) resInput.addEventListener('input', () => evaluateSingleRow(key, sensor));
       if (resUnit) resUnit.addEventListener('change', () => evaluateSingleRow(key, sensor));
 
-      renderRowAttachCell(key, getSensorUniqueId(sensor), false);
       initRowDragSlider(key, sensor);
     });
-  }
-
-  function renderRowAttachCell(key, sensorUid, isNg) {
-    const cell = document.getElementById(`attach_cell_${key}`);
-    if (!cell) return;
-
-    if (!isNg) {
-      cell.innerHTML = `<span class="attach-placeholder" style="color: var(--text-muted);">-</span>`;
-      return;
-    }
-
-    const images = rowAttachedImages[sensorUid] || [];
-    const statusHtml = images.length > 0
-      ? `<span class="attach-status-pill">✔ Attached (${images.length})</span>`
-      : '';
-
-    cell.innerHTML = `
-      <div class="row-attach-box">
-        ${statusHtml}
-        <label class="btn-row-attach">
-          <span>📷 ${images.length > 0 ? 'Add More' : 'Attach'}</span>
-          <input type="file" accept="image/*" multiple onchange="handleRowImageUpload(this, '${key}', '${sensorUid}')">
-        </label>
-      </div>
-    `;
-  }
-
-  function handleRowImageUpload(input, key, sensorUid) {
-    const files = Array.from(input.files);
-    if (!files || files.length === 0) return;
-
-    if (!rowAttachedImages[sensorUid]) {
-      rowAttachedImages[sensorUid] = [];
-    }
-
-    files.forEach(file => {
-      const processFile = (fileObj) => {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          rowAttachedImages[sensorUid].push(e.target.result);
-          renderRowAttachCell(key, sensorUid, true);
-          renderSection3AttachedPictures();
-        };
-        reader.readAsDataURL(fileObj);
-      };
-
-      if (file.name.toLowerCase().endsWith('.heic')) {
-        heic2any({ blob: file, toType: "image/jpeg" }).then(resultBlob => {
-          processFile(resultBlob);
-        }).catch(err => {
-          alert("Failed to convert HEIC file: " + err.message);
-        });
-      } else {
-        processFile(file);
-      }
-    });
-
-    input.value = '';
-  }
-
-  function removeRowImage(key, sensorUid, imgIdx) {
-    if (rowAttachedImages[sensorUid]) {
-      rowAttachedImages[sensorUid].splice(imgIdx, 1);
-      const badgeText = document.getElementById(`judge_badge_${key}`)?.textContent;
-      renderRowAttachCell(key, sensorUid, badgeText === 'NG');
-      renderSection3AttachedPictures();
-    }
-  }
-
-  function renderSection3AttachedPictures() {
-    const container = document.getElementById('appearance_img_container');
-    if (!container) return;
-
-    let cardsHtml = '';
-    activeSelectedPositions.forEach((sensor, idx) => {
-      const key = `pos_row_${idx}`;
-      const sensorUid = getSensorUniqueId(sensor);
-      const badgeText = document.getElementById(`judge_badge_${key}`)?.textContent;
-      const images = rowAttachedImages[sensorUid] || [];
-
-      if (badgeText === 'NG' && images.length > 0) {
-        images.forEach((src, imgIdx) => {
-          cardsHtml += `
-            <div class="attached-card">
-              <button type="button" class="remove-img-btn hide-on-pdf" onclick="removeRowImage('${key}', '${sensorUid}', ${imgIdx})" title="Remove image">✕</button>
-              <div class="attached-card-title">${sensor.name}${images.length > 1 ? ` - Photo ${imgIdx + 1}` : ''}</div>
-              <div class="attached-img-box"><img src="${src}" alt="${sensor.name} NG inspection image"></div>
-            </div>
-          `;
-        });
-      }
-    });
-
-    if (!cardsHtml) {
-      container.innerHTML = `<div class="empty-attach-note">No attached pictures from Section 2.</div>`;
-    } else {
-      container.innerHTML = cardsHtml;
-    }
   }
 
   function recalculateAllSelectedPositions() {
@@ -817,7 +679,6 @@
     const unitSelect = document.getElementById(`res_unit_${key}`);
     const badge = document.getElementById(`judge_badge_${key}`);
     const point = document.getElementById(`chart_point_${key}`);
-    const sensorUid = getSensorUniqueId(sensor);
 
     if (!input || !badge) return;
 
@@ -829,8 +690,6 @@
       badge.textContent = '-';
       badge.className = 'status-badge';
       if (point) point.style.display = 'none';
-      renderRowAttachCell(key, sensorUid, false);
-      renderSection3AttachedPictures();
       drawAllGraphs();
       updateSummarySection();
       return;
@@ -846,11 +705,9 @@
     if (isOk) {
       badge.textContent = 'OK';
       badge.className = 'status-badge status-ok';
-      renderRowAttachCell(key, sensorUid, false);
     } else {
       badge.textContent = 'NG';
       badge.className = 'status-badge status-ng';
-      renderRowAttachCell(key, sensorUid, true);
     }
 
     const SPEC_RANGE_PERCENT = 0.70;
@@ -871,7 +728,6 @@
       else point.classList.add('ng');
     }
 
-    renderSection3AttachedPictures();
     drawAllGraphs();
     updateSummarySection();
   }
@@ -1162,16 +1018,6 @@
     }
   }
 
-  function toggleOthersInput() {
-    const chkOthers = document.getElementById('chk_others');
-    const wrapper = document.getElementById('others_input_wrapper');
-    const txtOthers = document.getElementById('txt_others');
-    if (chkOthers && wrapper && txtOthers) {
-      wrapper.style.display = chkOthers.checked ? 'flex' : 'none';
-      if (!chkOthers.checked) txtOthers.value = '';
-    }
-  }
-
   function updateSummarySection() {
     const box = document.getElementById('summary_comment_content');
     if (!box) return;
@@ -1191,22 +1037,6 @@
     if (activeSelectedPositions.length > 0) {
       const posNames = activeSelectedPositions.map(p => p.name).join(', ');
       html += `<div class="summary-item-row"><span style="font-weight:600;">• Selected Sensors:</span> ${posNames}</div>`;
-    }
-
-    const selectedSymptoms = [];
-    const symptomCheckboxes = document.querySelectorAll('#symptomContainer input[type="checkbox"]:checked');
-    symptomCheckboxes.forEach(chk => {
-      const labelText = chk.getAttribute('data-symptom');
-      if (labelText === 'Others') {
-        const txtVal = document.getElementById('txt_others')?.value.trim();
-        selectedSymptoms.push(txtVal ? `Others (${txtVal})` : 'Others');
-      } else {
-        selectedSymptoms.push(labelText);
-      }
-    });
-
-    if (selectedSymptoms.length > 0) {
-      html += `<div class="summary-item-row"><span style="font-weight:600;">• Symptom:</span> ${selectedSymptoms.join(', ')}</div>`;
     }
 
     const temp = document.getElementById('ambientTemp')?.value;
@@ -1291,7 +1121,7 @@
     const reportVal = serviceReportInput ? serviceReportInput.value.trim() : '';
 
     if (!reportVal || reportVal === '-') {
-      alert("กรุณากรอก Service Report No. ก่อนทำการบันทึก PDF");
+      alert("กรุณากรอก Service Report No. ก่อนทำการบันทึก PDF\nPlease enter Service Report No. before saving PDF");
       if (serviceReportInput) serviceReportInput.focus();
       return;
     }
