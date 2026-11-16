@@ -42,14 +42,15 @@
     .input-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
     .input-control { width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; color: var(--text-main); background-color: #FAFAFA; box-sizing: border-box; }
 
-    /* Custom Position Grid (กล่องหลักไม่ยืดตามกล่องลูก) */
-    .position-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: max-content; gap: 8px; align-items: start; }
+    /* Custom Connector Grid (4 Columns) */
+    .position-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: max-content; gap: 8px; align-items: start; }
     
-    .custom-check { display: flex; align-items: center; justify-content: flex-start; gap: 6px; padding: 8px 10px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.78rem; cursor: pointer; user-select: none; width: 100%; box-sizing: border-box; }
+    .custom-check { display: flex; align-items: center; justify-content: flex-start; gap: 6px; padding: 8px 10px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; user-select: none; width: 100%; box-sizing: border-box; transition: border-color 0.15s, background-color 0.15s; }
+    .custom-check:hover { border-color: #94A3B8; background: #F1F5F9; }
     .custom-check input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border: 1.5px solid #CBD5E1; border-radius: 3.5px; outline: none; background-color: #FFFFFF; cursor: pointer; display: inline-grid; place-content: center; margin: 0; flex-shrink: 0; }
     .custom-check input[type="checkbox"]:checked { background-color: var(--primary-red); border-color: var(--primary-red); }
     .custom-check input[type="checkbox"]:checked::before { content: "✔"; font-size: 9px; color: #FFFFFF; font-weight: bold; }
-    
+
     .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-weight: 700; font-size: 0.8rem; text-align: center; }
     .status-ok { background-color: var(--success-bg); color: var(--success-green); border: 1px solid var(--success-green); }
     .status-ng { background-color: var(--danger-bg); color: var(--danger-red); border: 1px solid var(--danger-red); }
@@ -76,7 +77,7 @@
     .chart-label-std { position: absolute; left: 50%; transform: translateX(-50%); color: #0284C7; white-space: nowrap; }
     .chart-label-max { position: absolute; right: 15%; transform: translateX(50%); white-space: nowrap; }
 
-    /* Dynamic Graphs Container (Single = 1 Column Full Width, Multi = 2 Column Grid) */
+    /* Dynamic Graphs Container */
     .graphs-container-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px; }
     .graphs-container-grid.multi-graphs { grid-template-columns: repeat(2, 1fr); }
 
@@ -115,7 +116,20 @@
     .designer-card-yellow { background: #FFFDF0; border: 1px solid #FCD34D; border-radius: 8px; padding: 14px; margin-bottom: 12px; }
     .designer-card-blue { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px; margin-bottom: 16px; }
     
-    .designer-btn-group { display: flex; gap: 12px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-color); }
+    /* Designer Data Table Styles */
+    .designer-db-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+    .designer-db-table-wrap { max-height: 360px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 6px; background: #FFFFFF; }
+    .designer-db-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+    .designer-db-table th { position: sticky; top: 0; background: #1E293B; color: #FFFFFF; padding: 8px 6px; text-align: left; font-weight: 600; z-index: 2; }
+    .designer-db-table td { border-bottom: 1px solid var(--border-color); padding: 5px 6px; }
+    .designer-db-table input, .designer-db-table select { width: 100%; padding: 4px 6px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 0.78rem; background: #FAFAFA; }
+    .designer-db-table input:focus, .designer-db-table select:focus { background: #FFFFFF; border-color: var(--primary-red); outline: none; }
+    .btn-db-add { background: #0284C7; color: #FFFFFF; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+    .btn-db-add:hover { background: #0369A1; }
+    .btn-db-del { background: #FEE2E2; color: #DC2626; border: 1px solid #FCA5A5; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; cursor: pointer; }
+    .btn-db-del:hover { background: #EF4444; color: #FFFFFF; }
+
+    .designer-btn-group { display: flex; gap: 12px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-color); flex-wrap: wrap; }
     .btn-designer-save { background: #22C55E; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     .btn-designer-save:hover { background: #16A34A; }
     .btn-designer-update { background: var(--primary-red); color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
@@ -133,7 +147,7 @@
       .canvas-body-box { height: 250px !important; }
       .section-card { padding: 10px 8px !important; margin-bottom: 10px; }
       .designer-btn-group { flex-direction: column; }
-      .position-grid { grid-template-columns: 1fr !important; }
+      .position-grid { grid-template-columns: repeat(2, 1fr) !important; }
       .ambient-formula-bar { flex-direction: column; align-items: stretch; }
       .ambient-input-box { width: 100%; }
 
@@ -222,7 +236,7 @@
       .canvas-body-box { height: 230px !important; width: 100% !important; }
       .canvas-body-box canvas { width: 100% !important; height: 100% !important; }
       
-      .position-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; grid-auto-rows: max-content !important; gap: 8px !important; align-items: start !important; }
+      .position-grid { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; grid-auto-rows: max-content !important; gap: 8px !important; align-items: start !important; }
 
       .ambient-formula-bar { flex-direction: row !important; align-items: flex-end !important; justify-content: space-between !important; }
       .ambient-input-box { width: 160px !important; }
@@ -281,7 +295,7 @@
         <div class="grid-2" style="margin-bottom: 14px;">
           <div class="input-group">
             <label for="unitTypeSelect">1.1 Unit Type</label>
-            <select id="unitTypeSelect" class="input-control" onchange="filterPositions()">
+            <select id="unitTypeSelect" class="input-control" onchange="filterConnectors()">
               <option value="" selected>-- Select Unit Type --</option>
               <option value="Indoor">Indoor Unit</option>
               <option value="Outdoor">Outdoor Unit</option>
@@ -289,7 +303,7 @@
           </div>
           <div class="input-group">
             <label for="seriesSelect">1.2 Category / Series</label>
-            <select id="seriesSelect" class="input-control" onchange="filterPositions()">
+            <select id="seriesSelect" class="input-control" onchange="filterConnectors()">
               <option value="" selected>-- Select Category --</option>
               <option value="RAC">RAC (Room Air Conditioner)</option>
               <option value="PAC">PAC (Packaged Air Conditioner)</option>
@@ -298,12 +312,12 @@
           </div>
         </div>
 
-        <!-- 1.3 Sensor Position Checkboxes -->
+        <!-- 1.3 Connector Type Checkboxes -->
         <div style="font-size: 0.8rem; font-weight: 700; margin-bottom: 6px; color: var(--primary-black);">
-          1.3 Sensor Positions (Select available positions)
+          1.3 Connector Type (Select connector to load sensor positions)
         </div>
-        <div class="position-grid" id="positionContainer" style="margin-bottom: 14px;">
-          <div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">Please select Unit Type (1.1) and Category (1.2) to load positions.</div>
+        <div class="position-grid" id="connectorContainer" style="margin-bottom: 14px;">
+          <div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">Please select Unit Type (1.1) and Category (1.2) to load connector types.</div>
         </div>
       </section>
 
@@ -311,7 +325,7 @@
       <section class="section-card" id="section_technical_inspection">
         <div class="section-title">2. Technical Inspection &amp; Resistance Check</div>
         
-        <!-- Ambient Temp Input & Formula Bar (Moved Above Graph, Highlighted Ambient Input) -->
+        <!-- Ambient Temp Input & Formula Bar -->
         <div class="ambient-formula-bar">
           <div class="ambient-input-box">
             <div class="input-group">
@@ -336,15 +350,15 @@
           <table class="measure-table">
             <thead>
               <tr>
-                <th style="width: 30%;">Sensor Position</th>
-                <th style="width: 25%;">Measured Resistance</th>
-                <th style="width: 35%;">Specification Range Control (kΩ)</th>
+                <th style="width: 34%;">Sensor Position</th>
+                <th style="width: 23%;">Measured Resistance</th>
+                <th style="width: 33%;">Specification Range Control (kΩ)</th>
                 <th style="width: 10%;">Judgement</th>
               </tr>
             </thead>
             <tbody id="inspectionTableBody">
               <tr>
-                <td colspan="4" style="color: var(--text-muted); padding: 14px;">No sensor positions selected in Section 1.3</td>
+                <td colspan="4" style="color: var(--text-muted); padding: 14px;">No Connector Type selected in Section 1.3</td>
               </tr>
             </tbody>
           </table>
@@ -369,7 +383,7 @@
   </main>
 </div>
 
-<!-- Designer Mode Password FAB & Original Layout Style Panel -->
+<!-- Designer Mode Password FAB & Layout/Data Editor Panel -->
 <button type="button" class="designer-fab hide-on-pdf" onclick="promptEditorMode()" title="Designer Mode">⚙️</button>
 
 <div id="editorPanel" class="editor-panel-box hide-on-pdf">
@@ -380,7 +394,7 @@
     <button type="button" onclick="document.getElementById('editorPanel').style.display='none'" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-muted);">✕</button>
   </div>
   
-  <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">ปรับแต่งหัวข้อรายงาน ค่า Tolerance % และบันทึกอัปเดตไฟล์โค้ดได้โดยตรงที่นี่</p>
+  <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">ปรับแต่งหัวข้อรายงาน ค่า Tolerance % สเกลกราฟ และแก้ไขฐานข้อมูล Connector Type / Sensor Position ได้โดยตรงที่นี่</p>
 
   <!-- Yellow Form Title Box -->
   <div class="designer-card-yellow">
@@ -394,6 +408,69 @@
     <input type="number" id="editTolerancePercent" class="input-control" value="5" step="1" style="background:#fff; width: 100%; font-weight:600;">
   </div>
 
+  <!-- Graph Scale Configuration Editor -->
+  <div class="designer-card-blue">
+    <div style="font-size: 0.85rem; font-weight: 700; color: var(--primary-black); margin-bottom: 8px;">
+      📈 Graph Scale &amp; NTC Curve Settings (ตั้งค่าสเกลกราฟ)
+    </div>
+    <div class="designer-db-table-wrap" style="max-height: 220px;">
+      <table class="designer-db-table">
+        <thead>
+          <tr>
+            <th style="width: 110px;">Scale ID</th>
+            <th>Graph Title</th>
+            <th style="width: 85px;">Temp Min</th>
+            <th style="width: 85px;">Temp Max</th>
+            <th style="width: 90px;">Y-Max (kΩ)</th>
+            <th style="width: 85px;">R25 (kΩ)</th>
+            <th style="width: 85px;">B-Const</th>
+          </tr>
+        </thead>
+        <tbody id="designerCurveTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Master Sensor Data Table Editor -->
+  <div class="designer-card-blue">
+    <div class="designer-db-toolbar">
+      <div style="font-size: 0.85rem; font-weight: 700; color: var(--primary-black);">
+        📋 Connector Type &amp; Sensor Position Master Data (<span id="dbRowCount">40</span> รายการ)
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+        <select id="dbFilterSeries" class="input-control" style="width: 130px; padding: 5px 8px; font-size: 0.78rem; background: #fff;" onchange="renderDesignerDbTable()">
+          <option value="">All Series</option>
+          <option value="KX">KX</option>
+          <option value="RAC">RAC</option>
+          <option value="PAC">PAC</option>
+        </select>
+        <select id="dbFilterUnit" class="input-control" style="width: 130px; padding: 5px 8px; font-size: 0.78rem; background: #fff;" onchange="renderDesignerDbTable()">
+          <option value="">All Unit Types</option>
+          <option value="Indoor">Indoor</option>
+          <option value="Outdoor">Outdoor</option>
+        </select>
+        <button type="button" class="btn-db-add" onclick="addDesignerDbRow()">+ เพิ่มรายการใหม่</button>
+      </div>
+    </div>
+
+    <div class="designer-db-table-wrap">
+      <table class="designer-db-table">
+        <thead>
+          <tr>
+            <th style="width: 40px;">#</th>
+            <th style="width: 100px;">Category</th>
+            <th style="width: 100px;">Unit Type</th>
+            <th style="width: 120px;">Connector</th>
+            <th>Sensor Position</th>
+            <th style="width: 215px;">Graph Scale (สเกลกราฟ)</th>
+            <th style="width: 48px; text-align: center;">ลบ</th>
+          </tr>
+        </thead>
+        <tbody id="designerDbTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- Designer Action Buttons Bar -->
   <div class="designer-btn-group">
     <button type="button" class="btn-designer-save" onclick="applyEditorChanges()">💾 บันทึกชั่วคราว</button>
@@ -402,133 +479,257 @@
   </div>
 </div>
 
+<!-- Persistent Curve Config JSON Store -->
+<script type="application/json" id="curveConfigsJson">
+{
+  "15k": { "R_25": 5.0, "B": 3950, "xMin": 0, "xMax": 50, "yMax": 15, "title": "15 kΩ Standard Characteristic Curve" },
+  "100k_RAC": { "R_25": 50.0, "B": 4100, "xMin": 0, "xMax": 140, "yMax": 100, "title": "100 kΩ Discharge Characteristic Curve" },
+  "100k_THOA": { "R_25": 20.0, "B": 3800, "xMin": -20, "xMax": 50, "yMax": 100, "title": "100 kΩ Outdoor Air Characteristic Curve" },
+  "200k_PAC": { "R_25": 60.0, "B": 4200, "xMin": 0, "xMax": 160, "yMax": 200, "title": "200 kΩ High Temp Characteristic Curve" }
+}
+</script>
+
+<!-- Persistent JSON Data Store (Updated automatically on save/export) -->
+<script type="application/json" id="sensorMasterDataJson">
+[
+  {"series":"KX","unitType":"Indoor","connector":"CNN","position":"Thi-R1 (Indoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"KX","unitType":"Indoor","connector":"CNN","position":"Thi-R2 (Indoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"KX","unitType":"Indoor","connector":"CNN","position":"Thi-R3 (Indoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"KX","unitType":"Indoor","connector":"CNH","position":"Thi-A (Indoor Air)","curveType":"15k"},
+  {"series":"KX","unitType":"Outdoor","connector":"CNTH","position":"Tho-R1 (Outdoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"KX","unitType":"Outdoor","connector":"CNTH","position":"Tho-D1 (Discharge Pipe)","curveType":"200k_PAC"},
+  {"series":"KX","unitType":"Outdoor","connector":"CNTH","position":"Tho-S (Suction Pipe)","curveType":"15k"},
+  {"series":"KX","unitType":"Outdoor","connector":"CNTH","position":"Tho-A (Outdoor Air)","curveType":"100k_THOA"},
+  {"series":"KX","unitType":"Outdoor","connector":"CNB2","position":"Tho-R2 (Outdoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"KX","unitType":"Outdoor","connector":"CNB3","position":"Tho-R3 (Outdoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"KX","unitType":"Outdoor","connector":"CNB4","position":"Tho-R4 (Outdoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"KX","unitType":"Outdoor","connector":"CNF1","position":"Tho-SC (Subcooling Pipe)","curveType":"15k"},
+  {"series":"KX","unitType":"Outdoor","connector":"CNF2","position":"Tho-H (Suction Pipe of Subcool line)","curveType":"15k"},
+  {"series":"KX","unitType":"Outdoor","connector":"CNP1","position":"Tho-P1 (Power transistor (IPM))","curveType":"200k_PAC"},
+  {"series":"KX","unitType":"Outdoor","connector":"CNP2","position":"Tho-P2 (Power transistor (IPM))","curveType":"200k_PAC"},
+  {"series":"KX","unitType":"Outdoor","connector":"CNU1","position":"Tho-C1 (Compressor)","curveType":"200k_PAC"},
+  {"series":"KX","unitType":"Outdoor","connector":"CNU2","position":"Tho-C2 (Compressor)","curveType":"200k_PAC"},
+  {"series":"KX","unitType":"Outdoor","connector":"CNC2","position":"Tho-D2 (Discharge Pipe)","curveType":"200k_PAC"},
+  {"series":"RAC","unitType":"Indoor","connector":"CNG","position":"Thi-A (Indoor Air)","curveType":"15k"},
+  {"series":"RAC","unitType":"Indoor","connector":"CNG","position":"Thi-R1 (Indoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"RAC","unitType":"Indoor","connector":"CNG","position":"Thi-R3 (Indoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"PAC","unitType":"Indoor","connector":"CNN","position":"Thi-R1 (Indoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"PAC","unitType":"Indoor","connector":"CNN","position":"Thi-R2 (Indoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"PAC","unitType":"Indoor","connector":"CNN","position":"Thi-R3 (Indoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"PAC","unitType":"Indoor","connector":"CNH","position":"Thi-A (Indoor Air)","curveType":"15k"},
+  {"series":"RAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-R (Outdoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"RAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-A (Outdoor Air)","curveType":"15k"},
+  {"series":"RAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-D (Discharge Pipe)","curveType":"100k_RAC"},
+  {"series":"RAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-S (Suction Pipe for multi system)","curveType":"15k"},
+  {"series":"RAC","unitType":"Outdoor","connector":"CNP","position":"Tho-AF (Power transistor)","curveType":"200k_PAC"},
+  {"series":"PAC","unitType":"Outdoor","connector":"CNTH (VNP)","position":"Tho-R (Outdoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"PAC","unitType":"Outdoor","connector":"CNTH (VNP)","position":"Tho-A (Outdoor Air)","curveType":"100k_THOA"},
+  {"series":"PAC","unitType":"Outdoor","connector":"CNTH (VNP)","position":"Tho-D (Discharge Pipe)","curveType":"200k_PAC"},
+  {"series":"PAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-A (Outdoor Air)","curveType":"100k_THOA"},
+  {"series":"PAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-S (Suction Pipe)","curveType":"15k"},
+  {"series":"PAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-D (Discharge Pipe)","curveType":"200k_PAC"},
+  {"series":"PAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-R (Outdoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"PAC","unitType":"Outdoor","connector":"CNIP","position":"Tho-P (Power transistor (IPM))","curveType":"200k_PAC"},
+  {"series":"PAC","unitType":"Outdoor","connector":"CNB","position":"Tho-R2 (Outdoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"PAC","unitType":"Outdoor","connector":"CNU","position":"Tho-H (Suction Pipe of Subcool line (Under-dome))","curveType":"15k"}
+]
+</script>
+
 <script>
-  const MASTER_SENSOR_DB = [
-    // RAC Indoor
-    { unitType: 'Indoor', series: 'RAC', id: 'Thi-A', name: 'Thi-A (Indoor Air)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Indoor', series: 'RAC', id: 'Thi-R', name: 'Thi-R (Indoor Refrigerant inside Heat Exchanger)', isGroup: true },
-    { unitType: 'Indoor', series: 'RAC', id: 'Thi-R1', name: 'Thi-R1', parentGroup: 'Thi-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Indoor', series: 'RAC', id: 'Thi-R2', name: 'Thi-R2', parentGroup: 'Thi-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-
-    // PAC Indoor
-    { unitType: 'Indoor', series: 'PAC', id: 'Thi-A', name: 'Thi-A (Indoor Air)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Indoor', series: 'PAC', id: 'Thi-R', name: 'Thi-R (Indoor Refrigerant inside Heat Exchanger)', isGroup: true },
-    { unitType: 'Indoor', series: 'PAC', id: 'Thi-R1', name: 'Thi-R1', parentGroup: 'Thi-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Indoor', series: 'PAC', id: 'Thi-R2', name: 'Thi-R2', parentGroup: 'Thi-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Indoor', series: 'PAC', id: 'Thi-R3', name: 'Thi-R3', parentGroup: 'Thi-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-
-    // KX Indoor
-    { unitType: 'Indoor', series: 'KX', id: 'Thi-A', name: 'Thi-A (Indoor Air)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Indoor', series: 'KX', id: 'Thi-R', name: 'Thi-R (Indoor Refrigerant inside Heat Exchanger)', isGroup: true },
-    { unitType: 'Indoor', series: 'KX', id: 'Thi-R1', name: 'Thi-R1', parentGroup: 'Thi-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Indoor', series: 'KX', id: 'Thi-R2', name: 'Thi-R2', parentGroup: 'Thi-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Indoor', series: 'KX', id: 'Thi-R3', name: 'Thi-R3', parentGroup: 'Thi-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-
-    // RAC Outdoor
-    { unitType: 'Outdoor', series: 'RAC', id: 'Tho-A', name: 'Tho-A (Outdoor Air)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Outdoor', series: 'RAC', id: 'Tho-R', name: 'Tho-R (Outdoor Refrigerant inside Heat Exchanger)', isGroup: true },
-    { unitType: 'Outdoor', series: 'RAC', id: 'Tho-R1', name: 'Tho-R1', parentGroup: 'Tho-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Outdoor', series: 'RAC', id: 'Tho-D', name: 'Tho-D (Discharge Pipe)', curveType: '100k_RAC', xMin: 0, xMax: 140, yMax: 100, title: '100 kΩ Discharge Characteristic Curve' },
-
-    // PAC Outdoor
-    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-A', name: 'Tho-A (Outdoor Air)', curveType: '100k_THOA', xMin: -20, xMax: 50, yMax: 100, title: '100 kΩ Outdoor Air Characteristic Curve' },
-    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-R', name: 'Tho-R (Outdoor Refrigerant inside Heat Exchanger)', isGroup: true },
-    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-R1', name: 'Tho-R1', parentGroup: 'Tho-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-S', name: 'Tho-S (Suction Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-C', name: 'Tho-C (Power transistor)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Outdoor', series: 'PAC', id: 'Tho-D', name: 'Tho-D (Discharge Pipe)', curveType: '200k_PAC', xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Characteristic Curve' },
-
-    // KX Outdoor
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-A', name: 'Tho-A (Outdoor Air)', curveType: '100k_THOA', xMin: -20, xMax: 50, yMax: 100, title: '100 kΩ Outdoor Air Characteristic Curve' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-R', name: 'Tho-R (Outdoor Refrigerant inside Heat Exchanger)', isGroup: true },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-R1', name: 'Tho-R1', parentGroup: 'Tho-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-R2', name: 'Tho-R2', parentGroup: 'Tho-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-R3', name: 'Tho-R3', parentGroup: 'Tho-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-R4', name: 'Tho-R4', parentGroup: 'Tho-R', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-S', name: 'Tho-S (Suction Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-SC', name: 'Tho-SC (Subcooling Pipe)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-H', name: 'Tho-H (Suction Pipe of Subcool line)', curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-D', name: 'Tho-D (Discharge Pipe)', curveType: '200k_PAC', xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Characteristic Curve' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-C', name: 'Tho-C (Compressor)', curveType: '200k_PAC', xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Characteristic Curve' },
-    { unitType: 'Outdoor', series: 'KX', id: 'Tho-P', name: 'Tho-P (Power transistor (IPM))', curveType: '200k_PAC', xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Characteristic Curve' }
+  const DEFAULT_MASTER_SENSOR_DB = [
+    { series: 'KX', unitType: 'Indoor', connector: 'CNN', position: 'Thi-R1 (Indoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'KX', unitType: 'Indoor', connector: 'CNN', position: 'Thi-R2 (Indoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'KX', unitType: 'Indoor', connector: 'CNN', position: 'Thi-R3 (Indoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'KX', unitType: 'Indoor', connector: 'CNH', position: 'Thi-A (Indoor Air)', curveType: '15k' },
+    { series: 'KX', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-R1 (Outdoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'KX', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-D1 (Discharge Pipe)', curveType: '200k_PAC' },
+    { series: 'KX', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-S (Suction Pipe)', curveType: '15k' },
+    { series: 'KX', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-A (Outdoor Air)', curveType: '100k_THOA' },
+    { series: 'KX', unitType: 'Outdoor', connector: 'CNB2', position: 'Tho-R2 (Outdoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'KX', unitType: 'Outdoor', connector: 'CNB3', position: 'Tho-R3 (Outdoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'KX', unitType: 'Outdoor', connector: 'CNB4', position: 'Tho-R4 (Outdoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'KX', unitType: 'Outdoor', connector: 'CNF1', position: 'Tho-SC (Subcooling Pipe)', curveType: '15k' },
+    { series: 'KX', unitType: 'Outdoor', connector: 'CNF2', position: 'Tho-H (Suction Pipe of Subcool line)', curveType: '15k' },
+    { series: 'KX', unitType: 'Outdoor', connector: 'CNP1', position: 'Tho-P1 (Power transistor (IPM))', curveType: '200k_PAC' },
+    { series: 'KX', unitType: 'Outdoor', connector: 'CNP2', position: 'Tho-P2 (Power transistor (IPM))', curveType: '200k_PAC' },
+    { series: 'KX', unitType: 'Outdoor', connector: 'CNU1', position: 'Tho-C1 (Compressor)', curveType: '200k_PAC' },
+    { series: 'KX', unitType: 'Outdoor', connector: 'CNU2', position: 'Tho-C2 (Compressor)', curveType: '200k_PAC' },
+    { series: 'KX', unitType: 'Outdoor', connector: 'CNC2', position: 'Tho-D2 (Discharge Pipe)', curveType: '200k_PAC' },
+    { series: 'RAC', unitType: 'Indoor', connector: 'CNG', position: 'Thi-A (Indoor Air)', curveType: '15k' },
+    { series: 'RAC', unitType: 'Indoor', connector: 'CNG', position: 'Thi-R1 (Indoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'RAC', unitType: 'Indoor', connector: 'CNG', position: 'Thi-R3 (Indoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'PAC', unitType: 'Indoor', connector: 'CNN', position: 'Thi-R1 (Indoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'PAC', unitType: 'Indoor', connector: 'CNN', position: 'Thi-R2 (Indoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'PAC', unitType: 'Indoor', connector: 'CNN', position: 'Thi-R3 (Indoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'PAC', unitType: 'Indoor', connector: 'CNH', position: 'Thi-A (Indoor Air)', curveType: '15k' },
+    { series: 'RAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-R (Outdoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'RAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-A (Outdoor Air)', curveType: '15k' },
+    { series: 'RAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-D (Discharge Pipe)', curveType: '100k_RAC' },
+    { series: 'RAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-S (Suction Pipe for multi system)', curveType: '15k' },
+    { series: 'RAC', unitType: 'Outdoor', connector: 'CNP', position: 'Tho-AF (Power transistor)', curveType: '200k_PAC' },
+    { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH (VNP)', position: 'Tho-R (Outdoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH (VNP)', position: 'Tho-A (Outdoor Air)', curveType: '100k_THOA' },
+    { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH (VNP)', position: 'Tho-D (Discharge Pipe)', curveType: '200k_PAC' },
+    { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-A (Outdoor Air)', curveType: '100k_THOA' },
+    { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-S (Suction Pipe)', curveType: '15k' },
+    { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-D (Discharge Pipe)', curveType: '200k_PAC' },
+    { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-R (Outdoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'PAC', unitType: 'Outdoor', connector: 'CNIP', position: 'Tho-P (Power transistor (IPM))', curveType: '200k_PAC' },
+    { series: 'PAC', unitType: 'Outdoor', connector: 'CNB', position: 'Tho-R2 (Outdoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'PAC', unitType: 'Outdoor', connector: 'CNU', position: 'Tho-H (Suction Pipe of Subcool line (Under-dome))', curveType: '15k' }
   ];
 
+  const DEFAULT_CURVE_CONFIGS = {
+    '15k': { R_25: 5.0, B: 3950, xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
+    '100k_RAC': { R_25: 50.0, B: 4100, xMin: 0, xMax: 140, yMax: 100, title: '100 kΩ Discharge Characteristic Curve' },
+    '100k_THOA': { R_25: 20.0, B: 3800, xMin: -20, xMax: 50, yMax: 100, title: '100 kΩ Outdoor Air Characteristic Curve' },
+    '200k_PAC': { R_25: 60.0, B: 4200, xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Characteristic Curve' }
+  };
+
+  let CURVE_CONFIGS = {};
+  let MASTER_SENSOR_DB = [];
+  let editorDraftDB = [];
+  let editorDraftCurves = {};
   let currentTolerance = 5;
+  let activeSelectedConnectors = [];
   let activeSelectedPositions = [];
 
+  function loadMasterDatabase() {
+    try {
+      const curveEl = document.getElementById('curveConfigsJson');
+      if (curveEl && curveEl.textContent.trim()) {
+        CURVE_CONFIGS = JSON.parse(curveEl.textContent);
+      } else {
+        CURVE_CONFIGS = JSON.parse(JSON.stringify(DEFAULT_CURVE_CONFIGS));
+      }
+    } catch (e) {
+      CURVE_CONFIGS = JSON.parse(JSON.stringify(DEFAULT_CURVE_CONFIGS));
+    }
+
+    try {
+      const jsonEl = document.getElementById('sensorMasterDataJson');
+      if (jsonEl && jsonEl.textContent.trim()) {
+        MASTER_SENSOR_DB = JSON.parse(jsonEl.textContent);
+        return;
+      }
+    } catch (e) {
+      console.error('Failed to parse embedded sensor JSON, falling back to default.', e);
+    }
+    MASTER_SENSOR_DB = JSON.parse(JSON.stringify(DEFAULT_MASTER_SENSOR_DB));
+  }
+
+  function syncSeriesDropdownOptions() {
+    const seriesSelect = document.getElementById('seriesSelect');
+    if (!seriesSelect) return;
+    const prevVal = seriesSelect.value;
+    const uniqueSeries = [];
+    MASTER_SENSOR_DB.forEach(item => {
+      if (item.series && !uniqueSeries.includes(item.series)) uniqueSeries.push(item.series);
+    });
+    const labelMap = {
+      'RAC': 'RAC (Room Air Conditioner)',
+      'PAC': 'PAC (Packaged Air Conditioner)',
+      'KX': 'KX (VRF System)'
+    };
+    seriesSelect.innerHTML = `<option value="">-- Select Category --</option>`;
+    uniqueSeries.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s;
+      opt.textContent = labelMap[s] || s;
+      if (s === prevVal) opt.selected = true;
+      seriesSelect.appendChild(opt);
+    });
+  }
+
   window.addEventListener('DOMContentLoaded', () => {
+    loadMasterDatabase();
+    syncSeriesDropdownOptions();
     window.addEventListener('resize', () => drawAllGraphs());
     renderGraphContainers();
   });
 
-  function filterPositions() {
+  function filterConnectors(preserveChecked = false) {
     const unitType = document.getElementById('unitTypeSelect').value;
     const series = document.getElementById('seriesSelect').value;
-    const container = document.getElementById('positionContainer');
+    const container = document.getElementById('connectorContainer');
+
+    const prevChecked = preserveChecked ? [...activeSelectedConnectors] : [];
 
     if (!unitType || !series) {
-      container.innerHTML = `<div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">Please select Unit Type (1.1) and Category (1.2) to load positions.</div>`;
+      container.innerHTML = `<div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">Please select Unit Type (1.1) and Category (1.2) to load connector types.</div>`;
+      activeSelectedConnectors = [];
       activeSelectedPositions = [];
       renderInspectionRows();
       renderGraphContainers();
+      updateSummarySection();
       return;
     }
 
-    const filtered = MASTER_SENSOR_DB.filter(item => item.unitType === unitType && item.series === series && !item.parentGroup);
+    const matchingRows = MASTER_SENSOR_DB.filter(item => item.unitType === unitType && item.series === series);
+    const uniqueConnectors = [];
+    matchingRows.forEach(item => {
+      if (item.connector && !uniqueConnectors.includes(item.connector)) {
+        uniqueConnectors.push(item.connector);
+      }
+    });
 
-    if (filtered.length === 0) {
-      container.innerHTML = `<div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">No matching positions found.</div>`;
+    if (uniqueConnectors.length === 0) {
+      container.innerHTML = `<div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">No matching Connector Type found.</div>`;
+      activeSelectedConnectors = [];
       activeSelectedPositions = [];
       renderInspectionRows();
       renderGraphContainers();
+      updateSummarySection();
       return;
     }
 
     container.innerHTML = '';
 
-    filtered.forEach((sensor, idx) => {
-      const key = `${sensor.unitType}_${sensor.series}_${sensor.id}_${idx}`;
+    uniqueConnectors.forEach((connName, idx) => {
+      const key = `${unitType}_${series}_${idx}`;
       const label = document.createElement('label');
       label.className = 'custom-check';
-
-      if (sensor.isGroup) {
-        const safeData = JSON.stringify(sensor).replace(/'/g, "&#39;");
-        label.innerHTML = `
-          <input type="checkbox" class="sensor-checkbox group-checkbox" id="chk_pos_${key}" data-sensor='${safeData}' data-groupid="${sensor.id}" onchange="onPositionCheckChange()">
-          <span>${sensor.name}</span>
-        `;
-      } else {
-        const safeData = JSON.stringify(sensor).replace(/'/g, "&#39;");
-        label.innerHTML = `
-          <input type="checkbox" class="sensor-checkbox" id="chk_pos_${key}" data-sensor='${safeData}' onchange="onPositionCheckChange()">
-          <span>${sensor.name}</span>
-        `;
-      }
+      const isChecked = prevChecked.includes(connName) ? 'checked' : '';
+      const escapedConn = connName.replace(/"/g, '&quot;');
+      label.innerHTML = `
+        <input type="checkbox" class="connector-checkbox" id="chk_conn_${key}" value="${escapedConn}" ${isChecked} onchange="onConnectorCheckChange()">
+        <span>${connName}</span>
+      `;
       container.appendChild(label);
     });
 
-    onPositionCheckChange();
+    onConnectorCheckChange();
   }
 
-  function onPositionCheckChange() {
+  function onConnectorCheckChange() {
     const unitType = document.getElementById('unitTypeSelect').value;
     const series = document.getElementById('seriesSelect').value;
-    const checkedInputs = document.querySelectorAll('#positionContainer input.sensor-checkbox:checked');
-    activeSelectedPositions = [];
+    const checkedInputs = document.querySelectorAll('#connectorContainer input.connector-checkbox:checked');
 
+    activeSelectedConnectors = [];
     checkedInputs.forEach(input => {
-      const sensorData = JSON.parse(input.getAttribute('data-sensor'));
-      
-      if (sensorData.isGroup) {
-        const groupChildren = MASTER_SENSOR_DB.filter(item => 
-          item.unitType === unitType && item.series === series && item.parentGroup === sensorData.id
-        );
-        groupChildren.forEach(child => {
-          activeSelectedPositions.push(child);
+      activeSelectedConnectors.push(input.value);
+    });
+
+    activeSelectedPositions = [];
+    activeSelectedConnectors.forEach(conn => {
+      const rows = MASTER_SENSOR_DB.filter(item =>
+        item.unitType === unitType &&
+        item.series === series &&
+        item.connector === conn
+      );
+      rows.forEach(r => {
+        const cfg = CURVE_CONFIGS[r.curveType] || CURVE_CONFIGS['15k'];
+        activeSelectedPositions.push({
+          ...r,
+          id: r.position,
+          name: r.position,
+          xMin: cfg.xMin,
+          xMax: cfg.xMax,
+          yMax: cfg.yMax,
+          title: cfg.title
         });
-      } else {
-        activeSelectedPositions.push(sensorData);
-      }
+      });
     });
 
     renderInspectionRows();
@@ -541,13 +742,14 @@
     if (!tbody) return;
 
     if (activeSelectedPositions.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="4" style="color: var(--text-muted); padding: 14px;">No sensor positions selected in Section 1.3</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="4" style="color: var(--text-muted); padding: 14px;">No Connector Type selected in Section 1.3</td></tr>`;
       return;
     }
 
     tbody.innerHTML = '';
-    const tempInput = document.getElementById('ambientTemp').value;
-    const temp = tempInput !== '' ? parseFloat(tempInput) : 25;
+    const tempInput = document.getElementById('ambientTemp').value.trim();
+    const hasValidTemp = tempInput !== '' && !isNaN(parseFloat(tempInput));
+    const temp = hasValidTemp ? parseFloat(tempInput) : 25;
 
     activeSelectedPositions.forEach((sensor, idx) => {
       const key = `pos_row_${idx}`;
@@ -555,7 +757,7 @@
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td style="font-weight: 600; text-align: left;">${sensor.name}</td>
+        <td style="font-weight: 600; text-align: left;">${sensor.position}</td>
         <td>
           <div class="res-input-flex">
             <input type="number" step="0.01" id="res_val_${key}" class="input-control res-val-input" placeholder="0.00">
@@ -575,9 +777,9 @@
                 <div class="chart-point" id="chart_point_${key}" style="display: none;"></div>
               </div>
               <div class="chart-labels">
-                <span class="chart-label-min" id="lbl_min_${key}">${tempInput !== '' ? 'Min ' + spec.min : 'Min -'}</span>
-                <span class="chart-label-std" id="lbl_std_${key}">${tempInput !== '' ? 'Std ' + spec.std : 'Std -'}</span>
-                <span class="chart-label-max" id="lbl_max_${key}">${tempInput !== '' ? 'Max ' + spec.max : 'Max -'}</span>
+                <span class="chart-label-min" id="lbl_min_${key}">${hasValidTemp ? 'Min ' + spec.min : 'Min -'}</span>
+                <span class="chart-label-std" id="lbl_std_${key}">${hasValidTemp ? 'Std ' + spec.std : 'Std -'}</span>
+                <span class="chart-label-max" id="lbl_max_${key}">${hasValidTemp ? 'Max ' + spec.max : 'Max -'}</span>
               </div>
             </div>
           </div>
@@ -596,16 +798,9 @@
   }
 
   function recalculateAllSelectedPositions() {
-    const tempInput = document.getElementById('ambientTemp').value;
-    const graphsWrapper = document.getElementById('graphsWrapper');
-
-    if (tempInput === '') {
-      if (graphsWrapper) graphsWrapper.style.display = 'none';
-    } else {
-      if (graphsWrapper) graphsWrapper.style.display = 'grid';
-    }
-
-    const temp = tempInput !== '' ? parseFloat(tempInput) : 25;
+    const tempInput = document.getElementById('ambientTemp').value.trim();
+    const hasValidTemp = tempInput !== '' && !isNaN(parseFloat(tempInput));
+    const temp = hasValidTemp ? parseFloat(tempInput) : 25;
 
     activeSelectedPositions.forEach((sensor, idx) => {
       const key = `pos_row_${idx}`;
@@ -615,14 +810,14 @@
       const lblStd = document.getElementById(`lbl_std_${key}`);
       const lblMax = document.getElementById(`lbl_max_${key}`);
 
-      if (lblMin) lblMin.textContent = tempInput !== '' ? `Min ${spec.min}` : 'Min -';
-      if (lblStd) lblStd.textContent = tempInput !== '' ? `Std ${spec.std}` : 'Std -';
-      if (lblMax) lblMax.textContent = tempInput !== '' ? `Max ${spec.max}` : 'Max -';
+      if (lblMin) lblMin.textContent = hasValidTemp ? `Min ${spec.min}` : 'Min -';
+      if (lblStd) lblStd.textContent = hasValidTemp ? `Std ${spec.std}` : 'Std -';
+      if (lblMax) lblMax.textContent = hasValidTemp ? `Max ${spec.max}` : 'Max -';
 
       evaluateSingleRow(key, sensor);
     });
 
-    drawAllGraphs();
+    renderGraphContainers();
   }
 
   function calculateSensorSpec(tempC, curveType) {
@@ -635,12 +830,8 @@
   }
 
   function getNTCResistance(tempC, curveType) {
-    let R_25 = 5.0, B = 3950;
-    if (curveType === '100k_RAC') { R_25 = 50.0; B = 4100; }
-    else if (curveType === '200k_PAC') { R_25 = 60.0; B = 4200; }
-    else if (curveType === '100k_THOA') { R_25 = 20.0; B = 3800; }
-    
-    return R_25 * Math.exp(B * ((1 / (tempC + 273.15)) - (1 / 298.15)));
+    const cfg = CURVE_CONFIGS[curveType] || CURVE_CONFIGS['15k'];
+    return cfg.R_25 * Math.exp(cfg.B * ((1 / (tempC + 273.15)) - (1 / 298.15)));
   }
 
   function evaluateSingleRow(key, sensor) {
@@ -648,11 +839,11 @@
     const unitSelect = document.getElementById(`res_unit_${key}`);
     const badge = document.getElementById(`judge_badge_${key}`);
     const point = document.getElementById(`chart_point_${key}`);
-    const tempInput = document.getElementById('ambientTemp').value;
+    const tempInput = document.getElementById('ambientTemp').value.trim();
 
     if (!input || !badge) return;
 
-    if (tempInput === '') {
+    if (tempInput === '' || isNaN(parseFloat(tempInput))) {
       badge.textContent = '-';
       badge.className = 'status-badge';
       if (point) point.style.display = 'none';
@@ -720,8 +911,8 @@
     let isDragging = false;
 
     const updateFromPointer = (e) => {
-      const tempInput = document.getElementById('ambientTemp').value;
-      if (tempInput === '') return; // Don't allow slider dragging if ambient temp is not set
+      const tempInput = document.getElementById('ambientTemp').value.trim();
+      if (tempInput === '' || isNaN(parseFloat(tempInput))) return;
 
       const rect = bar.getBoundingClientRect();
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -771,21 +962,22 @@
     const wrapper = document.getElementById('graphsWrapper');
     if (!wrapper) return;
 
-    const tempInput = document.getElementById('ambientTemp').value;
-    if (tempInput === '') {
+    const tempInput = document.getElementById('ambientTemp').value.trim();
+    if (tempInput === '' || isNaN(parseFloat(tempInput))) {
       wrapper.style.display = 'none';
       return;
-    } else {
-      wrapper.style.display = 'grid';
     }
+
+    wrapper.style.display = 'grid';
 
     const groups = {};
     if (activeSelectedPositions.length === 0) {
-      groups['15k'] = [{ curveType: '15k', xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve Reference' }];
+      groups['15k'] = [CURVE_CONFIGS['15k']];
     } else {
       activeSelectedPositions.forEach(pos => {
-        if (!groups[pos.curveType]) groups[pos.curveType] = [];
-        groups[pos.curveType].push(pos);
+        const cType = pos.curveType || '15k';
+        if (!groups[cType]) groups[cType] = [];
+        groups[cType].push(pos);
       });
     }
 
@@ -799,12 +991,12 @@
 
     wrapper.innerHTML = '';
     groupKeys.forEach(curveType => {
-      const sample = groups[curveType][0];
+      const cfg = CURVE_CONFIGS[curveType] || CURVE_CONFIGS['15k'];
       const card = document.createElement('div');
       card.className = 'canvas-card-wrapper';
       card.innerHTML = `
         <div class="canvas-header-bar">
-          <div class="canvas-title">${sample.title || (curveType + ' Curve Reference')}</div>
+          <div class="canvas-title">${cfg.title}</div>
         </div>
 
         <div class="canvas-body-box">
@@ -826,16 +1018,17 @@
   }
 
   function drawAllGraphs() {
-    const tempInput = document.getElementById('ambientTemp').value;
-    if (tempInput === '') return;
+    const tempInput = document.getElementById('ambientTemp').value.trim();
+    if (tempInput === '' || isNaN(parseFloat(tempInput))) return;
 
     const groups = {};
     if (activeSelectedPositions.length === 0) {
       groups['15k'] = [];
     } else {
       activeSelectedPositions.forEach((pos, originalIdx) => {
-        if (!groups[pos.curveType]) groups[pos.curveType] = [];
-        groups[pos.curveType].push({ sensor: pos, idx: originalIdx });
+        const cType = pos.curveType || '15k';
+        if (!groups[cType]) groups[cType] = [];
+        groups[cType].push({ sensor: pos, idx: originalIdx });
       });
     }
 
@@ -844,12 +1037,7 @@
       if (!canvas) return;
 
       const items = groups[curveType];
-      let sampleConfig = { xMin: 0, xMax: 50, yMax: 15 };
-      if (items.length > 0) sampleConfig = items[0].sensor;
-      else if (curveType === '100k_RAC') sampleConfig = { xMin: 0, xMax: 140, yMax: 100 };
-      else if (curveType === '200k_PAC') sampleConfig = { xMin: 0, xMax: 160, yMax: 200 };
-      else if (curveType === '100k_THOA') sampleConfig = { xMin: -20, xMax: 50, yMax: 100 };
-
+      const sampleConfig = CURVE_CONFIGS[curveType] || CURVE_CONFIGS['15k'];
       drawSingleCanvas(canvas, curveType, sampleConfig, items);
     });
   }
@@ -859,6 +1047,7 @@
     const dpr = window.devicePixelRatio || 1;
     const width = container.clientWidth;
     const height = container.clientHeight;
+    if (width === 0 || height === 0) return;
 
     canvas.width = width * dpr;
     canvas.height = height * dpr;
@@ -990,7 +1179,8 @@
         ctx.beginPath(); ctx.arc(px, py, 5.5, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
         ctx.restore();
 
-        const tagText = `${sensor.id}: ${rawVal} ${unitSelect.value}`;
+        const shortCode = sensor.position.split(' (')[0];
+        const tagText = `${shortCode}: ${rawVal} ${unitSelect.value}`;
         ctx.font = '700 9px Inter';
         const textWidth = ctx.measureText(tagText).width;
 
@@ -1025,9 +1215,13 @@
       html += `<div class="summary-item-row"><span style="font-weight:600;">• Unit & Category:</span> ${unitType} (${series})</div>`;
     }
 
+    if (activeSelectedConnectors.length > 0) {
+      html += `<div class="summary-item-row"><span style="font-weight:600;">• Connector Type:</span> ${activeSelectedConnectors.join(', ')}</div>`;
+    }
+
     if (activeSelectedPositions.length > 0) {
-      const posNames = activeSelectedPositions.map(p => p.name).join(', ');
-      html += `<div class="summary-item-row"><span style="font-weight:600;">• Selected Sensors:</span> ${posNames}</div>`;
+      const posNames = activeSelectedPositions.map(p => p.position.split('(')[0].trim()).join(', ');
+      html += `<div class="summary-item-row"><span style="font-weight:600;">• Sensor Positions:</span> ${posNames}</div>`;
     }
 
     const temp = document.getElementById('ambientTemp')?.value;
@@ -1040,7 +1234,8 @@
       const unit = document.getElementById(`res_unit_${key}`)?.value;
 
       if (badge === 'NG') {
-        ngList.push(`${sensor.id} (${val || 'No Val'} ${unit})`);
+        const shortPos = sensor.position.split('(')[0].trim();
+        ngList.push(`${shortPos} (${val || 'No Val'} ${unit})`);
       }
     });
 
@@ -1051,6 +1246,9 @@
     box.innerHTML = html || '<div style="color:var(--text-muted);">No inspection summary available</div>';
   }
 
+  /* =========================================================
+     DESIGNER MODE & MASTER DATA EDITOR
+  ========================================================= */
   function promptEditorMode() {
     const panel = document.getElementById('editorPanel');
     const isVisible = panel && panel.style.display === 'block';
@@ -1062,13 +1260,161 @@
       if (pwd === "maco2026") {
         panel.style.display = 'block';
         document.getElementById('editTolerancePercent').value = currentTolerance;
+        editorDraftCurves = JSON.parse(JSON.stringify(CURVE_CONFIGS));
+        editorDraftDB = JSON.parse(JSON.stringify(MASTER_SENSOR_DB));
+        renderDesignerCurveTable();
+        renderDesignerDbTable();
       } else if (pwd !== null) {
         alert("Incorrect password!");
       }
     }
   }
 
-  function applyEditorChanges() {
+  function renderDesignerCurveTable() {
+    const tbody = document.getElementById('designerCurveTbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    Object.keys(editorDraftCurves).forEach(cKey => {
+      const cfg = editorDraftCurves[cKey];
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="font-weight: 700; color: var(--primary-black);">${escapeHtml(cKey)}</td>
+        <td><input type="text" value="${escapeHtml(cfg.title)}" onchange="updateDraftCurve('${cKey}', 'title', this.value)"></td>
+        <td><input type="number" step="1" value="${cfg.xMin}" onchange="updateDraftCurve('${cKey}', 'xMin', parseFloat(this.value))"></td>
+        <td><input type="number" step="1" value="${cfg.xMax}" onchange="updateDraftCurve('${cKey}', 'xMax', parseFloat(this.value))"></td>
+        <td><input type="number" step="1" value="${cfg.yMax}" onchange="updateDraftCurve('${cKey}', 'yMax', parseFloat(this.value))"></td>
+        <td><input type="number" step="0.1" value="${cfg.R_25}" onchange="updateDraftCurve('${cKey}', 'R_25', parseFloat(this.value))"></td>
+        <td><input type="number" step="1" value="${cfg.B}" onchange="updateDraftCurve('${cKey}', 'B', parseFloat(this.value))"></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function updateDraftCurve(cKey, field, value) {
+    if (editorDraftCurves[cKey] && (typeof value === 'string' || !isNaN(value))) {
+      editorDraftCurves[cKey][field] = value;
+      if (field === 'yMax' || field === 'xMin' || field === 'xMax') {
+        renderDesignerDbTable();
+      }
+    }
+  }
+
+  function getCurveScaleSelectOptions(selectedCurveType) {
+    const scaleKeys = Object.keys(editorDraftCurves);
+    return scaleKeys.map(k => {
+      const c = editorDraftCurves[k];
+      const label = `${c.yMax} kΩ (${c.xMin}~${c.xMax}°C) - ${k}`;
+      return `<option value="${k}" ${selectedCurveType === k ? 'selected' : ''}>${escapeHtml(label)}</option>`;
+    }).join('');
+  }
+
+  function renderDesignerDbTable() {
+    const tbody = document.getElementById('designerDbTbody');
+    const countSpan = document.getElementById('dbRowCount');
+    if (!tbody) return;
+
+    const filterSeries = document.getElementById('dbFilterSeries')?.value || '';
+    const filterUnit = document.getElementById('dbFilterUnit')?.value || '';
+
+    if (countSpan) countSpan.textContent = editorDraftDB.length;
+    tbody.innerHTML = '';
+
+    editorDraftDB.forEach((row, realIdx) => {
+      if (filterSeries && row.series !== filterSeries) return;
+      if (filterUnit && row.unitType !== filterUnit) return;
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="color: var(--text-muted); font-weight: 600;">${realIdx + 1}</td>
+        <td>
+          <input type="text" value="${escapeHtml(row.series)}" onchange="updateDraftRow(${realIdx}, 'series', this.value.trim())" placeholder="e.g. KX">
+        </td>
+        <td>
+          <select onchange="updateDraftRow(${realIdx}, 'unitType', this.value)">
+            <option value="Indoor" ${row.unitType === 'Indoor' ? 'selected' : ''}>Indoor</option>
+            <option value="Outdoor" ${row.unitType === 'Outdoor' ? 'selected' : ''}>Outdoor</option>
+          </select>
+        </td>
+        <td>
+          <input type="text" value="${escapeHtml(row.connector)}" onchange="updateDraftRow(${realIdx}, 'connector', this.value.trim())" placeholder="e.g. CNN">
+        </td>
+        <td>
+          <input type="text" value="${escapeHtml(row.position)}" onchange="updateDraftRow(${realIdx}, 'position', this.value.trim())" placeholder="e.g. Thi-R1 (Indoor Refrigerant...)">
+        </td>
+        <td>
+          <select onchange="updateDraftRow(${realIdx}, 'curveType', this.value)">
+            ${getCurveScaleSelectOptions(row.curveType)}
+          </select>
+        </td>
+        <td style="text-align: center;">
+          <button type="button" class="btn-db-del" onclick="deleteDraftRow(${realIdx})" title="ลบแถวนี้">✕</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function updateDraftRow(idx, field, value) {
+    if (editorDraftDB[idx]) {
+      editorDraftDB[idx][field] = value;
+    }
+  }
+
+  function addDesignerDbRow() {
+    const filterSeries = document.getElementById('dbFilterSeries')?.value || 'KX';
+    const filterUnit = document.getElementById('dbFilterUnit')?.value || 'Indoor';
+    editorDraftDB.push({
+      series: filterSeries,
+      unitType: filterUnit,
+      connector: 'CN_NEW',
+      position: 'Th-New (Description)',
+      curveType: '15k'
+    });
+    renderDesignerDbTable();
+    const wrap = document.querySelectorAll('.designer-db-table-wrap')[1];
+    if (wrap) wrap.scrollTop = wrap.scrollHeight;
+  }
+
+  function deleteDraftRow(idx) {
+    editorDraftDB.splice(idx, 1);
+    renderDesignerDbTable();
+  }
+
+  function commitMasterDatabase() {
+    if (editorDraftCurves && Object.keys(editorDraftCurves).length > 0) {
+      CURVE_CONFIGS = JSON.parse(JSON.stringify(editorDraftCurves));
+    }
+    const curveEl = document.getElementById('curveConfigsJson');
+    if (curveEl) {
+      curveEl.textContent = JSON.stringify(CURVE_CONFIGS, null, 2);
+    }
+
+    if (editorDraftDB && editorDraftDB.length > 0) {
+      MASTER_SENSOR_DB = editorDraftDB
+        .filter(r => r.series && r.unitType && r.connector && r.position)
+        .map(r => ({
+          series: r.series.trim(),
+          unitType: r.unitType.trim(),
+          connector: r.connector.trim(),
+          position: r.position.trim(),
+          curveType: r.curveType || '15k'
+        }));
+    }
+    const jsonEl = document.getElementById('sensorMasterDataJson');
+    if (jsonEl) {
+      jsonEl.textContent = JSON.stringify(MASTER_SENSOR_DB, null, 2);
+    }
+    syncSeriesDropdownOptions();
+    filterConnectors(true);
+  }
+
+  function applyEditorChanges(silent = false) {
     const titleVal = document.getElementById('editFormTitle').value.trim();
     if (titleVal) {
       document.getElementById('displayFormTitle').textContent = titleVal;
@@ -1082,13 +1428,20 @@
     const canvasTols = document.querySelectorAll('.lbl_canvas_tol');
     canvasTols.forEach(el => el.textContent = tolVal);
 
+    commitMasterDatabase();
     recalculateAllSelectedPositions();
-    alert("บันทึกการตั้งค่าลงหน้าจอเรียบร้อยแล้ว");
+    if (!silent) {
+      alert("บันทึกการตั้งค่า สเกลกราฟ และข้อมูลเรียบร้อยแล้ว");
+    }
   }
 
   function exportHTMLFile() {
-    applyEditorChanges();
+    applyEditorChanges(true);
     document.getElementById('editorPanel').style.display = 'none';
+    const curveTbody = document.getElementById('designerCurveTbody');
+    if (curveTbody) curveTbody.innerHTML = '';
+    const tbody = document.getElementById('designerDbTbody');
+    if (tbody) tbody.innerHTML = '';
 
     let htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
     const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
@@ -1102,9 +1455,15 @@
   }
 
   function resetEditorChanges() {
+    if (!confirm("ต้องการรีเซ็ตหัวข้อ ค่า Tolerance สเกลกราฟ และข้อมูล Connector/Position กลับเป็นค่าเริ่มต้นทั้งหมดใช่หรือไม่?")) return;
     document.getElementById('editFormTitle').value = "Checking Part Report (Thermistor)";
     document.getElementById('editTolerancePercent').value = 5;
-    applyEditorChanges();
+    editorDraftCurves = JSON.parse(JSON.stringify(DEFAULT_CURVE_CONFIGS));
+    editorDraftDB = JSON.parse(JSON.stringify(DEFAULT_MASTER_SENSOR_DB));
+    renderDesignerCurveTable();
+    renderDesignerDbTable();
+    applyEditorChanges(true);
+    alert("รีเซ็ตค่าเริ่มต้นเรียบร้อยแล้ว");
   }
 
   function generatePDF() {
