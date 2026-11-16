@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageHeaderTitle">Checking Part Report (Rectifier)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  <style>
+    :root {
+      --primary-red: #E60012;
+      --primary-black: #111111;
+      --bg-gray: #F4F6F9;
+      --card-bg: #FFFFFF;
+      --border-color: #E2E8F0;
+      --text-main: #1E293B;
+      --text-muted: #64748B;
+      --success-green: #10B981;
+      --success-bg: #ECFDF5;
+      --danger-red: #EF4444;
+      --danger-bg: #FEF2F2;
+    }
+    * { box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
+    body { background-color: var(--bg-gray); color: var(--text-main); padding: 24px 16px; line-height: 1.4; }
+    .app-container { width: 100%; max-width: 980px; margin: 0 auto; background: var(--card-bg); border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid var(--border-color); }
+    .brand-header { background: #FFFFFF; padding: 16px 24px; border-bottom: 3px solid var(--primary-red); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .brand-logo-img { height: 36px; width: auto; object-fit: contain; }
+    .report-badge { background-color: #F8FAFC; border: 1px solid var(--border-color); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+    .report-badge input { border: none; background: transparent; font-weight: 700; color: var(--primary-black); font-size: 0.9rem; outline: none; width: 130px; text-transform: uppercase; }
+    
+    .report-badge input::placeholder {
+      color: #F87171 !important;
+      opacity: 0.85;
+      font-weight: 400;
+    }
+
+    .form-body { padding: 20px 24px; }
+    .page-title { font-size: 1.25rem; font-weight: 700; color: var(--primary-black); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .page-title::before { content: ''; display: inline-block; width: 5px; height: 22px; background-color: var(--primary-red); border-radius: 3px; }
+    .section-card { background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; margin-bottom: 16px; break-inside: avoid; page-break-inside: avoid; }
+    .section-title { font-size: 0.875rem; font-weight: 700; color: var(--primary-black); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .input-group { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+    .input-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
+    .input-control { width: 100%; padding: 7px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.82rem; color: var(--text-main); background-color: #FAFAFA; box-sizing: border-box; text-transform: uppercase; }
+    
+    .part-item-card { background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; }
+    .part-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed var(--border-color); flex-wrap: wrap; gap: 8px; }
+    .part-title-text { font-weight: 700; font-size: 0.95rem; color: var(--primary-black); }
+    .dual-image-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+    .image-preview-box { width: 100%; min-height: 225px; background-color: #F8FAFC; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+    .image-preview-box .img-container { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 8px; background: #FFFFFF; }
+    .image-preview-box img { max-width: 100%; max-height: 195px; object-fit: contain; }
+    .img-caption { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); padding: 6px 8px; background: #F1F5F9; width: 100%; text-align: center; border-top: 1px solid var(--border-color); }
+    
+    /* Unified Reference + Measurement Matrix Table */
+    .table-scroll-wrap { width: 100%; overflow-x: auto; }
+    .unified-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; margin-bottom: 12px; }
+    .unified-table th, .unified-table td { border: 1px solid var(--border-color); padding: 6px 6px; text-align: center; vertical-align: middle; }
+    .unified-table th { background-color: #F1F5F9; color: var(--primary-black); font-weight: 700; white-space: nowrap; }
+    .unified-table th.pin-col { background-color: #E2E8F0; min-width: 44px; font-size: 0.8rem; }
+    .row-active-test { background-color: #FFFFFF; }
+    .row-active-test:hover { background-color: #FFFBEB; }
+    .row-reverse-test { background-color: #F8FAFC; color: var(--text-muted); display: none; }
+    .row-reverse-test.show-reverse { display: table-row; }
+
+    .probe-red { display: inline-block; background: #FEE2E2; color: #DC2626; border: 1px solid #FCA5A5; border-radius: 4px; padding: 1px 6px; font-weight: 700; font-size: 0.72rem; }
+    .probe-black { display: inline-block; background: #E2E8F0; color: #0F172A; border: 1px solid #94A3B8; border-radius: 4px; padding: 1px 6px; font-weight: 700; font-size: 0.72rem; }
+
+    .status-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-weight: 700; font-size: 0.74rem; }
+    .status-ok { background-color: var(--success-bg); color: var(--success-green); border: 1px solid var(--success-green); }
+    .status-ng { background-color: var(--danger-bg); color: var(--danger-red); border: 1px solid var(--danger-red); }
+    
+    .custom-check { display: flex; align-items: center; gap: 6px; padding: 6px 10px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem; cursor: pointer; user-select: none; }
+    .custom-check input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 15px;
+      height: 15px;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 3.5px;
+      outline: none;
+      background-color: #FFFFFF;
+      cursor: pointer;
+      display: inline-grid;
+      place-content: center;
+      flex-shrink: 0;
+    }
+    .custom-check input[type="checkbox"]:checked {
+      background-color: var(--primary-red);
+      border-color: var(--primary-red);
+    }
+    .custom-check input[type="checkbox"]:checked::before {
+      content: "✔";
+      font-size: 10px;
+      color: #FFFFFF;
+      font-weight: bold;
+    }
+
+    .upload-zone { position: relative; border: 1px dashed #CBD5E1; border-radius: 6px; padding: 10px; background: #FAFAFA; text-align: center; cursor: pointer; overflow: hidden; display: block; margin-top: 8px; transition: all 0.2s; }
+    .upload-zone:hover { border-color: var(--primary-red); background: #FFF5F5; }
+    .upload-zone.has-file { background: var(--success-bg); border: 1px solid var(--success-green); }
+    .upload-zone input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10; }
+    .upload-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; pointer-events: none; }
+    .upload-zone.has-file .upload-label { color: var(--success-green); font-weight: 700; }
+
+    .attached-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .attached-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background: #FAFAFA; break-inside: avoid; page-break-inside: avoid; }
+    .attached-card-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .attached-card-title { font-size: 0.82rem; font-weight: 600; color: var(--primary-black); }
+    .btn-delete-pic { background: #FEE2E2; color: #DC2626; border: 1px solid #FCA5A5; border-radius: 5px; padding: 2px 8px; font-size: 0.72rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s; }
+    .btn-delete-pic:hover { background: #DC2626; color: #FFFFFF; border-color: #DC2626; }
+    .attached-img-box { width: 100%; height: 170px; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .attached-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+    .summary-comment-box { width: 100%; min-height: 40px; border: 1px solid var(--border-color); border-radius: 6px; background: #FAFAFA; padding: 10px; font-size: 0.85rem; color: var(--text-main); }
+    .summary-item-row { margin-bottom: 6px; }
+    .summary-part-name { font-weight: 600; }
+    .action-container { margin-top: 20px; }
+    .btn-submit-primary { width: 100%; background-color: var(--primary-red); color: #FFFFFF; border: none; border-radius: 8px; padding: 12px 20px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .btn-submit-primary:hover { background-color: #C0000F; }
+    
+    /* Designer Mode Styling */
+    .designer-fab { position: fixed; bottom: 16px; right: 16px; z-index: 9999; background: #111111; color: #FFFFFF; width: 38px; height: 38px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,0.3); opacity: 0.7; transition: opacity 0.2s, transform 0.2s; }
+    .designer-fab:hover { opacity: 1; transform: scale(1.08); }
+    .editor-panel-box { display: none; background: #FFFFFF; border: 2px solid var(--primary-red); padding: 18px; margin: 16px auto; max-width: 980px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .criteria-card { background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; margin-bottom: 14px; }
+    .criteria-card-title { font-size: 0.86rem; font-weight: 700; color: var(--primary-black); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .excel-editor-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; background: #FFFFFF; }
+    .excel-editor-table th, .excel-editor-table td { border: 1px solid var(--border-color); padding: 6px 8px; text-align: left; vertical-align: middle; }
+    .excel-editor-table th { background-color: #F1F5F9; color: var(--primary-black); font-weight: 700; text-align: center; white-space: nowrap; }
+    .excel-editor-table input[type="text"], .excel-editor-table input[type="number"], .excel-editor-table select { width: 100%; padding: 5px 7px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.78rem; background: #FFF; box-sizing: border-box; }
+    .excel-editor-table input:focus, .excel-editor-table select:focus { border-color: var(--primary-red); outline: none; }
+
+    .btn-edit-temp { background-color: #34D399; color: #FFFFFF; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-edit-temp:hover { background-color: #10B981; }
+    .btn-edit-update { background-color: #E60012; color: #FFFFFF; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-edit-update:hover { background-color: #C0000F; }
+    .btn-edit-reset { background-color: #64748B; color: #FFFFFF; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-edit-reset:hover { background-color: #475569; }
+
+    @media screen and (max-width: 768px) {
+      body { padding: 8px 4px !important; }
+      .brand-header { padding: 12px 16px !important; flex-direction: column; align-items: flex-start; }
+      .form-body { padding: 12px !important; }
+      .grid-3 { grid-template-columns: 1fr !important; }
+      .dual-image-grid, .attached-grid { grid-template-columns: 1fr !important; }
+    }
+
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 7mm 8mm;
+      }
+      html, body {
+        width: 100% !important;
+        background-color: #FFFFFF !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+      .app-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        overflow: visible !important;
+      }
+      .hide-on-pdf, .designer-fab, #editorPanel, .row-reverse-test, .diagram-box-hide-pdf, .btn-delete-pic {
+        display: none !important;
+      }
+      #section_attached_pictures[style*="display: none"], #section_inspection_summary[style*="display: none"] {
+        display: none !important;
+      }
+
+      /* Maintain Desktop Proportions on A4 even if printed from Mobile */
+      .brand-header {
+        padding: 8px 12px !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+      }
+      .brand-logo-img {
+        height: 28px !important;
+      }
+      .report-badge {
+        padding: 4px 10px !important;
+        font-size: 0.78rem !important;
+      }
+      .report-badge input {
+        width: 110px !important;
+        font-size: 0.8rem !important;
+      }
+      .form-body {
+        padding: 10px 12px !important;
+      }
+      .page-title {
+        font-size: 1.05rem !important;
+        margin-bottom: 10px !important;
+      }
+      .page-title::before {
+        height: 18px !important;
+      }
+      .section-card {
+        padding: 10px 12px !important;
+        margin-bottom: 10px !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      /* Allow Technical Section to flow cleanly across pages if tall without clipping */
+      #section_technical, .part-item-card {
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+        padding: 10px !important;
+      }
+      .section-title {
+        font-size: 0.8rem !important;
+        margin-bottom: 8px !important;
+        padding-bottom: 4px !important;
+      }
+      .grid-3 {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px !important;
+      }
+      .attached-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+      }
+      .attached-img-box {
+        height: 145px !important;
+      }
+
+      /* Compact Form Controls */
+      .input-control {
+        border: 1px solid var(--border-color) !important;
+        background-color: #FAFAFA !important;
+        border-radius: 5px !important;
+        padding: 4px 7px !important;
+        font-size: 0.76rem !important;
+      }
+      .custom-check {
+        border: 1px solid var(--border-color) !important;
+        background-color: #F8FAFC !important;
+        border-radius: 5px !important;
+        padding: 4px 8px !important;
+        font-size: 0.75rem !important;
+      }
+      .custom-check input[type="checkbox"] {
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        width: 13px !important;
+        height: 13px !important;
+        border: 1.5px solid #CBD5E1 !important;
+        border-radius: 3px !important;
+        background-color: #FFFFFF !important;
+        display: inline-grid !important;
+        place-content: center !important;
+        position: relative !important;
+      }
+      .custom-check input[type="checkbox"]:checked {
+        background-color: var(--primary-red) !important;
+        border-color: var(--primary-red) !important;
+      }
+      .custom-check input[type="checkbox"]:checked::before {
+        content: "✔" !important;
+        font-size: 9px !important;
+        color: #FFFFFF !important;
+        font-weight: bold !important;
+      }
+
+      /* Fit 9-Column Unified Table Inside A4 Width Without Clipping */
+      .table-scroll-wrap {
+        overflow: visible !important;
+      }
+      .unified-table {
+        width: 100% !important;
+        font-size: 0.7rem !important;
+        margin-bottom: 8px !important;
+      }
+      .unified-table tr {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+      .unified-table th, .unified-table td {
+        padding: 3.5px 3px !important;
+      }
+      .unified-table th.pin-col {
+        min-width: 28px !important;
+        width: 32px !important;
+        font-size: 0.72rem !important;
+      }
+      .probe-red, .probe-black {
+        padding: 1px 4px !important;
+        font-size: 0.65rem !important;
+      }
+      .unified-table input.input-control {
+        width: 54px !important;
+        padding: 2px 3px !important;
+        font-size: 0.72rem !important;
+      }
+      .unified-table select.input-control {
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        width: auto !important;
+        min-width: 32px !important;
+        max-width: 82px !important;
+        padding: 2px 4px !important;
+        font-size: 0.7rem !important;
+        text-align: center !important;
+      }
+      .status-badge {
+        padding: 1px 7px !important;
+        font-size: 0.68rem !important;
+      }
+      .summary-comment-box {
+        padding: 8px !important;
+        font-size: 0.78rem !important;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container" id="reportContent">
+  <header class="brand-header">
+    <div class="brand-logo-container"><img src="images/Picture1.png" alt="Mitsubishi Heavy Industries" class="brand-logo-img"></div>
+    <div class="report-badge"><span>Service Report No:</span><input type="text" id="serviceReportNo" placeholder="*Ref.Job No.*" value="" required="" oninput="this.value = this.value.toUpperCase()"></div>
+  </header>
+
+  <main class="form-body">
+    <h1 class="page-title" id="displayFormTitle">Checking Part Report (Rectifier)</h1>
+    <form id="inspectionForm">
+      <!-- Section 1: General Information -->
+      <section class="section-card">
+        <div class="section-title">General Information</div>
+        <div class="grid-3">
+          <div class="input-group"><label for="Model">Model</label><input type="text" id="Model" class="input-control" placeholder="MODEL NUMBER" oninput="this.value = this.value.toUpperCase()"></div>
+          <div class="input-group"><label for="SN">Serial No. (S/N)</label><input type="text" id="SN" class="input-control" placeholder="SERIAL NUMBER" oninput="this.value = this.value.toUpperCase()"></div>
+          <div class="input-group"><label for="partNo">Part No.</label><input type="text" id="partNo" class="input-control" placeholder="PART NUMBER" oninput="this.value = this.value.toUpperCase()"></div>
+        </div>
+      </section>
+
+      <!-- Section 2: Symptom (Rectifier) -->
+      <section class="section-card">
+        <div class="section-title">Symptom (Rectifier)</div>
+        <div style="margin-bottom: 10px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary-black);">Rectifier Type:</span>
+          <label class="custom-check">
+            <input type="checkbox" id="chk_diode_stack" name="rectifier_type" value="Diode stack" onchange="selectRectifierType('stack')"> Diode stack
+          </label>
+          <label class="custom-check">
+            <input type="checkbox" id="chk_diode_module" name="rectifier_type" value="Diode module" onchange="selectRectifierType('module')"> Diode module
+          </label>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+          <label class="custom-check" style="background: #F8FAFC; font-weight: 600;">
+            <input type="checkbox" id="chk_sym_no_broken" data-main-symptom="Failure without broken" onchange="updateSummarySection();"> Failure without broken
+          </label>
+          <label class="custom-check" style="background: #F8FAFC; font-weight: 600;">
+            <input type="checkbox" id="chk_sym_broken" data-main-symptom="Broken" onchange="updateSummarySection();"> Broken
+          </label>
+        </div>
+      </section>
+
+      <!-- Section 3: Unified Technical Reference & Diode Function Check -->
+      <section class="section-card" id="section_technical">
+        <div class="section-title">
+          <span>Technical Data Reference &amp; Diode Function Check</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Multimeter Mode: Diode Test</span>
+        </div>
+        <div id="technicalPartsContainer">
+          <div style="padding:16px; text-align:center; color:var(--text-muted); font-size:0.85rem;">
+            👉 Please select <b>Diode stack</b> or <b>Diode module</b> above to open the probe matrix and input test results.
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Attached Pictures -->
+      <section class="section-card" id="section_attached_pictures" style="display: none;">
+        <div class="section-title">
+          <span>Attached Rectifier Pictures</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;" class="hide-on-pdf">(Click "Delete" to remove any picture)</span>
+        </div>
+        <div class="attached-grid" id="attached_container"></div>
+      </section>
+
+      <!-- Section 5: Inspection Summary & Comments -->
+      <section class="section-card" id="section_inspection_summary" style="display: block;">
+        <div class="section-title">Inspection Summary &amp; Comments</div>
+        <div class="summary-comment-box" id="summary_comment_content"><div style="color:var(--text-muted);">No inspection summary available</div></div>
+      </section>
+
+      <div class="action-container hide-on-pdf">
+        <button type="button" class="btn-submit-primary" onclick="generatePDF()"><span>🖨 Save as PDF Report</span></button>
+      </div>
+    </form>
+  </main>
+</div>
+
+<!-- Designer / Edit Mode Floating Button & Panel -->
+<button type="button" class="designer-fab hide-on-pdf" onclick="promptEditorMode()" title="Designer Mode">⚙️</button>
+<div id="editorPanel" class="editor-panel-box hide-on-pdf" style="display: none;">
+  <h3 style="margin-bottom: 6px; color: var(--primary-red);">Designer Mode — Standard Criteria Settings</h3>
+  <p style="font-size: 0.83rem; color: var(--text-muted); margin-bottom: 14px;">แก้ไขเกณฑ์มาตรฐาน (Standard Criteria) ของทั้ง 3 ตาราง และหัวข้อแบบฟอร์ม</p>
+  
+  <div style="margin-bottom: 14px; background: #F8FAFC; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border-color);">
+    <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 4px;">Form Title:</label>
+    <input type="text" id="editFormTitle" class="input-control" style="background:#fff; text-transform:none;">
+  </div>
+
+  <!-- Table 1: Diode Stack Standard Criteria -->
+  <div class="criteria-card">
+    <div class="criteria-card-title">📋 Table 1: Diode Stack (Single-Phase Bridge) — Standard Criteria</div>
+    <div style="overflow-x: auto;">
+      <table class="excel-editor-table">
+        <thead>
+          <tr>
+            <th>1-Diode Min (V)<br><span style="font-weight:normal; font-size:0.7rem;">(Case 2, 4, 10, 12)</span></th>
+            <th>1-Diode Max (V)<br><span style="font-weight:normal; font-size:0.7rem;">(Case 2, 4, 10, 12)</span></th>
+            <th>2-Diode Min (V)<br><span style="font-weight:normal; font-size:0.7rem;">(Case 6)</span></th>
+            <th>2-Diode Max (V)<br><span style="font-weight:normal; font-size:0.7rem;">(Case 6)</span></th>
+            <th>Part Photo Path (Left)</th>
+            <th>Drawing Path (Right)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="number" step="0.01" id="ed_stack_sMin"></td>
+            <td><input type="number" step="0.01" id="ed_stack_sMax"></td>
+            <td><input type="number" step="0.01" id="ed_stack_dMin"></td>
+            <td><input type="number" step="0.01" id="ed_stack_dMax"></td>
+            <td><input type="text" id="ed_stack_partImg" placeholder="images/..."></td>
+            <td><input type="text" id="ed_stack_drawImg" placeholder="images/..."></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Table 2: Diode Module (Six-Diode Test) Standard Criteria -->
+  <div class="criteria-card">
+    <div class="criteria-card-title">📋 Table 2: Diode Module (1. Six-Diode Test) — Standard Criteria</div>
+    <div style="overflow-x: auto;">
+      <table class="excel-editor-table">
+        <thead>
+          <tr>
+            <th>1-Diode Min (V)<br><span style="font-weight:normal; font-size:0.7rem;">(Case 2, 4, 6, 14, 18, 20)</span></th>
+            <th>1-Diode Max (V)<br><span style="font-weight:normal; font-size:0.7rem;">(Case 2, 4, 6, 14, 18, 20)</span></th>
+            <th>2-Diode Min (V)<br><span style="font-weight:normal; font-size:0.7rem;">(Case 8)</span></th>
+            <th>2-Diode Max (V)<br><span style="font-weight:normal; font-size:0.7rem;">(Case 8)</span></th>
+            <th>Part Photo Path (Left)</th>
+            <th>Drawing Path (Right)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="number" step="0.01" id="ed_mod_sMin"></td>
+            <td><input type="number" step="0.01" id="ed_mod_sMax"></td>
+            <td><input type="number" step="0.01" id="ed_mod_dMin"></td>
+            <td><input type="number" step="0.01" id="ed_mod_dMax"></td>
+            <td><input type="text" id="ed_mod_partImg" placeholder="images/..."></td>
+            <td><input type="text" id="ed_mod_drawImg" placeholder="images/..."></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Table 3: Diode Module (SCR Test) Standard Criteria -->
+  <div class="criteria-card">
+    <div class="criteria-card-title">📋 Table 3: Diode Module (2. SCR Test) — Standard Criteria</div>
+    <div style="overflow-x: auto;">
+      <table class="excel-editor-table">
+        <thead>
+          <tr>
+            <th style="width: 80px;">Case</th>
+            <th style="width: 170px;">Probes (+4 / R5 / G)</th>
+            <th>Standard Display Text</th>
+            <th style="width: 150px;">Expected Result (OK)</th>
+          </tr>
+        </thead>
+        <tbody id="ed_scr_tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="display: flex; justify-content: flex-start; gap: 10px; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+    <button type="button" class="btn-edit-temp" onclick="saveEditorTemp()">💾 บันทึกชั่วคราว</button>
+    <button type="button" class="btn-edit-update" onclick="saveEditorChanges()">⚡ อัปเดตโค้ด HTML</button>
+    <button type="button" class="btn-edit-reset" onclick="resetEditorDefault()">🔄 รีเซ็ตค่าเดิม</button>
+  </div>
+</div>
+
+<script>
+  let initialCriteria = {
+    "stack": {
+      "singleMin": 0.45,
+      "singleMax": 0.55,
+      "doubleMin": 0.90,
+      "doubleMax": 1.10,
+      "partImg": "images/Diode_Stack.jpg",
+      "drawingImg": "images/Drawing_Diode_Stack.jpg"
+    },
+    "moduleDiode": {
+      "singleMin": 0.45,
+      "singleMax": 0.55,
+      "doubleMin": 0.90,
+      "doubleMax": 1.10,
+      "partImg": "images/Diode_Module_PGH3016AM.jpg",
+      "drawingImg": "images/Drawing_Diode_Module.jpg"
+    },
+    "moduleScr": [
+      { "id": "scr1", "caseNo": "1", "p4": "Red",   "r5": "Black", "gate": "Trig",    "expectedSound": "No sound", "stdText": "OL (No sound)" },
+      { "id": "scr2", "caseNo": "2", "p4": "Red",   "r5": "Black", "gate": "No trig", "expectedSound": "No sound", "stdText": "OL (No sound)" },
+      { "id": "scr3", "caseNo": "3", "p4": "Black", "r5": "Red",   "gate": "Trig",    "expectedSound": "Sound",    "stdText": "0.018 V (Sound)" },
+      { "id": "scr4", "caseNo": "4", "p4": "Black", "r5": "Red",   "gate": "No trig", "expectedSound": "No sound", "stdText": "OL (No sound)" }
+    ]
+  };
+
+  let standardCriteria = JSON.parse(JSON.stringify(initialCriteria));
+  let activeRectifierType = null; // 'stack' | 'module' | null
+
+  const formState = {
+    uploadedImages: {},
+    imageCounter: 0
+  };
+
+  // Full 12 Cases for Diode Stack
+  const STACK_ALL_CASES = [
+    { id: 'c1',  caseNo: '1',  pPos: 'Red',   pAc1: 'Black', pAc2: '',      pNeg: '',      active: false },
+    { id: 'c2',  caseNo: '2',  pPos: 'Black', pAc1: 'Red',   pAc2: '',      pNeg: '',      active: true, type: 'single' },
+    { id: 'c3',  caseNo: '3',  pPos: 'Red',   pAc1: '',      pAc2: 'Black', pNeg: '',      active: false },
+    { id: 'c4',  caseNo: '4',  pPos: 'Black', pAc1: '',      pAc2: 'Red',   pNeg: '',      active: true, type: 'single' },
+    { id: 'c5',  caseNo: '5',  pPos: 'Red',   pAc1: '',      pAc2: '',      pNeg: 'Black', active: false },
+    { id: 'c6',  caseNo: '6',  pPos: 'Black', pAc1: '',      pAc2: '',      pNeg: 'Red',   active: true, type: 'double' },
+    { id: 'c7',  caseNo: '7',  pPos: '',      pAc1: 'Red',   pAc2: 'Black', pNeg: '',      active: false },
+    { id: 'c8',  caseNo: '8',  pPos: '',      pAc1: 'Black', pAc2: 'Red',   pNeg: '',      active: false },
+    { id: 'c9',  caseNo: '9',  pPos: '',      pAc1: 'Red',   pAc2: '',      pNeg: 'Black', active: false },
+    { id: 'c10', caseNo: '10', pPos: '',      pAc1: 'Black', pAc2: '',      pNeg: 'Red',   active: true, type: 'single' },
+    { id: 'c11', caseNo: '11', pPos: '',      pAc1: '',      pAc2: 'Red',   pNeg: 'Black', active: false },
+    { id: 'c12', caseNo: '12', pPos: '',      pAc1: '',      pAc2: 'Black', pNeg: 'Red',   active: true, type: 'single' }
+  ];
+
+  // Full 20 Cases for Six-Diode Test of Diode Module
+  const MODULE_ALL_CASES = [
+    { id: 'c1',  caseNo: '1',  r5: 'Red',   ac1: 'Black', ac2: '',      ac3: '',      n6: '',      active: false },
+    { id: 'c2',  caseNo: '2',  r5: 'Black', ac1: 'Red',   ac2: '',      ac3: '',      n6: '',      active: true, type: 'single' },
+    { id: 'c3',  caseNo: '3',  r5: 'Red',   ac1: '',      ac2: 'Black', ac3: '',      n6: '',      active: false },
+    { id: 'c4',  caseNo: '4',  r5: 'Black', ac1: '',      ac2: 'Red',   ac3: '',      n6: '',      active: true, type: 'single' },
+    { id: 'c5',  caseNo: '5',  r5: 'Red',   ac1: '',      ac2: '',      ac3: 'Black', n6: '',      active: false },
+    { id: 'c6',  caseNo: '6',  r5: 'Black', ac1: '',      ac2: '',      ac3: 'Red',   n6: '',      active: true, type: 'single' },
+    { id: 'c7',  caseNo: '7',  r5: 'Red',   ac1: '',      ac2: '',      ac3: '',      n6: 'Black', active: false },
+    { id: 'c8',  caseNo: '8',  r5: 'Black', ac1: '',      ac2: '',      ac3: '',      n6: 'Red',   active: true, type: 'double' },
+    { id: 'c9',  caseNo: '9',  r5: '',      ac1: 'Red',   ac2: 'Black', ac3: '',      n6: '',      active: false },
+    { id: 'c10', caseNo: '10', r5: '',      ac1: 'Black', ac2: 'Red',   ac3: '',      n6: '',      active: false },
+    { id: 'c11', caseNo: '11', r5: '',      ac1: 'Red',   ac2: '',      ac3: 'Black', n6: '',      active: false },
+    { id: 'c12', caseNo: '12', r5: '',      ac1: 'Black', ac2: '',      ac3: 'Red',   n6: '',      active: false },
+    { id: 'c13', caseNo: '13', r5: '',      ac1: 'Red',   ac2: '',      ac3: '',      n6: 'Black', active: false },
+    { id: 'c14', caseNo: '14', r5: '',      ac1: 'Black', ac2: '',      ac3: '',      n6: 'Red',   active: true, type: 'single' },
+    { id: 'c15', caseNo: '15', r5: '',      ac1: '',      ac2: 'Red',   ac3: 'Black', n6: '',      active: false },
+    { id: 'c16', caseNo: '16', r5: '',      ac1: '',      ac2: 'Black', ac3: 'Red',   n6: '',      active: false },
+    { id: 'c17', caseNo: '17', r5: '',      ac1: '',      ac2: 'Red',   ac3: '',      n6: 'Black', active: false },
+    { id: 'c18', caseNo: '18', r5: '',      ac1: '',      ac2: 'Black', ac3: '',      n6: 'Red',   active: true, type: 'single' },
+    { id: 'c19', caseNo: '19', r5: '',      ac1: '',      ac2: '',      ac3: 'Red',   n6: 'Black', active: false },
+    { id: 'c20', caseNo: '20', r5: '',      ac1: '',      ac2: '',      ac3: 'Black', n6: 'Red',   active: true, type: 'single' }
+  ];
+
+  window.addEventListener('DOMContentLoaded', () => {
+    initEditorFields();
+  });
+
+  window.addEventListener('afterprint', () => {
+    const container = document.getElementById('reportContent');
+    if (container) container.style.zoom = '';
+  });
+
+  function formatProbeCell(val) {
+    if (val === 'Red') return `<span class="probe-red">Red</span>`;
+    if (val === 'Black') return `<span class="probe-black">Black</span>`;
+    return '';
+  }
+
+  function selectRectifierType(type) {
+    const chkStack = document.getElementById('chk_diode_stack');
+    const chkModule = document.getElementById('chk_diode_module');
+
+    if (type === 'stack') {
+      if (chkStack.checked) {
+        chkModule.checked = false;
+        activeRectifierType = 'stack';
+      } else {
+        activeRectifierType = null;
+      }
+    } else if (type === 'module') {
+      if (chkModule.checked) {
+        chkStack.checked = false;
+        activeRectifierType = 'module';
+      } else {
+        activeRectifierType = null;
+      }
+    }
+    renderUnifiedSection();
+    updateSummarySection();
+  }
+
+  function toggleReverseRows(chk) {
+    const rows = document.querySelectorAll('.row-reverse-test');
+    rows.forEach(r => {
+      if (chk.checked) r.classList.add('show-reverse');
+      else r.classList.remove('show-reverse');
+    });
+  }
+
+  function captureCurrentInputs() {
+    const saved = {};
+    document.querySelectorAll('#technicalPartsContainer input, #technicalPartsContainer select').forEach(el => {
+      if (el.id) {
+        saved[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+      }
+    });
+    return saved;
+  }
+
+  function restoreAndEvaluateInputs(saved) {
+    Object.keys(saved).forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.type === 'checkbox') {
+        el.checked = saved[id];
+        if (el.onchange) el.onchange();
+      } else {
+        el.value = saved[id];
+      }
+    });
+
+    const activeCases = (activeRectifierType === 'stack' ? STACK_ALL_CASES : MODULE_ALL_CASES).filter(c => c.active);
+    const spec = activeRectifierType === 'stack' ? standardCriteria.stack : standardCriteria.moduleDiode;
+    activeCases.forEach(c => {
+      const minV = c.type === 'double' ? spec.doubleMin : spec.singleMin;
+      const maxV = c.type === 'double' ? spec.doubleMax : spec.singleMax;
+      handleDiodeUnitChange(c.id, minV, maxV);
+    });
+
+    if (activeRectifierType === 'module') {
+      standardCriteria.moduleScr.forEach(s => {
+        evaluateScrRow(s.id, s.expectedSound);
+      });
+    }
+  }
+
+  function renderUnifiedSection(preserveValues = false) {
+    const container = document.getElementById('technicalPartsContainer');
+    if (!container) return;
+
+    const savedInputs = preserveValues ? captureCurrentInputs() : null;
+
+    if (!activeRectifierType) {
+      container.innerHTML = `<div style="padding:16px; text-align:center; color:var(--text-muted); font-size:0.85rem;">👉 Please select <b>Diode stack</b> or <b>Diode module</b> above to open the probe matrix and input test results.</div>`;
+      return;
+    }
+
+    if (activeRectifierType === 'stack') {
+      const spec = standardCriteria.stack;
+      const rowsHtml = STACK_ALL_CASES.map(c => {
+        if (!c.active) {
+          return `
+            <tr class="row-reverse-test">
+              <td>Case ${c.caseNo}</td>
+              <td>${formatProbeCell(c.pPos)}</td>
+              <td>${formatProbeCell(c.pAc1)}</td>
+              <td>${formatProbeCell(c.pAc2)}</td>
+              <td>${formatProbeCell(c.pNeg)}</td>
+              <td>- V</td>
+              <td colspan="2" style="font-size:0.72rem; color:var(--text-muted);">Reverse Bias (No Conduction)</td>
+            </tr>
+          `;
+        }
+        const minV = c.type === 'double' ? spec.doubleMin : spec.singleMin;
+        const maxV = c.type === 'double' ? spec.doubleMax : spec.singleMax;
+        return `
+          <tr class="row-active-test">
+            <td><b>Case ${c.caseNo}</b></td>
+            <td>${formatProbeCell(c.pPos)}</td>
+            <td>${formatProbeCell(c.pAc1)}</td>
+            <td>${formatProbeCell(c.pAc2)}</td>
+            <td>${formatProbeCell(c.pNeg)}</td>
+            <td style="white-space:nowrap;">${Number(minV).toFixed(2)} - ${Number(maxV).toFixed(2)} V</td>
+            <td>
+              <div style="display: flex; gap: 4px; align-items: center; justify-content: center;">
+                <input type="number" step="0.001" id="val_diode_${c.id}" class="input-control" placeholder="0.00" style="width: 85px; text-align: center;" oninput="evaluateDiodeRow('${c.id}', ${minV}, ${maxV})">
+                <select id="unit_diode_${c.id}" class="input-control" style="width: 58px; padding: 7px 2px;" onchange="handleDiodeUnitChange('${c.id}', ${minV}, ${maxV})">
+                  <option value="V" selected>V</option>
+                  <option value="OL" style="font-weight:bold; color:var(--danger-red);">OL</option>
+                </select>
+              </div>
+            </td>
+            <td><span id="status_diode_${c.id}" class="status-badge">-</span></td>
+          </tr>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="part-item-card">
+          <div class="part-header">
+            <span class="part-title-text">Diode Stack Inspection (Single-Phase Bridge)</span>
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              <label class="custom-check hide-on-pdf" style="padding: 4px 8px; font-size: 0.74rem;">
+                <input type="checkbox" id="chk_show_rev_stack" onchange="toggleReverseRows(this)"> Show Reverse-Bias Cases (All 12)
+              </label>
+            </div>
+          </div>
+
+          <!-- 2 Reference Boxes: Left = Part Photo, Right = Single-Phase Bridge Diode Stack Drawing -->
+          <div class="dual-image-grid diagram-box-hide-pdf">
+            <div class="image-preview-box">
+              <div class="img-container">
+                ${spec.partImg ? `<img src="${spec.partImg}" alt="Diode Stack" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : ''}
+                <svg viewBox="0 0 260 155" style="width:100%; max-height:165px; ${spec.partImg ? 'display:none;' : ''}">
+                  <rect x="45" y="15" width="170" height="75" rx="6" fill="#334155" stroke="#0F172A" stroke-width="2"/>
+                  <circle cx="130" cy="38" r="10" fill="#F8FAFC"/>
+                  <text x="72" y="72" fill="#FFFFFF" font-size="14" font-weight="bold">+</text>
+                  <text x="108" y="72" fill="#FFFFFF" font-size="13" font-weight="bold">~1</text>
+                  <text x="142" y="72" fill="#FFFFFF" font-size="13" font-weight="bold">~2</text>
+                  <text x="182" y="72" fill="#FFFFFF" font-size="16" font-weight="bold">-</text>
+                  <rect x="73" y="90" width="8" height="45" fill="#94A3B8"/>
+                  <rect x="111" y="90" width="8" height="45" fill="#94A3B8"/>
+                  <rect x="145" y="90" width="8" height="45" fill="#94A3B8"/>
+                  <rect x="181" y="90" width="8" height="45" fill="#94A3B8"/>
+                </svg>
+              </div>
+              <div class="img-caption">Diode Stack Part &amp; Terminal Layout (+, ~1, ~2, -)</div>
+            </div>
+
+            <div class="image-preview-box">
+              <div class="img-container">
+                ${spec.drawingImg ? `<img src="${spec.drawingImg}" alt="Diode Stack Drawing" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : ''}
+                <svg viewBox="0 0 300 185" style="width:100%; max-height:180px; ${spec.drawingImg ? 'display:none;' : ''}">
+                  <line x1="150" y1="32" x2="80" y2="92" stroke="#000000" stroke-width="2.2"/>
+                  <line x1="150" y1="32" x2="220" y2="92" stroke="#000000" stroke-width="2.2"/>
+                  <line x1="80" y1="92" x2="150" y2="152" stroke="#000000" stroke-width="2.2"/>
+                  <line x1="220" y1="92" x2="150" y2="152" stroke="#000000" stroke-width="2.2"/>
+                  <line x1="150" y1="10" x2="150" y2="32" stroke="#000000" stroke-width="2.2"/>
+                  <line x1="150" y1="152" x2="150" y2="174" stroke="#000000" stroke-width="2.2"/>
+                  <line x1="54" y1="92" x2="80" y2="92" stroke="#000000" stroke-width="2.2"/>
+                  <line x1="220" y1="92" x2="246" y2="92" stroke="#000000" stroke-width="2.2"/>
+                  <g transform="translate(115, 62) rotate(-40.6)">
+                    <polygon points="-10,-9 -10,9 9,0" fill="#000000"/>
+                    <line x1="9" y1="-10" x2="9" y2="10" stroke="#000000" stroke-width="3.2"/>
+                  </g>
+                  <g transform="translate(185, 62) rotate(40.6)">
+                    <polygon points="-10,-9 -10,9 9,0" fill="#000000"/>
+                    <line x1="9" y1="-10" x2="9" y2="10" stroke="#000000" stroke-width="3.2"/>
+                  </g>
+                  <g transform="translate(115, 122) rotate(40.6)">
+                    <polygon points="-10,-9 -10,9 9,0" fill="#000000"/>
+                    <line x1="9" y1="-10" x2="9" y2="10" stroke="#000000" stroke-width="3.2"/>
+                  </g>
+                  <g transform="translate(185, 122) rotate(-40.6)">
+                    <polygon points="-10,-9 -10,9 9,0" fill="#000000"/>
+                    <line x1="9" y1="-10" x2="9" y2="10" stroke="#000000" stroke-width="3.2"/>
+                  </g>
+                  <circle cx="150" cy="32" r="4.5" fill="#000000"/>
+                  <circle cx="150" cy="152" r="4.5" fill="#000000"/>
+                  <circle cx="80" cy="92" r="4.5" fill="#000000"/>
+                  <circle cx="220" cy="92" r="4.5" fill="#000000"/>
+                  <text x="158" y="24" font-size="13" font-weight="600" fill="#000000">~ 1</text>
+                  <text x="158" y="170" font-size="13" font-weight="600" fill="#000000">~ 2</text>
+                  <text x="61" y="83" font-size="15" font-weight="600" fill="#000000">-</text>
+                  <text x="230" y="83" font-size="15" font-weight="600" fill="#000000">+</text>
+                </svg>
+              </div>
+              <div class="img-caption">Diode Stack Internal Circuit Drawing</div>
+            </div>
+          </div>
+
+          <!-- Table 1: Unified Matrix Table -->
+          <div class="table-scroll-wrap">
+            <table class="unified-table">
+              <thead>
+                <tr>
+                  <th>Case</th>
+                  <th class="pin-col">+</th>
+                  <th class="pin-col">~1</th>
+                  <th class="pin-col">~2</th>
+                  <th class="pin-col">-</th>
+                  <th>Standard</th>
+                  <th>Result (V)</th>
+                  <th>Judgement</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHtml}
+              </tbody>
+            </table>
+          </div>
+
+          ${renderBottomUpload()}
+        </div>
+      `;
+    } else {
+      // Diode Module (Table 2: Six-Diode Test + Table 3: SCR Test)
+      const spec = standardCriteria.moduleDiode;
+      const diodeRowsHtml = MODULE_ALL_CASES.map(c => {
+        if (!c.active) {
+          return `
+            <tr class="row-reverse-test">
+              <td>Case ${c.caseNo}</td>
+              <td>${formatProbeCell(c.r5)}</td>
+              <td>${formatProbeCell(c.ac1)}</td>
+              <td>${formatProbeCell(c.ac2)}</td>
+              <td>${formatProbeCell(c.ac3)}</td>
+              <td>${formatProbeCell(c.n6)}</td>
+              <td>- V</td>
+              <td colspan="2" style="font-size:0.72rem; color:var(--text-muted);">Reverse Bias (No Conduction)</td>
+            </tr>
+          `;
+        }
+        const minV = c.type === 'double' ? spec.doubleMin : spec.singleMin;
+        const maxV = c.type === 'double' ? spec.doubleMax : spec.singleMax;
+        return `
+          <tr class="row-active-test">
+            <td><b>Case ${c.caseNo}</b></td>
+            <td>${formatProbeCell(c.r5)}</td>
+            <td>${formatProbeCell(c.ac1)}</td>
+            <td>${formatProbeCell(c.ac2)}</td>
+            <td>${formatProbeCell(c.ac3)}</td>
+            <td>${formatProbeCell(c.n6)}</td>
+            <td style="white-space:nowrap;">${Number(minV).toFixed(2)} - ${Number(maxV).toFixed(2)} V</td>
+            <td>
+              <div style="display: flex; gap: 3px; align-items: center; justify-content: center;">
+                <input type="number" step="0.001" id="val_diode_${c.id}" class="input-control" placeholder="0.00" style="width: 82px; text-align: center;" oninput="evaluateDiodeRow('${c.id}', ${minV}, ${maxV})">
+                <select id="unit_diode_${c.id}" class="input-control" style="width: 56px; padding: 7px 2px;" onchange="handleDiodeUnitChange('${c.id}', ${minV}, ${maxV})">
+                  <option value="V" selected>V</option>
+                  <option value="OL" style="font-weight:bold; color:var(--danger-red);">OL</option>
+                </select>
+              </div>
+            </td>
+            <td><span id="status_diode_${c.id}" class="status-badge">-</span></td>
+          </tr>
+        `;
+      }).join('');
+
+      const scrRowsHtml = standardCriteria.moduleScr.map(s => `
+        <tr class="row-active-test">
+          <td><b>Case ${s.caseNo}</b></td>
+          <td>${formatProbeCell(s.p4)}</td>
+          <td>${formatProbeCell(s.r5)}</td>
+          <td><b>${s.gate}</b></td>
+          <td style="white-space:nowrap;">${s.stdText}</td>
+          <td>
+            <div style="display: flex; gap: 3px; align-items: center; justify-content: center;">
+              <select id="val_scr_${s.id}" class="input-control" style="width: 112px; text-transform: none;" onchange="evaluateScrRow('${s.id}', '${s.expectedSound}')">
+                <option value="">-- Select --</option>
+                <option value="Sound">Sound</option>
+                <option value="No sound">No sound</option>
+              </select>
+              ${s.caseNo === '3' ? `<input type="number" step="0.001" id="volt_scr_${s.id}" class="input-control" placeholder="V (opt)" style="width: 72px; text-align: center;" oninput="updateSummarySection()">` : ''}
+            </div>
+          </td>
+          <td><span id="status_scr_${s.id}" class="status-badge">-</span></td>
+        </tr>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="part-item-card">
+          <div class="part-header">
+            <span class="part-title-text">Diode Module Inspection (3-Phase Bridge + SCR)</span>
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              <label class="custom-check hide-on-pdf" style="padding: 4px 8px; font-size: 0.74rem;">
+                <input type="checkbox" id="chk_show_rev_mod" onchange="toggleReverseRows(this)"> Show Reverse-Bias Cases (All 20)
+              </label>
+            </div>
+          </div>
+
+          <!-- 2 Reference Boxes: Left = Physical Diode Module, Right = Circuit & SCR Trigger Drawing -->
+          <div class="dual-image-grid diagram-box-hide-pdf">
+            <div class="image-preview-box">
+              <div class="img-container">
+                ${spec.partImg ? `<img src="${spec.partImg}" alt="Diode Module Part" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : ''}
+                <svg viewBox="0 0 300 175" style="width:100%; max-height:175px; ${spec.partImg ? 'display:none;' : ''}">
+                  <rect x="20" y="18" width="260" height="115" rx="8" fill="#1E293B" stroke="#0F172A" stroke-width="2"/>
+                  <circle cx="32" cy="75" r="7" fill="#F8FAFC"/>
+                  <circle cx="268" cy="75" r="7" fill="#F8FAFC"/>
+                  <rect x="48" y="32" width="12" height="16" rx="2" fill="#CBD5E1"/>
+                  <text x="54" y="27" text-anchor="middle" fill="#F8FAFC" font-size="9" font-weight="bold">G</text>
+                  <rect x="48" y="102" width="12" height="16" rx="2" fill="#CBD5E1"/>
+                  <text x="54" y="128" text-anchor="middle" fill="#F8FAFC" font-size="9" font-weight="bold">K</text>
+                  <rect x="76" y="30" width="44" height="28" rx="3" fill="#E2E8F0"/><circle cx="98" cy="44" r="6" fill="#64748B"/>
+                  <text x="98" y="25" text-anchor="middle" fill="#F8FAFC" font-size="10" font-weight="bold">AC1</text>
+                  <rect x="136" y="30" width="44" height="28" rx="3" fill="#E2E8F0"/><circle cx="158" cy="44" r="6" fill="#64748B"/>
+                  <text x="158" y="25" text-anchor="middle" fill="#F8FAFC" font-size="10" font-weight="bold">AC2</text>
+                  <rect x="196" y="30" width="44" height="28" rx="3" fill="#E2E8F0"/><circle cx="218" cy="44" r="6" fill="#64748B"/>
+                  <text x="218" y="25" text-anchor="middle" fill="#F8FAFC" font-size="10" font-weight="bold">AC3</text>
+                  <rect x="68" y="71" width="184" height="8" rx="2" fill="#0F172A"/>
+                  <rect x="76" y="92" width="44" height="28" rx="3" fill="#E2E8F0"/><circle cx="98" cy="106" r="6" fill="#64748B"/>
+                  <text x="98" y="130" text-anchor="middle" fill="#F8FAFC" font-size="10" font-weight="bold">+4</text>
+                  <rect x="136" y="92" width="44" height="28" rx="3" fill="#E2E8F0"/><circle cx="158" cy="106" r="6" fill="#64748B"/>
+                  <text x="158" y="130" text-anchor="middle" fill="#F8FAFC" font-size="10" font-weight="bold">R5</text>
+                  <rect x="196" y="92" width="44" height="28" rx="3" fill="#E2E8F0"/><circle cx="218" cy="106" r="6" fill="#64748B"/>
+                  <text x="218" y="130" text-anchor="middle" fill="#F8FAFC" font-size="10" font-weight="bold">-6</text>
+                  <rect x="76" y="140" width="164" height="16" rx="2" fill="#F1F5F9" stroke="#CBD5E1"/>
+                  <text x="158" y="151" text-anchor="middle" fill="#0F172A" font-size="9.5" font-weight="bold">Diode Module Terminal Layout</text>
+                </svg>
+              </div>
+              <div class="img-caption">Diode Module Part &amp; Terminal Layout</div>
+            </div>
+
+            <div class="image-preview-box">
+              <div class="img-container">
+                ${spec.drawingImg ? `<img src="${spec.drawingImg}" alt="Diode Module Drawing" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : ''}
+                <svg viewBox="0 0 385 240" style="width:100%; max-height:210px; ${spec.drawingImg ? 'display:none;' : ''}">
+                  <rect x="234" y="5" width="54" height="76" rx="8" fill="#F59E0B" stroke="#B45309" stroke-width="1.5"/>
+                  <rect x="239" y="9" width="44" height="68" rx="5" fill="#334155"/>
+                  <rect x="243" y="13" width="36" height="20" rx="2" fill="#E2E8F0" stroke="#0F172A" stroke-width="0.8"/>
+                  <ellipse cx="252" cy="23" rx="3.2" ry="2.2" fill="#0F172A"/>
+                  <path d="M 258 19.5 Q 261 23 258 26.5" fill="none" stroke="#0F172A" stroke-width="1.4" stroke-linecap="round"/>
+                  <path d="M 262 17.5 Q 266 23 262 28.5" fill="none" stroke="#0F172A" stroke-width="1.4" stroke-linecap="round"/>
+                  <path d="M 266 15.5 Q 271 23 266 30.5" fill="none" stroke="#0F172A" stroke-width="1.4" stroke-linecap="round"/>
+                  <rect x="245" y="36" width="8" height="3.5" rx="1" fill="#F97316"/>
+                  <rect x="257" y="36" width="8" height="3.5" rx="1" fill="#94A3B8"/>
+                  <rect x="269" y="36" width="8" height="3.5" rx="1" fill="#94A3B8"/>
+                  <circle cx="261" cy="51" r="9.5" fill="#1E293B" stroke="#64748B" stroke-width="1"/>
+                  <line x1="256" y1="45" x2="266" y2="57" stroke="#CBD5E1" stroke-width="2.5" stroke-linecap="round"/>
+                  <circle cx="249" cy="69" r="3.2" fill="#DC2626" stroke="#FFFFFF" stroke-width="0.8"/>
+                  <circle cx="261" cy="69" r="3.2" fill="#0F172A" stroke="#FFFFFF" stroke-width="0.8"/>
+                  <circle cx="273" cy="69" r="3.2" fill="#DC2626" stroke="#FFFFFF" stroke-width="0.8"/>
+
+                  <path d="M 249 72 C 242 84, 208 80, 208 94" fill="none" stroke="#DC2626" stroke-width="2"/>
+                  <rect x="204.5" y="94" width="7" height="32" rx="1.5" fill="#DC2626" stroke="#991B1B" stroke-width="0.8"/>
+                  <rect x="202" y="125" width="12" height="3" rx="1" fill="#991B1B"/>
+                  <polygon points="206.5,128 209.5,128 208,147" fill="#64748B"/>
+
+                  <path d="M 261 72 C 272 86, 344 76, 344 94" fill="none" stroke="#1E293B" stroke-width="2"/>
+                  <rect x="340.5" y="94" width="7" height="32" rx="1.5" fill="#1E293B" stroke="#0F172A" stroke-width="0.8"/>
+                  <rect x="338" y="125" width="12" height="3" rx="1" fill="#0F172A"/>
+                  <polygon points="342.5,128 345.5,128 344,147" fill="#64748B"/>
+
+                  <text x="278" y="90" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0F172A">No trig</text>
+                  <line x1="254" y1="98" x2="268" y2="98" stroke="#0284C7" stroke-width="2"/>
+                  <circle cx="268" cy="98" r="2.2" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.6"/>
+                  <line x1="270" y1="97" x2="287" y2="90" stroke="#0284C7" stroke-width="2"/>
+                  <circle cx="288" cy="98" r="2.2" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.6"/>
+                  <line x1="288" y1="98" x2="302" y2="98" stroke="#0284C7" stroke-width="2"/>
+
+                  <line x1="254" y1="117" x2="268" y2="117" stroke="#0284C7" stroke-width="2"/>
+                  <circle cx="268" cy="117" r="2.2" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.6"/>
+                  <line x1="270" y1="116" x2="288" y2="110" stroke="#0284C7" stroke-width="2"/>
+                  <circle cx="288" cy="117" r="2.2" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.6"/>
+                  <line x1="288" y1="117" x2="302" y2="117" stroke="#0284C7" stroke-width="2"/>
+                  <text x="278" y="130" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0F172A">Trig</text>
+
+                  <line x1="208" y1="143" x2="254" y2="117" stroke="#DC2626" stroke-width="1.5"/>
+                  <line x1="302" y1="117" x2="246" y2="141" stroke="#DC2626" stroke-width="1.5"/>
+
+                  <line x1="65" y1="154" x2="254" y2="154" stroke="#000000" stroke-width="1.6"/>
+                  <line x1="270" y1="154" x2="340" y2="154" stroke="#000000" stroke-width="1.6"/>
+                  <line x1="65" y1="226" x2="340" y2="226" stroke="#000000" stroke-width="1.6"/>
+
+                  <line x1="65" y1="154" x2="65" y2="226" stroke="#000000" stroke-width="1.5"/>
+                  <polygon points="58,177 72,177 65,165" fill="#000000"/>
+                  <line x1="57" y1="165" x2="73" y2="165" stroke="#000000" stroke-width="2.4"/>
+                  <polygon points="58,214 72,214 65,202" fill="#000000"/>
+                  <line x1="57" y1="202" x2="73" y2="202" stroke="#000000" stroke-width="2.4"/>
+                  <line x1="43" y1="190" x2="65" y2="190" stroke="#000000" stroke-width="1.5"/>
+                  <circle cx="39" cy="190" r="3.5" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+                  <text x="12" y="194" font-size="10.5" font-weight="600" fill="#000000">AC1</text>
+
+                  <line x1="118" y1="154" x2="118" y2="226" stroke="#000000" stroke-width="1.5"/>
+                  <polygon points="111,177 125,177 118,165" fill="#000000"/>
+                  <line x1="110" y1="165" x2="126" y2="165" stroke="#000000" stroke-width="2.4"/>
+                  <polygon points="111,214 125,214 118,202" fill="#000000"/>
+                  <line x1="110" y1="202" x2="126" y2="202" stroke="#000000" stroke-width="2.4"/>
+                  <line x1="96" y1="190" x2="118" y2="190" stroke="#000000" stroke-width="1.5"/>
+                  <circle cx="92" cy="190" r="3.5" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+                  <text x="69" y="185" font-size="10.5" font-weight="600" fill="#000000">AC2</text>
+
+                  <line x1="171" y1="154" x2="171" y2="226" stroke="#000000" stroke-width="1.5"/>
+                  <polygon points="164,177 178,177 171,165" fill="#000000"/>
+                  <line x1="163" y1="165" x2="179" y2="165" stroke="#000000" stroke-width="2.4"/>
+                  <polygon points="164,214 178,214 171,202" fill="#000000"/>
+                  <line x1="163" y1="202" x2="179" y2="202" stroke="#000000" stroke-width="2.4"/>
+                  <line x1="149" y1="190" x2="171" y2="190" stroke="#000000" stroke-width="1.5"/>
+                  <circle cx="145" cy="190" r="3.5" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+                  <text x="122" y="185" font-size="10.5" font-weight="600" fill="#000000">AC3</text>
+
+                  <line x1="208" y1="154" x2="208" y2="151" stroke="#000000" stroke-width="1.5"/>
+                  <circle cx="208" cy="150" r="3.5" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+                  <text x="188" y="147" font-size="10.5" font-weight="600" fill="#000000">R5</text>
+
+                  <polygon points="254,147 254,161 269,154" fill="#000000"/>
+                  <line x1="269" y1="146" x2="269" y2="162" stroke="#000000" stroke-width="2.6"/>
+                  <line x1="269" y1="150" x2="249" y2="141" stroke="#000000" stroke-width="1.5"/>
+                  <circle cx="245" cy="141" r="3.5" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+                  <text x="231" y="143" font-size="10.5" font-weight="600" fill="#000000">G</text>
+                  <line x1="292" y1="154" x2="292" y2="145" stroke="#000000" stroke-width="1.5"/>
+                  <circle cx="292" cy="141" r="3.5" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+                  <text x="299" y="143" font-size="10.5" font-weight="600" fill="#000000">K</text>
+
+                  <circle cx="344" cy="154" r="3.5" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+                  <text x="352" y="158" font-size="11" font-weight="600" fill="#000000">+4</text>
+
+                  <circle cx="344" cy="226" r="3.5" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+                  <text x="352" y="230" font-size="11" font-weight="600" fill="#000000">-6</text>
+                </svg>
+              </div>
+              <div class="img-caption">Diode Module Circuit &amp; SCR Triggering Drawing</div>
+            </div>
+          </div>
+
+          <!-- Table 2: Six-Diode Unified Matrix -->
+          <div style="font-size: 0.8rem; font-weight: 700; color: var(--primary-black); margin-bottom: 5px;">1. Six-Diode Test</div>
+          <div class="table-scroll-wrap">
+            <table class="unified-table">
+              <thead>
+                <tr>
+                  <th>Case</th>
+                  <th class="pin-col">R5</th>
+                  <th class="pin-col">AC1</th>
+                  <th class="pin-col">AC2</th>
+                  <th class="pin-col">AC3</th>
+                  <th class="pin-col">-6</th>
+                  <th>Standard</th>
+                  <th>Result (V)</th>
+                  <th>Judgement</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${diodeRowsHtml}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Table 3: SCR Unified Matrix -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0 5px; flex-wrap: wrap; gap: 4px;">
+            <span style="font-size: 0.8rem; font-weight: 700; color: var(--primary-black);">2. SCR Test of Diode Module</span>
+            <span style="font-size: 0.72rem; color: var(--danger-red); font-weight: 600;">* Record "Sound" or "No sound" in all cases</span>
+          </div>
+          <div class="table-scroll-wrap">
+            <table class="unified-table">
+              <thead>
+                <tr>
+                  <th>Case</th>
+                  <th class="pin-col">+4</th>
+                  <th class="pin-col">R5</th>
+                  <th class="pin-col">G</th>
+                  <th>Standard</th>
+                  <th>Result *</th>
+                  <th>Judgement</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${scrRowsHtml}
+              </tbody>
+            </table>
+          </div>
+
+          ${renderBottomUpload()}
+        </div>
+      `;
+    }
+
+    if (savedInputs) {
+      restoreAndEvaluateInputs(savedInputs);
+    }
+  }
+
+  function renderBottomUpload() {
+    return `
+      <div class="upload-zone hide-on-pdf" id="zone_rectifier_pic">
+        <input type="file" id="pic_rectifier" accept="image/*" multiple onchange="handleImageUpload(this)">
+        <div class="upload-label" id="lbl_upload_rectifier">📷 Attach Rectifier Part / Damage Picture (Optional - Multiple Allowed)</div>
+      </div>
+    `;
+  }
+
+  function handleDiodeUnitChange(caseId, minV, maxV) {
+    const unitEl = document.getElementById(`unit_diode_${caseId}`);
+    const valEl = document.getElementById(`val_diode_${caseId}`);
+    if (!unitEl || !valEl) return;
+
+    if (unitEl.value === 'OL') {
+      valEl.value = '';
+      valEl.placeholder = 'OL';
+      valEl.disabled = true;
+    } else {
+      valEl.placeholder = '0.00';
+      valEl.disabled = false;
+    }
+    evaluateDiodeRow(caseId, minV, maxV);
+  }
+
+  function evaluateDiodeRow(caseId, minV, maxV) {
+    const unitEl = document.getElementById(`unit_diode_${caseId}`);
+    const valEl = document.getElementById(`val_diode_${caseId}`);
+    const badge = document.getElementById(`status_diode_${caseId}`);
+    if (!unitEl || !valEl || !badge) return;
+
+    if (unitEl.value === 'OL') {
+      badge.textContent = 'NG';
+      badge.className = 'status-badge status-ng';
+      updateSummarySection();
+      return;
+    }
+
+    const raw = valEl.value.trim();
+    if (raw === '' || isNaN(raw)) {
+      badge.textContent = '-';
+      badge.className = 'status-badge';
+      updateSummarySection();
+      return;
+    }
+
+    const num = parseFloat(raw);
+    const isOk = num >= (minV - 0.0001) && num <= (maxV + 0.0001);
+    badge.textContent = isOk ? 'OK' : 'NG';
+    badge.className = isOk ? 'status-badge status-ok' : 'status-badge status-ng';
+
+    updateSummarySection();
+  }
+
+  function evaluateScrRow(scrId, expectedSound) {
+    const sel = document.getElementById(`val_scr_${scrId}`);
+    const badge = document.getElementById(`status_scr_${scrId}`);
+    if (!sel || !badge) return;
+
+    const val = sel.value;
+    if (!val) {
+      badge.textContent = '-';
+      badge.className = 'status-badge';
+    } else if (val === expectedSound) {
+      badge.textContent = 'OK';
+      badge.className = 'status-badge status-ok';
+    } else {
+      badge.textContent = 'NG';
+      badge.className = 'status-badge status-ng';
+    }
+
+    updateSummarySection();
+  }
+
+  function handleImageUpload(input) {
+    const files = Array.from(input.files || []);
+    if (files.length === 0) return;
+
+    files.forEach(file => {
+      formState.imageCounter += 1;
+      const attachId = 'attach_rectifier_' + Date.now() + '_' + formState.imageCounter;
+      const title = `Rectifier Picture #${formState.imageCounter} (${file.name})`;
+
+      const processFile = (fileObj) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          formState.uploadedImages[attachId] = { title, src: e.target.result };
+          updateUploadZoneVisual();
+          renderAttachedImages();
+        };
+        reader.readAsDataURL(fileObj);
+      };
+
+      if (file.name.toLowerCase().endsWith('.heic')) {
+        heic2any({ blob: file, toType: "image/jpeg" }).then(resultBlob => {
+          processFile(resultBlob);
+        }).catch(err => {
+          alert("Failed to convert HEIC file: " + err.message);
+        });
+      } else {
+        processFile(file);
+      }
+    });
+
+    input.value = '';
+  }
+
+  function deleteAttachedImage(attachId) {
+    if (formState.uploadedImages[attachId]) {
+      delete formState.uploadedImages[attachId];
+      updateUploadZoneVisual();
+      renderAttachedImages();
+    }
+  }
+
+  function updateUploadZoneVisual() {
+    const zone = document.getElementById('zone_rectifier_pic');
+    const lbl = document.getElementById('lbl_upload_rectifier');
+    const count = Object.keys(formState.uploadedImages).length;
+    if (!zone || !lbl) return;
+
+    if (count > 0) {
+      zone.classList.add('has-file');
+      lbl.textContent = `✔ ${count} Picture(s) Attached — Click to Add More`;
+    } else {
+      zone.classList.remove('has-file');
+      lbl.textContent = `📷 Attach Rectifier Part / Damage Picture (Optional - Multiple Allowed)`;
+    }
+  }
+
+  function renderAttachedImages() {
+    const container = document.getElementById('attached_container');
+    const section = document.getElementById('section_attached_pictures');
+    if (!container || !section) return;
+
+    const keys = Object.keys(formState.uploadedImages);
+    if (keys.length === 0) {
+      section.style.display = 'none';
+      container.innerHTML = '';
+      return;
+    }
+
+    section.style.display = 'block';
+    container.innerHTML = '';
+
+    keys.forEach((k, idx) => {
+      const item = formState.uploadedImages[k];
+      const card = document.createElement('div');
+      card.className = 'attached-card';
+      card.innerHTML = `
+        <div class="attached-card-header">
+          <div class="attached-card-title">Rectifier Picture ${idx + 1}</div>
+          <button type="button" class="btn-delete-pic hide-on-pdf" onclick="deleteAttachedImage('${k}')" title="Delete Picture">🗑️ Delete</button>
+        </div>
+        <div class="attached-img-box"><img src="${item.src}" alt="${item.title}"></div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function updateSummarySection() {
+    const box = document.getElementById('summary_comment_content');
+    if (!box) return;
+
+    let html = '';
+
+    if (activeRectifierType) {
+      const typeLabel = activeRectifierType === 'module' ? 'Diode module' : 'Diode stack';
+      html += `<div class="summary-item-row"><span class="summary-part-name">• Rectifier Type:</span> ${typeLabel}</div>`;
+    }
+
+    const symptoms = [];
+    document.querySelectorAll('input[data-main-symptom]:checked').forEach(chk => {
+      symptoms.push(chk.getAttribute('data-main-symptom'));
+    });
+    if (symptoms.length > 0) {
+      html += `<div class="summary-item-row"><span class="summary-part-name">• Symptom:</span> ${symptoms.join(' | ')}</div>`;
+    }
+
+    if (activeRectifierType) {
+      const ngResults = [];
+      let totalMeasured = 0;
+
+      const activeCases = (activeRectifierType === 'stack' ? STACK_ALL_CASES : MODULE_ALL_CASES).filter(c => c.active);
+      activeCases.forEach(c => {
+        const status = document.getElementById(`status_diode_${c.id}`)?.textContent.trim();
+        const unit = document.getElementById(`unit_diode_${c.id}`)?.value;
+        const val = document.getElementById(`val_diode_${c.id}`)?.value;
+        if (status === 'OK' || status === 'NG') totalMeasured++;
+        if (status === 'NG') {
+          ngResults.push(`Diode Case ${c.caseNo}: ${unit === 'OL' ? 'OL' : val + ' V'} (NG)`);
+        }
+      });
+
+      if (activeRectifierType === 'module') {
+        standardCriteria.moduleScr.forEach(s => {
+          const status = document.getElementById(`status_scr_${s.id}`)?.textContent.trim();
+          const val = document.getElementById(`val_scr_${s.id}`)?.value;
+          const volt = document.getElementById(`volt_scr_${s.id}`)?.value;
+          if (status === 'OK' || status === 'NG') totalMeasured++;
+          if (status === 'NG') {
+            const voltNote = volt ? ` [${volt} V]` : '';
+            ngResults.push(`SCR Case ${s.caseNo} (${s.gate}): ${val}${voltNote} (NG)`);
+          }
+        });
+      }
+
+      if (ngResults.length > 0) {
+        html += `<div class="summary-item-row" style="color: var(--danger-red); font-weight: 600;"><span class="summary-part-name" style="color: var(--danger-red);">• Defective Measurements (NG Only):</span> ${ngResults.join(' | ')}</div>`;
+      } else if (totalMeasured > 0) {
+        html += `<div class="summary-item-row" style="color: var(--success-green);"><span class="summary-part-name">• Measurement Result:</span> All Pass (No NG Parameters)</div>`;
+      }
+    }
+
+    box.innerHTML = html || '<div style="color:var(--text-muted);">No inspection summary available</div>';
+  }
+
+  /* ==================== DESIGNER MODE FUNCTIONS (3 TABLES CRITERIA ONLY) ==================== */
+  function promptEditorMode() {
+    const panel = document.getElementById('editorPanel');
+    const isVisible = panel && panel.style.display === 'block';
+
+    if (isVisible) {
+      toggleEditorPanel(false);
+    } else {
+      const pwd = prompt("Enter Designer Mode password:");
+      if (pwd === "maco2026") {
+        toggleEditorPanel(true);
+      } else if (pwd !== null) {
+        alert("Incorrect password!");
+      }
+    }
+  }
+
+  function toggleEditorPanel(show) {
+    const panel = document.getElementById('editorPanel');
+    if (panel) {
+      panel.style.display = show ? 'block' : 'none';
+      if (show) {
+        initEditorFields();
+      }
+    }
+  }
+
+  function initEditorFields() {
+    document.getElementById('editFormTitle').value = document.getElementById('displayFormTitle').textContent;
+
+    // Table 1: Diode Stack
+    document.getElementById('ed_stack_sMin').value = standardCriteria.stack.singleMin;
+    document.getElementById('ed_stack_sMax').value = standardCriteria.stack.singleMax;
+    document.getElementById('ed_stack_dMin').value = standardCriteria.stack.doubleMin;
+    document.getElementById('ed_stack_dMax').value = standardCriteria.stack.doubleMax;
+    document.getElementById('ed_stack_partImg').value = standardCriteria.stack.partImg || '';
+    document.getElementById('ed_stack_drawImg').value = standardCriteria.stack.drawingImg || '';
+
+    // Table 2: Diode Module (Six-Diode)
+    document.getElementById('ed_mod_sMin').value = standardCriteria.moduleDiode.singleMin;
+    document.getElementById('ed_mod_sMax').value = standardCriteria.moduleDiode.singleMax;
+    document.getElementById('ed_mod_dMin').value = standardCriteria.moduleDiode.doubleMin;
+    document.getElementById('ed_mod_dMax').value = standardCriteria.moduleDiode.doubleMax;
+    document.getElementById('ed_mod_partImg').value = standardCriteria.moduleDiode.partImg || '';
+    document.getElementById('ed_mod_drawImg').value = standardCriteria.moduleDiode.drawingImg || '';
+
+    // Table 3: Diode Module (SCR)
+    const scrTbody = document.getElementById('ed_scr_tbody');
+    if (scrTbody) {
+      scrTbody.innerHTML = standardCriteria.moduleScr.map((s, idx) => `
+        <tr>
+          <td style="text-align:center; font-weight:700;">Case ${s.caseNo}</td>
+          <td style="text-align:center;">${s.p4} / ${s.r5} / <b>${s.gate}</b></td>
+          <td><input type="text" id="ed_scr_std_${idx}" value="${s.stdText}"></td>
+          <td>
+            <select id="ed_scr_exp_${idx}">
+              <option value="No sound" ${s.expectedSound === 'No sound' ? 'selected' : ''}>No sound</option>
+              <option value="Sound" ${s.expectedSound === 'Sound' ? 'selected' : ''}>Sound</option>
+            </select>
+          </td>
+        </tr>
+      `).join('');
+    }
+  }
+
+  function collectEditorData() {
+    const titleVal = document.getElementById('editFormTitle').value;
+    if (titleVal) {
+      document.getElementById('displayFormTitle').textContent = titleVal;
+      document.getElementById('pageHeaderTitle').textContent = titleVal;
+    }
+
+    standardCriteria.stack.singleMin = parseFloat(document.getElementById('ed_stack_sMin').value) || 0.45;
+    standardCriteria.stack.singleMax = parseFloat(document.getElementById('ed_stack_sMax').value) || 0.55;
+    standardCriteria.stack.doubleMin = parseFloat(document.getElementById('ed_stack_dMin').value) || 0.90;
+    standardCriteria.stack.doubleMax = parseFloat(document.getElementById('ed_stack_dMax').value) || 1.10;
+    standardCriteria.stack.partImg = document.getElementById('ed_stack_partImg').value.trim();
+    standardCriteria.stack.drawingImg = document.getElementById('ed_stack_drawImg').value.trim();
+
+    standardCriteria.moduleDiode.singleMin = parseFloat(document.getElementById('ed_mod_sMin').value) || 0.45;
+    standardCriteria.moduleDiode.singleMax = parseFloat(document.getElementById('ed_mod_sMax').value) || 0.55;
+    standardCriteria.moduleDiode.doubleMin = parseFloat(document.getElementById('ed_mod_dMin').value) || 0.90;
+    standardCriteria.moduleDiode.doubleMax = parseFloat(document.getElementById('ed_mod_dMax').value) || 1.10;
+    standardCriteria.moduleDiode.partImg = document.getElementById('ed_mod_partImg').value.trim();
+    standardCriteria.moduleDiode.drawingImg = document.getElementById('ed_mod_drawImg').value.trim();
+
+    standardCriteria.moduleScr.forEach((s, idx) => {
+      const stdInput = document.getElementById(`ed_scr_std_${idx}`);
+      const expSelect = document.getElementById(`ed_scr_exp_${idx}`);
+      if (stdInput) s.stdText = stdInput.value;
+      if (expSelect) s.expectedSound = expSelect.value;
+    });
+  }
+
+  function saveEditorTemp() {
+    collectEditorData();
+    renderUnifiedSection(true);
+    updateSummarySection();
+    alert("บันทึก Standard Criteria ชั่วคราวเรียบร้อยแล้ว!");
+  }
+
+  function saveEditorChanges() {
+    collectEditorData();
+    renderUnifiedSection(true);
+    updateSummarySection();
+
+    const panel = document.getElementById('editorPanel');
+    if (panel) panel.style.display = 'none';
+
+    const scrTbody = document.getElementById('ed_scr_tbody');
+    if (scrTbody) scrTbody.innerHTML = '';
+
+    let htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    const criteriaRegex = /let standardCriteria = \{[\s\S]*?\};/;
+    const initialCriteriaRegex = /let initialCriteria = \{[\s\S]*?\};/;
+    
+    htmlContent = htmlContent.replace(criteriaRegex, "let standardCriteria = " + JSON.stringify(standardCriteria, null, 2) + ";");
+    htmlContent = htmlContent.replace(initialCriteriaRegex, "let initialCriteria = " + JSON.stringify(standardCriteria, null, 2) + ";");
+
+    initEditorFields();
+
+    const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "Checking_Part_Report_Rectifier.html";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+
+    alert("อัปเดต Standard Criteria ลงในโค้ดและดาวน์โหลดไฟล์ HTML เรียบร้อยแล้ว!");
+  }
+
+  function resetEditorDefault() {
+    if (confirm("คุณต้องการรีเซ็ต Standard Criteria กลับเป็นค่าเริ่มต้นเดิมใช่หรือไม่?")) {
+      standardCriteria = JSON.parse(JSON.stringify(initialCriteria));
+      document.getElementById('displayFormTitle').textContent = "Checking Part Report (Rectifier)";
+      document.getElementById('pageHeaderTitle').textContent = "Checking Part Report (Rectifier)";
+      initEditorFields();
+      renderUnifiedSection(true);
+      updateSummarySection();
+      alert("รีเซ็ตข้อมูลเป็นค่าเริ่มต้นเรียบร้อยแล้ว!");
+    }
+  }
+
+  function prepareDOMForPDF() {
+    document.querySelectorAll('input[type="checkbox"]').forEach(input => {
+      if (input.checked) input.setAttribute('checked', 'checked');
+      else input.removeAttribute('checked');
+    });
+
+    document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(input => {
+      input.setAttribute('value', input.value);
+    });
+
+    document.querySelectorAll('select').forEach(select => {
+      select.querySelectorAll('option').forEach(option => {
+        if (option.value === select.value) option.setAttribute('selected', 'selected');
+        else option.removeAttribute('selected');
+      });
+    });
+  }
+
+  function autoFitForPrint() {
+    const container = document.getElementById('reportContent');
+    if (!container) return;
+
+    // A4 portrait printable width at 96dpi with 8mm side margins is ~730px
+    const maxA4WidthPx = 720;
+    let maxNeededWidth = container.offsetWidth;
+
+    document.querySelectorAll('.unified-table').forEach(tbl => {
+      if (tbl.scrollWidth > maxNeededWidth) {
+        maxNeededWidth = tbl.scrollWidth + 48;
+      }
+    });
+
+    if (maxNeededWidth > maxA4WidthPx && window.innerWidth < 768) {
+      const scale = Math.max(0.72, Math.min(1, maxA4WidthPx / maxNeededWidth));
+      container.style.zoom = scale.toFixed(2);
+    } else {
+      container.style.zoom = '';
+    }
+  }
+
+  function generatePDF() {
+    const serviceReportInput = document.getElementById('serviceReportNo');
+    if (!serviceReportInput || !serviceReportInput.value.trim()) {
+      alert("กรุณากรอก Service Report No. ก่อนทำการบันทึก PDF\nPlease enter Service Report No. before saving PDF");
+      if (serviceReportInput) serviceReportInput.focus();
+      return;
+    }
+    prepareDOMForPDF();
+    autoFitForPrint();
+    window.print();
+  }
+</script>
+</body></html>
