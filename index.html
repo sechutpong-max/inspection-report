@@ -122,6 +122,7 @@
       color: #FFFFFF;
     }
 
+    /* Red EN Button (Staff View Trigger) */
     .user-avatar {
       width: 30px;
       height: 30px;
@@ -133,9 +134,38 @@
       font-weight: 600;
       color: #FFFFFF;
       font-size: 0.75rem;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    /* Staff Name Clickable Trigger */
+    .user-avatar:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 0 3px rgba(230, 0, 18, 0.35);
+    }
+
+    /* Staff View Active Indicator */
+    body.is-staff-view .user-avatar {
+      box-shadow: 0 0 0 2px #FFFFFF, 0 0 12px rgba(230, 0, 18, 0.85);
+    }
+
+    .staff-view-badge {
+      display: none;
+      background: rgba(230, 0, 18, 0.2);
+      border: 1px solid var(--primary-red);
+      color: #FCA5A5;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      letter-spacing: 0.3px;
+    }
+
+    body.is-staff-view .staff-view-badge {
+      display: inline-block;
+    }
+
+    /* Staff Name Clickable Trigger (Design / Edit Mode) */
     .staff-name {
       cursor: pointer;
       user-select: none;
@@ -278,6 +308,26 @@
     /* Hidden Card Styling (Normal Mode) */
     .portal-card.is-hidden {
       display: none;
+    }
+
+    /* Hidden Cards visible in Staff View (Normal clickable mode + Staff Only badge) */
+    body.is-staff-view:not(.is-editing) .portal-card.is-hidden {
+      display: flex;
+    }
+
+    body.is-staff-view:not(.is-editing) .portal-card.is-hidden::after {
+      content: 'Staff Only';
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(15, 23, 42, 0.78);
+      color: #F8FAFC;
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      letter-spacing: 0.3px;
+      pointer-events: none;
     }
 
     .card-icon-box {
@@ -533,8 +583,9 @@
       <span class="nav-title">Service Portal</span>
     </div>
     <div class="user-profile">
-      <div class="user-avatar">EN</div>
-      <span class="staff-name" onclick="toggleEditMode()" title="Click to toggle Edit Mode">Engineer Staff</span>
+      <span class="staff-view-badge">Staff View</span>
+      <div class="user-avatar" onclick="toggleStaffView()" title="Click to toggle Staff View">EN</div>
+      <span class="staff-name" onclick="toggleEditMode()" title="Click to toggle Design / Edit Mode">Engineer Staff</span>
     </div>
   </header>
 
@@ -634,10 +685,10 @@
               <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)" checked="checked"> Hidden (Hide from users)
+              <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div><div class="portal-card is-hidden" data-href="dc-motor.html" data-locked="false" data-hidden="true">
+        </div><div class="portal-card  is-hidden" data-href="dc-motor.html" data-locked="false" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">⚙</div>
@@ -655,7 +706,7 @@
               <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)" checked="checked"> Hidden (Hide from users)
+              <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
         </div><div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true">
@@ -679,7 +730,7 @@
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div><div class="portal-card is-hidden" data-href="EEV.html" data-locked="false" data-hidden="true">
+        </div><div class="portal-card  is-hidden" data-href="EEV.html" data-locked="false" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">⚙</div>
@@ -697,7 +748,7 @@
               <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)" checked="checked"> Hidden (Hide from users)
+              <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
         </div><div class="portal-card is-hidden" data-href="stepping motor.html" data-locked="false" data-hidden="true">
@@ -718,7 +769,7 @@
               <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" class="card-hidden-check" onchange="updateVisibilityState(this)" checked="checked"> Hidden (Hide from users)
+              <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
         </div><div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true">
@@ -805,7 +856,7 @@
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div><div class="portal-card  is-hidden" data-href="running capacitor.html" data-locked="false" data-hidden="true">
+        </div><div class="portal-card is-hidden" data-href="running capacitor.html" data-locked="false" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🔋</div>
@@ -826,7 +877,7 @@
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div><div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true">
+        </div><div class="portal-card is-hidden" data-href="rectifier.html" data-locked="false" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">⚡</div>
@@ -834,14 +885,14 @@
             <p class="card-desc">Diode bridge rectifier circuit continuity and breakdown test module.</p>
           </div>
           <div class="card-footer">
-            <span class="footer-text">Coming Soon</span>
-            <span class="card-arrow">🔒</span>
+            <span class="footer-text">Open Report Form</span>
+            <span class="card-arrow">➔</span>
           </div>
           <div class="card-edit-fields" onclick="event.stopPropagation()">
             <label>Link URL:</label>
-            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <input type="text" class="card-url-input" value="rectifier.html" oninput="handleUrlChange(this)">
             <label class="checkbox-label">
-              <input type="checkbox" class="card-locked-check" checked="checked" onchange="updateCardState(this)"> Locked (Coming Soon)
+              <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
             <label class="checkbox-label">
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
@@ -868,7 +919,7 @@
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
             </label>
           </div>
-        </div><div class="portal-card is-locked is-hidden" data-href="#" data-locked="true" data-hidden="true">
+        </div><div class="portal-card is-hidden" data-href="compressor.html" data-locked="false" data-hidden="true">
           <div class="card-delete-btn" onclick="deleteCard(event, this)">✕</div>
           <div>
             <div class="card-icon-box">🔧</div>
@@ -876,14 +927,14 @@
             <p class="card-desc">Inverter/fixed compressor electrical winding, insulation, and mechanical check.</p>
           </div>
           <div class="card-footer">
-            <span class="footer-text">Coming Soon</span>
-            <span class="card-arrow">🔒</span>
+            <span class="footer-text">Open Report Form</span>
+            <span class="card-arrow">➔</span>
           </div>
           <div class="card-edit-fields" onclick="event.stopPropagation()">
             <label>Link URL:</label>
-            <input type="text" class="card-url-input" value="#" oninput="handleUrlChange(this)">
+            <input type="text" class="card-url-input" value="compressor.html" oninput="handleUrlChange(this)">
             <label class="checkbox-label">
-              <input type="checkbox" class="card-locked-check" checked="checked" onchange="updateCardState(this)"> Locked (Coming Soon)
+              <input type="checkbox" class="card-locked-check" onchange="updateCardState(this)"> Locked (Coming Soon)
             </label>
             <label class="checkbox-label">
               <input type="checkbox" class="card-hidden-check" checked="checked" onchange="updateVisibilityState(this)"> Hidden (Hide from users)
@@ -972,21 +1023,40 @@
     })();
   </script>
 
-  <!-- Dynamic Edit Mode / Auto Unlock / HTML Export Logic -->
+  <!-- Dynamic Staff View / Edit Mode / Auto Unlock / HTML Export Logic -->
   <script>
     let isEditing = false;
+    let isStaffView = false;
 
     document.addEventListener('DOMContentLoaded', function() {
       loadSavedPortalData();
     });
 
-    // สลับ Edit Mode (ต้องใส่รหัสเฉพาะตอนเข้า)
+    // สลับ Staff View (กดปุ่มแดง EN เพื่อแสดงกล่องที่ซ่อนอยู่โดยไม่ต้องเข้าโหมดแก้ไข)
+    function toggleStaffView() {
+      const body = document.body;
+
+      if (!isStaffView) {
+        const pass = prompt('กรุณากรอกรหัสผ่านเพื่อเข้าสู่ Staff View:');
+        if (pass !== 'maco2026') {
+          if (pass !== null) alert('รหัสผ่านไม่ถูกต้อง!');
+          return;
+        }
+        isStaffView = true;
+        body.classList.add('is-staff-view');
+      } else {
+        isStaffView = false;
+        body.classList.remove('is-staff-view');
+      }
+    }
+
+    // สลับ Edit Mode / Design Mode (กดที่ Engineer Staff)
     function toggleEditMode() {
       const body = document.body;
       const editables = document.querySelectorAll('.card-title, .card-desc, .card-icon-box');
 
       if (!isEditing) {
-        const pass = prompt('กรุณากรอกรหัสผ่านเพื่อเข้าสู่ Edit Mode:');
+        const pass = prompt('กรุณากรอกรหัสผ่านเพื่อเข้าสู่ Design Mode:');
         if (pass !== 'maco2026') {
           if (pass !== null) alert('รหัสผ่านไม่ถูกต้อง!');
           return;
@@ -1024,8 +1094,20 @@
 
     // ดาวน์โหลดโค้ด HTML ล่าสุดออกเป็นไฟล์ index.html อัตโนมัติทันที
     function downloadCurrentHTML() {
+      const body = document.body;
+      const hadStaffView = body.classList.contains('is-staff-view');
+
+      // เอาคลาส is-staff-view ออกชั่วคราวก่อนบันทึกไฟล์ เพื่อให้หน้าเริ่มต้นของผู้ใช้ทั่วไปยังคงซ่อนการ์ดตามปกติ
+      if (hadStaffView) {
+        body.classList.remove('is-staff-view');
+      }
+
       const docType = "<!DOCTYPE html>\n";
       const fullHTML = docType + document.documentElement.outerHTML;
+
+      if (hadStaffView) {
+        body.classList.add('is-staff-view');
+      }
 
       const blob = new Blob([fullHTML], { type: 'text/html;charset=utf-8;' });
       const link = document.createElement('a');
