@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageHeaderTitle">Checking Part Report (Compressor)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  <style>
+    :root {
+      --primary-red: #E60012;
+      --primary-black: #111111;
+      --bg-gray: #F4F6F9;
+      --card-bg: #FFFFFF;
+      --border-color: #E2E8F0;
+      --text-main: #1E293B;
+      --text-muted: #64748B;
+      --success-green: #10B981;
+      --success-bg: #ECFDF5;
+      --danger-red: #EF4444;
+      --danger-bg: #FEF2F2;
+    }
+    * { box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
+    body { background-color: var(--bg-gray); color: var(--text-main); padding: 24px 16px; line-height: 1.4; }
+    .app-container { width: 100%; max-width: 980px; margin: 0 auto; background: var(--card-bg); border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid var(--border-color); }
+    .brand-header { background: #FFFFFF; padding: 16px 24px; border-bottom: 3px solid var(--primary-red); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .brand-logo-img { height: 36px; width: auto; object-fit: contain; }
+    .report-badge { background-color: #F8FAFC; border: 1px solid var(--border-color); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+    .report-badge input { border: none; background: transparent; font-weight: 700; color: var(--primary-black); font-size: 0.9rem; outline: none; width: 130px; text-transform: uppercase; }
+    .report-badge input::placeholder {
+      color: #F87171 !important;
+      opacity: 0.85;
+      font-weight: 400;
+    }
+
+    .form-body { padding: 20px 24px; }
+    .page-title { font-size: 1.25rem; font-weight: 700; color: var(--primary-black); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .page-title::before { content: ''; display: inline-block; width: 5px; height: 22px; background-color: var(--primary-red); border-radius: 3px; }
+    .section-card { background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; margin-bottom: 16px; break-inside: avoid; page-break-inside: avoid; }
+    .section-title { font-size: 0.875rem; font-weight: 700; color: var(--primary-black); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .input-group { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+    .input-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
+    .input-control { width: 100%; padding: 7px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.82rem; color: var(--text-main); background-color: #FAFAFA; box-sizing: border-box; text-transform: uppercase; }
+    .input-control:focus { border-color: var(--primary-red); outline: none; background-color: #FFFFFF; }
+    .input-control[readonly] { background-color: #F1F5F9; color: var(--primary-black); font-weight: 600; cursor: default; }
+
+    .symptom-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .others-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+
+    .part-item-card { background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; }
+    .part-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed var(--border-color); flex-wrap: wrap; gap: 8px; }
+    .part-title-text { font-weight: 700; font-size: 0.95rem; color: var(--primary-black); }
+    
+    /* Dual Reference & Formula Grid */
+    .dual-image-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+    .image-preview-box { width: 100%; min-height: 215px; background-color: #F8FAFC; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+    .image-preview-box .img-container { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 10px; background: #FFFFFF; }
+    .image-preview-box img { max-width: 100%; max-height: 185px; object-fit: contain; }
+    .img-caption { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); padding: 6px 8px; background: #F1F5F9; width: 100%; text-align: center; border-top: 1px solid var(--border-color); }
+
+    /* Formula Card Styling */
+    .formula-box { width: 100%; text-align: left; font-size: 0.76rem; color: var(--text-main); }
+    .formula-equation { background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 6px; padding: 8px 10px; text-align: center; font-weight: 700; font-size: 0.85rem; color: var(--primary-black); margin-bottom: 8px; font-family: 'Cambria Math', 'Times New Roman', serif; }
+    .formula-legend { display: grid; grid-template-columns: 1fr; gap: 2px; font-size: 0.72rem; color: var(--text-muted); margin-bottom: 6px; }
+    .formula-rule { background: #FFF5F5; border-left: 3px solid var(--primary-red); padding: 4px 8px; font-size: 0.72rem; color: var(--primary-black); border-radius: 0 4px 4px 0; }
+
+    /* Ambient Temp Bar */
+    .temp-bar { background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px 14px; margin-bottom: 14px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: end; }
+    .temp-input-wrap { display: flex; align-items: center; gap: 6px; }
+    .unit-tag { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+
+    /* Unified Table */
+    .table-scroll-wrap { width: 100%; overflow-x: auto; }
+    .unified-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; margin-bottom: 14px; }
+    .unified-table th, .unified-table td { border: 1px solid var(--border-color); padding: 7px 6px; text-align: center; vertical-align: middle; }
+    .unified-table th { background-color: #F1F5F9; color: var(--primary-black); font-weight: 700; white-space: nowrap; }
+    .unified-table th.pin-col { background-color: #E2E8F0; min-width: 76px; font-size: 0.8rem; }
+    .row-active-test { background-color: #FFFFFF; }
+    .row-active-test:hover { background-color: #FFFBEB; }
+
+    .terminal-badge { display: inline-block; background: #F1F5F9; color: var(--primary-black); border: 1px solid #CBD5E1; border-radius: 4px; padding: 2px 8px; font-weight: 700; font-size: 0.76rem; }
+    .calc-value { font-weight: 700; color: #0F172A; font-size: 0.8rem; }
+    .range-text { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; white-space: nowrap; }
+
+    .status-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-weight: 700; font-size: 0.74rem; }
+    .status-ok { background-color: var(--success-bg); color: var(--success-green); border: 1px solid var(--success-green); }
+    .status-ng { background-color: var(--danger-bg); color: var(--danger-red); border: 1px solid var(--danger-red); }
+
+    .custom-check { display: flex; align-items: center; gap: 6px; padding: 6px 10px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem; cursor: pointer; user-select: none; }
+    .custom-check input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 15px;
+      height: 15px;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 3.5px;
+      outline: none;
+      background-color: #FFFFFF;
+      cursor: pointer;
+      display: inline-grid;
+      place-content: center;
+      flex-shrink: 0;
+    }
+    .custom-check input[type="checkbox"]:checked {
+      background-color: var(--primary-red);
+      border-color: var(--primary-red);
+    }
+    .custom-check input[type="checkbox"]:checked::before {
+      content: "✔";
+      font-size: 10px;
+      color: #FFFFFF;
+      font-weight: bold;
+    }
+
+    .upload-zone { position: relative; border: 1px dashed #CBD5E1; border-radius: 6px; padding: 10px; background: #FAFAFA; text-align: center; cursor: pointer; overflow: hidden; display: block; margin-top: 8px; transition: all 0.2s; }
+    .upload-zone:hover { border-color: var(--primary-red); background: #FFF5F5; }
+    .upload-zone.has-file { background: var(--success-bg); border: 1px solid var(--success-green); }
+    .upload-zone input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10; }
+    .upload-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; pointer-events: none; }
+    .upload-zone.has-file .upload-label { color: var(--success-green); font-weight: 700; }
+
+    .attached-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .attached-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background: #FAFAFA; break-inside: avoid; page-break-inside: avoid; }
+    .attached-card-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .attached-card-title { font-size: 0.82rem; font-weight: 600; color: var(--primary-black); }
+    .btn-delete-pic { background: #FEE2E2; color: #DC2626; border: 1px solid #FCA5A5; border-radius: 5px; padding: 2px 8px; font-size: 0.72rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s; }
+    .btn-delete-pic:hover { background: #DC2626; color: #FFFFFF; border-color: #DC2626; }
+    .attached-img-box { width: 100%; height: 170px; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .attached-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+    .summary-comment-box { width: 100%; min-height: 40px; border: 1px solid var(--border-color); border-radius: 6px; background: #FAFAFA; padding: 10px; font-size: 0.85rem; color: var(--text-main); }
+    .summary-item-row { margin-bottom: 6px; }
+    .summary-item-row:last-child { margin-bottom: 0; }
+    .summary-part-name { font-weight: 600; }
+    .action-container { margin-top: 20px; }
+    .btn-submit-primary { width: 100%; background-color: var(--primary-red); color: #FFFFFF; border: none; border-radius: 8px; padding: 12px 20px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .btn-submit-primary:hover { background-color: #C0000F; }
+
+    /* Designer Mode Styling */
+    .designer-fab { position: fixed; bottom: 16px; right: 16px; z-index: 9999; background: #111111; color: #FFFFFF; width: 38px; height: 38px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,0.3); opacity: 0.7; transition: opacity 0.2s, transform 0.2s; }
+    .designer-fab:hover { opacity: 1; transform: scale(1.08); }
+    .editor-panel-box { display: none; background: #FFFFFF; border: 2px solid var(--primary-red); padding: 18px; margin: 16px auto; max-width: 980px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .criteria-card { background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; margin-bottom: 14px; }
+    .criteria-card-title { font-size: 0.86rem; font-weight: 700; color: var(--primary-black); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .excel-editor-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; background: #FFFFFF; }
+    .excel-editor-table th, .excel-editor-table td { border: 1px solid var(--border-color); padding: 6px 8px; text-align: left; vertical-align: middle; }
+    .excel-editor-table th { background-color: #F1F5F9; color: var(--primary-black); font-weight: 700; text-align: center; white-space: nowrap; }
+    .excel-editor-table input[type="text"], .excel-editor-table input[type="number"], .excel-editor-table select { width: 100%; padding: 5px 7px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.78rem; background: #FFF; box-sizing: border-box; }
+    .excel-editor-table input:focus, .excel-editor-table select:focus { border-color: var(--primary-red); outline: none; }
+
+    .btn-edit-temp { background-color: #34D399; color: #FFFFFF; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-edit-temp:hover { background-color: #10B981; }
+    .btn-edit-update { background-color: #E60012; color: #FFFFFF; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-edit-update:hover { background-color: #C0000F; }
+    .btn-edit-reset { background-color: #64748B; color: #FFFFFF; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-edit-reset:hover { background-color: #475569; }
+
+    @media screen and (max-width: 768px) {
+      body { padding: 8px 4px !important; }
+      .brand-header { padding: 12px 16px !important; flex-direction: column; align-items: flex-start; }
+      .form-body { padding: 12px !important; }
+      .grid-3, .symptom-grid { grid-template-columns: 1fr !important; }
+      .temp-bar { grid-template-columns: 1fr !important; }
+      .dual-image-grid, .attached-grid { grid-template-columns: 1fr !important; }
+      .others-row { flex-direction: column; align-items: stretch; }
+    }
+
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 7mm 8mm;
+      }
+      html, body {
+        width: 100% !important;
+        background-color: #FFFFFF !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+      .app-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        overflow: visible !important;
+      }
+      .hide-on-pdf, .designer-fab, #editorPanel, .diagram-box-hide-pdf, .btn-delete-pic {
+        display: none !important;
+      }
+      #section_attached_pictures[style*="display: none"], #section_inspection_summary[style*="display: none"] {
+        display: none !important;
+      }
+
+      .brand-header {
+        padding: 8px 12px !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+      }
+      .brand-logo-img { height: 28px !important; }
+      .report-badge { padding: 4px 10px !important; font-size: 0.78rem !important; }
+      .report-badge input { width: 110px !important; font-size: 0.8rem !important; }
+      .form-body { padding: 10px 12px !important; }
+      .page-title { font-size: 1.05rem !important; margin-bottom: 10px !important; }
+      .page-title::before { height: 18px !important; }
+      .section-card {
+        padding: 10px 12px !important;
+        margin-bottom: 10px !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      #section_technical, .part-item-card {
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+        padding: 10px !important;
+      }
+      .section-title { font-size: 0.8rem !important; margin-bottom: 8px !important; padding-bottom: 4px !important; }
+      .grid-3, .symptom-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px !important;
+      }
+      .temp-bar {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        padding: 6px 10px !important;
+        margin-bottom: 8px !important;
+      }
+      .attached-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+      }
+      .attached-img-box { height: 145px !important; }
+
+      .input-control {
+        border: 1px solid var(--border-color) !important;
+        background-color: #FAFAFA !important;
+        border-radius: 5px !important;
+        padding: 4px 7px !important;
+        font-size: 0.76rem !important;
+      }
+      .custom-check {
+        border: 1px solid var(--border-color) !important;
+        background-color: #F8FAFC !important;
+        border-radius: 5px !important;
+        padding: 4px 8px !important;
+        font-size: 0.75rem !important;
+      }
+      .custom-check input[type="checkbox"] {
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        width: 13px !important;
+        height: 13px !important;
+        border: 1.5px solid #CBD5E1 !important;
+        border-radius: 3px !important;
+        background-color: #FFFFFF !important;
+        display: inline-grid !important;
+        place-content: center !important;
+        position: relative !important;
+      }
+      .custom-check input[type="checkbox"]:checked {
+        background-color: var(--primary-red) !important;
+        border-color: var(--primary-red) !important;
+      }
+      .custom-check input[type="checkbox"]:checked::before {
+        content: "✔" !important;
+        font-size: 9px !important;
+        color: #FFFFFF !important;
+        font-weight: bold !important;
+      }
+
+      .table-scroll-wrap { overflow: visible !important; }
+      .unified-table {
+        width: 100% !important;
+        font-size: 0.72rem !important;
+        margin-bottom: 8px !important;
+      }
+      .unified-table tr { break-inside: avoid !important; page-break-inside: avoid !important; }
+      .unified-table th, .unified-table td { padding: 4px 4px !important; }
+      .unified-table input.input-control {
+        width: 68px !important;
+        padding: 2px 4px !important;
+        font-size: 0.72rem !important;
+      }
+      .unified-table select.input-control {
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        width: auto !important;
+        min-width: 34px !important;
+        padding: 2px 4px !important;
+        font-size: 0.7rem !important;
+        text-align: center !important;
+      }
+      .status-badge { padding: 1px 7px !important; font-size: 0.68rem !important; }
+      .summary-comment-box { padding: 8px !important; font-size: 0.78rem !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container" id="reportContent">
+  <header class="brand-header">
+    <div class="brand-logo-container"><img src="images/Picture1.png" alt="Mitsubishi Heavy Industries" class="brand-logo-img"></div>
+    <div class="report-badge"><span>Service Report No:</span><input type="text" id="serviceReportNo" placeholder="*Ref.Job No.*" value="" required="" oninput="this.value = this.value.toUpperCase()"></div>
+  </header>
+
+  <main class="form-body">
+    <h1 class="page-title" id="displayFormTitle">Checking Part Report (Compressor)</h1>
+    <form id="inspectionForm">
+      <!-- Section 1: General Information -->
+      <section class="section-card">
+        <div class="section-title">General Information</div>
+        <div class="grid-3">
+          <div class="input-group"><label for="Model">Model</label><input type="text" id="Model" class="input-control" placeholder="MODEL NUMBER" oninput="this.value = this.value.toUpperCase()"></div>
+          <div class="input-group"><label for="SN">Serial No. (S/N)</label><input type="text" id="SN" class="input-control" placeholder="SERIAL NUMBER" oninput="this.value = this.value.toUpperCase()"></div>
+          <div class="input-group"><label for="partNo">Part No.</label><input type="text" id="partNo" class="input-control" placeholder="PART NUMBER" oninput="this.value = this.value.toUpperCase()"></div>
+        </div>
+      </section>
+
+      <!-- Section 2: Symptom (Compressor) -->
+      <section class="section-card">
+        <div class="section-title">Symptom (Compressor)</div>
+        <div style="margin-bottom: 12px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary-black);">Compressor Phase:</span>
+          <label class="custom-check">
+            <input type="checkbox" id="chk_phase_1" name="compressor_phase" value="1 Ø phase" onchange="selectCompressorPhase('1phase')"> 1 Ø phase
+          </label>
+          <label class="custom-check">
+            <input type="checkbox" id="chk_phase_3" name="compressor_phase" value="3 Ø phase" onchange="selectCompressorPhase('3phase')"> 3 Ø phase
+          </label>
+        </div>
+
+        <div class="symptom-grid">
+          <label class="custom-check" style="background: #F8FAFC; font-weight: 600;">
+            <input type="checkbox" id="chk_sym_locked" data-main-symptom="Locked" onchange="updateSummarySection();"> Locked
+          </label>
+          <label class="custom-check" style="background: #F8FAFC; font-weight: 600;">
+            <input type="checkbox" id="chk_sym_nopressure" data-main-symptom="No pressure" onchange="updateSummarySection();"> No pressure
+          </label>
+          <label class="custom-check" style="background: #F8FAFC; font-weight: 600;">
+            <input type="checkbox" id="chk_sym_leaked" data-main-symptom="Leaked" onchange="updateSummarySection();"> Leaked
+          </label>
+          <label class="custom-check" style="background: #F8FAFC; font-weight: 600;">
+            <input type="checkbox" id="chk_sym_venting" data-main-symptom="Terminal venting" onchange="updateSummarySection();"> Terminal venting
+          </label>
+          <label class="custom-check" style="background: #F8FAFC; font-weight: 600;">
+            <input type="checkbox" id="chk_sym_noise" data-main-symptom="Noise" onchange="updateSummarySection();"> Noise
+          </label>
+          <label class="custom-check" style="background: #F8FAFC; font-weight: 600;">
+            <input type="checkbox" id="chk_sym_others" onchange="toggleOthersInput();"> Others
+          </label>
+        </div>
+
+        <div class="others-row" id="othersInputWrapper" style="display: none;">
+          <label for="txt_sym_others" style="font-size: 0.8rem; font-weight: 600; white-space: nowrap;">Others Detail:</label>
+          <input type="text" id="txt_sym_others" class="input-control" style="text-transform: none;" placeholder="Specify other compressor symptom..." oninput="updateSummarySection()">
+        </div>
+      </section>
+
+      <!-- Section 3: Technical Data Reference & Compressor Electrical Check -->
+      <section class="section-card" id="section_technical">
+        <div class="section-title">
+          <span>Technical Data Reference &amp; Electrical Check</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">Multimeter (Ω) &amp; Megohmmeter (500Vdc)</span>
+        </div>
+        <div id="technicalPartsContainer">
+          <div style="padding:16px; text-align:center; color:var(--text-muted); font-size:0.85rem;">
+            👉 Please select <b>1 Ø phase</b> or <b>3 Ø phase</b> above to open the temperature compensation calculator and measurement tables.
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Attached Pictures -->
+      <section class="section-card" id="section_attached_pictures" style="display: none;">
+        <div class="section-title">
+          <span>Attached Compressor Pictures</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;" class="hide-on-pdf">(Click "Delete" to remove any picture)</span>
+        </div>
+        <div class="attached-grid" id="attached_container"></div>
+      </section>
+
+      <!-- Section 5: Inspection Summary & Comments -->
+      <section class="section-card" id="section_inspection_summary" style="display: block;">
+        <div class="section-title">Inspection Summary &amp; Comments</div>
+        <div class="summary-comment-box" id="summary_comment_content"><div style="color:var(--text-muted);">No inspection summary available</div></div>
+      </section>
+
+      <div class="action-container hide-on-pdf">
+        <button type="button" class="btn-submit-primary" onclick="generatePDF()"><span>🖨 Save as PDF Report</span></button>
+      </div>
+    </form>
+  </main>
+</div>
+
+<!-- Designer / Edit Mode Floating Button & Panel -->
+<button type="button" class="designer-fab hide-on-pdf" onclick="promptEditorMode()" title="Designer Mode">⚙️</button>
+<div id="editorPanel" class="editor-panel-box hide-on-pdf" style="display: none;">
+  <h3 style="margin-bottom: 6px; color: var(--primary-red);">Designer Mode — Standard Criteria Settings</h3>
+  <p style="font-size: 0.83rem; color: var(--text-muted); margin-bottom: 14px;">แก้ไขเกณฑ์มาตรฐาน (Standard Criteria), ค่าคงที่สูตรชดเชยอุณหภูมิ และหัวข้อแบบฟอร์ม</p>
+  
+  <div style="margin-bottom: 14px; background: #F8FAFC; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border-color);">
+    <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 4px;">Form Title:</label>
+    <input type="text" id="editFormTitle" class="input-control" style="background:#fff; text-transform:none;">
+  </div>
+
+  <!-- General Calculation & Insulation Standard Criteria -->
+  <div class="criteria-card">
+    <div class="criteria-card-title">📋 General Formula &amp; Insulation Standard Criteria</div>
+    <div style="overflow-x: auto;">
+      <table class="excel-editor-table">
+        <thead>
+          <tr>
+            <th>Temp Constant<br><span style="font-weight:normal; font-size:0.7rem;">(Copper = 234.5)</span></th>
+            <th>Resistance Tolerance (±%)<br><span style="font-weight:normal; font-size:0.7rem;">(Default = 10%)</span></th>
+            <th>Insulation Test Voltage<br><span style="font-weight:normal; font-size:0.7rem;">(Default = 500Vdc)</span></th>
+            <th>Min Insulation Resistance (MΩ)<br><span style="font-weight:normal; font-size:0.7rem;">(Default = 3 MΩ)</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="number" step="0.1" id="ed_comp_tempConst"></td>
+            <td><input type="number" step="0.5" id="ed_comp_tolerance"></td>
+            <td><input type="text" id="ed_comp_insulVolt"></td>
+            <td><input type="number" step="0.1" id="ed_comp_minInsul"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="display: flex; justify-content: flex-start; gap: 10px; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+    <button type="button" class="btn-edit-temp" onclick="saveEditorTemp()">💾 บันทึกชั่วคราว</button>
+    <button type="button" class="btn-edit-update" onclick="saveEditorChanges()">⚡ อัปเดตโค้ด HTML</button>
+    <button type="button" class="btn-edit-reset" onclick="resetEditorDefault()">🔄 รีเซ็ตค่าเดิม</button>
+  </div>
+</div>
+
+<script>
+  let initialCriteria = {
+    "tempConstant": 234.5,
+    "tolerancePercent": 10,
+    "insulationVoltage": "500Vdc",
+    "minInsulationMOhm": 3.0
+  };
+
+  let standardCriteria = JSON.parse(JSON.stringify(initialCriteria));
+  let activePhase = null; // '1phase' | '3phase' | null
+
+  const formState = {
+    uploadedImages: {},
+    imageCounter: 0
+  };
+
+  const PHASE_1_CONFIG = {
+    title: "1 Ø Phase Compressor Inspection",
+    windingPairs: [
+      { id: "rc", label: "R - C" },
+      { id: "sc", label: "S - C" },
+      { id: "rs", label: "R - S" }
+    ],
+    insulationPairs: [
+      { id: "rgnd", label: "R - Gnd" },
+      { id: "sgnd", label: "S - Gnd" },
+      { id: "cgnd", label: "C - Gnd" }
+    ]
+  };
+
+  const PHASE_3_CONFIG = {
+    title: "3 Ø Phase Compressor Inspection",
+    windingPairs: [
+      { id: "uv", label: "U - V" },
+      { id: "vw", label: "V - W" },
+      { id: "wu", label: "W - U" }
+    ],
+    insulationPairs: [
+      { id: "ugnd", label: "U - Gnd" },
+      { id: "vgnd", label: "V - Gnd" },
+      { id: "wgnd", label: "W - Gnd" }
+    ]
+  };
+
+  window.addEventListener('DOMContentLoaded', () => {
+    initEditorFields();
+  });
+
+  window.addEventListener('afterprint', () => {
+    const container = document.getElementById('reportContent');
+    if (container) container.style.zoom = '';
+  });
+
+  function toggleOthersInput() {
+    const chk = document.getElementById('chk_sym_others');
+    const wrap = document.getElementById('othersInputWrapper');
+    const txt = document.getElementById('txt_sym_others');
+    if (!chk || !wrap) return;
+
+    if (chk.checked) {
+      wrap.style.display = 'flex';
+      if (txt) txt.focus();
+    } else {
+      wrap.style.display = 'none';
+    }
+    updateSummarySection();
+  }
+
+  function selectCompressorPhase(phase) {
+    const chk1 = document.getElementById('chk_phase_1');
+    const chk3 = document.getElementById('chk_phase_3');
+
+    if (phase === '1phase') {
+      if (chk1.checked) {
+        chk3.checked = false;
+        activePhase = '1phase';
+      } else {
+        activePhase = null;
+      }
+    } else if (phase === '3phase') {
+      if (chk3.checked) {
+        chk1.checked = false;
+        activePhase = '3phase';
+      } else {
+        activePhase = null;
+      }
+    }
+    renderTechnicalSection();
+    updateSummarySection();
+  }
+
+  function handleSameAreaToggle() {
+    const chkSame = document.getElementById('chk_same_area');
+    const t1El = document.getElementById('temp_t1');
+    const t2El = document.getElementById('temp_t2');
+    if (!chkSame || !t1El || !t2El) return;
+
+    if (chkSame.checked) {
+      t2El.value = t1El.value;
+      t2El.readOnly = true;
+    } else {
+      t2El.readOnly = false;
+    }
+    recalculateAllWindings();
+  }
+
+  function handleT1Input() {
+    const chkSame = document.getElementById('chk_same_area');
+    const t1El = document.getElementById('temp_t1');
+    const t2El = document.getElementById('temp_t2');
+    if (chkSame && chkSame.checked && t1El && t2El) {
+      t2El.value = t1El.value;
+    }
+    recalculateAllWindings();
+  }
+
+  function captureCurrentInputs() {
+    const saved = {};
+    document.querySelectorAll('#technicalPartsContainer input, #technicalPartsContainer select').forEach(el => {
+      if (el.id) {
+        saved[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+      }
+    });
+    return saved;
+  }
+
+  function restoreAndEvaluateInputs(saved) {
+    Object.keys(saved).forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.type === 'checkbox') {
+        el.checked = saved[id];
+      } else {
+        el.value = saved[id];
+      }
+    });
+
+    const chkSame = document.getElementById('chk_same_area');
+    const t2El = document.getElementById('temp_t2');
+    if (chkSame && t2El) {
+      t2El.readOnly = chkSame.checked;
+    }
+
+    const cfg = activePhase === '1phase' ? PHASE_1_CONFIG : PHASE_3_CONFIG;
+    if (cfg) {
+      cfg.windingPairs.forEach(p => {
+        handleR3UnitChange(p.id);
+      });
+      cfg.insulationPairs.forEach(p => {
+        handleInsulUnitChange(p.id);
+      });
+    }
+    recalculateAllWindings();
+  }
+
+  function renderTechnicalSection(preserveValues = false) {
+    const container = document.getElementById('technicalPartsContainer');
+    if (!container) return;
+
+    const savedInputs = preserveValues ? captureCurrentInputs() : null;
+
+    if (!activePhase) {
+      container.innerHTML = `
+        <div style="padding:16px; text-align:center; color:var(--text-muted); font-size:0.85rem;">
+          👉 Please select <b>1 Ø phase</b> or <b>3 Ø phase</b> above to open the temperature compensation calculator and measurement tables.
+        </div>
+      `;
+      return;
+    }
+
+    const cfg = activePhase === '1phase' ? PHASE_1_CONFIG : PHASE_3_CONFIG;
+    const tol = standardCriteria.tolerancePercent;
+    const minFactor = (1 - tol / 100).toFixed(2);
+    const maxFactor = (1 + tol / 100).toFixed(2);
+    const minInsul = Number(standardCriteria.minInsulationMOhm).toFixed(1);
+
+    const windingRowsHtml = cfg.windingPairs.map(p => `
+      <tr class="row-active-test">
+        <td><span class="terminal-badge">${p.label}</span></td>
+        <td>
+          <input type="number" step="0.001" id="val_r1_${p.id}" class="input-control" placeholder="0.00" style="width: 86px; text-align: center; margin: 0 auto;" oninput="calculateWindingRow('${p.id}')">
+        </td>
+        <td><span id="calc_r2_${p.id}" class="calc-value">-</span></td>
+        <td><span id="range_r2_${p.id}" class="range-text">-</span></td>
+        <td>
+          <div style="display: flex; gap: 4px; align-items: center; justify-content: center;">
+            <input type="number" step="0.001" id="val_r3_${p.id}" class="input-control" placeholder="0.00" style="width: 86px; text-align: center;" oninput="evaluateWindingRow('${p.id}')">
+            <select id="unit_r3_${p.id}" class="input-control" style="width: 58px; padding: 7px 2px;" onchange="handleR3UnitChange('${p.id}')">
+              <option value="Ohm" selected>Ω</option>
+              <option value="OL" style="font-weight:bold; color:var(--danger-red);">OL</option>
+            </select>
+          </div>
+        </td>
+        <td><span id="status_wind_${p.id}" class="status-badge">-</span></td>
+      </tr>
+    `).join('');
+
+    const insulRowsHtml = cfg.insulationPairs.map(p => `
+      <tr class="row-active-test">
+        <td><span class="terminal-badge">${p.label}</span></td>
+        <td style="font-weight: 600; color: var(--text-muted);">${standardCriteria.insulationVoltage}</td>
+        <td style="white-space: nowrap; font-weight: 600;">&ge; ${minInsul} MΩ</td>
+        <td>
+          <div style="display: flex; gap: 4px; align-items: center; justify-content: center;">
+            <input type="number" step="0.01" id="val_ins_${p.id}" class="input-control" placeholder="0.00" style="width: 90px; text-align: center;" oninput="evaluateInsulRow('${p.id}')">
+            <select id="unit_ins_${p.id}" class="input-control" style="width: 74px; padding: 7px 2px; text-transform: none;" onchange="handleInsulUnitChange('${p.id}')">
+              <option value="MOhm" selected>MΩ</option>
+              <option value="OL" style="font-weight:bold; color:var(--success-green);">OL (∞)</option>
+            </select>
+          </div>
+        </td>
+        <td><span id="status_ins_${p.id}" class="status-badge">-</span></td>
+      </tr>
+    `).join('');
+
+    const terminalSvg = activePhase === '1phase'
+      ? `
+        <svg viewBox="0 0 280 165" style="width:100%; max-height:165px;">
+          <circle cx="140" cy="82" r="64" fill="#F8FAFC" stroke="#1E293B" stroke-width="2.5"/>
+          <circle cx="140" cy="82" r="54" fill="none" stroke="#94A3B8" stroke-width="1" stroke-dasharray="4 3"/>
+          <!-- C Pin (Top) -->
+          <circle cx="140" cy="48" r="11" fill="#FEE2E2" stroke="#DC2626" stroke-width="2"/>
+          <text x="140" y="52" text-anchor="middle" font-size="11" font-weight="bold" fill="#DC2626">C</text>
+          <!-- S Pin (Bottom Left) -->
+          <circle cx="108" cy="104" r="11" fill="#E2E8F0" stroke="#0F172A" stroke-width="2"/>
+          <text x="108" y="108" text-anchor="middle" font-size="11" font-weight="bold" fill="#0F172A">S</text>
+          <!-- R Pin (Bottom Right) -->
+          <circle cx="172" cy="104" r="11" fill="#E2E8F0" stroke="#0F172A" stroke-width="2"/>
+          <text x="172" y="108" text-anchor="middle" font-size="11" font-weight="bold" fill="#0F172A">R</text>
+          <!-- Ground -->
+          <rect x="218" y="72" width="38" height="20" rx="4" fill="#ECFDF5" stroke="#10B981" stroke-width="1.5"/>
+          <text x="237" y="85" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#047857">Gnd</text>
+          <line x1="204" y1="82" x2="218" y2="82" stroke="#10B981" stroke-width="1.8"/>
+        </svg>
+      `
+      : `
+        <svg viewBox="0 0 280 165" style="width:100%; max-height:165px;">
+          <circle cx="140" cy="82" r="64" fill="#F8FAFC" stroke="#1E293B" stroke-width="2.5"/>
+          <circle cx="140" cy="82" r="54" fill="none" stroke="#94A3B8" stroke-width="1" stroke-dasharray="4 3"/>
+          <!-- U Pin -->
+          <circle cx="140" cy="48" r="11" fill="#FEE2E2" stroke="#DC2626" stroke-width="2"/>
+          <text x="140" y="52" text-anchor="middle" font-size="11" font-weight="bold" fill="#DC2626">U</text>
+          <!-- V Pin -->
+          <circle cx="108" cy="104" r="11" fill="#E2E8F0" stroke="#0F172A" stroke-width="2"/>
+          <text x="108" y="108" text-anchor="middle" font-size="11" font-weight="bold" fill="#0F172A">V</text>
+          <!-- W Pin -->
+          <circle cx="172" cy="104" r="11" fill="#E2E8F0" stroke="#0F172A" stroke-width="2"/>
+          <text x="172" y="108" text-anchor="middle" font-size="11" font-weight="bold" fill="#0F172A">W</text>
+          <!-- Ground -->
+          <rect x="218" y="72" width="38" height="20" rx="4" fill="#ECFDF5" stroke="#10B981" stroke-width="1.5"/>
+          <text x="237" y="85" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#047857">Gnd</text>
+          <line x1="204" y1="82" x2="218" y2="82" stroke="#10B981" stroke-width="1.8"/>
+        </svg>
+      `;
+
+    container.innerHTML = `
+      <div class="part-item-card">
+        <div class="part-header">
+          <span class="part-title-text">${cfg.title}</span>
+          <span style="font-size: 0.75rem; font-weight: 600; color: var(--primary-red);">Tolerance: ±${tol}% | Min Insulation: ${minInsul} MΩ @ ${standardCriteria.insulationVoltage}</span>
+        </div>
+
+        <!-- Reference & Formula Cards -->
+        <div class="dual-image-grid diagram-box-hide-pdf">
+          <div class="image-preview-box">
+            <div class="img-container" style="flex-direction: column; justify-content: center;">
+              <div class="formula-box">
+                <div class="formula-equation">
+                  R2 = ( (${standardCriteria.tempConstant} + T2) / (${standardCriteria.tempConstant} + T1) ) × R1
+                </div>
+                <div class="formula-legend">
+                  <div><b>R1</b> : Resistance measured from compressor spare part (Ω)</div>
+                  <div><b>T1</b> : Ambient temp when measuring R1 of spare part (°C)</div>
+                  <div><b>R2</b> : Resistance should be at T2 (Ω)</div>
+                  <div><b>T2</b> : Ambient temp when measuring defective comp (°C)</div>
+                  <div><b>R3</b> : Resistance measured from defective comp (Ω)</div>
+                </div>
+                <div class="formula-rule">
+                  <b>Judgement:</b> (R2 × ${minFactor}) ≤ R3 ≤ (R2 × ${maxFactor}) &nbsp;|&nbsp; <b>Insulation:</b> ≥ ${minInsul} MΩ (${standardCriteria.insulationVoltage})
+                </div>
+              </div>
+            </div>
+            <div class="img-caption">Formula for Resistance Judge &amp; Criteria</div>
+          </div>
+
+          <div class="image-preview-box">
+            <div class="img-container">
+              ${terminalSvg}
+            </div>
+            <div class="img-caption">${activePhase === '1phase' ? '1Ø Compressor Terminal Layout (C, R, S & Gnd)' : '3Ø Compressor Terminal Layout (U, V, W & Gnd)'}</div>
+          </div>
+        </div>
+
+        <!-- Ambient Temperature Inputs (T1 & T2) -->
+        <div class="temp-bar">
+          <div class="input-group">
+            <label for="temp_t1">T1: Ambient Temp — Spare Part (°C)</label>
+            <div class="temp-input-wrap">
+              <input type="number" step="0.1" id="temp_t1" class="input-control" placeholder="e.g. 28.0" oninput="handleT1Input()">
+              <span class="unit-tag">°C</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="temp_t2">T2: Ambient Temp — Defective Comp (°C)</label>
+            <div class="temp-input-wrap">
+              <input type="number" step="0.1" id="temp_t2" class="input-control" placeholder="e.g. 32.0" oninput="recalculateAllWindings()">
+              <span class="unit-tag">°C</span>
+            </div>
+          </div>
+          <label class="custom-check hide-on-pdf" style="height: 33px; background: #FFFFFF;">
+            <input type="checkbox" id="chk_same_area" onchange="handleSameAreaToggle()"> Same Area (T1 = T2)
+          </label>
+        </div>
+
+        <!-- Table 1: Resistance Check -->
+        <div style="font-size: 0.8rem; font-weight: 700; color: var(--primary-black); margin-bottom: 6px;">1. Winding Resistance Check (Ω)</div>
+        <div class="table-scroll-wrap">
+          <table class="unified-table">
+            <thead>
+              <tr>
+                <th class="pin-col">Terminal Pair</th>
+                <th>Spare Part R1 (Ω)</th>
+                <th>Std R2 at T2 (Ω)</th>
+                <th>Acceptable Range (±${tol}%)</th>
+                <th>Defective Comp R3 (Ω)</th>
+                <th>Judgement</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${windingRowsHtml}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Table 2: Insulation Check -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0 6px; flex-wrap: wrap; gap: 4px;">
+          <span style="font-size: 0.8rem; font-weight: 700; color: var(--primary-black);">2. Insulation Resistance Check (Megohmmeter @ ${standardCriteria.insulationVoltage})</span>
+          <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">* Less than ${minInsul} MΩ = Defective (NG)</span>
+        </div>
+        <div class="table-scroll-wrap">
+          <table class="unified-table">
+            <thead>
+              <tr>
+                <th class="pin-col">Terminal - Gnd</th>
+                <th>Test Setting</th>
+                <th>Standard</th>
+                <th>Measured Value (MΩ)</th>
+                <th>Judgement</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${insulRowsHtml}
+            </tbody>
+          </table>
+        </div>
+
+        ${renderBottomUpload()}
+      </div>
+    `;
+
+    if (savedInputs) {
+      restoreAndEvaluateInputs(savedInputs);
+    } else {
+      recalculateAllWindings();
+    }
+  }
+
+  function renderBottomUpload() {
+    return `
+      <div class="upload-zone hide-on-pdf" id="zone_compressor_pic">
+        <input type="file" id="pic_compressor" accept="image/*" multiple onchange="handleImageUpload(this)">
+        <div class="upload-label" id="lbl_upload_compressor">📷 Attach Compressor Nameplate / Meter Reading / Damage Picture (Optional - Multiple Allowed)</div>
+      </div>
+    `;
+  }
+
+  function getCalculatedR2(pairId) {
+    const r1Raw = document.getElementById(`val_r1_${pairId}`)?.value.trim();
+    const t1Raw = document.getElementById('temp_t1')?.value.trim();
+    const t2Raw = document.getElementById('temp_t2')?.value.trim();
+
+    if (!r1Raw || isNaN(r1Raw) || !t1Raw || isNaN(t1Raw) || !t2Raw || isNaN(t2Raw)) {
+      return null;
+    }
+
+    const r1 = parseFloat(r1Raw);
+    const t1 = parseFloat(t1Raw);
+    const t2 = parseFloat(t2Raw);
+    const k = parseFloat(standardCriteria.tempConstant) || 234.5;
+
+    if ((k + t1) === 0) return null;
+    return ((k + t2) / (k + t1)) * r1;
+  }
+
+  function recalculateAllWindings() {
+    if (!activePhase) return;
+    const cfg = activePhase === '1phase' ? PHASE_1_CONFIG : PHASE_3_CONFIG;
+    cfg.windingPairs.forEach(p => {
+      calculateWindingRow(p.id);
+    });
+  }
+
+  function calculateWindingRow(pairId) {
+    const r2El = document.getElementById(`calc_r2_${pairId}`);
+    const rangeEl = document.getElementById(`range_r2_${pairId}`);
+    if (!r2El || !rangeEl) return;
+
+    const r2 = getCalculatedR2(pairId);
+    const tol = parseFloat(standardCriteria.tolerancePercent) || 10;
+
+    if (r2 === null) {
+      r2El.textContent = '-';
+      rangeEl.textContent = '-';
+    } else {
+      const minR = r2 * (1 - tol / 100);
+      const maxR = r2 * (1 + tol / 100);
+      r2El.textContent = `${r2.toFixed(3)} Ω`;
+      rangeEl.textContent = `${minR.toFixed(2)} - ${maxR.toFixed(2)} Ω`;
+    }
+
+    evaluateWindingRow(pairId);
+  }
+
+  function handleR3UnitChange(pairId) {
+    const unitEl = document.getElementById(`unit_r3_${pairId}`);
+    const valEl = document.getElementById(`val_r3_${pairId}`);
+    if (!unitEl || !valEl) return;
+
+    if (unitEl.value === 'OL') {
+      valEl.value = '';
+      valEl.placeholder = 'OL';
+      valEl.disabled = true;
+    } else {
+      valEl.placeholder = '0.00';
+      valEl.disabled = false;
+    }
+    evaluateWindingRow(pairId);
+  }
+
+  function evaluateWindingRow(pairId) {
+    const unitEl = document.getElementById(`unit_r3_${pairId}`);
+    const valEl = document.getElementById(`val_r3_${pairId}`);
+    const badge = document.getElementById(`status_wind_${pairId}`);
+    if (!unitEl || !valEl || !badge) return;
+
+    if (unitEl.value === 'OL') {
+      badge.textContent = 'NG';
+      badge.className = 'status-badge status-ng';
+      updateSummarySection();
+      return;
+    }
+
+    const r3Raw = valEl.value.trim();
+    const r2 = getCalculatedR2(pairId);
+
+    if (r3Raw === '' || isNaN(r3Raw) || r2 === null) {
+      badge.textContent = '-';
+      badge.className = 'status-badge';
+      updateSummarySection();
+      return;
+    }
+
+    const r3 = parseFloat(r3Raw);
+    const tol = parseFloat(standardCriteria.tolerancePercent) || 10;
+    const minR = r2 * (1 - tol / 100);
+    const maxR = r2 * (1 + tol / 100);
+
+    const isOk = r3 >= (minR - 0.0001) && r3 <= (maxR + 0.0001);
+    badge.textContent = isOk ? 'OK' : 'NG';
+    badge.className = isOk ? 'status-badge status-ok' : 'status-badge status-ng';
+
+    updateSummarySection();
+  }
+
+  function handleInsulUnitChange(pairId) {
+    const unitEl = document.getElementById(`unit_ins_${pairId}`);
+    const valEl = document.getElementById(`val_ins_${pairId}`);
+    if (!unitEl || !valEl) return;
+
+    if (unitEl.value === 'OL') {
+      valEl.value = '';
+      valEl.placeholder = 'OL (∞)';
+      valEl.disabled = true;
+    } else {
+      valEl.placeholder = '0.00';
+      valEl.disabled = false;
+    }
+    evaluateInsulRow(pairId);
+  }
+
+  function evaluateInsulRow(pairId) {
+    const unitEl = document.getElementById(`unit_ins_${pairId}`);
+    const valEl = document.getElementById(`val_ins_${pairId}`);
+    const badge = document.getElementById(`status_ins_${pairId}`);
+    if (!unitEl || !valEl || !badge) return;
+
+    if (unitEl.value === 'OL') {
+      badge.textContent = 'OK';
+      badge.className = 'status-badge status-ok';
+      updateSummarySection();
+      return;
+    }
+
+    const raw = valEl.value.trim();
+    if (raw === '' || isNaN(raw)) {
+      badge.textContent = '-';
+      badge.className = 'status-badge';
+      updateSummarySection();
+      return;
+    }
+
+    const num = parseFloat(raw);
+    const minInsul = parseFloat(standardCriteria.minInsulationMOhm) || 3.0;
+    const isOk = num >= (minInsul - 0.0001);
+
+    badge.textContent = isOk ? 'OK' : 'NG';
+    badge.className = isOk ? 'status-badge status-ok' : 'status-badge status-ng';
+
+    updateSummarySection();
+  }
+
+  function handleImageUpload(input) {
+    const files = Array.from(input.files || []);
+    if (files.length === 0) return;
+
+    files.forEach(file => {
+      formState.imageCounter += 1;
+      const attachId = 'attach_compressor_' + Date.now() + '_' + formState.imageCounter;
+      const title = `Compressor Picture #${formState.imageCounter} (${file.name})`;
+
+      const processFile = (fileObj) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          formState.uploadedImages[attachId] = { title, src: e.target.result };
+          updateUploadZoneVisual();
+          renderAttachedImages();
+        };
+        reader.readAsDataURL(fileObj);
+      };
+
+      if (file.name.toLowerCase().endsWith('.heic')) {
+        heic2any({ blob: file, toType: "image/jpeg" }).then(resultBlob => {
+          processFile(resultBlob);
+        }).catch(err => {
+          alert("Failed to convert HEIC file: " + err.message);
+        });
+      } else {
+        processFile(file);
+      }
+    });
+
+    input.value = '';
+  }
+
+  function deleteAttachedImage(attachId) {
+    if (formState.uploadedImages[attachId]) {
+      delete formState.uploadedImages[attachId];
+      updateUploadZoneVisual();
+      renderAttachedImages();
+    }
+  }
+
+  function updateUploadZoneVisual() {
+    const zone = document.getElementById('zone_compressor_pic');
+    const lbl = document.getElementById('lbl_upload_compressor');
+    const count = Object.keys(formState.uploadedImages).length;
+    if (!zone || !lbl) return;
+
+    if (count > 0) {
+      zone.classList.add('has-file');
+      lbl.textContent = `✔ ${count} Picture(s) Attached — Click to Add More`;
+    } else {
+      zone.classList.remove('has-file');
+      lbl.textContent = `📷 Attach Compressor Nameplate / Meter Reading / Damage Picture (Optional - Multiple Allowed)`;
+    }
+  }
+
+  function renderAttachedImages() {
+    const container = document.getElementById('attached_container');
+    const section = document.getElementById('section_attached_pictures');
+    if (!container || !section) return;
+
+    const keys = Object.keys(formState.uploadedImages);
+    if (keys.length === 0) {
+      section.style.display = 'none';
+      container.innerHTML = '';
+      return;
+    }
+
+    section.style.display = 'block';
+    container.innerHTML = '';
+
+    keys.forEach((k, idx) => {
+      const item = formState.uploadedImages[k];
+      const card = document.createElement('div');
+      card.className = 'attached-card';
+      card.innerHTML = `
+        <div class="attached-card-header">
+          <div class="attached-card-title">Compressor Picture ${idx + 1}</div>
+          <button type="button" class="btn-delete-pic hide-on-pdf" onclick="deleteAttachedImage('${k}')" title="Delete Picture">🗑️ Delete</button>
+        </div>
+        <div class="attached-img-box"><img src="${item.src}" alt="${item.title}"></div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function updateSummarySection() {
+    const box = document.getElementById('summary_comment_content');
+    if (!box) return;
+
+    let html = '';
+
+    if (activePhase) {
+      const phaseLabel = activePhase === '1phase' ? '1 Ø phase' : '3 Ø phase';
+      html += `<div class="summary-item-row"><span class="summary-part-name">• Compressor Phase:</span> ${phaseLabel}</div>`;
+    }
+
+    const symptoms = [];
+    document.querySelectorAll('input[data-main-symptom]:checked').forEach(chk => {
+      symptoms.push(chk.getAttribute('data-main-symptom'));
+    });
+    const chkOthers = document.getElementById('chk_sym_others');
+    const txtOthers = document.getElementById('txt_sym_others')?.value.trim();
+    if (chkOthers && chkOthers.checked) {
+      symptoms.push(txtOthers ? `Others (${txtOthers})` : 'Others');
+    }
+    if (symptoms.length > 0) {
+      html += `<div class="summary-item-row"><span class="summary-part-name">• Symptom:</span> ${symptoms.join(' | ')}</div>`;
+    }
+
+    if (activePhase) {
+      const cfg = activePhase === '1phase' ? PHASE_1_CONFIG : PHASE_3_CONFIG;
+      const ngResults = [];
+      let totalMeasured = 0;
+
+      const t1 = document.getElementById('temp_t1')?.value.trim();
+      const t2 = document.getElementById('temp_t2')?.value.trim();
+      if (t1 || t2) {
+        html += `<div class="summary-item-row"><span class="summary-part-name">• Ambient Temp:</span> T1 = ${t1 || '-'} °C, T2 = ${t2 || '-'} °C</div>`;
+      }
+
+      cfg.windingPairs.forEach(p => {
+        const status = document.getElementById(`status_wind_${p.id}`)?.textContent.trim();
+        const unit = document.getElementById(`unit_r3_${p.id}`)?.value;
+        const val = document.getElementById(`val_r3_${p.id}`)?.value;
+        const r2Text = document.getElementById(`calc_r2_${p.id}`)?.textContent;
+        if (status === 'OK' || status === 'NG') totalMeasured++;
+        if (status === 'NG') {
+          const measuredStr = unit === 'OL' ? 'OL' : `${val} Ω (Std R2: ${r2Text})`;
+          ngResults.push(`Winding [${p.label}]: ${measuredStr} (NG)`);
+        }
+      });
+
+      cfg.insulationPairs.forEach(p => {
+        const status = document.getElementById(`status_ins_${p.id}`)?.textContent.trim();
+        const unit = document.getElementById(`unit_ins_${p.id}`)?.value;
+        const val = document.getElementById(`val_ins_${p.id}`)?.value;
+        if (status === 'OK' || status === 'NG') totalMeasured++;
+        if (status === 'NG') {
+          const measuredStr = unit === 'OL' ? 'OL' : `${val} MΩ`;
+          ngResults.push(`Insulation [${p.label}]: ${measuredStr} (NG)`);
+        }
+      });
+
+      if (ngResults.length > 0) {
+        html += `<div class="summary-item-row" style="color: var(--danger-red); font-weight: 600;"><span class="summary-part-name" style="color: var(--danger-red);">• Defective Measurements (NG Only):</span> ${ngResults.join(' | ')}</div>`;
+      } else if (totalMeasured > 0) {
+        html += `<div class="summary-item-row" style="color: var(--success-green);"><span class="summary-part-name">• Measurement Result:</span> All Pass (No NG Parameters)</div>`;
+      }
+    }
+
+    box.innerHTML = html || '<div style="color:var(--text-muted);">No inspection summary available</div>';
+  }
+
+  /* ==================== DESIGNER MODE FUNCTIONS ==================== */
+  function promptEditorMode() {
+    const panel = document.getElementById('editorPanel');
+    const isVisible = panel && panel.style.display === 'block';
+
+    if (isVisible) {
+      toggleEditorPanel(false);
+    } else {
+      const pwd = prompt("Enter Designer Mode password:");
+      if (pwd === "maco2026") {
+        toggleEditorPanel(true);
+      } else if (pwd !== null) {
+        alert("Incorrect password!");
+      }
+    }
+  }
+
+  function toggleEditorPanel(show) {
+    const panel = document.getElementById('editorPanel');
+    if (panel) {
+      panel.style.display = show ? 'block' : 'none';
+      if (show) {
+        initEditorFields();
+      }
+    }
+  }
+
+  function initEditorFields() {
+    document.getElementById('editFormTitle').value = document.getElementById('displayFormTitle').textContent;
+
+    document.getElementById('ed_comp_tempConst').value = standardCriteria.tempConstant;
+    document.getElementById('ed_comp_tolerance').value = standardCriteria.tolerancePercent;
+    document.getElementById('ed_comp_insulVolt').value = standardCriteria.insulationVoltage;
+    document.getElementById('ed_comp_minInsul').value = standardCriteria.minInsulationMOhm;
+  }
+
+  function collectEditorData() {
+    const titleVal = document.getElementById('editFormTitle').value;
+    if (titleVal) {
+      document.getElementById('displayFormTitle').textContent = titleVal;
+      document.getElementById('pageHeaderTitle').textContent = titleVal;
+    }
+
+    standardCriteria.tempConstant = parseFloat(document.getElementById('ed_comp_tempConst').value) || 234.5;
+    standardCriteria.tolerancePercent = parseFloat(document.getElementById('ed_comp_tolerance').value) || 10;
+    standardCriteria.insulationVoltage = document.getElementById('ed_comp_insulVolt').value.trim() || "500Vdc";
+    standardCriteria.minInsulationMOhm = parseFloat(document.getElementById('ed_comp_minInsul').value) || 3.0;
+  }
+
+  function saveEditorTemp() {
+    collectEditorData();
+    renderTechnicalSection(true);
+    updateSummarySection();
+    alert("บันทึก Standard Criteria ชั่วคราวเรียบร้อยแล้ว!");
+  }
+
+  function saveEditorChanges() {
+    collectEditorData();
+    renderTechnicalSection(true);
+    updateSummarySection();
+
+    const panel = document.getElementById('editorPanel');
+    if (panel) panel.style.display = 'none';
+
+    let htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    const criteriaRegex = /let standardCriteria = \{[\s\S]*?\};/;
+    const initialCriteriaRegex = /let initialCriteria = \{[\s\S]*?\};/;
+    
+    htmlContent = htmlContent.replace(criteriaRegex, "let standardCriteria = " + JSON.stringify(standardCriteria, null, 2) + ";");
+    htmlContent = htmlContent.replace(initialCriteriaRegex, "let initialCriteria = " + JSON.stringify(standardCriteria, null, 2) + ";");
+
+    initEditorFields();
+
+    const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "Checking_Part_Report_Compressor.html";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+
+    alert("อัปเดต Standard Criteria ลงในโค้ดและดาวน์โหลดไฟล์ HTML เรียบร้อยแล้ว!");
+  }
+
+  function resetEditorDefault() {
+    if (confirm("คุณต้องการรีเซ็ต Standard Criteria กลับเป็นค่าเริ่มต้นเดิมใช่หรือไม่?")) {
+      standardCriteria = JSON.parse(JSON.stringify(initialCriteria));
+      document.getElementById('displayFormTitle').textContent = "Checking Part Report (Compressor)";
+      document.getElementById('pageHeaderTitle').textContent = "Checking Part Report (Compressor)";
+      initEditorFields();
+      renderTechnicalSection(true);
+      updateSummarySection();
+      alert("รีเซ็ตข้อมูลเป็นค่าเริ่มต้นเรียบร้อยแล้ว!");
+    }
+  }
+
+  function prepareDOMForPDF() {
+    document.querySelectorAll('input[type="checkbox"]').forEach(input => {
+      if (input.checked) input.setAttribute('checked', 'checked');
+      else input.removeAttribute('checked');
+    });
+
+    document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(input => {
+      input.setAttribute('value', input.value);
+    });
+
+    document.querySelectorAll('select').forEach(select => {
+      select.querySelectorAll('option').forEach(option => {
+        if (option.value === select.value) option.setAttribute('selected', 'selected');
+        else option.removeAttribute('selected');
+      });
+    });
+  }
+
+  function autoFitForPrint() {
+    const container = document.getElementById('reportContent');
+    if (!container) return;
+
+    const maxA4WidthPx = 720;
+    let maxNeededWidth = container.offsetWidth;
+
+    document.querySelectorAll('.unified-table').forEach(tbl => {
+      if (tbl.scrollWidth > maxNeededWidth) {
+        maxNeededWidth = tbl.scrollWidth + 48;
+      }
+    });
+
+    if (maxNeededWidth > maxA4WidthPx && window.innerWidth < 768) {
+      const scale = Math.max(0.72, Math.min(1, maxA4WidthPx / maxNeededWidth));
+      container.style.zoom = scale.toFixed(2);
+    } else {
+      container.style.zoom = '';
+    }
+  }
+
+  function generatePDF() {
+    const serviceReportInput = document.getElementById('serviceReportNo');
+    if (!serviceReportInput || !serviceReportInput.value.trim()) {
+      alert("กรุณากรอก Service Report No. ก่อนทำการบันทึก PDF\nPlease enter Service Report No. before saving PDF");
+      if (serviceReportInput) serviceReportInput.focus();
+      return;
+    }
+    prepareDOMForPDF();
+    autoFitForPrint();
+    window.print();
+  }
+</script>
+</body></html>
