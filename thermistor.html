@@ -312,9 +312,9 @@
           </div>
         </div>
 
-        <!-- 1.3 Connector Type Checkboxes -->
+        <!-- 1.3 Connector Name Checkboxes -->
         <div style="font-size: 0.8rem; font-weight: 700; margin-bottom: 6px; color: var(--primary-black);">
-          1.3 Connector Type (Select connector to load sensor positions)
+          1.3 Connector Name (Select connector to load sensor positions)
         </div>
         <div class="position-grid" id="connectorContainer" style="margin-bottom: 14px;">
           <div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">Please select Unit Type (1.1) and Category (1.2) to load connector types.</div>
@@ -520,18 +520,18 @@
   {"series":"RAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-R (Outdoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
   {"series":"RAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-A (Outdoor Air)","curveType":"15k"},
   {"series":"RAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-D (Discharge Pipe)","curveType":"100k_RAC"},
-  {"series":"RAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-S (Suction Pipe for multi system)","curveType":"15k"},
+  {"series":"RAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-S (Suction Pipe) for multi system","curveType":"15k"},
   {"series":"RAC","unitType":"Outdoor","connector":"CNP","position":"Tho-AF (Power transistor)","curveType":"200k_PAC"},
-  {"series":"PAC","unitType":"Outdoor","connector":"CNTH (VNP)","position":"Tho-R (Outdoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
-  {"series":"PAC","unitType":"Outdoor","connector":"CNTH (VNP)","position":"Tho-A (Outdoor Air)","curveType":"100k_THOA"},
-  {"series":"PAC","unitType":"Outdoor","connector":"CNTH (VNP)","position":"Tho-D (Discharge Pipe)","curveType":"200k_PAC"},
+  {"series":"PAC","unitType":"Outdoor","connector":"CNTH (VNP, YNA)","position":"Tho-R (Outdoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
+  {"series":"PAC","unitType":"Outdoor","connector":"CNTH (VNP, YNA)","position":"Tho-A (Outdoor Air)","curveType":"100k_THOA"},
+  {"series":"PAC","unitType":"Outdoor","connector":"CNTH (VNP, YNA)","position":"Tho-D (Discharge Pipe)","curveType":"200k_PAC"},
   {"series":"PAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-A (Outdoor Air)","curveType":"100k_THOA"},
   {"series":"PAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-S (Suction Pipe)","curveType":"15k"},
   {"series":"PAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-D (Discharge Pipe)","curveType":"200k_PAC"},
   {"series":"PAC","unitType":"Outdoor","connector":"CNTH","position":"Tho-R (Outdoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
   {"series":"PAC","unitType":"Outdoor","connector":"CNIP","position":"Tho-P (Power transistor (IPM))","curveType":"200k_PAC"},
   {"series":"PAC","unitType":"Outdoor","connector":"CNB","position":"Tho-R2 (Outdoor Refrigerant inside Heat Exchanger)","curveType":"15k"},
-  {"series":"PAC","unitType":"Outdoor","connector":"CNU","position":"Tho-H (Suction Pipe of Subcool line (Under-dome))","curveType":"15k"}
+  {"series":"PAC","unitType":"Outdoor","connector":"CNU","position":"Tho-H (Under-dome)","curveType":"15k"}
 ]
 </script>
 
@@ -565,18 +565,18 @@
     { series: 'RAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-R (Outdoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
     { series: 'RAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-A (Outdoor Air)', curveType: '15k' },
     { series: 'RAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-D (Discharge Pipe)', curveType: '100k_RAC' },
-    { series: 'RAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-S (Suction Pipe for multi system)', curveType: '15k' },
+    { series: 'RAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-S (Suction Pipe) for multi system', curveType: '15k' },
     { series: 'RAC', unitType: 'Outdoor', connector: 'CNP', position: 'Tho-AF (Power transistor)', curveType: '200k_PAC' },
-    { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH (VNP)', position: 'Tho-R (Outdoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
-    { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH (VNP)', position: 'Tho-A (Outdoor Air)', curveType: '100k_THOA' },
-    { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH (VNP)', position: 'Tho-D (Discharge Pipe)', curveType: '200k_PAC' },
+    { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH (VNP, YNA)', position: 'Tho-R (Outdoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
+    { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH (VNP, YNA)', position: 'Tho-A (Outdoor Air)', curveType: '100k_THOA' },
+    { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH (VNP, YNA)', position: 'Tho-D (Discharge Pipe)', curveType: '200k_PAC' },
     { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-A (Outdoor Air)', curveType: '100k_THOA' },
     { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-S (Suction Pipe)', curveType: '15k' },
     { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-D (Discharge Pipe)', curveType: '200k_PAC' },
     { series: 'PAC', unitType: 'Outdoor', connector: 'CNTH', position: 'Tho-R (Outdoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
     { series: 'PAC', unitType: 'Outdoor', connector: 'CNIP', position: 'Tho-P (Power transistor (IPM))', curveType: '200k_PAC' },
     { series: 'PAC', unitType: 'Outdoor', connector: 'CNB', position: 'Tho-R2 (Outdoor Refrigerant inside Heat Exchanger)', curveType: '15k' },
-    { series: 'PAC', unitType: 'Outdoor', connector: 'CNU', position: 'Tho-H (Suction Pipe of Subcool line (Under-dome))', curveType: '15k' }
+    { series: 'PAC', unitType: 'Outdoor', connector: 'CNU', position: 'Tho-H (Under-dome)', curveType: '15k' }
   ];
 
   const DEFAULT_CURVE_CONFIGS = {
