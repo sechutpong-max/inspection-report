@@ -317,7 +317,7 @@
           1.3 Connector Name (Select connector to load sensor positions)
         </div>
         <div class="position-grid" id="connectorContainer" style="margin-bottom: 14px;">
-          <div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">Please select Unit Type (1.1) and Category (1.2) to load connector types.</div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">Please select Unit Type (1.1) and Category (1.2) to load s.</div>
         </div>
       </section>
 
@@ -358,7 +358,7 @@
             </thead>
             <tbody id="inspectionTableBody">
               <tr>
-                <td colspan="4" style="color: var(--text-muted); padding: 14px;">No Connector Type selected in Section 1.3</td>
+                <td colspan="4" style="color: var(--text-muted); padding: 14px;">No  selected in Section 1.3</td>
               </tr>
             </tbody>
           </table>
@@ -394,7 +394,7 @@
     <button type="button" onclick="document.getElementById('editorPanel').style.display='none'" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-muted);">✕</button>
   </div>
   
-  <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">ปรับแต่งหัวข้อรายงาน ค่า Tolerance % สเกลกราฟ และแก้ไขฐานข้อมูล Connector Type / Sensor Position ได้โดยตรงที่นี่</p>
+  <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">ปรับแต่งหัวข้อรายงาน ค่า Tolerance % สเกลกราฟ และแก้ไขฐานข้อมูล  / Sensor Position ได้โดยตรงที่นี่</p>
 
   <!-- Yellow Form Title Box -->
   <div class="designer-card-yellow">
@@ -435,7 +435,7 @@
   <div class="designer-card-blue">
     <div class="designer-db-toolbar">
       <div style="font-size: 0.85rem; font-weight: 700; color: var(--primary-black);">
-        📋 Connector Type &amp; Sensor Position Master Data (<span id="dbRowCount">40</span> รายการ)
+        📋 Connector Name &amp; Sensor Position Master Data (<span id="dbRowCount">40</span> รายการ)
       </div>
       <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
         <select id="dbFilterSeries" class="input-control" style="width: 130px; padding: 5px 8px; font-size: 0.78rem; background: #fff;" onchange="renderDesignerDbTable()">
@@ -656,7 +656,7 @@
     const prevChecked = preserveChecked ? [...activeSelectedConnectors] : [];
 
     if (!unitType || !series) {
-      container.innerHTML = `<div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">Please select Unit Type (1.1) and Category (1.2) to load connector types.</div>`;
+      container.innerHTML = `<div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">Please select Unit Type (1.1) and Category (1.2) to load Connector Names.</div>`;
       activeSelectedConnectors = [];
       activeSelectedPositions = [];
       renderInspectionRows();
@@ -674,7 +674,7 @@
     });
 
     if (uniqueConnectors.length === 0) {
-      container.innerHTML = `<div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">No matching Connector Type found.</div>`;
+      container.innerHTML = `<div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">No matching Connector Name found.</div>`;
       activeSelectedConnectors = [];
       activeSelectedPositions = [];
       renderInspectionRows();
@@ -742,7 +742,7 @@
     if (!tbody) return;
 
     if (activeSelectedPositions.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="4" style="color: var(--text-muted); padding: 14px;">No Connector Type selected in Section 1.3</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="4" style="color: var(--text-muted); padding: 14px;">No Connector Name selected in Section 1.3</td></tr>`;
       return;
     }
 
@@ -1216,7 +1216,7 @@
     }
 
     if (activeSelectedConnectors.length > 0) {
-      html += `<div class="summary-item-row"><span style="font-weight:600;">• Connector Type:</span> ${activeSelectedConnectors.join(', ')}</div>`;
+      html += `<div class="summary-item-row"><span style="font-weight:600;">• Connector Name:</span> ${activeSelectedConnectors.join(', ')}</div>`;
     }
 
     if (activeSelectedPositions.length > 0) {
