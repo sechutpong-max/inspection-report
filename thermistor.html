@@ -42,14 +42,19 @@
     .input-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
     .input-control { width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; color: var(--text-main); background-color: #FAFAFA; box-sizing: border-box; }
 
-    /* Custom Connector Grid (4 Columns) */
-    .position-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: max-content; gap: 8px; align-items: start; }
+    /* Custom Connector Grid (3 Columns) */
+    .position-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: max-content; gap: 8px; align-items: start; }
     
-    .custom-check { display: flex; align-items: center; justify-content: flex-start; gap: 6px; padding: 8px 10px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; user-select: none; width: 100%; box-sizing: border-box; transition: border-color 0.15s, background-color 0.15s; }
+    .custom-check { display: flex; align-items: center; justify-content: flex-start; gap: 5px; padding: 7px 8px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; user-select: none; width: 100%; box-sizing: border-box; transition: border-color 0.15s, background-color 0.15s; white-space: nowrap; overflow: hidden; }
     .custom-check:hover { border-color: #94A3B8; background: #F1F5F9; }
     .custom-check input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border: 1.5px solid #CBD5E1; border-radius: 3.5px; outline: none; background-color: #FFFFFF; cursor: pointer; display: inline-grid; place-content: center; margin: 0; flex-shrink: 0; }
     .custom-check input[type="checkbox"]:checked { background-color: var(--primary-red); border-color: var(--primary-red); }
     .custom-check input[type="checkbox"]:checked::before { content: "✔"; font-size: 9px; color: #FFFFFF; font-weight: bold; }
+    .conn-label-wrap { display: inline-flex; align-items: center; gap: 4px; flex-wrap: nowrap; min-width: 0; }
+    .conn-name-text { white-space: nowrap; color: var(--primary-black); flex-shrink: 0; }
+    .sensor-tag-group { display: inline-flex; align-items: center; gap: 3px; flex-wrap: nowrap; }
+    .sensor-pos-badge { display: inline-block; background-color: #E2E8F0; color: #334155; border: 1px solid #CBD5E1; font-size: 0.64rem; font-weight: 600; padding: 1px 4px; border-radius: 4px; line-height: 1.25; white-space: nowrap; }
+    .custom-check input[type="checkbox"]:checked ~ .conn-label-wrap .sensor-pos-badge { background-color: #FEF2F2; color: var(--primary-red); border-color: #FECACA; }
 
     .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-weight: 700; font-size: 0.8rem; text-align: center; }
     .status-ok { background-color: var(--success-bg); color: var(--success-green); border: 1px solid var(--success-green); }
@@ -147,7 +152,7 @@
       .canvas-body-box { height: 250px !important; }
       .section-card { padding: 10px 8px !important; margin-bottom: 10px; }
       .designer-btn-group { flex-direction: column; }
-      .position-grid { grid-template-columns: repeat(2, 1fr) !important; }
+      .position-grid { grid-template-columns: 1fr !important; }
       .ambient-formula-bar { flex-direction: column; align-items: stretch; }
       .ambient-input-box { width: 100%; }
 
@@ -236,24 +241,35 @@
       .canvas-body-box { height: 230px !important; width: 100% !important; }
       .canvas-body-box canvas { width: 100% !important; height: 100% !important; }
       
-      .position-grid { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; grid-auto-rows: max-content !important; gap: 8px !important; align-items: start !important; }
+      .position-grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; grid-auto-rows: max-content !important; gap: 6px !important; align-items: start !important; }
+      .custom-check { padding: 5px 6px !important; gap: 4px !important; font-size: 0.65rem !important; }
+      .custom-check input[type="checkbox"] { width: 12px !important; height: 12px !important; }
+      .conn-label-wrap { gap: 3px !important; }
+      .sensor-tag-group { gap: 2px !important; }
+      .sensor-pos-badge { font-size: 0.54rem !important; padding: 1px 3px !important; }
 
       .ambient-formula-bar { flex-direction: row !important; align-items: flex-end !important; justify-content: space-between !important; }
       .ambient-input-box { width: 160px !important; }
       
       .table-responsive-wrapper { overflow: visible !important; }
-      .measure-table { display: table !important; width: 100% !important; }
+      .measure-table { display: table !important; width: 100% !important; font-size: 0.68rem !important; margin-bottom: 8px !important; }
       .measure-table thead { display: table-header-group !important; }
       .measure-table tbody { display: table-row-group !important; }
       .measure-table tbody tr { display: table-row !important; background: transparent !important; border: none !important; padding: 0 !important; margin: 0 !important; }
-      .measure-table th:not(.hide-on-pdf), .measure-table tbody td:not(.hide-on-pdf) { display: table-cell !important; border: 1px solid var(--border-color) !important; padding: 8px !important; text-align: center !important; vertical-align: middle !important; }
-      .measure-table tbody td:nth-child(1) { text-align: left !important; font-size: 0.8rem !important; }
-      .res-input-flex { justify-content: center !important; }
+      .measure-table th:not(.hide-on-pdf) { display: table-cell !important; border: 1px solid var(--border-color) !important; padding: 5px 6px !important; font-size: 0.68rem !important; text-align: center !important; vertical-align: middle !important; }
+      .measure-table tbody td:not(.hide-on-pdf) { display: table-cell !important; border: 1px solid var(--border-color) !important; padding: 5px 6px !important; text-align: center !important; vertical-align: middle !important; }
+      .measure-table tbody td:nth-child(1) { text-align: left !important; font-size: 0.68rem !important; line-height: 1.25 !important; }
+      .res-input-flex { justify-content: center !important; gap: 3px !important; }
       .res-input-flex::before { content: none !important; }
-      .res-val-input { flex: none !important; width: 78px !important; }
-      .res-unit-select { width: 58px !important; }
-      .chart-scroll-wrapper { overflow: visible !important; }
-      .chart-cell-container { min-width: 0 !important; width: 100% !important; background: #F8FAFC !important; }
+      .res-val-input { flex: none !important; width: 62px !important; padding: 4px 6px !important; font-size: 0.72rem !important; }
+      .res-unit-select { width: 48px !important; padding: 4px 2px !important; font-size: 0.72rem !important; }
+      .chart-scroll-wrapper { overflow: visible !important; padding: 0 !important; }
+      .chart-cell-container { min-width: 0 !important; width: 100% !important; height: 32px !important; padding: 3px 5px !important; background: #F8FAFC !important; }
+      .chart-bar-bg { height: 6px !important; }
+      .chart-center-line { height: 10px !important; }
+      .chart-point { width: 12px !important; height: 12px !important; top: -3px !important; }
+      .chart-labels { height: 11px !important; margin-top: 3px !important; font-size: 0.55rem !important; }
+      .status-badge { padding: 2px 8px !important; font-size: 0.68rem !important; }
       .measure-table th.hide-on-pdf, .measure-table tbody td.hide-on-pdf, .hide-on-pdf, .designer-fab, #editorPanel { display: none !important; }
     }
   </style>
@@ -317,7 +333,7 @@
           1.3 Connector Name (Select connector to load sensor positions)
         </div>
         <div class="position-grid" id="connectorContainer" style="margin-bottom: 14px;">
-          <div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">Please select Unit Type (1.1) and Category (1.2) to load s.</div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); grid-column: 1 / -1;">Please select Unit Type (1.1) and Category (1.2) to load Connector Names.</div>
         </div>
       </section>
 
@@ -342,9 +358,6 @@
           </div>
         </div>
 
-        <!-- Dynamic Graphs Container Wrapper (Hidden until Ambient Temp is entered) -->
-        <div id="graphsWrapper" class="graphs-container-grid" style="display: none;"></div>
-
         <!-- Dynamic Resistance Table Generated From Section 1.3 -->
         <div class="table-responsive-wrapper">
           <table class="measure-table">
@@ -358,7 +371,7 @@
             </thead>
             <tbody id="inspectionTableBody">
               <tr>
-                <td colspan="4" style="color: var(--text-muted); padding: 14px;">No  selected in Section 1.3</td>
+                <td colspan="4" style="color: var(--text-muted); padding: 14px;">No Connector Name selected in Section 1.3</td>
               </tr>
             </tbody>
           </table>
@@ -366,8 +379,11 @@
 
         <!-- Tolerance Remark Text -->
         <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;" id="displayToleranceRemark">
-          • Standard tolerance control range: ±<span id="lbl_tolerance_val">5</span>% from nominal specification.
+- Standard tolerance control range: ±<span id="lbl_tolerance_val">5</span>% from nominal specification.
         </div>
+
+        <!-- Dynamic Graphs Container Wrapper (Hidden until Ambient Temp is entered) -->
+        <div id="graphsWrapper" class="graphs-container-grid" style="display: none; margin-top: 14px; margin-bottom: 0;"></div>
       </section>
 
       <!-- Section 4: Inspection Summary & Comments -->
@@ -394,7 +410,7 @@
     <button type="button" onclick="document.getElementById('editorPanel').style.display='none'" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-muted);">✕</button>
   </div>
   
-  <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">ปรับแต่งหัวข้อรายงาน ค่า Tolerance % สเกลกราฟ และแก้ไขฐานข้อมูล  / Sensor Position ได้โดยตรงที่นี่</p>
+  <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">ปรับแต่งหัวข้อรายงาน ค่า Tolerance % สเกลกราฟ และแก้ไขฐานข้อมูล Connector Name / Sensor Position ได้โดยตรงที่นี่</p>
 
   <!-- Yellow Form Title Box -->
   <div class="designer-card-yellow">
@@ -482,10 +498,10 @@
 <!-- Persistent Curve Config JSON Store -->
 <script type="application/json" id="curveConfigsJson">
 {
-  "15k": { "R_25": 5.0, "B": 3950, "xMin": 0, "xMax": 50, "yMax": 15, "title": "15 kΩ Standard Characteristic Curve" },
-  "100k_RAC": { "R_25": 50.0, "B": 4100, "xMin": 0, "xMax": 140, "yMax": 100, "title": "100 kΩ Discharge Characteristic Curve" },
-  "100k_THOA": { "R_25": 20.0, "B": 3800, "xMin": -20, "xMax": 50, "yMax": 100, "title": "100 kΩ Outdoor Air Characteristic Curve" },
-  "200k_PAC": { "R_25": 60.0, "B": 4200, "xMin": 0, "xMax": 160, "yMax": 200, "title": "200 kΩ High Temp Characteristic Curve" }
+  "15k": { "R_25": 5.0, "B": 3950, "xMin": 0, "xMax": 50, "yMax": 15, "title": "Characteristic Curve: 15 kΩ" },
+  "100k_RAC": { "R_25": 50.0, "B": 4100, "xMin": 0, "xMax": 140, "yMax": 100, "title": "Characteristic Curve: 100 kΩ" },
+  "100k_THOA": { "R_25": 20.0, "B": 3800, "xMin": -20, "xMax": 50, "yMax": 100, "title": "Characteristic Curve: 100 kΩ" },
+  "200k_PAC": { "R_25": 60.0, "B": 4200, "xMin": 0, "xMax": 160, "yMax": 200, "title": "Characteristic Curve: 200 kΩ" }
 }
 </script>
 
@@ -580,10 +596,10 @@
   ];
 
   const DEFAULT_CURVE_CONFIGS = {
-    '15k': { R_25: 5.0, B: 3950, xMin: 0, xMax: 50, yMax: 15, title: '15 kΩ Standard Characteristic Curve' },
-    '100k_RAC': { R_25: 50.0, B: 4100, xMin: 0, xMax: 140, yMax: 100, title: '100 kΩ Discharge Characteristic Curve' },
-    '100k_THOA': { R_25: 20.0, B: 3800, xMin: -20, xMax: 50, yMax: 100, title: '100 kΩ Outdoor Air Characteristic Curve' },
-    '200k_PAC': { R_25: 60.0, B: 4200, xMin: 0, xMax: 160, yMax: 200, title: '200 kΩ High Temp Characteristic Curve' }
+    '15k': { R_25: 5.0, B: 3950, xMin: 0, xMax: 50, yMax: 15, title: 'Characteristic Curve: 15 kΩ' },
+    '100k_RAC': { R_25: 50.0, B: 4100, xMin: 0, xMax: 140, yMax: 100, title: 'Characteristic Curve: 100 kΩ' },
+    '100k_THOA': { R_25: 20.0, B: 3800, xMin: -20, xMax: 50, yMax: 100, title: 'Characteristic Curve: 100 kΩ' },
+    '200k_PAC': { R_25: 60.0, B: 4200, xMin: 0, xMax: 160, yMax: 200, title: 'Characteristic Curve: 200 kΩ' }
   };
 
   let CURVE_CONFIGS = {};
@@ -691,9 +707,22 @@
       label.className = 'custom-check';
       const isChecked = prevChecked.includes(connName) ? 'checked' : '';
       const escapedConn = connName.replace(/"/g, '&quot;');
+      const shortPositions = [];
+      matchingRows
+        .filter(item => item.connector === connName)
+        .forEach(item => {
+          const shortCode = item.position.split('(')[0].trim();
+          if (shortCode && !shortPositions.includes(shortCode)) {
+            shortPositions.push(shortCode);
+          }
+        });
+      const badgesHtml = shortPositions.map(code => `<span class="sensor-pos-badge">${escapeHtml(code)}</span>`).join('');
       label.innerHTML = `
         <input type="checkbox" class="connector-checkbox" id="chk_conn_${key}" value="${escapedConn}" ${isChecked} onchange="onConnectorCheckChange()">
-        <span>${connName}</span>
+        <span class="conn-label-wrap">
+          <span class="conn-name-text">${escapeHtml(connName)}</span>
+          ${badgesHtml ? `<span class="sensor-tag-group">${badgesHtml}</span>` : ''}
+        </span>
       `;
       container.appendChild(label);
     });
