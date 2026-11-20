@@ -215,7 +215,7 @@
       .chart-cell-container { min-width: 0 !important; width: 100% !important; background: #FFFFFF; }
     }
 
-    /* Save PDF / Print Settings */
+    /* Save PDF / Print Settings (2mm Outer Margin) */
     @media print {
       @page { size: A4 portrait; margin: 0mm !important; }
       html, body {
@@ -230,15 +230,16 @@
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
-      .app-container { width: 100% !important; max-width: 100% !important; margin: 0 auto !important; padding: 6mm !important; box-shadow: none !important; border: none !important; border-radius: 0 !important; }
-      .brand-header { flex-direction: row !important; justify-content: space-between !important; align-items: center !important; padding: 12px 16px !important; }
-      .form-body { padding: 14px 16px !important; }
-      .section-card { padding: 12px 14px !important; margin-bottom: 12px !important; break-inside: avoid !important; page-break-inside: avoid !important; }
-      .grid-3 { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 12px !important; }
-      .grid-2 { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
-      .graphs-container-grid { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
-      .graphs-container-grid.multi-graphs { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-      .canvas-body-box { height: 230px !important; width: 100% !important; }
+      .app-container { width: 100% !important; max-width: 100% !important; margin: 0 auto !important; padding: 2mm !important; box-shadow: none !important; border: none !important; border-radius: 0 !important; }
+      .brand-header { flex-direction: row !important; justify-content: space-between !important; align-items: center !important; padding: 8px 10px !important; }
+      .form-body { padding: 8px 6px !important; }
+      .page-title { margin-bottom: 10px !important; font-size: 1.15rem !important; }
+      .section-card { padding: 10px 10px !important; margin-bottom: 8px !important; break-inside: avoid !important; page-break-inside: avoid !important; }
+      .grid-3 { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; }
+      .grid-2 { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+      .graphs-container-grid { display: grid !important; grid-template-columns: 1fr !important; gap: 10px !important; }
+      .graphs-container-grid.multi-graphs { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+      .canvas-body-box { height: 225px !important; width: 100% !important; }
       .canvas-body-box canvas { width: 100% !important; height: 100% !important; }
       
       .position-grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; grid-auto-rows: max-content !important; gap: 6px !important; align-items: start !important; }
@@ -248,7 +249,7 @@
       .sensor-tag-group { gap: 2px !important; }
       .sensor-pos-badge { font-size: 0.54rem !important; padding: 1px 3px !important; }
 
-      .ambient-formula-bar { flex-direction: row !important; align-items: flex-end !important; justify-content: space-between !important; }
+      .ambient-formula-bar { flex-direction: row !important; align-items: flex-end !important; justify-content: space-between !important; padding: 8px 10px !important; margin-bottom: 10px !important; }
       .ambient-input-box { width: 160px !important; }
       
       .table-responsive-wrapper { overflow: visible !important; }
