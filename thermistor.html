@@ -44,7 +44,7 @@
 
     /* Custom Connector Grid (3 Columns) */
     .position-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: max-content; gap: 8px; align-items: start; }
-    
+
     .custom-check { display: flex; align-items: center; justify-content: flex-start; gap: 5px; padding: 7px 8px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; user-select: none; width: 100%; box-sizing: border-box; transition: border-color 0.15s, background-color 0.15s; white-space: nowrap; overflow: hidden; }
     .custom-check:hover { border-color: #94A3B8; background: #F1F5F9; }
     .custom-check input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border: 1.5px solid #CBD5E1; border-radius: 3.5px; outline: none; background-color: #FFFFFF; cursor: pointer; display: inline-grid; place-content: center; margin: 0; flex-shrink: 0; }
@@ -89,7 +89,7 @@
     .canvas-card-wrapper { width: 100%; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; }
     .canvas-header-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
     .canvas-title { font-size: 0.85rem; font-weight: 700; color: var(--primary-black); }
-    
+
     .canvas-body-box { position: relative; width: 100%; height: 280px; background: #FAFAFA; border: 1px solid #CBD5E1; border-radius: 8px; overflow: hidden; }
     canvas { display: block; width: 100%; height: 100%; }
 
@@ -116,11 +116,11 @@
     /* Designer FAB & Original Layout Style Panel */
     .designer-fab { position: fixed; bottom: 16px; right: 16px; z-index: 9999; background: #111111; color: #FFFFFF; width: 44px; height: 44px; border-radius: 50%; border: 2px solid #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); opacity: 0.85; transition: transform 0.2s, opacity 0.2s; }
     .designer-fab:hover { transform: scale(1.08); opacity: 1; }
-    
+
     .editor-panel-box { display: none; background: #FFFFFF; border: 2px solid var(--primary-red); padding: 20px; margin: 20px auto; max-width: 980px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
     .designer-card-yellow { background: #FFFDF0; border: 1px solid #FCD34D; border-radius: 8px; padding: 14px; margin-bottom: 12px; }
     .designer-card-blue { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px; margin-bottom: 16px; }
-    
+
     /* Designer Data Table Styles */
     .designer-db-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
     .designer-db-table-wrap { max-height: 360px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 6px; background: #FFFFFF; }
@@ -241,7 +241,7 @@
       .graphs-container-grid.multi-graphs { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
       .canvas-body-box { height: 225px !important; width: 100% !important; }
       .canvas-body-box canvas { width: 100% !important; height: 100% !important; }
-      
+
       .position-grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; grid-auto-rows: max-content !important; gap: 6px !important; align-items: start !important; }
       .custom-check { padding: 5px 6px !important; gap: 4px !important; font-size: 0.65rem !important; }
       .custom-check input[type="checkbox"] { width: 12px !important; height: 12px !important; }
@@ -251,7 +251,7 @@
 
       .ambient-formula-bar { flex-direction: row !important; align-items: flex-end !important; justify-content: space-between !important; padding: 8px 10px !important; margin-bottom: 10px !important; }
       .ambient-input-box { width: 160px !important; }
-      
+
       .table-responsive-wrapper { overflow: visible !important; }
       .measure-table { display: table !important; width: 100% !important; font-size: 0.68rem !important; margin-bottom: 8px !important; }
       .measure-table thead { display: table-header-group !important; }
@@ -284,7 +284,7 @@
   <main class="form-body">
     <h1 class="page-title" id="displayFormTitle">Checking Part Report (Thermistor)</h1>
     <form id="inspectionForm">
-      
+
       <!-- Section 1: General Information -->
       <section class="section-card">
         <div class="section-title">General Information</div>
@@ -307,7 +307,7 @@
       <!-- Section 2: Thermistor Selection -->
       <section class="section-card">
         <div class="section-title">1. Thermistor Selection</div>
-        
+
         <!-- 1.1 Unit Type & 1.2 Category Filters -->
         <div class="grid-2" style="margin-bottom: 14px;">
           <div class="input-group">
@@ -341,7 +341,7 @@
       <!-- Section 3: Technical Inspection & Resistance Check -->
       <section class="section-card" id="section_technical_inspection">
         <div class="section-title">2. Technical Inspection &amp; Resistance Check</div>
-        
+
         <!-- Ambient Temp Input & Formula Bar -->
         <div class="ambient-formula-bar">
           <div class="ambient-input-box">
@@ -410,7 +410,7 @@
     </h3>
     <button type="button" onclick="document.getElementById('editorPanel').style.display='none'" style="background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-muted);">✕</button>
   </div>
-  
+
   <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">ปรับแต่งหัวข้อรายงาน ค่า Tolerance % สเกลกราฟ และแก้ไขฐานข้อมูล Connector Name / Sensor Position ได้โดยตรงที่นี่</p>
 
   <!-- Yellow Form Title Box -->
@@ -499,10 +499,10 @@
 <!-- Persistent Curve Config JSON Store -->
 <script type="application/json" id="curveConfigsJson">
 {
-  "15k": { "R_25": 5.0, "B": 3950, "xMin": 0, "xMax": 50, "yMax": 15, "title": "Characteristic Curve: 15 kΩ" },
-  "100k_RAC": { "R_25": 50.0, "B": 4100, "xMin": 0, "xMax": 140, "yMax": 100, "title": "Characteristic Curve: 100 kΩ" },
-  "100k_THOA": { "R_25": 20.0, "B": 3800, "xMin": -20, "xMax": 50, "yMax": 100, "title": "Characteristic Curve: 100 kΩ" },
-  "200k_PAC": { "R_25": 60.0, "B": 4200, "xMin": 0, "xMax": 160, "yMax": 200, "title": "Characteristic Curve: 200 kΩ" }
+  "15k": { "R_25": 5.0, "B": 3950, "xMin": 0, "xMax": 50, "yMax": 15, "title": "Thermistor Characteristic Curve (5 kΩ at 25°C)" },
+  "100k_RAC": { "R_25": 50.0, "B": 4100, "xMin": 0, "xMax": 140, "yMax": 100, "title": "Thermistor Characteristic Curve (50 kΩ at 25°C)" },
+  "100k_THOA": { "R_25": 20.0, "B": 3800, "xMin": -20, "xMax": 50, "yMax": 100, "title": "Thermistor Characteristic Curve (20 kΩ at 25°C)" },
+  "200k_PAC": { "R_25": 60.0, "B": 4200, "xMin": 0, "xMax": 160, "yMax": 200, "title": "Thermistor Characteristic Curve (60 kΩ at 25°C)" }
 }
 </script>
 
@@ -597,10 +597,10 @@
   ];
 
   const DEFAULT_CURVE_CONFIGS = {
-    '15k': { R_25: 5.0, B: 3950, xMin: 0, xMax: 50, yMax: 15, title: 'Characteristic Curve: 15 kΩ' },
-    '100k_RAC': { R_25: 50.0, B: 4100, xMin: 0, xMax: 140, yMax: 100, title: 'Characteristic Curve: 100 kΩ' },
-    '100k_THOA': { R_25: 20.0, B: 3800, xMin: -20, xMax: 50, yMax: 100, title: 'Characteristic Curve: 100 kΩ' },
-    '200k_PAC': { R_25: 60.0, B: 4200, xMin: 0, xMax: 160, yMax: 200, title: 'Characteristic Curve: 200 kΩ' }
+    '15k': { R_25: 5.0, B: 3950, xMin: 0, xMax: 50, yMax: 15, title: 'Thermistor Characteristic Curve (5 kΩ at 25°C)' },
+    '100k_RAC': { R_25: 50.0, B: 4100, xMin: 0, xMax: 140, yMax: 100, title: 'Thermistor Characteristic Curve (50 kΩ at 25°C)' },
+    '100k_THOA': { R_25: 20.0, B: 3800, xMin: -20, xMax: 50, yMax: 100, title: 'Thermistor Characteristic Curve (20 kΩ at 25°C)' },
+    '200k_PAC': { R_25: 60.0, B: 4200, xMin: 0, xMax: 160, yMax: 200, title: 'Thermistor Characteristic Curve (60 kΩ at 25°C)' }
   };
 
   let CURVE_CONFIGS = {};
@@ -947,7 +947,7 @@
       const rect = bar.getBoundingClientRect();
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       let offsetX = clientX - rect.left;
-      
+
       if (offsetX < 0) offsetX = 0;
       if (offsetX > rect.width) offsetX = rect.width;
 
@@ -962,7 +962,7 @@
 
       const percent = offsetX / rect.width;
       let calculatedKohm = scaleMin + (percent * (scaleMax - scaleMin));
-      
+
       const unit = unitSelect.value;
       if (unit === 'Ω') {
         input.value = Math.round(calculatedKohm * 1000);
