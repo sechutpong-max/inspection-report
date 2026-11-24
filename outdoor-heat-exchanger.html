@@ -776,13 +776,28 @@
 
   function generatePDF() {
     const reportNoInput = document.getElementById('serviceReportNo');
-    if (!reportNoInput.value.trim()) {
+    const reportNoValue = reportNoInput.value.trim().toUpperCase();
+    if (!reportNoValue) {
       alert('Please fill in the Service Report No before generating the PDF report.');
       reportNoInput.focus();
       return;
     }
     updateSummarySection();
     renderAttachedPictures();
+
+    const originalTitle = document.title;
+    const safeFileName = reportNoValue.replace(/[\/\\:*?"<>|]/g, '-');
+    document.title = safeFileName;
+    try {
+      if (window.top && window.top !== window) {
+        window.top.document.title = safeFileName;
+      }
+    } catch (e) {}
+
+    window.addEventListener('afterprint', () => {
+      document.title = originalTitle;
+    }, { once: true });
+
     setTimeout(() => { window.print(); }, 100);
   }
 
@@ -790,7 +805,13 @@
     const savedConfig = localStorage.getItem('reportConfig');
     if (savedConfig) {
       try {
-        reportConfig = JSON.parse(savedConfig);
+        const parsed = JSON.parse(savedConfig);
+        if (parsed && parsed.formTitle === reportConfig.formTitle) {
+          if (!parsed.overallOptions || parsed.overallOptions.length === 0) {
+            parsed.overallOptions = reportConfig.overallOptions;
+          }
+          reportConfig = parsed;
+        }
       } catch (e) {
         console.error('Error loading saved config', e);
       }
