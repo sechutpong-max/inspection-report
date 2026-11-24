@@ -252,6 +252,7 @@
   function renderForm() {
     document.getElementById('displayFormTitle').textContent = reportConfig.formTitle;
     document.getElementById('pageHeaderTitle').textContent = reportConfig.formTitle;
+    syncReportTitle();
     
     const overviewContainer = document.getElementById('overviewContainer');
     let overviewHTML = `<img src="${reportConfig.overallImage}" alt="Drawing Overall" id="overviewImage">`;
@@ -479,10 +480,12 @@
     saveLayoutChangesFromEditor();
     const panel = document.getElementById('editorPanel');
     panel.style.display = 'none';
+    document.title = reportConfig.formTitle;
 
     let htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
     const newConfigCode = `  /* CONFIG START */\n  let reportConfig = ${JSON.stringify(reportConfig, null, 4)};\n  /* CONFIG END */`;
     htmlContent = htmlContent.replace(/\/\* CONFIG START \*\/[\s\S]*?\/\* CONFIG END \*\//, newConfigCode);
+    syncReportTitle();
 
     const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -625,6 +628,21 @@
     }
   }
 
+  function syncReportTitle() {
+    const reportNoInput = document.getElementById('serviceReportNo');
+    const val = reportNoInput ? reportNoInput.value.trim().toUpperCase() : '';
+    const newTitle = val ? val.replace(/[\/\\:*?"<>|]/g, '-') : reportConfig.formTitle;
+
+    document.title = newTitle;
+    try {
+      if (window.top && window.top !== window) {
+        window.top.document.title = newTitle;
+      }
+    } catch (e) {
+      // ข้ามกรณีเปิดข้ามโดเมน
+    }
+  }
+
   function generatePDF() {
     const reportNoInput = document.getElementById('serviceReportNo');
     const reportNoValue = reportNoInput.value.trim().toUpperCase();
@@ -635,15 +653,11 @@
     }
     updateSummarySection();
     renderAttachedPictures();
-
-    const originalTitle = document.title;
-    document.title = reportNoValue.replace(/[\/\\:*?"<>|]/g, '-');
-    window.addEventListener('afterprint', () => {
-      document.title = originalTitle;
-    }, { once: true });
-
-    setTimeout(() => { window.print(); }, 100);
+    syncReportTitle();
+    setTimeout(() => { window.print(); }, 150);
   }
+
+  window.addEventListener('beforeprint', syncReportTitle);
 
   // แปลงเฉพาะช่องที่มีคลาส auto-upper เป็นตัวพิมพ์ใหญ่อัตโนมัติขณะพิมพ์
   document.addEventListener('input', function (e) {
@@ -652,6 +666,9 @@
       const end = e.target.selectionEnd;
       e.target.value = e.target.value.toUpperCase();
       e.target.setSelectionRange(start, end);
+    }
+    if (e.target.id === 'serviceReportNo') {
+      syncReportTitle();
     }
   });
 
