@@ -1566,7 +1566,7 @@
 
   function generatePDF() {
     const serviceReportInput = document.getElementById('serviceReportNo');
-    const reportVal = serviceReportInput ? serviceReportInput.value.trim() : '';
+    const reportVal = serviceReportInput ? serviceReportInput.value.trim().toUpperCase() : '';
 
     if (!reportVal || reportVal === '-') {
       alert("กรุณากรอก Service Report No. ก่อนทำการบันทึก PDF\nPlease enter Service Report No. before saving PDF");
@@ -1583,7 +1583,28 @@
     const inputs = document.querySelectorAll('input[type="text"], input[type="number"], select');
     inputs.forEach(input => input.setAttribute('value', input.value));
 
-    window.print();
+    const originalTitle = document.title;
+    let originalTopTitle = '';
+    const safeFileName = reportVal.replace(/[\/\\:*?"<>|]/g, '-');
+
+    document.title = safeFileName;
+    try {
+      if (window.top && window.top !== window) {
+        originalTopTitle = window.top.document.title;
+        window.top.document.title = safeFileName;
+      }
+    } catch (e) {}
+
+    window.addEventListener('afterprint', () => {
+      document.title = originalTitle;
+      try {
+        if (window.top && window.top !== window && originalTopTitle) {
+          window.top.document.title = originalTopTitle;
+        }
+      } catch (e) {}
+    }, { once: true });
+
+    setTimeout(() => { window.print(); }, 100);
   }
 </script>
 </body>
