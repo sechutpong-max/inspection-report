@@ -217,7 +217,13 @@
       .chart-scroll-wrapper { overflow-x: visible; padding: 0; }
       .chart-cell-container { min-width: 0 !important; width: 100% !important; background: #FFFFFF; }
     }
-
+/* === เพิ่มโค้ดส่วนนี้เพื่อซ่อนปุ่มรูปเฟืองบนมือถือ === */
+    @media screen and (max-width: 768px), (hover: none) and (pointer: coarse) {
+      .designer-fab, #editorPanel {
+        display: none !important;
+      }
+    }
+    /* ========================================== */
     /* Save PDF / Print Settings (2mm Outer Margin) */
     @media print {
       @page { size: A4 portrait; margin: 0mm !important; }
