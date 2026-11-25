@@ -2,11 +2,13 @@
 <html lang="en"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light only">
   <title id="pageHeaderTitle">Checking Part Report (Rectifier)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
   <style>
     :root {
+      color-scheme: light only;
       --primary-red: #E60012;
       --primary-black: #111111;
       --bg-gray: #F4F6F9;
@@ -20,6 +22,7 @@
       --danger-bg: #FEF2F2;
     }
     * { box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
+    html, body { width: 100%; max-width: 100vw; overflow-x: hidden; background-color: var(--bg-gray); color: var(--text-main); }
     body { background-color: var(--bg-gray); color: var(--text-main); padding: 24px 16px; line-height: 1.4; }
     .app-container { width: 100%; max-width: 980px; margin: 0 auto; background: var(--card-bg); border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid var(--border-color); }
     .brand-header { background: #FFFFFF; padding: 16px 24px; border-bottom: 3px solid var(--primary-red); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
@@ -138,6 +141,7 @@
     .btn-edit-reset { background-color: #64748B; color: #FFFFFF; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
     .btn-edit-reset:hover { background-color: #475569; }
 
+    /* Responsive Media Query สำหรับมือถือแนวตั้ง (Portrait) */
     @media screen and (max-width: 768px) {
       body { padding: 8px 4px !important; }
       .brand-header { padding: 12px 16px !important; flex-direction: column; align-items: flex-start; }
@@ -146,16 +150,21 @@
       .dual-image-grid, .attached-grid { grid-template-columns: 1fr !important; }
     }
 
+    /* Save PDF / Print Settings (Consistent A4 Layout on Windows & Mobile) */
     @media print {
       @page {
         size: A4 portrait;
-        margin: 7mm 8mm;
+        margin: 0mm !important;
       }
       html, body {
-        width: 100% !important;
         background-color: #FFFFFF !important;
+        width: 210mm !important;
+        min-width: 210mm !important;
+        max-width: 210mm !important;
+        height: auto !important;
+        margin: 0 auto !important;
         padding: 0 !important;
-        margin: 0 !important;
+        overflow: visible !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
         color-adjust: exact !important;
@@ -163,9 +172,12 @@
       .app-container {
         width: 100% !important;
         max-width: 100% !important;
+        min-width: 100% !important;
         box-shadow: none !important;
         border: none !important;
         border-radius: 0 !important;
+        padding: 5mm !important;
+        margin: 0 auto !important;
         overflow: visible !important;
       }
       .hide-on-pdf, .designer-fab, #editorPanel, .row-reverse-test, .diagram-box-hide-pdf, .btn-delete-pic {
@@ -571,11 +583,6 @@
 
   window.addEventListener('DOMContentLoaded', () => {
     initEditorFields();
-  });
-
-  window.addEventListener('afterprint', () => {
-    const container = document.getElementById('reportContent');
-    if (container) container.style.zoom = '';
   });
 
   function formatProbeCell(val) {
@@ -1444,6 +1451,8 @@
   }
 
   function prepareDOMForPDF() {
+    toggleEditorPanel(false);
+
     document.querySelectorAll('input[type="checkbox"]').forEach(input => {
       if (input.checked) input.setAttribute('checked', 'checked');
       else input.removeAttribute('checked');
@@ -1461,37 +1470,40 @@
     });
   }
 
-  function autoFitForPrint() {
-    const container = document.getElementById('reportContent');
-    if (!container) return;
-
-    const maxA4WidthPx = 720;
-    let maxNeededWidth = container.offsetWidth;
-
-    document.querySelectorAll('.unified-table').forEach(tbl => {
-      if (tbl.scrollWidth > maxNeededWidth) {
-        maxNeededWidth = tbl.scrollWidth + 48;
-      }
-    });
-
-    if (maxNeededWidth > maxA4WidthPx && window.innerWidth < 768) {
-      const scale = Math.max(0.72, Math.min(1, maxA4WidthPx / maxNeededWidth));
-      container.style.zoom = scale.toFixed(2);
-    } else {
-      container.style.zoom = '';
-    }
-  }
-
   function generatePDF() {
     const serviceReportInput = document.getElementById('serviceReportNo');
-    if (!serviceReportInput || !serviceReportInput.value.trim()) {
+    const reportVal = serviceReportInput ? serviceReportInput.value.trim().toUpperCase() : '';
+
+    if (!reportVal || reportVal === '-') {
       alert("กรุณากรอก Service Report No. ก่อนทำการบันทึก PDF\nPlease enter Service Report No. before saving PDF");
       if (serviceReportInput) serviceReportInput.focus();
       return;
     }
+
     prepareDOMForPDF();
-    autoFitForPrint();
-    window.print();
+
+    const originalTitle = document.title;
+    let originalTopTitle = '';
+    const safeFileName = reportVal.replace(/[\/\\:*?"<>|]/g, '-');
+
+    document.title = safeFileName;
+    try {
+      if (window.top && window.top !== window) {
+        originalTopTitle = window.top.document.title;
+        window.top.document.title = safeFileName;
+      }
+    } catch (e) {}
+
+    window.addEventListener('afterprint', () => {
+      document.title = originalTitle;
+      try {
+        if (window.top && window.top !== window && originalTopTitle) {
+          window.top.document.title = originalTopTitle;
+        }
+      } catch (e) {}
+    }, { once: true });
+
+    setTimeout(() => { window.print(); }, 100);
   }
 </script>
 </body></html>
