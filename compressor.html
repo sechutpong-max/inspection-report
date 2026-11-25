@@ -167,7 +167,13 @@
       .dual-image-grid, .attached-grid { grid-template-columns: 1fr !important; }
       .others-row { flex-direction: column; align-items: stretch; }
     }
-
+/* === เพิ่มโค้ดส่วนนี้เพื่อซ่อนปุ่มรูปเฟืองบนมือถือ === */
+    @media screen and (max-width: 768px), (hover: none) and (pointer: coarse) {
+      .designer-fab, #editorPanel {
+        display: none !important;
+      }
+    }
+    /* ========================================== */
     /* Save PDF / Print Settings (Consistent A4 Layout on Windows & Mobile) */
     @media print {
       @page {
