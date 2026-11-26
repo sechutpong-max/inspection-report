@@ -1,0 +1,3720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PulseMetrics — Skeuomorphism User Analytics Dashboard</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Inter"', 'system-ui', 'sans-serif'],
+            inter: ['"Inter"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            canvas: '#EAE6DF',
+            surface: '#F6F4EF',
+            recessed: '#E2DDD4',
+            terracotta: '#E86A33',
+            coral: '#F3804E',
+            charcoal: '#1E1E1E',
+            taupe: '#7A746B',
+            ledEmerald: '#10B981',
+            ledAmber: '#F59E0B',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    /* ==========================================================================
+       1. SKEUOMORPHIC DESIGN TOKENS & TACTILE SURFACES
+       ========================================================================== */
+    :root {
+      --bg-canvas: #EAE6DF;
+      --surface-raised: #F6F4EF;
+      --surface-recessed: #E2DDD4;
+      --accent-orange: #E86A33;
+      --accent-coral: #F3804E;
+      --led-emerald: #10B981;
+      --led-amber: #F59E0B;
+      --text-primary: #1E1E1E;
+      --text-muted: #787268;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-canvas);
+      background-image:
+        radial-gradient(circle at 14% 10%, rgba(255, 255, 255, 0.7) 0%, transparent 45%),
+        radial-gradient(circle at 86% 90%, rgba(212, 204, 190, 0.55) 0%, transparent 52%);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Crisp alignment for all counters & metrics */
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Main Outer Shell */
+    .skeuo-shell {
+      background: linear-gradient(165deg, #F8F6F2 0%, #F2EFE9 100%);
+      border-radius: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow:
+        0 25px 60px -12px rgba(45, 40, 30, 0.14),
+        0 8px 20px -4px rgba(45, 40, 30, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    }
+
+    @media (max-width: 640px) {
+      .skeuo-shell {
+        border-radius: 22px;
+      }
+    }
+
+    /* Raised Card Surface (#F6F4EF with inner top highlight & beveled border) */
+    .skeuo-card {
+      background-color: #F6F4EF;
+      background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, rgba(246, 244, 239, 0.2) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      box-shadow:
+        0 10px 25px -5px rgba(45, 40, 30, 0.08),
+        0 4px 10px -2px rgba(45, 40, 30, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      transition:
+        transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .skeuo-card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 14px 30px -5px rgba(45, 40, 30, 0.11),
+        0 6px 14px -2px rgba(45, 40, 30, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    }
+
+    /* Debossed / Recessed Element (#E2DDD4 with inner shadows) */
+    .skeuo-recessed {
+      background-color: #E2DDD4;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      box-shadow:
+        inset 0 2px 5px rgba(45, 40, 30, 0.12),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.7);
+    }
+
+    /* Tactile 3D Push Button (Warm Ivory) */
+    .skeuo-btn {
+      background: linear-gradient(180deg, #FCFBF9 0%, #EFECE5 100%);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow:
+        0 4px 10px -2px rgba(45, 40, 30, 0.10),
+        0 2px 4px -1px rgba(45, 40, 30, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+      transition: all 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .skeuo-btn:hover {
+      background: linear-gradient(180deg, #FFFFFF 0%, #F3F0EA 100%);
+      box-shadow:
+        0 6px 14px -2px rgba(45, 40, 30, 0.13),
+        0 2px 5px -1px rgba(45, 40, 30, 0.07),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+    }
+
+    .skeuo-btn:active {
+      transform: translateY(1px);
+      background: linear-gradient(180deg, #E8E4DB 0%, #F2EFE9 100%);
+      box-shadow:
+        inset 0 2px 4px rgba(45, 40, 30, 0.16),
+        0 1px 2px rgba(45, 40, 30, 0.05);
+    }
+
+    /* Tactile 3D Push Button (Brushed Charcoal) */
+    .skeuo-btn-dark {
+      background: linear-gradient(180deg, #32302E 0%, #1C1B1A 100%);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow:
+        0 6px 14px -2px rgba(30, 28, 25, 0.28),
+        0 2px 5px -1px rgba(30, 28, 25, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      transition: all 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .skeuo-btn-dark:hover {
+      background: linear-gradient(180deg, #3A3835 0%, #22211F 100%);
+      box-shadow:
+        0 8px 18px -2px rgba(30, 28, 25, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.32);
+    }
+
+    .skeuo-btn-dark:active {
+      transform: translateY(1px);
+      box-shadow:
+        inset 0 2px 5px rgba(0, 0, 0, 0.55),
+        0 1px 3px rgba(30, 28, 25, 0.2);
+    }
+
+    /* Tactile 3D Push Button (Warm Terracotta Accent) */
+    .skeuo-btn-accent {
+      background: linear-gradient(180deg, #F48554 0%, #E2622B 100%);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 215, 195, 0.55);
+      box-shadow:
+        0 6px 15px -2px rgba(232, 106, 51, 0.36),
+        0 2px 5px -1px rgba(232, 106, 51, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+      transition: all 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .skeuo-btn-accent:hover {
+      background: linear-gradient(180deg, #F68F61 0%, #E86A33 100%);
+      box-shadow:
+        0 8px 18px -2px rgba(232, 106, 51, 0.44),
+        inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    }
+
+    .skeuo-btn-accent:active {
+      transform: translateY(1px);
+      box-shadow:
+        inset 0 2px 5px rgba(154, 54, 12, 0.45),
+        0 1px 3px rgba(232, 106, 51, 0.25);
+    }
+
+    /* Brushed Metallic Membership Tier Badges */
+    .tier-badge-pro {
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.02) 0px,
+          rgba(255, 255, 255, 0.02) 2px,
+          transparent 2px,
+          transparent 5px
+        ),
+        radial-gradient(circle at 88% 15%, rgba(234, 179, 8, 0.22) 0%, transparent 48%),
+        linear-gradient(145deg, #2D2B29 0%, #191817 100%);
+      border: 1px solid rgba(234, 179, 8, 0.38);
+      box-shadow:
+        0 12px 24px -6px rgba(25, 24, 23, 0.32),
+        inset 0 1px 0 rgba(255, 235, 175, 0.28);
+    }
+
+    .tier-badge-free {
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(45, 40, 30, 0.015) 0px,
+          rgba(45, 40, 30, 0.015) 2px,
+          transparent 2px,
+          transparent 5px
+        ),
+        linear-gradient(145deg, #FCFBF8 0%, #EAE5DC 100%);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow:
+        0 10px 22px -5px rgba(45, 40, 30, 0.09),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    }
+
+    /* Diagonal Striped Recessed Progress Fill */
+    .striped-fill-emerald {
+      background-color: #10B981;
+      background-image: repeating-linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.24),
+        rgba(255, 255, 255, 0.24) 6px,
+        transparent 6px,
+        transparent 12px
+      );
+      box-shadow:
+        0 2px 6px rgba(16, 185, 129, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+
+    .striped-fill-amber {
+      background-color: #F59E0B;
+      background-image: repeating-linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.26),
+        rgba(255, 255, 255, 0.26) 6px,
+        transparent 6px,
+        transparent 12px
+      );
+      box-shadow:
+        0 2px 8px rgba(245, 158, 11, 0.42),
+        inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    }
+
+    /* Physical Mechanical Toggle Switch */
+    .mech-switch {
+      width: 54px;
+      height: 30px;
+      border-radius: 9999px;
+      background-color: #DCD6CB;
+      border: 1px solid rgba(255, 255, 255, 0.65);
+      box-shadow:
+        inset 0 2px 5px rgba(45, 40, 30, 0.18),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.75);
+      position: relative;
+      transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      cursor: pointer;
+    }
+
+    .mech-switch.on {
+      background: linear-gradient(180deg, #0FA976 0%, #10B981 100%);
+      border-color: rgba(167, 243, 208, 0.6);
+      box-shadow:
+        inset 0 2px 4px rgba(6, 78, 59, 0.35),
+        0 2px 8px rgba(16, 185, 129, 0.25);
+    }
+
+    .mech-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 9999px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #EDE9E0 100%);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      box-shadow:
+        0 3px 6px rgba(45, 40, 30, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      transition: transform 0.26s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mech-switch.on .mech-thumb {
+      transform: translateX(24px);
+    }
+
+    /* Recessed Tactile Range Slider */
+    input[type="range"].skeuo-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 12px;
+      border-radius: 9999px;
+      background-color: #E2DDD4;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow:
+        inset 0 2px 5px rgba(45, 40, 30, 0.14),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.75);
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"].skeuo-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #FFFFFF 0%, #ECE8DF 100%);
+      border: 2px solid #E86A33;
+      box-shadow:
+        0 4px 10px rgba(45, 40, 30, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    input[type="range"].skeuo-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+    }
+
+    input[type="range"].skeuo-slider::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #FFFFFF 0%, #ECE8DF 100%);
+      border: 2px solid #E86A33;
+      box-shadow:
+        0 4px 10px rgba(45, 40, 30, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+      cursor: pointer;
+    }
+
+    /* Glowing LED Dots */
+    .led-emerald {
+      background-color: #10B981;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.75);
+    }
+
+    .led-amber {
+      background-color: #F59E0B;
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.75);
+    }
+
+    /* Smooth View & Feed Animations */
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-view {
+      animation: fadeSlideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes feedPulseIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.98);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .animate-feed-item {
+      animation: feedPulseIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+  </style>
+</head>
+
+<body class="p-2 sm:p-4 md:p-6 lg:p-8">
+  <!-- ========================================================================
+       MAIN DASHBOARD SHELL
+       ======================================================================== -->
+  <div class="skeuo-shell w-full max-w-[1440px] mx-auto flex flex-col min-h-[840px]">
+
+    <!-- ======================================================================
+         PERSISTENT HEADER & RECESSED PILL NAVIGATION BAR
+         ====================================================================== -->
+    <header class="px-4 sm:px-7 py-4 sm:py-5 border-b border-white/70 flex flex-col lg:flex-row items-center justify-between gap-4">
+
+      <!-- Left: Embossed Brand Identity ("PulseMetrics") -->
+      <div class="w-full lg:w-auto flex items-center justify-between lg:justify-start gap-3">
+        <div class="flex items-center gap-3">
+          <div class="skeuo-card w-11 h-11 rounded-2xl flex items-center justify-center relative">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-[#2B2927] to-[#171615] flex items-center justify-center text-white shadow-inner">
+              <i data-lucide="activity" class="w-4 h-4 text-[#E86A33]"></i>
+            </div>
+            <span class="w-2.5 h-2.5 rounded-full led-emerald border-2 border-[#F6F4EF] absolute -top-0.5 -right-0.5"></span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-base sm:text-lg font-extrabold tracking-tight text-[#1E1E1E]">PulseMetrics</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#E86A33]/12 text-[#E86A33] border border-[#E86A33]/20">
+                LIVE OS
+              </span>
+            </div>
+            <p class="text-[11px] font-medium text-[#787268]">User Analytics Hub</p>
+          </div>
+        </div>
+
+        <!-- Mobile-only Quick Right Controls -->
+        <div class="flex lg:hidden items-center gap-2">
+          <button
+            onclick="openGa4Modal()"
+            class="skeuo-btn px-3 py-1.5 rounded-full flex items-center gap-1.5 text-[11px] font-extrabold text-[#1E1E1E]"
+            title="Configure Google Analytics 4 Data Source"
+          >
+            <span id="ga4MobileLed" class="w-2 h-2 rounded-full led-amber"></span>
+            <span>GA4 Connect</span>
+            <span id="ga4MobileBadge" class="px-1.5 py-0.2 rounded-full text-[9px] font-extrabold bg-[#F59E0B]/15 text-[#B45309]">Demo</span>
+          </button>
+          <button
+            id="ga4MobileRefreshBtn"
+            onclick="syncGa4LiveData()"
+            class="hidden skeuo-btn w-7 h-7 rounded-full flex items-center justify-center text-[#1E1E1E]"
+            title="Refresh GA4 Live Data"
+          >
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Center: Recessed Pill Navigation Bar (4 Interactive Tabs) -->
+      <nav aria-label="Dashboard sections" class="w-full lg:w-auto overflow-x-auto pb-1 lg:pb-0">
+        <div class="skeuo-recessed p-1.5 rounded-full flex items-center justify-between sm:justify-center gap-1 min-w-max mx-auto">
+          <button
+            onclick="switchTab('overview')"
+            data-tab="overview"
+            class="nav-pill-btn px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2"
+          >
+            <i data-lucide="users" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+            <span>Overview</span>
+          </button>
+
+          <button
+            onclick="switchTab('traffic')"
+            data-tab="traffic"
+            class="nav-pill-btn px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2"
+          >
+            <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+            <span>Traffic &amp; Insights</span>
+          </button>
+
+          <button
+            onclick="switchTab('growth')"
+            data-tab="growth"
+            class="nav-pill-btn px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2"
+          >
+            <i data-lucide="target" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+            <span>Growth &amp; Goals</span>
+          </button>
+
+          <button
+            onclick="switchTab('live')"
+            data-tab="live"
+            class="nav-pill-btn px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2"
+          >
+            <i data-lucide="radio" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+            <span>Live Activity</span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Right: Live Sync Status + Notification Bell + Admin Profile Chip -->
+      <div class="hidden lg:flex items-center gap-2.5 relative">
+        <!-- Tactile GA4 Data Source Pill Control -->
+        <div class="flex items-center gap-1.5">
+          <button
+            onclick="openGa4Modal()"
+            class="skeuo-btn px-3.5 py-2 rounded-full flex items-center gap-2 text-xs font-extrabold text-[#1E1E1E]"
+            title="Connect Google Analytics 4 via Apps Script"
+          >
+            <span id="ga4DesktopLed" class="w-2.5 h-2.5 rounded-full led-amber"></span>
+            <span>GA4 Connect</span>
+            <span
+              id="ga4DesktopBadge"
+              class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#F59E0B]/15 text-[#B45309] border border-[#F59E0B]/25"
+            >
+              Demo Data
+            </span>
+          </button>
+
+          <button
+            id="ga4DesktopRefreshBtn"
+            onclick="syncGa4LiveData()"
+            class="hidden skeuo-btn w-9 h-9 rounded-full flex items-center justify-center text-[#1E1E1E]"
+            title="Sync Now from GA4"
+          >
+            <i id="ga4DesktopRefreshIcon" data-lucide="refresh-cw" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Tactile Sound Toggle -->
+        <button
+          onclick="toggleClickSound()"
+          class="skeuo-btn w-10 h-10 rounded-full flex items-center justify-center text-[#787268]"
+          title="Toggle Tactile Click Sound"
+        >
+          <i id="soundToggleIcon" data-lucide="volume-2" class="w-4 h-4 text-[#10B981]"></i>
+        </button>
+
+        <!-- Tactile Notification Bell -->
+        <div class="relative">
+          <button
+            onclick="toggleNotifications()"
+            class="skeuo-btn w-10 h-10 rounded-full flex items-center justify-center text-[#1E1E1E] relative"
+            title="System Alerts"
+          >
+            <i data-lucide="bell" class="w-4 h-4"></i>
+            <span id="notifBadgeDot" class="w-2.5 h-2.5 rounded-full led-amber border-2 border-[#F6F4EF] absolute top-2 right-2"></span>
+          </button>
+
+          <!-- Notifications Dropdown -->
+          <div id="notifDropdown" class="hidden skeuo-card rounded-2xl p-4 w-80 absolute right-0 mt-3 z-50">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-extrabold text-[#1E1E1E]">Telemetry Alerts</span>
+              <button onclick="clearNotifDot()" class="text-[11px] font-bold text-[#E86A33] hover:underline">Mark read</button>
+            </div>
+            <div id="notifDropdownBody" class="space-y-2.5 text-xs">
+              <div class="skeuo-recessed rounded-xl p-2.5 flex items-start gap-2.5">
+                <span class="w-2 h-2 rounded-full led-emerald mt-1.5 shrink-0"></span>
+                <div>
+                  <p class="font-bold text-[#1E1E1E]">MAU Milestone 85% Reached</p>
+                  <p class="text-[11px] text-[#787268] mt-0.5">128,450 monthly active users verified</p>
+                </div>
+              </div>
+              <div class="skeuo-recessed rounded-xl p-2.5 flex items-start gap-2.5">
+                <span class="w-2 h-2 rounded-full led-amber mt-1.5 shrink-0"></span>
+                <div>
+                  <p class="font-bold text-[#1E1E1E]">APAC Peak Concurrency</p>
+                  <p class="text-[11px] text-[#787268] mt-0.5">Bangkok &amp; Singapore nodes at 76.8% load</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Profile Chip -->
+        <div
+          onclick="showToast('Authenticated as Lead Product Analyst (Code XR)', 'shield-check')"
+          class="skeuo-btn pl-1.5 pr-3.5 py-1.5 rounded-full flex items-center gap-2.5"
+        >
+          <div class="w-7 h-7 rounded-full bg-gradient-to-br from-[#2B2927] to-[#171615] text-white text-xs font-extrabold flex items-center justify-center">
+            XR
+          </div>
+          <div class="text-left">
+            <div class="text-xs font-bold text-[#1E1E1E] leading-none">Admin</div>
+            <div class="text-[10px] font-semibold text-[#787268] mt-0.5">Workspace</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ======================================================================
+         DYNAMIC TAB CONTENT STAGE
+         ====================================================================== -->
+    <main id="mainStage" class="flex-1 p-4 sm:p-6 lg:p-7">
+      <!-- Rendered dynamically by JS -->
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       SKEUOMORPHIC MODAL: + SIMULATE SIGNUPS
+       ======================================================================== -->
+  <div id="simulateSignupsModal" class="hidden fixed inset-0 z-50 bg-[#1E1E1E]/35 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="skeuo-card rounded-3xl p-6 w-full max-w-md animate-view">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div class="skeuo-recessed w-10 h-10 rounded-2xl flex items-center justify-center text-[#E86A33]">
+            <i data-lucide="user-plus" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-extrabold text-[#1E1E1E]">Simulate New Signups</h3>
+            <p class="text-xs text-[#787268]">Inject new registrations into live telemetry</p>
+          </div>
+        </div>
+        <button onclick="closeSignupModal()" class="skeuo-btn w-8 h-8 rounded-full flex items-center justify-center text-[#787268]">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleSimulateSignupsSubmit(event)" class="space-y-4">
+        <!-- Batch Size Selector -->
+        <div>
+          <label class="block text-xs font-bold text-[#787268] mb-2">Select Signup Batch Size</label>
+          <div class="grid grid-cols-3 gap-2.5">
+            <button
+              type="button"
+              onclick="selectSignupBatch(50)"
+              data-batch="50"
+              class="batch-btn skeuo-btn py-2.5 rounded-2xl text-xs font-extrabold text-[#1E1E1E]"
+            >
+              +50 Users
+            </button>
+            <button
+              type="button"
+              onclick="selectSignupBatch(250)"
+              data-batch="250"
+              class="batch-btn skeuo-btn-dark py-2.5 rounded-2xl text-xs font-extrabold"
+            >
+              +250 Users
+            </button>
+            <button
+              type="button"
+              onclick="selectSignupBatch(1000)"
+              data-batch="1000"
+              class="batch-btn skeuo-btn py-2.5 rounded-2xl text-xs font-extrabold text-[#1E1E1E]"
+            >
+              +1,000 Users
+            </button>
+          </div>
+        </div>
+
+        <!-- Target Platform Selector -->
+        <div>
+          <label class="block text-xs font-bold text-[#787268] mb-2">Target Acquisition Platform</label>
+          <div class="skeuo-recessed p-1.5 rounded-2xl grid grid-cols-3 gap-1.5">
+            <button
+              type="button"
+              onclick="selectSignupPlatform('Web')"
+              data-plat="Web"
+              class="plat-btn skeuo-btn-dark py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5"
+            >
+              <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+              <span>Web App</span>
+            </button>
+            <button
+              type="button"
+              onclick="selectSignupPlatform('iOS')"
+              data-plat="iOS"
+              class="plat-btn py-2 rounded-xl text-xs font-bold text-[#787268] hover:text-[#1E1E1E] flex items-center justify-center gap-1.5"
+            >
+              <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
+              <span>iOS App</span>
+            </button>
+            <button
+              type="button"
+              onclick="selectSignupPlatform('Android')"
+              data-plat="Android"
+              class="plat-btn py-2 rounded-xl text-xs font-bold text-[#787268] hover:text-[#1E1E1E] flex items-center justify-center gap-1.5"
+            >
+              <i data-lucide="tablet-smartphone" class="w-3.5 h-3.5"></i>
+              <span>Android</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Membership Plan Allocation -->
+        <div>
+          <label class="block text-xs font-bold text-[#787268] mb-2">Plan Tier Distribution</label>
+          <div class="skeuo-recessed rounded-2xl px-3.5 py-2.5">
+            <select id="signupPlanSelect" class="bg-transparent w-full text-xs sm:text-sm font-bold text-[#1E1E1E] outline-none">
+              <option value="mixed">Realistic Mix (85% Free / 15% Pro)</option>
+              <option value="pro">100% Pro / Enterprise Seats</option>
+              <option value="free">100% Starter / Free Tier</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pt-2 flex items-center gap-3">
+          <button type="button" onclick="closeSignupModal()" class="skeuo-btn flex-1 py-3 rounded-2xl text-xs font-bold text-[#1E1E1E]">
+            Cancel
+          </button>
+          <button type="submit" class="skeuo-btn-accent flex-1 py-3 rounded-2xl text-xs font-extrabold flex items-center justify-center gap-2">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Inject Users</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       SKEUOMORPHIC MODAL: GOOGLE ANALYTICS 4 (GA4) LIVE CONNECTOR
+       ======================================================================== -->
+  <div id="ga4ConnectModal" class="hidden fixed inset-0 z-50 bg-[#1E1E1E]/40 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="skeuo-card rounded-3xl p-5 sm:p-6 w-full max-w-xl animate-view my-auto">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between gap-3 mb-4">
+        <div class="flex items-center gap-3">
+          <div class="skeuo-recessed w-11 h-11 rounded-2xl flex items-center justify-center text-[#E86A33]">
+            <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base sm:text-lg font-extrabold text-[#1E1E1E]">Google Analytics 4 Connector</h3>
+              <span id="ga4ModalModePill" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#F59E0B]/15 text-[#B45309]">
+                DEMO MODE
+              </span>
+            </div>
+            <p class="text-xs text-[#787268]">Sync real GA4 metrics via Google Apps Script Web App</p>
+          </div>
+        </div>
+        <button onclick="closeGa4Modal()" class="skeuo-btn w-8 h-8 rounded-full flex items-center justify-center text-[#787268]">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Connection Status & Last Sync Readout Well -->
+      <div class="skeuo-recessed rounded-2xl p-3.5 mb-4 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-2">
+          <span id="ga4ModalStatusLed" class="w-2.5 h-2.5 rounded-full led-amber"></span>
+          <span id="ga4ModalStatusText" class="font-extrabold text-[#1E1E1E]">Using Built-in Demo Dataset</span>
+        </div>
+        <span id="ga4ModalLastSync" class="text-[11px] font-bold text-[#787268] tabular-nums">
+          Last sync: Not synced yet
+        </span>
+      </div>
+
+      <!-- Error Feedback Box (Shown when fetch or JSON validation fails) -->
+      <div id="ga4ModalErrorBox" class="hidden mb-4 rounded-2xl p-3.5 bg-[#EF4444]/10 border border-[#EF4444]/30 text-xs text-[#B91C1C]">
+        <div class="flex items-start gap-2.5">
+          <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 mt-0.5"></i>
+          <div>
+            <div class="font-extrabold">Connection Error</div>
+            <p id="ga4ModalErrorMsg" class="mt-0.5 leading-relaxed font-medium"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Apps Script Web App URL Form -->
+      <form onsubmit="handleGa4ConnectSubmit(event)" class="space-y-4">
+        <div>
+          <label for="ga4WebAppUrlInput" class="block text-xs font-extrabold text-[#1E1E1E] mb-1.5">
+            Google Apps Script Web App URL
+          </label>
+          <div class="skeuo-recessed rounded-2xl px-3.5 py-2.5 flex items-center gap-2">
+            <i data-lucide="link" class="w-4 h-4 text-[#787268] shrink-0"></i>
+            <input
+              id="ga4WebAppUrlInput"
+              type="url"
+              placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+              class="bg-transparent w-full text-xs sm:text-sm font-semibold text-[#1E1E1E] placeholder-[#787268]/70 outline-none"
+            />
+          </div>
+          <p class="text-[11px] text-[#787268] mt-1.5">
+            Saved locally in your browser (<code class="font-bold">pulsemetrics_ga4_url</code>). Uses CORS-safe GET requests.
+          </p>
+        </div>
+
+        <!-- Primary Action Buttons -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <button
+            type="submit"
+            id="ga4ConnectSubmitBtn"
+            class="skeuo-btn-accent py-3 px-4 rounded-2xl text-xs font-extrabold flex items-center justify-center gap-2"
+          >
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            <span>Connect &amp; Sync Live Data</span>
+          </button>
+
+          <button
+            type="button"
+            onclick="switchToDemoMode()"
+            class="skeuo-btn py-3 px-4 rounded-2xl text-xs font-extrabold text-[#1E1E1E] flex items-center justify-center gap-2"
+          >
+            <i data-lucide="database" class="w-4 h-4 text-[#787268]"></i>
+            <span>Switch to Demo Mode</span>
+          </button>
+        </div>
+
+        <!-- Helper Preview Button -->
+        <div class="pt-1 border-t border-[#787268]/15 flex flex-wrap items-center justify-between gap-2">
+          <button
+            type="button"
+            onclick="testWithSampleGa4Payload()"
+            class="skeuo-btn py-2 px-3.5 rounded-xl text-[11px] font-extrabold text-[#1E1E1E] flex items-center gap-1.5"
+          >
+            <i data-lucide="flask-conical" class="w-3.5 h-3.5 text-[#10B981]"></i>
+            <span>Test with Sample GA4 Payload</span>
+          </button>
+
+          <button
+            type="button"
+            onclick="toggleAppsScriptDrawer()"
+            class="text-[11px] font-extrabold text-[#E86A33] hover:underline flex items-center gap-1"
+          >
+            <i data-lucide="code-2" class="w-3.5 h-3.5"></i>
+            <span id="appsScriptDrawerToggleText">Show Apps Script Code</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Collapsible Google Apps Script (Code.gs) Setup Helper -->
+      <div id="appsScriptDrawer" class="hidden mt-4 pt-4 border-t border-[#787268]/15 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-extrabold text-[#1E1E1E]">Google Apps Script (Code.gs)</span>
+          <button
+            type="button"
+            onclick="copyAppsScriptSnippet()"
+            class="skeuo-btn px-3 py-1.5 rounded-xl text-[11px] font-extrabold text-[#1E1E1E] flex items-center gap-1.5"
+          >
+            <i data-lucide="copy" class="w-3.5 h-3.5 text-[#E86A33]"></i>
+            <span>Copy Script</span>
+          </button>
+        </div>
+        <p class="text-[11px] text-[#787268] leading-relaxed">
+          1. Go to <strong>script.google.com</strong> &rarr; New Project &rarr; Add Service: <strong>Google Analytics Data API</strong>.<br />
+          2. Set <code>PROPERTY_ID</code> to your GA4 Property ID (e.g. <code>565933593</code>).<br />
+          3. Click <strong>Deploy &rarr; New deployment &rarr; Web app</strong> (Execute as: <em>Me</em>, Who has access: <em>Anyone</em>).
+        </p>
+        <div class="skeuo-recessed rounded-2xl p-3 max-h-44 overflow-auto">
+          <pre id="ga4AppsScriptSource" class="text-[10px] font-mono text-[#1E1E1E] whitespace-pre leading-relaxed"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       FLOATING TACTILE TOAST CONTAINER
+       ======================================================================== -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ========================================================================
+       APPLICATION STATE & INTERACTIVE CONTROLLERS
+       ======================================================================== -->
+  <script>
+    // ========================================================================
+    // 1. CENTRALIZED REACTIVE ANALYTICS STATE
+    // ========================================================================
+    const state = {
+      activeTab: 'overview', // 'overview' | 'traffic' | 'growth' | 'live'
+      soundEnabled: true,
+
+      // Overview Hero Active Users Scope
+      activeScope: 'MAU', // 'DAU' | 'WAU' | 'MAU'
+      scopes: {
+        DAU: { label: 'Daily Active Users', count: 42890, trend: '+14.8% vs last period' },
+        WAU: { label: 'Weekly Active Users', count: 89340, trend: '+11.2% vs last period' },
+        MAU: { label: 'Monthly Active Users', count: 128450, trend: '+16.4% vs last period' },
+      },
+
+      // Platform Breakdown
+      platforms: {
+        Web: { name: 'Web App', users: 64200, growth: '+12.4%', icon: 'globe', sparkline: [28, 34, 31, 42, 46, 52, 64] },
+        iOS: { name: 'iOS App', users: 41850, growth: '+18.2%', icon: 'smartphone', sparkline: [18, 22, 26, 29, 34, 38, 42] },
+        Android: { name: 'Android App', users: 22400, growth: '+9.1%', icon: 'tablet-smartphone', sparkline: [14, 15, 17, 16, 19, 21, 22] },
+      },
+
+      // Concurrent Server Capacity
+      concurrentBase: 3842,
+      concurrentMax: 5000,
+      trafficSpikeActive: false,
+
+      // Membership Tiers
+      tiers: {
+        proSeats: 18920,
+        proRetention: '98.4%',
+        freeUsers: 109530,
+        freeUpgradeRate: '6.8%',
+      },
+
+      // Monthly User Growth Chart (Jan - Dec)
+      chartPlatformFilter: 'all', // 'all' | 'mobile'
+      monthlyGrowth: [
+        { month: 'Jan', newAll: 6400, retAll: 48200, newMob: 3100, retMob: 22100 },
+        { month: 'Feb', newAll: 7100, retAll: 51400, newMob: 3500, retMob: 24300 },
+        { month: 'Mar', newAll: 6850, retAll: 54900, newMob: 3400, retMob: 26800 },
+        { month: 'Apr', newAll: 8200, retAll: 59100, newMob: 4200, retMob: 29500 },
+        { month: 'May', newAll: 7900, retAll: 63800, newMob: 4150, retMob: 32400 },
+        { month: 'Jun', newAll: 9400, retAll: 68500, newMob: 4950, retMob: 35900 },
+        { month: 'Jul', newAll: 9100, retAll: 72900, newMob: 4800, retMob: 38700 },
+        { month: 'Aug', newAll: 10600, retAll: 78400, newMob: 5600, retMob: 42100 },
+        { month: 'Sep', newAll: 11200, retAll: 83900, newMob: 6100, retMob: 46200 },
+        { month: 'Oct', newAll: 11850, retAll: 89600, newMob: 6450, retMob: 50400 },
+        { month: 'Nov', newAll: 12900, retAll: 96200, newMob: 7100, retMob: 55100 },
+        { month: 'Dec', newAll: 14250, retAll: 104200, newMob: 7950, retMob: 60300 },
+      ],
+
+      // Directory Filter & Search
+      directorySearch: '',
+      directoryFilter: 'All', // 'All' | 'Online' | 'New Signup' | 'Pro Plan'
+      usersDirectory: [
+        {
+          id: 'USR-9041',
+          name: 'Nattapol Srisai',
+          email: 'nattapol.s@codexr.io',
+          platform: 'Web',
+          plan: 'Pro',
+          session: '42m 18s',
+          status: 'Online',
+          isNew: false,
+        },
+        {
+          id: 'USR-9042',
+          name: 'Aiko Takahashi',
+          email: 'aiko.t@studio-tokyo.jp',
+          platform: 'iOS',
+          plan: 'Pro',
+          session: '28m 05s',
+          status: 'Online',
+          isNew: true,
+        },
+        {
+          id: 'USR-9043',
+          name: 'Marcus Vance',
+          email: 'm.vance@northstar.co',
+          platform: 'Web',
+          plan: 'Team',
+          session: '19m 44s',
+          status: 'Active',
+          isNew: false,
+        },
+        {
+          id: 'USR-9044',
+          name: 'Pimchanok Wong',
+          email: 'pim.wong@bkkdesign.th',
+          platform: 'iOS',
+          plan: 'Free',
+          session: '06m 12s',
+          status: 'Online',
+          isNew: true,
+        },
+        {
+          id: 'USR-9045',
+          name: 'Liam O’Connor',
+          email: 'liam@cloudscale.uk',
+          platform: 'Android',
+          plan: 'Pro',
+          session: '51m 09s',
+          status: 'Active',
+          isNew: false,
+        },
+        {
+          id: 'USR-9046',
+          name: 'Chloe Tan',
+          email: 'chloe.tan@sgventures.sg',
+          platform: 'Android',
+          plan: 'Free',
+          session: '03m 48s',
+          status: 'Idle',
+          isNew: true,
+        },
+      ],
+
+      // Tab 2: Traffic & Insights
+      trafficTimeframe: 'Last 30 Days', // 'Last 7 Days' | 'Last 30 Days' | 'Year to Date'
+      trafficDatasets: {
+        'Last 7 Days': {
+          kpis: {
+            duration: '13m 48s',
+            durationDelta: '+4.2%',
+            retention: '86.4%',
+            retentionDelta: '+1.9%',
+            conversion: '7.1%',
+            conversionDelta: '+0.8%',
+            registrations: '+2,640',
+            registrationsDelta: '+15.3%',
+          },
+          channels: [
+            { period: 'Mon', organic: 420, direct: 280, social: 190, referral: 130 },
+            { period: 'Tue', organic: 480, direct: 310, social: 220, referral: 145 },
+            { period: 'Wed', organic: 510, direct: 295, social: 240, referral: 160 },
+            { period: 'Thu', organic: 560, direct: 340, social: 265, referral: 175 },
+            { period: 'Fri', organic: 620, direct: 380, social: 310, referral: 195 },
+            { period: 'Sat', organic: 490, direct: 270, social: 290, referral: 150 },
+            { period: 'Sun', organic: 530, direct: 300, social: 275, referral: 165 },
+          ],
+          devices: [
+            { name: 'Desktop Web', pct: 48, users: 20587, color: '#1E1E1E', icon: 'monitor' },
+            { name: 'iOS Mobile', pct: 31, users: 13296, color: '#E86A33', icon: 'smartphone' },
+            { name: 'Android Mobile', pct: 16, users: 6862, color: '#10B981', icon: 'tablet-smartphone' },
+            { name: 'Tablet', pct: 5, users: 2145, color: '#8A847A', icon: 'tablet' },
+          ],
+        },
+        'Last 30 Days': {
+          kpis: {
+            duration: '14m 32s',
+            durationDelta: '+6.8%',
+            retention: '84.2%',
+            retentionDelta: '+2.4%',
+            conversion: '6.8%',
+            conversionDelta: '+1.1%',
+            registrations: '+9,420',
+            registrationsDelta: '+18.4%',
+          },
+          channels: [
+            { period: 'Wk 1', organic: 1420, direct: 890, social: 640, referral: 410 },
+            { period: 'Wk 2', organic: 1580, direct: 940, social: 710, referral: 460 },
+            { period: 'Wk 3', organic: 1740, direct: 1020, social: 790, referral: 520 },
+            { period: 'Wk 4', organic: 1960, direct: 1150, social: 880, referral: 590 },
+          ],
+          devices: [
+            { name: 'Desktop Web', pct: 48, users: 61656, color: '#1E1E1E', icon: 'monitor' },
+            { name: 'iOS Mobile', pct: 31, users: 39820, color: '#E86A33', icon: 'smartphone' },
+            { name: 'Android Mobile', pct: 16, users: 20552, color: '#10B981', icon: 'tablet-smartphone' },
+            { name: 'Tablet', pct: 5, users: 6422, color: '#8A847A', icon: 'tablet' },
+          ],
+        },
+        'Year to Date': {
+          kpis: {
+            duration: '15m 14s',
+            durationDelta: '+11.5%',
+            retention: '81.9%',
+            retentionDelta: '+4.6%',
+            conversion: '7.4%',
+            conversionDelta: '+1.9%',
+            registrations: '+114,850',
+            registrationsDelta: '+26.2%',
+          },
+          channels: [
+            { period: 'Q1', organic: 11200, direct: 7400, social: 5200, referral: 3100 },
+            { period: 'Q2', organic: 13800, direct: 8900, social: 6400, referral: 3900 },
+            { period: 'Q3', organic: 16400, direct: 10200, social: 7800, referral: 4700 },
+            { period: 'Q4', organic: 19500, direct: 11900, social: 9100, referral: 5600 },
+          ],
+          devices: [
+            { name: 'Desktop Web', pct: 46, users: 192400, color: '#1E1E1E', icon: 'monitor' },
+            { name: 'iOS Mobile', pct: 33, users: 138020, color: '#E86A33', icon: 'smartphone' },
+            { name: 'Android Mobile', pct: 16, users: 66920, color: '#10B981', icon: 'tablet-smartphone' },
+            { name: 'Tablet', pct: 5, users: 20910, color: '#8A847A', icon: 'tablet' },
+          ],
+        },
+      },
+      selectedDeviceIdx: null,
+
+      // Tab 3: Growth & Goals
+      mauTargetSlider: 150000,
+      automations: [
+        { id: 'auto1', title: 'Auto-Onboarding Flow', desc: 'Interactive 3-step product walkthrough', enabled: true },
+        { id: 'auto2', title: 'Push Re-engagement', desc: 'Smart nudge after 72h inactivity', enabled: true },
+        { id: 'auto3', title: 'Weekly Digest Email', desc: 'Personalized Monday analytics recap', enabled: true },
+        { id: 'auto4', title: 'Referral Bonus Program', desc: 'Grant +14 Pro days per invited teammate', enabled: false },
+      ],
+      milestones: [
+        { id: 'm1', title: 'Monthly Active Users Goal', current: 128450, target: 150000, increment: 2500, icon: 'users', linkedToSlider: true },
+        { id: 'm2', title: 'Pro Plan Conversions', current: 18920, target: 25000, increment: 500, icon: 'crown', linkedToSlider: false },
+        { id: 'm3', title: 'Mobile App Adoption', current: 64250, target: 80000, increment: 1500, icon: 'smartphone', linkedToSlider: false },
+        { id: 'm4', title: 'Verified Profiles', current: 112300, target: 128450, increment: 2000, icon: 'badge-check', linkedToSlider: false },
+      ],
+
+      // Tab 4: Live Activity
+      signupsToday: 418,
+      activeSessions: 2915,
+      churnRisk: 12,
+      eventFilter: 'All Events', // 'All Events' | 'Signups' | 'Upgrades' | 'Logins'
+      liveSimulatorOn: true,
+      eventLedger: [
+        {
+          id: 'EVT-501',
+          type: 'Signups',
+          user: 'Sarawut K.',
+          action: 'Created new workspace account',
+          city: 'Bangkok, TH',
+          device: 'Desktop Web',
+          icon: 'monitor',
+          time: 'Just now',
+        },
+        {
+          id: 'EVT-500',
+          type: 'Upgrades',
+          user: 'Kenji Sato',
+          action: 'Upgraded from Free to Pro Plan',
+          city: 'Tokyo, JP',
+          device: 'iOS App',
+          icon: 'smartphone',
+          time: '1 min ago',
+        },
+        {
+          id: 'EVT-499',
+          type: 'Logins',
+          user: 'Rachel Lim',
+          action: 'Authenticated via SSO Passkey',
+          city: 'Singapore, SG',
+          device: 'Desktop Web',
+          icon: 'monitor',
+          time: '3 mins ago',
+        },
+        {
+          id: 'EVT-498',
+          type: 'Signups',
+          user: 'Arthit Charoen',
+          action: 'Completed mobile onboarding',
+          city: 'Chiang Mai, TH',
+          device: 'Android App',
+          icon: 'tablet-smartphone',
+          time: '5 mins ago',
+        },
+        {
+          id: 'EVT-497',
+          type: 'Upgrades',
+          user: 'Oliver Bennett',
+          action: 'Added 5 Team Enterprise seats',
+          city: 'London, UK',
+          device: 'Desktop Web',
+          icon: 'monitor',
+          time: '8 mins ago',
+        },
+        {
+          id: 'EVT-496',
+          type: 'Logins',
+          user: 'Mayuree P.',
+          action: 'Resumed active analytics session',
+          city: 'Bangkok, TH',
+          device: 'iOS App',
+          icon: 'smartphone',
+          time: '11 mins ago',
+        },
+      ],
+
+      // Modal form selection state
+      modalBatchSize: 250,
+      modalPlatform: 'Web',
+
+      // Google Analytics 4 (GA4) Live Connector State
+      ga4: {
+        mode: 'demo', // 'demo' | 'live'
+        url: '',
+        isSyncing: false,
+        lastSync: null,
+        error: null,
+        isSamplePreview: false,
+        dailyTrend: [],
+        liveChannels: [],
+        liveDevices: [],
+      },
+    };
+
+    // Snapshot of initial demo values so "Switch to Demo Mode" restores cleanly
+    const INITIAL_DEMO_SNAPSHOT = JSON.parse(
+      JSON.stringify({
+        scopes: state.scopes,
+        platforms: state.platforms,
+        concurrentBase: state.concurrentBase,
+        concurrentMax: state.concurrentMax,
+        milestones: state.milestones,
+      })
+    );
+
+    // ========================================================================
+    // 2. TACTILE MECHANICAL SOUND SYNTHESIS (WEB AUDIO API)
+    // ========================================================================
+    let audioCtx = null;
+
+    function playMechanicalClick(freq = 560) {
+      if (!state.soundEnabled) return;
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(140, audioCtx.currentTime + 0.035);
+
+        gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.035);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.038);
+      } catch (e) {
+        // Silently ignore audio restrictions before user gesture
+      }
+    }
+
+    function toggleClickSound() {
+      state.soundEnabled = !state.soundEnabled;
+      const icon = document.getElementById('soundToggleIcon');
+      if (icon) {
+        icon.setAttribute('data-lucide', state.soundEnabled ? 'volume-2' : 'volume-x');
+        icon.className = `w-4 h-4 ${state.soundEnabled ? 'text-[#10B981]' : 'text-[#787268]'}`;
+      }
+      if (window.lucide) lucide.createIcons();
+      if (state.soundEnabled) playMechanicalClick(680);
+      showToast(state.soundEnabled ? 'Tactile click sound enabled' : 'Tactile click sound muted', 'volume-2');
+    }
+
+    // ========================================================================
+    // 3. FORMATTING & SVG VISUALIZATION HELPERS
+    // ========================================================================
+    function fmtNum(num) {
+      return Number(num || 0).toLocaleString('en-US');
+    }
+
+    function getConcurrentStats() {
+      const current = state.trafficSpikeActive
+        ? Math.min(state.concurrentMax, Math.round(state.concurrentBase * 1.24))
+        : state.concurrentBase;
+      const pct = Math.min(100, Number(((current / state.concurrentMax) * 100).toFixed(1)));
+      return { current, max: state.concurrentMax, pct };
+    }
+
+    function buildSparklineSVG(points, strokeColor = '#10B981') {
+      const arr = Array.isArray(points) && points.length > 1 ? points : [10, 14, 12, 18, 22, 20, 26];
+      const w = 78;
+      const h = 30;
+      const min = Math.min(...arr);
+      const max = Math.max(...arr);
+      const range = max - min || 1;
+
+      const coords = arr.map((val, idx) => {
+        const x = (idx / (arr.length - 1)) * (w - 6) + 3;
+        const y = h - 4 - ((val - min) / range) * (h - 8);
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      });
+
+      const lastPt = coords[coords.length - 1].split(',');
+      return `
+        <svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" class="overflow-visible shrink-0">
+          <polyline
+            fill="none"
+            stroke="${strokeColor}"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            points="${coords.join(' ')}"
+          />
+          <circle cx="${lastPt[0]}" cy="${lastPt[1]}" r="3" fill="${strokeColor}" />
+        </svg>
+      `;
+    }
+
+    function getPlanBadge(plan) {
+      if (plan === 'Pro') {
+        return `<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-[#1E1E1E] text-[#FBBF24] border border-[#FBBF24]/30">PRO</span>`;
+      }
+      if (plan === 'Team') {
+        return `<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-[#E86A33]/15 text-[#E86A33] border border-[#E86A33]/25">TEAM</span>`;
+      }
+      return `<span class="skeuo-recessed px-2.5 py-1 rounded-full text-[10px] font-extrabold text-[#5C574F]">FREE</span>`;
+    }
+
+    function getStatusBadge(status) {
+      if (status === 'Online') {
+        return `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-[#10B981]/14 text-[#0D9468]">
+            <span class="w-2 h-2 rounded-full led-emerald"></span>
+            Online
+          </span>
+        `;
+      }
+      if (status === 'Active') {
+        return `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-[#E86A33]/12 text-[#E86A33]">
+            <span class="w-2 h-2 rounded-full bg-[#E86A33]"></span>
+            Active
+          </span>
+        `;
+      }
+      return `
+        <span class="skeuo-recessed inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold text-[#787268]">
+          <span class="w-2 h-2 rounded-full led-amber"></span>
+          Idle
+        </span>
+      `;
+    }
+
+    // ========================================================================
+    // 4. NAVIGATION, NOTIFICATIONS & TOAST FEEDBACK
+    // ========================================================================
+    function syncNavigationPills() {
+      document.querySelectorAll('.nav-pill-btn').forEach((btn) => {
+        const isCurrent = btn.getAttribute('data-tab') === state.activeTab;
+        if (isCurrent) {
+          btn.className =
+            'nav-pill-btn skeuo-btn-dark px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2';
+        } else {
+          btn.className =
+            'nav-pill-btn px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2 text-[#787268] hover:text-[#1E1E1E]';
+        }
+      });
+    }
+
+    function switchTab(tabName) {
+      if (state.activeTab === tabName) return;
+      playMechanicalClick(580);
+      state.activeTab = tabName;
+      syncNavigationPills();
+      renderCurrentTab();
+    }
+
+    function renderCurrentTab() {
+      const stage = document.getElementById('mainStage');
+      if (!stage) return;
+
+      if (state.activeTab === 'overview') {
+        stage.innerHTML = renderOverviewTab();
+      } else if (state.activeTab === 'traffic') {
+        stage.innerHTML = renderTrafficTab();
+      } else if (state.activeTab === 'growth') {
+        stage.innerHTML = renderGrowthTab();
+      } else if (state.activeTab === 'live') {
+        stage.innerHTML = renderLiveTab();
+      }
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    }
+
+    function toggleNotifications() {
+      playMechanicalClick(520);
+      const dd = document.getElementById('notifDropdown');
+      if (dd) dd.classList.toggle('hidden');
+    }
+
+    function clearNotifDot() {
+      playMechanicalClick(620);
+      const dot = document.getElementById('notifBadgeDot');
+      if (dot) dot.classList.add('hidden');
+      const dd = document.getElementById('notifDropdown');
+      if (dd) dd.classList.add('hidden');
+      showToast('All telemetry alerts marked as read', 'check-circle-2');
+    }
+
+    function showToast(message, iconName = 'check-circle-2') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className =
+        'skeuo-card pointer-events-auto rounded-2xl px-4 py-3 flex items-center gap-2.5 text-xs font-extrabold text-[#1E1E1E] animate-feed-item max-w-sm';
+      toast.innerHTML = `
+        <span class="w-2.5 h-2.5 rounded-full led-emerald shrink-0"></span>
+        <i data-lucide="${iconName}" class="w-4 h-4 text-[#E86A33] shrink-0"></i>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      if (window.lucide) lucide.createIcons();
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        toast.style.transition = 'all 0.25s ease';
+        setTimeout(() => toast.remove(), 260);
+      }, 3200);
+    }
+
+    // Close notifications dropdown if user clicks outside
+    document.addEventListener('click', (e) => {
+      const dd = document.getElementById('notifDropdown');
+      if (!dd || dd.classList.contains('hidden')) return;
+      if (!e.target.closest('#notifDropdown') && !e.target.closest('button[onclick="toggleNotifications()"]')) {
+        dd.classList.add('hidden');
+      }
+    });
+
+    // ========================================================================
+    // 5. TAB 1: OVERVIEW RENDERER
+    // ========================================================================
+    function renderOverviewTab() {
+      const currentScopeObj = state.scopes[state.activeScope];
+      const totalPlatUsers =
+        state.platforms.Web.users + state.platforms.iOS.users + state.platforms.Android.users || 1;
+      const conc = getConcurrentStats();
+      const isGa4Live = state.ga4.mode === 'live';
+      const hasDailyTrend = isGa4Live && state.ga4.dailyTrend.length > 0;
+
+      // Growth chart calculations (Supports both Demo Monthly & GA4 Daily Trend)
+      const chartSeries = hasDailyTrend
+        ? state.ga4.dailyTrend.map((d) => ({
+            label: formatGa4Date(d.date),
+            primaryVal: Number(d.newUsers) || 0,
+            secondaryVal: Number(d.activeUsers) || 0,
+          }))
+        : state.monthlyGrowth.map((m) => ({
+            label: m.month,
+            primaryVal: state.chartPlatformFilter === 'all' ? m.newAll : m.newMob,
+            secondaryVal: state.chartPlatformFilter === 'all' ? m.retAll : m.retMob,
+          }));
+
+      const maxChartVal = Math.max(
+        1,
+        ...chartSeries.flatMap((item) => [item.primaryVal, item.secondaryVal])
+      );
+
+      // Filtered Directory (Demo mode only)
+      const q = state.directorySearch.trim().toLowerCase();
+      const filteredUsers = state.usersDirectory.filter((u) => {
+        const matchesPill =
+          state.directoryFilter === 'All' ||
+          (state.directoryFilter === 'Online' && u.status === 'Online') ||
+          (state.directoryFilter === 'New Signup' && u.isNew) ||
+          (state.directoryFilter === 'Pro Plan' && (u.plan === 'Pro' || u.plan === 'Team'));
+
+        const matchesQuery =
+          !q ||
+          u.name.toLowerCase().includes(q) ||
+          u.email.toLowerCase().includes(q) ||
+          u.platform.toLowerCase().includes(q) ||
+          u.plan.toLowerCase().includes(q);
+
+        return matchesPill && matchesQuery;
+      });
+
+      return `
+        <div class="animate-view space-y-6">
+
+          <!-- TOP ROW: HERO ACTIVE USERS CARD + CONCURRENT CAPACITY (& TIER BADGES IN DEMO MODE) -->
+          <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-stretch">
+
+            <!-- Left 7 Cols: Hero Active Users Card + Platform Breakdown Strip -->
+            <div class="xl:col-span-7 flex flex-col justify-between gap-5">
+
+              <!-- 1. Hero Active Users Card -->
+              <div class="skeuo-card rounded-[28px] p-5 sm:p-6">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                  <div>
+                    <span class="text-xs font-extrabold uppercase tracking-wider text-[#787268]">
+                      ${isGa4Live ? 'GA4 Active User Telemetry' : 'Active User Telemetry'}
+                    </span>
+                    <h1 class="text-lg sm:text-xl font-extrabold text-[#1E1E1E] mt-0.5">
+                      ${currentScopeObj.label}
+                    </h1>
+                  </div>
+
+                  <!-- Tactile Segmented Switch: DAU | WAU | MAU -->
+                  <div class="skeuo-recessed p-1.5 rounded-full flex items-center gap-1">
+                    ${['DAU', 'WAU', 'MAU']
+                      .map(
+                        (scopeKey) => `
+                      <button
+                        onclick="setActiveScope('${scopeKey}')"
+                        class="px-3.5 py-1.5 rounded-full text-xs font-extrabold transition-all ${
+                          state.activeScope === scopeKey
+                            ? 'skeuo-btn-dark text-white'
+                            : 'text-[#787268] hover:text-[#1E1E1E]'
+                        }"
+                      >
+                        ${scopeKey}
+                      </button>
+                    `
+                      )
+                      .join('')}
+                  </div>
+                </div>
+
+                <!-- Big Counter + Trend Pill + Action Buttons -->
+                <div class="flex flex-wrap items-end justify-between gap-4 pt-1">
+                  <div>
+                    <div class="text-4xl sm:text-5xl font-extrabold text-[#1E1E1E] tracking-tight tabular-nums">
+                      ${fmtNum(currentScopeObj.count)}
+                    </div>
+                    <div class="flex items-center gap-2 mt-2.5">
+                      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-extrabold bg-[#10B981]/14 text-[#0D9468] border border-[#10B981]/25">
+                        <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                        ${currentScopeObj.trend}
+                      </span>
+                      <span class="text-xs font-semibold text-[#787268]">
+                        ${isGa4Live ? 'Google Analytics 4' : 'Verified sessions'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Tactile 3D Push Buttons -->
+                  <div class="flex flex-wrap items-center gap-2.5">
+                    ${
+                      isGa4Live
+                        ? ''
+                        : `<button
+                            onclick="openSignupModal()"
+                            class="skeuo-btn-accent px-4 py-3 rounded-2xl text-xs sm:text-sm font-extrabold flex items-center gap-2"
+                          >
+                            <i data-lucide="user-plus" class="w-4 h-4"></i>
+                            <span>+ Simulate Signups</span>
+                          </button>`
+                    }
+                    <button
+                      onclick="exportUsersCSV()"
+                      class="skeuo-btn px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold text-[#1E1E1E] flex items-center gap-2"
+                    >
+                      <i data-lucide="download" class="w-4 h-4 text-[#787268]"></i>
+                      <span>${isGa4Live ? 'Export GA4 CSV' : 'Export CSV'}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. Platform Breakdown Strip (3 Mini Skeuomorphic Cards) -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                ${Object.entries(state.platforms)
+                  .map(([key, plat]) => {
+                    const rawPlatSum =
+                      state.platforms.Web.users + state.platforms.iOS.users + state.platforms.Android.users;
+                    const sharePct = rawPlatSum > 0 ? ((plat.users / rawPlatSum) * 100).toFixed(1) : '0.0';
+                    const showSparkline = !isGa4Live || state.ga4.dailyTrend.length >= 2;
+
+                    return `
+                    <div class="skeuo-card skeuo-card-hover rounded-[24px] p-4 flex flex-col justify-between">
+                      <div class="flex items-center justify-between gap-2 mb-3">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                          <div class="skeuo-recessed w-9 h-9 rounded-xl flex items-center justify-center text-[#1E1E1E] shrink-0">
+                            <i data-lucide="${plat.icon}" class="w-4 h-4 text-[#E86A33]"></i>
+                          </div>
+                          <div class="min-w-0">
+                            <div class="text-xs font-extrabold text-[#1E1E1E] whitespace-nowrap leading-snug">${plat.name}</div>
+                            <div class="text-[11px] font-semibold text-[#787268] tabular-nums leading-tight mt-0.5">${sharePct}% share</div>
+                          </div>
+                        </div>
+                        <span class="w-2.5 h-2.5 rounded-full led-emerald shrink-0" title="Platform Healthy"></span>
+                      </div>
+
+                      <div class="flex items-end justify-between gap-2 mt-1">
+                        <div>
+                          <div class="text-xl font-extrabold text-[#1E1E1E] tabular-nums">${fmtNum(plat.users)}</div>
+                          <div class="text-[11px] font-extrabold text-[#0D9468] mt-0.5">${plat.growth}</div>
+                        </div>
+                        ${showSparkline ? buildSparklineSVG(plat.sparkline, '#10B981') : ''}
+                      </div>
+                    </div>
+                  `;
+                  })
+                  .join('')}
+              </div>
+            </div>
+
+            <!-- Right 5 Cols: Concurrent Capacity (& Brushed Metallic Tier Cards in Demo Mode) -->
+            <div class="xl:col-span-5 flex flex-col justify-between gap-5">
+
+              <!-- 3A. Concurrent Online Users Card -->
+              <div class="skeuo-card rounded-[28px] p-5 sm:p-6 ${isGa4Live ? 'flex-1 flex flex-col justify-between' : ''}">
+                <div>
+                  <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <div class="flex items-center gap-2">
+                      <span class="w-2.5 h-2.5 rounded-full ${state.trafficSpikeActive ? 'led-amber animate-ping' : 'led-emerald animate-pulse'}"></span>
+                      <h2 class="text-sm font-extrabold text-[#1E1E1E]">Concurrent Online Users</h2>
+                    </div>
+
+                    ${
+                      isGa4Live
+                        ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-[#10B981]/15 text-[#0D9468] border border-[#10B981]/25">
+                            GA4 REALTIME
+                          </span>`
+                        : `<button
+                            onclick="toggleTrafficSpike()"
+                            class="${state.trafficSpikeActive ? 'skeuo-btn-accent' : 'skeuo-btn'} px-3 py-1.5 rounded-full text-[11px] font-extrabold flex items-center gap-1.5"
+                          >
+                            <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+                            <span>${state.trafficSpikeActive ? 'Reset Normal Load' : 'Simulate Traffic Spike'}</span>
+                          </button>`
+                    }
+                  </div>
+
+                  <div class="flex items-baseline justify-between mb-2.5 tabular-nums">
+                    <div>
+                      <span class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E]">${fmtNum(conc.current)}</span>
+                      <span class="text-xs font-semibold text-[#787268]">
+                        ${isGa4Live ? ' active in last 30 mins' : ` / ${fmtNum(conc.max)} peak capacity`}
+                      </span>
+                    </div>
+                    ${
+                      isGa4Live
+                        ? ''
+                        : `<span class="text-xs font-extrabold ${state.trafficSpikeActive ? 'text-[#D97706]' : 'text-[#0D9468]'}">
+                            ${conc.pct}%
+                          </span>`
+                    }
+                  </div>
+
+                  <!-- Recessed Diagonal-Striped Progress Bar -->
+                  <div class="skeuo-recessed w-full h-4 rounded-full p-1 overflow-hidden">
+                    <div
+                      class="${state.trafficSpikeActive ? 'striped-fill-amber' : 'striped-fill-emerald'} h-full rounded-full transition-all duration-500"
+                      style="width: ${isGa4Live && conc.current === 0 ? 0 : conc.pct}%"
+                    ></div>
+                  </div>
+                </div>
+
+                ${
+                  isGa4Live
+                    ? `<div class="mt-5 pt-4 border-t border-[#787268]/15 space-y-2.5">
+                        <div class="skeuo-recessed rounded-2xl px-3.5 py-2.5 flex items-center justify-between text-xs">
+                          <span class="font-bold text-[#787268]">GA4 Property ID</span>
+                          <span class="font-extrabold text-[#1E1E1E] tabular-nums">565933593</span>
+                        </div>
+                        <div class="skeuo-recessed rounded-2xl px-3.5 py-2.5 flex items-center justify-between text-xs">
+                          <span class="font-bold text-[#787268]">Last Synced</span>
+                          <span class="font-extrabold text-[#1E1E1E] tabular-nums">${state.ga4.lastSync || 'Just now'}</span>
+                        </div>
+                      </div>`
+                    : `<div class="flex items-center justify-between mt-2.5 text-[11px] font-semibold text-[#787268]">
+                        <span>Cluster: APAC-BKK-01 &amp; SG-02</span>
+                        <span>${state.trafficSpikeActive ? 'High Load Auto-Scaling Active' : 'Latency: 24ms Optimal'}</span>
+                      </div>`
+                }
+              </div>
+
+              ${
+                isGa4Live
+                  ? ''
+                  : `<!-- 3B. Two Embossed User Tier Cards (Demo Mode Only) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
+                      <!-- PRO / ENTERPRISE Badge -->
+                      <div class="tier-badge-pro rounded-[24px] p-4 sm:p-5 text-white flex flex-col justify-between">
+                        <div class="flex items-center justify-between">
+                          <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wider bg-[#FBBF24]/15 text-[#FBBF24] border border-[#FBBF24]/35">
+                            PRO / ENTERPRISE
+                          </span>
+                          <i data-lucide="crown" class="w-4 h-4 text-[#FBBF24]"></i>
+                        </div>
+
+                        <div class="my-3">
+                          <div class="text-2xl font-extrabold text-white tabular-nums">${fmtNum(state.tiers.proSeats)}</div>
+                          <div class="text-[11px] font-medium text-white/70">Active paid seats</div>
+                        </div>
+
+                        <div class="pt-2.5 border-t border-white/10 flex items-center justify-between text-[11px]">
+                          <span class="text-white/70 font-medium">Retention</span>
+                          <span class="font-extrabold text-[#FBBF24] tabular-nums">${state.tiers.proRetention}</span>
+                        </div>
+                      </div>
+
+                      <!-- STARTER / FREE Badge -->
+                      <div class="tier-badge-free rounded-[24px] p-4 sm:p-5 text-[#1E1E1E] flex flex-col justify-between">
+                        <div class="flex items-center justify-between">
+                          <span class="skeuo-recessed px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wider text-[#5C574F]">
+                            STARTER / FREE
+                          </span>
+                          <i data-lucide="sparkles" class="w-4 h-4 text-[#787268]"></i>
+                        </div>
+
+                        <div class="my-3">
+                          <div class="text-2xl font-extrabold text-[#1E1E1E] tabular-nums">${fmtNum(state.tiers.freeUsers)}</div>
+                          <div class="text-[11px] font-medium text-[#787268]">Active free users</div>
+                        </div>
+
+                        <div class="pt-2.5 border-t border-[#787268]/15 flex items-center justify-between text-[11px]">
+                          <span class="text-[#787268] font-medium">Upgrade rate</span>
+                          <span class="font-extrabold text-[#0D9468] tabular-nums">${state.tiers.freeUpgradeRate}</span>
+                        </div>
+                      </div>
+                    </div>`
+              }
+            </div>
+          </div>
+
+          <!-- MIDDLE ROW: USER GROWTH & SIGNUPS INTERACTIVE BAR CHART -->
+          <div class="skeuo-card rounded-[28px] p-5 sm:p-6">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-5">
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 class="text-base sm:text-lg font-extrabold text-[#1E1E1E]">
+                    ${isGa4Live ? 'Daily Active vs New Users' : 'User Growth & Signups'}
+                  </h2>
+                  ${
+                    isGa4Live
+                      ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#10B981]/15 text-[#0D9468]">GA4 LIVE</span>'
+                      : ''
+                  }
+                </div>
+                <p class="text-xs text-[#787268]">
+                  ${
+                    isGa4Live
+                      ? 'Real-time daily active users and new registrations from Google Analytics 4'
+                      : 'Monthly comparison of New Signups vs Returning Users (Jan–Dec)'
+                  }
+                </p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-3">
+                <!-- Legend -->
+                <div class="skeuo-recessed px-3.5 py-1.5 rounded-full flex items-center gap-4 text-xs font-bold">
+                  <span class="flex items-center gap-1.5 text-[#1E1E1E]">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#E86A33]"></span>
+                    ${isGa4Live ? 'New Users' : 'New Signups'}
+                  </span>
+                  <span class="flex items-center gap-1.5 text-[#1E1E1E]">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#1E1E1E]"></span>
+                    ${isGa4Live ? 'Active Users' : 'Returning Users'}
+                  </span>
+                </div>
+
+                ${
+                  isGa4Live
+                    ? ''
+                    : `<!-- Platform Scope Toggle (Demo Mode Only) -->
+                      <div class="skeuo-recessed p-1 rounded-full flex items-center gap-1">
+                        <button
+                          onclick="setChartPlatformFilter('all')"
+                          class="px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
+                            state.chartPlatformFilter === 'all' ? 'skeuo-btn-dark text-white' : 'text-[#787268] hover:text-[#1E1E1E]'
+                          }"
+                        >
+                          All Platforms
+                        </button>
+                        <button
+                          onclick="setChartPlatformFilter('mobile')"
+                          class="px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
+                            state.chartPlatformFilter === 'mobile' ? 'skeuo-btn-dark text-white' : 'text-[#787268] hover:text-[#1E1E1E]'
+                          }"
+                        >
+                          Mobile Only
+                        </button>
+                      </div>`
+                }
+              </div>
+            </div>
+
+            <!-- Recessed Chart Plot Stage -->
+            ${
+              isGa4Live && !hasDailyTrend
+                ? `<div class="skeuo-recessed rounded-2xl p-8 text-center">
+                    <p class="text-xs sm:text-sm font-extrabold text-[#1E1E1E]">No daily historical trend data in GA4 yet</p>
+                    <p class="text-xs text-[#787268] mt-1">Daily Active vs New User bars will appear automatically once GA4 aggregates 24–48 hours of traffic.</p>
+                  </div>`
+                : `<div class="skeuo-recessed rounded-2xl p-4 sm:p-5 pt-10 overflow-x-auto">
+                    <div
+                      class="grid gap-2 sm:gap-3 items-end h-52 min-w-[640px]"
+                      style="grid-template-columns: repeat(${chartSeries.length}, minmax(0, 1fr));"
+                    >
+                      ${chartSeries
+                        .map((m) => {
+                          const newH = m.primaryVal === 0 ? 4 : Math.max(8, Math.round((m.primaryVal / maxChartVal) * 100));
+                          const retH = m.secondaryVal === 0 ? 4 : Math.max(12, Math.round((m.secondaryVal / maxChartVal) * 100));
+
+                          return `
+                          <div class="group relative flex flex-col items-center h-full justify-end">
+                            <!-- Hover Tooltip -->
+                            <div class="opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 -translate-y-1 group-hover:-translate-y-2 absolute -top-14 z-20 skeuo-card px-2.5 py-1.5 rounded-xl text-[10px] font-extrabold whitespace-nowrap">
+                              <div class="text-[#E86A33] tabular-nums">New: ${fmtNum(m.primaryVal)}</div>
+                              <div class="text-[#1E1E1E] tabular-nums">${isGa4Live ? 'Active' : 'Returning'}: ${fmtNum(m.secondaryVal)}</div>
+                            </div>
+
+                            <!-- Bar Pair -->
+                            <div class="flex items-end gap-1 sm:gap-1.5 h-40">
+                              <div
+                                class="w-2.5 sm:w-3 rounded-full bg-gradient-to-t from-[#E2622B] to-[#F59164] shadow-sm transition-all duration-300 group-hover:brightness-105"
+                                style="height: ${newH}%"
+                              ></div>
+                              <div
+                                class="w-2.5 sm:w-3 rounded-full bg-gradient-to-t from-[#1E1E1E] to-[#474440] shadow-sm transition-all duration-300"
+                                style="height: ${retH}%"
+                              ></div>
+                            </div>
+
+                            <span class="text-[11px] font-bold text-[#787268] group-hover:text-[#1E1E1E] mt-2.5 whitespace-nowrap">
+                              ${m.label}
+                            </span>
+                          </div>
+                        `;
+                        })
+                        .join('')}
+                    </div>
+                  </div>`
+            }
+          </div>
+
+          ${
+            isGa4Live
+              ? ''
+              : `<!-- BOTTOM ROW: RECENT USER ACTIVITY & DIRECTORY TABLE (Demo Mode Only) -->
+                <div class="skeuo-card rounded-[28px] p-5 sm:p-6">
+                  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                    <div>
+                      <h2 class="text-base sm:text-lg font-extrabold text-[#1E1E1E]">Recent User Activity &amp; Directory</h2>
+                      <p class="text-xs text-[#787268]">Search active members, inspect session telemetry, and filter by cohort</p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-3">
+                      <!-- Recessed Search Input -->
+                      <div class="skeuo-recessed rounded-full px-3.5 py-2 flex items-center gap-2 w-full sm:w-64">
+                        <i data-lucide="search" class="w-4 h-4 text-[#787268] shrink-0"></i>
+                        <input
+                          type="text"
+                          value="${state.directorySearch}"
+                          oninput="handleDirectorySearch(this.value)"
+                          placeholder="Search name, email, platform..."
+                          class="bg-transparent text-xs font-semibold text-[#1E1E1E] placeholder-[#787268] outline-none w-full"
+                        />
+                      </div>
+
+                      <!-- Tactile Filter Pills -->
+                      <div class="skeuo-recessed p-1 rounded-full flex items-center gap-1 overflow-x-auto">
+                        ${['All', 'Online', 'New Signup', 'Pro Plan']
+                          .map(
+                            (pill) => `
+                          <button
+                            onclick="setDirectoryFilter('${pill}')"
+                            class="px-3 py-1.5 rounded-full text-[11px] font-extrabold whitespace-nowrap transition-all ${
+                              state.directoryFilter === pill
+                                ? 'skeuo-btn-dark text-white'
+                                : 'text-[#787268] hover:text-[#1E1E1E]'
+                            }"
+                          >
+                            ${pill}
+                          </button>
+                        `
+                          )
+                          .join('')}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[680px]">
+                      <thead>
+                        <tr class="text-[11px] font-extrabold uppercase tracking-wider text-[#787268] border-b border-[#787268]/15">
+                          <th class="pb-3 pl-2">User</th>
+                          <th class="pb-3">Platform</th>
+                          <th class="pb-3">Plan</th>
+                          <th class="pb-3">Session Time</th>
+                          <th class="pb-3 pr-2 text-right">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-[#787268]/10 text-xs">
+                        ${
+                          filteredUsers.length === 0
+                            ? `
+                          <tr>
+                            <td colspan="5" class="py-8 text-center text-[#787268] font-semibold">
+                              No users match your search or cohort filter.
+                            </td>
+                          </tr>
+                        `
+                            : filteredUsers
+                                .map((u) => {
+                                  const initials = u.name
+                                    .split(' ')
+                                    .map((part) => part[0])
+                                    .join('')
+                                    .slice(0, 2);
+                                  const platIcon =
+                                    u.platform === 'Web' ? 'globe' : u.platform === 'iOS' ? 'smartphone' : 'tablet-smartphone';
+
+                                  return `
+                              <tr class="hover:bg-white/45 transition-colors">
+                                <td class="py-3.5 pl-2">
+                                  <div class="flex items-center gap-3">
+                                    <div class="skeuo-btn w-9 h-9 rounded-full flex items-center justify-center font-extrabold text-xs text-[#1E1E1E] shrink-0">
+                                      ${initials}
+                                    </div>
+                                    <div>
+                                      <div class="flex items-center gap-2">
+                                        <span class="font-extrabold text-[#1E1E1E]">${u.name}</span>
+                                        ${
+                                          u.isNew
+                                            ? '<span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-[#E86A33]/15 text-[#E86A33]">NEW</span>'
+                                            : ''
+                                        }
+                                      </div>
+                                      <div class="text-[11px] text-[#787268]">${u.email}</div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td class="py-3.5">
+                                  <span class="skeuo-recessed inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[11px] font-bold text-[#1E1E1E]">
+                                    <i data-lucide="${platIcon}" class="w-3.5 h-3.5 text-[#E86A33]"></i>
+                                    ${u.platform}
+                                  </span>
+                                </td>
+                                <td class="py-3.5">
+                                  ${getPlanBadge(u.plan)}
+                                </td>
+                                <td class="py-3.5 font-bold text-[#1E1E1E] tabular-nums">
+                                  ${u.session}
+                                </td>
+                                <td class="py-3.5 pr-2 text-right">
+                                  ${getStatusBadge(u.status)}
+                                </td>
+                              </tr>
+                            `;
+                                })
+                                .join('')
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>`
+          }
+        </div>
+      `;
+    }
+
+    // ========================================================================
+    // 6. TAB 2: TRAFFIC & INSIGHTS RENDERER
+    // ========================================================================
+    function renderTrafficTab() {
+      const ds = state.trafficDatasets[state.trafficTimeframe];
+      const isGa4Live = state.ga4.mode === 'live';
+      const activeDevices = isGa4Live ? state.ga4.liveDevices : ds.devices;
+
+      const maxChannelVal = Math.max(
+        ...ds.channels.flatMap((c) => [c.organic, c.direct, c.social, c.referral])
+      );
+
+      // Build Donut Chart SVG Segments
+      const radius = 68;
+      const circumference = 2 * Math.PI * radius;
+      let cumulativePct = 0;
+      const donutSlices = activeDevices.map((dev, idx) => {
+        const dashArray = `${(dev.pct / 100) * circumference} ${circumference}`;
+        const dashOffset = -((cumulativePct / 100) * circumference);
+        cumulativePct += dev.pct;
+        return { ...dev, idx, dashArray, dashOffset };
+      });
+
+      const activeSlice =
+        state.selectedDeviceIdx !== null && activeDevices[state.selectedDeviceIdx]
+          ? activeDevices[state.selectedDeviceIdx]
+          : null;
+      const totalDeviceUsers = activeDevices.reduce((acc, d) => acc + d.users, 0);
+
+      // Live GA4 Acquisition Channels & KPIs calculation
+      const liveChannels = state.ga4.liveChannels || [];
+      const totalLiveChannelUsers = liveChannels.reduce((sum, c) => sum + c.users, 0) || 1;
+      const maxLiveChannelUsers = Math.max(1, ...liveChannels.map((c) => c.users));
+      const channelColors = ['#1E1E1E', '#E86A33', '#10B981', '#8A847A', '#F59E0B', '#3B82F6'];
+
+      const totalNewUsers12d = state.ga4.dailyTrend.reduce((sum, d) => sum + (Number(d.newUsers) || 0), 0);
+      const topChannelObj = liveChannels[0] || null;
+
+      return `
+        <div class="animate-view space-y-6">
+          <!-- Header & Timeframe Segmented Switcher -->
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h1 class="text-2xl sm:text-[28px] font-extrabold text-[#1E1E1E] tracking-tight">Traffic &amp; Insights</h1>
+              <p class="text-xs sm:text-sm text-[#787268] mt-0.5">
+                ${
+                  isGa4Live
+                    ? 'Live Google Analytics 4 acquisition attribution and device category distribution.'
+                    : 'Session engagement, acquisition attribution, and device distribution.'
+                }
+              </p>
+            </div>
+
+            ${
+              isGa4Live
+                ? `<div class="flex items-center gap-2">
+                    <span class="skeuo-recessed px-4 py-2 rounded-full text-xs font-extrabold text-[#1E1E1E] flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full led-emerald"></span>
+                      GA4 28-Day Window
+                    </span>
+                  </div>`
+                : `<div class="skeuo-recessed p-1.5 rounded-full flex items-center gap-1">
+                    ${['Last 7 Days', 'Last 30 Days', 'Year to Date']
+                      .map(
+                        (tf) => `
+                      <button
+                        onclick="setTrafficTimeframe('${tf}')"
+                        class="px-3.5 py-2 rounded-full text-xs font-extrabold transition-all ${
+                          state.trafficTimeframe === tf ? 'skeuo-btn-dark text-white' : 'text-[#787268] hover:text-[#1E1E1E]'
+                        }"
+                      >
+                        ${tf}
+                      </button>
+                    `
+                      )
+                      .join('')}
+                  </div>`
+            }
+          </div>
+
+          <!-- 4 Tactile KPI Cards (100% GA4-backed when Live) -->
+          ${
+            isGa4Live
+              ? `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div class="skeuo-card skeuo-card-hover rounded-[26px] p-5">
+                    <div class="flex items-center justify-between mb-3">
+                      <span class="text-xs font-bold text-[#787268]">28-Day Active Users</span>
+                      <div class="skeuo-recessed w-9 h-9 rounded-full flex items-center justify-center text-[#1E1E1E]">
+                        <i data-lucide="users" class="w-4 h-4 text-[#E86A33]"></i>
+                      </div>
+                    </div>
+                    <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] tabular-nums">${fmtNum(state.scopes.MAU.count)}</div>
+                    <div class="mt-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#10B981]/14 text-[#0D9468]">
+                      GA4 MAU
+                    </div>
+                  </div>
+
+                  <div class="skeuo-card skeuo-card-hover rounded-[26px] p-5">
+                    <div class="flex items-center justify-between mb-3">
+                      <span class="text-xs font-bold text-[#787268]">7-Day Active Users</span>
+                      <div class="skeuo-recessed w-9 h-9 rounded-full flex items-center justify-center text-[#10B981]">
+                        <i data-lucide="calendar" class="w-4 h-4"></i>
+                      </div>
+                    </div>
+                    <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] tabular-nums">${fmtNum(state.scopes.WAU.count)}</div>
+                    <div class="mt-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#10B981]/14 text-[#0D9468]">
+                      GA4 WAU
+                    </div>
+                  </div>
+
+                  <div class="skeuo-card skeuo-card-hover rounded-[26px] p-5">
+                    <div class="flex items-center justify-between mb-3">
+                      <span class="text-xs font-bold text-[#787268]">New Users (12 Days)</span>
+                      <div class="skeuo-recessed w-9 h-9 rounded-full flex items-center justify-center text-[#E86A33]">
+                        <i data-lucide="user-plus" class="w-4 h-4"></i>
+                      </div>
+                    </div>
+                    <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] tabular-nums">${fmtNum(totalNewUsers12d)}</div>
+                    <div class="mt-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#10B981]/14 text-[#0D9468]">
+                      GA4 Daily Trend
+                    </div>
+                  </div>
+
+                  <div class="skeuo-card skeuo-card-hover rounded-[26px] p-5">
+                    <div class="flex items-center justify-between mb-3">
+                      <span class="text-xs font-bold text-[#787268]">Top Channel Group</span>
+                      <div class="skeuo-recessed w-9 h-9 rounded-full flex items-center justify-center text-[#1E1E1E]">
+                        <i data-lucide="compass" class="w-4 h-4 text-[#10B981]"></i>
+                      </div>
+                    </div>
+                    <div class="text-xl sm:text-2xl font-extrabold text-[#1E1E1E] truncate">
+                      ${topChannelObj ? topChannelObj.channel : 'No Data Yet'}
+                    </div>
+                    <div class="mt-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#10B981]/14 text-[#0D9468] tabular-nums">
+                      ${topChannelObj ? `${fmtNum(topChannelObj.users)} active users` : 'Awaiting traffic'}
+                    </div>
+                  </div>
+                </div>`
+              : `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div class="skeuo-card skeuo-card-hover rounded-[26px] p-5">
+                    <div class="flex items-center justify-between mb-3">
+                      <span class="text-xs font-bold text-[#787268]">Avg. Session Duration</span>
+                      <div class="skeuo-recessed w-9 h-9 rounded-full flex items-center justify-center text-[#1E1E1E]">
+                        <i data-lucide="clock" class="w-4 h-4 text-[#E86A33]"></i>
+                      </div>
+                    </div>
+                    <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] tabular-nums">${ds.kpis.duration}</div>
+                    <div class="mt-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#10B981]/14 text-[#0D9468]">
+                      ${ds.kpis.durationDelta}
+                    </div>
+                  </div>
+
+                  <div class="skeuo-card skeuo-card-hover rounded-[26px] p-5">
+                    <div class="flex items-center justify-between mb-3">
+                      <span class="text-xs font-bold text-[#787268]">Retention Rate</span>
+                      <div class="skeuo-recessed w-9 h-9 rounded-full flex items-center justify-center text-[#10B981]">
+                        <i data-lucide="repeat" class="w-4 h-4"></i>
+                      </div>
+                    </div>
+                    <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] tabular-nums">${ds.kpis.retention}</div>
+                    <div class="mt-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#10B981]/14 text-[#0D9468]">
+                      ${ds.kpis.retentionDelta}
+                    </div>
+                  </div>
+
+                  <div class="skeuo-card skeuo-card-hover rounded-[26px] p-5">
+                    <div class="flex items-center justify-between mb-3">
+                      <span class="text-xs font-bold text-[#787268]">Signup Conversion</span>
+                      <div class="skeuo-recessed w-9 h-9 rounded-full flex items-center justify-center text-[#E86A33]">
+                        <i data-lucide="percent" class="w-4 h-4"></i>
+                      </div>
+                    </div>
+                    <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] tabular-nums">${ds.kpis.conversion}</div>
+                    <div class="mt-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#10B981]/14 text-[#0D9468]">
+                      ${ds.kpis.conversionDelta}
+                    </div>
+                  </div>
+
+                  <div class="skeuo-card skeuo-card-hover rounded-[26px] p-5">
+                    <div class="flex items-center justify-between mb-3">
+                      <span class="text-xs font-bold text-[#787268]">New Registrations</span>
+                      <div class="skeuo-recessed w-9 h-9 rounded-full flex items-center justify-center text-[#1E1E1E]">
+                        <i data-lucide="user-plus" class="w-4 h-4 text-[#10B981]"></i>
+                      </div>
+                    </div>
+                    <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] tabular-nums">${ds.kpis.registrations}</div>
+                    <div class="mt-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#10B981]/14 text-[#0D9468]">
+                      ${ds.kpis.registrationsDelta}
+                    </div>
+                  </div>
+                </div>`
+          }
+
+          <!-- Bottom Row: Acquisition Channels Grouped Bar Chart + Device Donut Chart -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+            <!-- Left (7 cols): Acquisition Channels -->
+            <div class="lg:col-span-7 skeuo-card rounded-[28px] p-5 sm:p-6 flex flex-col justify-between">
+              <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h2 class="text-base sm:text-lg font-extrabold text-[#1E1E1E]">Acquisition Channels</h2>
+                    ${
+                      isGa4Live
+                        ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#10B981]/15 text-[#0D9468]">GA4 LIVE</span>'
+                        : ''
+                    }
+                  </div>
+                  <p class="text-xs text-[#787268]">
+                    ${
+                      isGa4Live
+                        ? 'Active users grouped by GA4 Default Channel Group'
+                        : `Signups by source (${state.trafficTimeframe})`
+                    }
+                  </p>
+                </div>
+
+                ${
+                  isGa4Live
+                    ? `<span class="skeuo-recessed px-3 py-1.5 rounded-full text-xs font-extrabold text-[#1E1E1E] tabular-nums">
+                        Total: ${fmtNum(liveChannels.reduce((sum, c) => sum + c.users, 0))} users
+                      </span>`
+                    : `<!-- 4-Channel Legend -->
+                      <div class="skeuo-recessed px-3 py-1.5 rounded-full flex flex-wrap items-center gap-3 text-[11px] font-bold">
+                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#1E1E1E]"></span>Organic</span>
+                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#E86A33]"></span>Direct</span>
+                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#10B981]"></span>Social</span>
+                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#8A847A]"></span>Referral</span>
+                      </div>`
+                }
+              </div>
+
+              ${
+                isGa4Live
+                  ? liveChannels.length > 0
+                    ? `<div class="skeuo-recessed rounded-2xl p-4 sm:p-5 space-y-3.5">
+                        ${liveChannels
+                          .map((ch, idx) => {
+                            const sharePct = ((ch.users / totalLiveChannelUsers) * 100).toFixed(1);
+                            const barWidth = Math.max(8, Math.round((ch.users / maxLiveChannelUsers) * 100));
+                            const barColor = channelColors[idx % channelColors.length];
+                            return `
+                              <div class="skeuo-card rounded-2xl p-3.5">
+                                <div class="flex items-center justify-between text-xs font-extrabold mb-2">
+                                  <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${barColor}"></span>
+                                    <span class="text-[#1E1E1E]">${ch.channel}</span>
+                                  </div>
+                                  <div class="flex items-center gap-3 tabular-nums">
+                                    <span class="text-[#787268] font-bold">${sharePct}%</span>
+                                    <span class="text-[#1E1E1E]">${fmtNum(ch.users)} users</span>
+                                  </div>
+                                </div>
+                                <div class="skeuo-recessed w-full h-3 rounded-full p-0.5 overflow-hidden">
+                                  <div
+                                    class="h-full rounded-full transition-all duration-500"
+                                    style="width: ${barWidth}%; background-color: ${barColor};"
+                                  ></div>
+                                </div>
+                              </div>
+                            `;
+                          })
+                          .join('')}
+                      </div>`
+                    : `<div class="skeuo-recessed rounded-2xl p-8 text-center my-auto">
+                        <p class="text-xs sm:text-sm font-extrabold text-[#1E1E1E]">No acquisition channel rows in GA4 yet</p>
+                        <p class="text-xs text-[#787268] mt-1">Channel groups (Direct, Organic, Referral) appear after GA4 processes initial sessions.</p>
+                      </div>`
+                  : `<div class="skeuo-recessed rounded-2xl p-4 sm:p-5 pt-10 overflow-x-auto">
+                      <div class="grid gap-4 items-end h-56 min-w-[420px]" style="grid-template-columns: repeat(${ds.channels.length}, minmax(0, 1fr));">
+                        ${ds.channels
+                          .map((ch) => {
+                            const hOrg = Math.max(10, Math.round((ch.organic / maxChannelVal) * 100));
+                            const hDir = Math.max(10, Math.round((ch.direct / maxChannelVal) * 100));
+                            const hSoc = Math.max(10, Math.round((ch.social / maxChannelVal) * 100));
+                            const hRef = Math.max(10, Math.round((ch.referral / maxChannelVal) * 100));
+
+                            return `
+                            <div class="group relative flex flex-col items-center h-full justify-end">
+                              <!-- Hover Tooltip -->
+                              <div class="opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 -translate-y-1 group-hover:-translate-y-2 absolute -top-20 z-20 skeuo-card px-3 py-2 rounded-xl text-[10px] font-extrabold whitespace-nowrap tabular-nums">
+                                <div class="text-[#1E1E1E]">Organic: ${fmtNum(ch.organic)}</div>
+                                <div class="text-[#E86A33]">Direct: ${fmtNum(ch.direct)}</div>
+                                <div class="text-[#0D9468]">Social: ${fmtNum(ch.social)}</div>
+                                <div class="text-[#787268]">Referral: ${fmtNum(ch.referral)}</div>
+                              </div>
+
+                              <!-- 4 Grouped Bars -->
+                              <div class="flex items-end gap-1.5 h-44">
+                                <div class="w-2.5 sm:w-3 rounded-full bg-[#1E1E1E] transition-all duration-300" style="height: ${hOrg}%"></div>
+                                <div class="w-2.5 sm:w-3 rounded-full bg-[#E86A33] transition-all duration-300" style="height: ${hDir}%"></div>
+                                <div class="w-2.5 sm:w-3 rounded-full bg-[#10B981] transition-all duration-300" style="height: ${hSoc}%"></div>
+                                <div class="w-2.5 sm:w-3 rounded-full bg-[#8A847A] transition-all duration-300" style="height: ${hRef}%"></div>
+                              </div>
+
+                              <span class="text-xs font-extrabold text-[#787268] group-hover:text-[#1E1E1E] mt-2.5">
+                                ${ch.period}
+                              </span>
+                            </div>
+                          `;
+                          })
+                          .join('')}
+                      </div>
+                    </div>`
+              }
+            </div>
+
+            <!-- Right (5 cols): Users by Device & Platform Interactive Donut Chart -->
+            <div class="lg:col-span-5 skeuo-card rounded-[28px] p-5 sm:p-6 flex flex-col justify-between">
+              <div>
+                <h2 class="text-base sm:text-lg font-extrabold text-[#1E1E1E]">Users by Device &amp; Platform</h2>
+                <p class="text-xs text-[#787268]">Click or hover any segment to inspect exact user counts</p>
+              </div>
+
+              ${
+                activeDevices.length === 0
+                  ? `<div class="skeuo-recessed rounded-2xl p-8 text-center my-auto">
+                      <p class="text-xs sm:text-sm font-extrabold text-[#1E1E1E]">No device category data in GA4 yet</p>
+                      <p class="text-xs text-[#787268] mt-1">Desktop, Mobile, and Tablet shares will populate once GA4 records session devices.</p>
+                    </div>`
+                  : `<!-- SVG Ring Chart inside Recessed Bezel -->
+                    <div class="my-4 flex items-center justify-center">
+                      <div class="skeuo-recessed w-52 h-52 rounded-full p-3 flex items-center justify-center relative">
+                        <svg class="w-full h-full -rotate-90" viewBox="0 0 180 180">
+                          ${donutSlices
+                            .map(
+                              (s) => `
+                            <circle
+                              cx="90"
+                              cy="90"
+                              r="${radius}"
+                              fill="transparent"
+                              stroke="${s.color}"
+                              stroke-width="${state.selectedDeviceIdx === s.idx ? '22' : '17'}"
+                              stroke-dasharray="${s.dashArray}"
+                              stroke-dashoffset="${s.dashOffset}"
+                              stroke-linecap="round"
+                              class="transition-all duration-300 cursor-pointer"
+                              onmouseenter="selectDeviceSlice(${s.idx})"
+                              onclick="selectDeviceSlice(${s.idx})"
+                            />
+                          `
+                            )
+                            .join('')}
+                        </svg>
+
+                        <!-- Raised Center Hub -->
+                        <div class="skeuo-card w-32 h-32 rounded-full absolute flex flex-col items-center justify-center text-center p-2">
+                          <span class="text-lg sm:text-xl font-extrabold text-[#1E1E1E] tabular-nums">
+                            ${activeSlice ? fmtNum(activeSlice.users) : fmtNum(totalDeviceUsers)}
+                          </span>
+                          <span class="text-[11px] font-bold text-[#787268] mt-0.5 leading-tight">
+                            ${activeSlice ? `${activeSlice.name} (${activeSlice.pct}%)` : 'Total Active'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Interactive Legend Rows -->
+                    <div class="space-y-2">
+                      ${activeDevices
+                        .map(
+                          (dev, idx) => `
+                        <div
+                          onclick="selectDeviceSlice(${idx})"
+                          onmouseenter="selectDeviceSlice(${idx})"
+                          class="${
+                            state.selectedDeviceIdx === idx ? 'skeuo-btn' : 'skeuo-recessed'
+                          } rounded-2xl px-3.5 py-2.5 flex items-center justify-between cursor-pointer transition-all"
+                        >
+                          <div class="flex items-center gap-2.5">
+                            <span class="w-3 h-3 rounded-full shrink-0" style="background-color: ${dev.color}"></span>
+                            <i data-lucide="${dev.icon}" class="w-3.5 h-3.5 text-[#787268]"></i>
+                            <span class="text-xs font-extrabold text-[#1E1E1E]">${dev.name}</span>
+                          </div>
+                          <div class="flex items-center gap-3 tabular-nums">
+                            <span class="text-xs font-bold text-[#787268]">${fmtNum(dev.users)}</span>
+                            <span class="text-xs font-extrabold text-[#1E1E1E] w-9 text-right">${dev.pct}%</span>
+                          </div>
+                        </div>
+                      `
+                        )
+                        .join('')}
+                    </div>`
+              }
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ========================================================================
+    // 7. TAB 3: GROWTH & GOALS RENDERER
+    // ========================================================================
+    function renderGrowthTab() {
+      const isGa4Live = state.ga4.mode === 'live';
+      const currentMau = state.milestones[0].current;
+      const targetMau = state.mauTargetSlider;
+      const mauPct = Math.min(100, Math.round((currentMau / targetMau) * 100));
+
+      // When GA4 is connected, only show milestones directly fed by GA4 metrics
+      const visibleMilestones = isGa4Live
+        ? state.milestones.filter((m) => m.id === 'm1' || m.id === 'm3')
+        : state.milestones;
+
+      return `
+        <div class="animate-view space-y-6">
+          <!-- Header & Campaign Boost Button -->
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h1 class="text-2xl sm:text-[28px] font-extrabold text-[#1E1E1E] tracking-tight">Growth &amp; Goals</h1>
+              <p class="text-xs sm:text-sm text-[#787268] mt-0.5">
+                ${
+                  isGa4Live
+                    ? 'Track your GA4 Monthly Active Users and Mobile Adoption against quarterly targets.'
+                    : 'Configure MAU growth targets, toggle automated engagement engines, and track milestones.'
+                }
+              </p>
+            </div>
+
+            ${
+              isGa4Live
+                ? ''
+                : `<button
+                    onclick="triggerCampaignBoost()"
+                    class="skeuo-btn-accent px-5 py-3 rounded-2xl text-xs sm:text-sm font-extrabold flex items-center gap-2"
+                  >
+                    <i data-lucide="rocket" class="w-4 h-4"></i>
+                    <span>+500 Campaign Boost</span>
+                  </button>`
+            }
+          </div>
+
+          <!-- Top Control Panel: MAU Target Slider (+ Mechanical Automation Switches in Demo Mode) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+            <!-- Tactile MAU Target Slider Well -->
+            <div class="${isGa4Live ? 'lg:col-span-12' : 'lg:col-span-6'} skeuo-card rounded-[28px] p-5 sm:p-6 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-extrabold uppercase tracking-wider text-[#787268]">Quarterly Growth Target</span>
+                  <span class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-[#E86A33]/12 text-[#E86A33] tabular-nums">
+                    ${mauPct}% Achieved
+                  </span>
+                </div>
+                <h2 class="text-lg font-extrabold text-[#1E1E1E]">Monthly Active Users (MAU) Goal</h2>
+                <p class="text-xs text-[#787268] mt-0.5">Drag the tactile control knob to adjust your active user threshold</p>
+              </div>
+
+              <div class="my-6 space-y-4">
+                <div class="skeuo-recessed rounded-2xl p-4 flex items-center justify-between tabular-nums">
+                  <div>
+                    <div class="text-[11px] font-bold text-[#787268]">${isGa4Live ? 'Current GA4 MAU' : 'Current MAU'}</div>
+                    <div class="text-xl sm:text-2xl font-extrabold text-[#1E1E1E] mt-0.5">${fmtNum(currentMau)}</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-[11px] font-bold text-[#787268]">Target MAU</div>
+                    <div id="mauSliderTargetDisplay" class="text-xl sm:text-2xl font-extrabold text-[#E86A33] mt-0.5">${fmtNum(targetMau)}</div>
+                  </div>
+                </div>
+
+                <div class="px-1">
+                  <input
+                    type="range"
+                    min="${isGa4Live ? 100 : 100000}"
+                    max="${isGa4Live ? 300000 : 300000}"
+                    step="${isGa4Live ? 100 : 5000}"
+                    value="${targetMau}"
+                    oninput="handleMauTargetSlider(this.value)"
+                    class="skeuo-slider"
+                  />
+                  <div class="flex justify-between text-[11px] font-bold text-[#787268] mt-2 tabular-nums">
+                    <span>${isGa4Live ? '100' : '100,000'}</span>
+                    <span>150,000</span>
+                    <span>300,000</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-3 border-t border-[#787268]/15 flex items-center justify-between text-xs">
+                <span class="font-semibold text-[#787268]">Remaining to target:</span>
+                <span class="font-extrabold text-[#1E1E1E] tabular-nums">
+                  ${fmtNum(Math.max(0, targetMau - currentMau))} users
+                </span>
+              </div>
+            </div>
+
+            ${
+              isGa4Live
+                ? ''
+                : `<!-- Right 6 Cols: 4 Mechanical Automation Switches (Demo Mode Only) -->
+                  <div class="lg:col-span-6 skeuo-card rounded-[28px] p-5 sm:p-6 flex flex-col justify-between">
+                    <div class="mb-4">
+                      <h2 class="text-lg font-extrabold text-[#1E1E1E]">Growth Automation Engines</h2>
+                      <p class="text-xs text-[#787268]">Physical toggle switches for automated lifecycle retention pipelines</p>
+                    </div>
+
+                    <div class="space-y-3">
+                      ${state.automations
+                        .map(
+                          (auto) => `
+                        <div class="skeuo-recessed rounded-2xl px-4 py-3.5 flex items-center justify-between gap-3">
+                          <div class="flex items-center gap-3">
+                            <span class="w-2.5 h-2.5 rounded-full shrink-0 ${auto.enabled ? 'led-emerald' : 'led-amber'}"></span>
+                            <div>
+                              <div class="text-xs sm:text-sm font-extrabold text-[#1E1E1E]">${auto.title}</div>
+                              <div class="text-[11px] font-medium text-[#787268]">${auto.desc}</div>
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            role="switch"
+                            aria-checked="${auto.enabled}"
+                            onclick="toggleAutomationSwitch('${auto.id}')"
+                            class="mech-switch shrink-0 ${auto.enabled ? 'on' : ''}"
+                          >
+                            <span class="mech-thumb"></span>
+                          </button>
+                        </div>
+                      `
+                        )
+                        .join('')}
+                    </div>
+                  </div>`
+            }
+          </div>
+
+          <!-- Bottom Row: Circular Progress Milestone Cards -->
+          <div class="grid grid-cols-1 ${isGa4Live ? 'sm:grid-cols-2' : 'sm:grid-cols-2 xl:grid-cols-4'} gap-4">
+            ${visibleMilestones
+              .map((m) => {
+                const targetVal = m.linkedToSlider ? state.mauTargetSlider : m.target;
+                const pct = Math.min(100, Math.round((m.current / targetVal) * 100));
+                const r = 34;
+                const circ = 2 * Math.PI * r;
+                const offset = circ - (pct / 100) * circ;
+
+                return `
+                <div class="skeuo-card skeuo-card-hover rounded-[26px] p-5 flex flex-col justify-between">
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="skeuo-recessed w-9 h-9 rounded-xl flex items-center justify-center text-[#E86A33]">
+                      <i data-lucide="${m.icon}" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-xs font-extrabold text-[#0D9468] tabular-nums">${pct}%</span>
+                  </div>
+
+                  <div class="flex items-center gap-4 my-2">
+                    <div class="skeuo-recessed w-20 h-20 rounded-full p-1.5 flex items-center justify-center relative shrink-0">
+                      <svg class="w-full h-full -rotate-90" viewBox="0 0 84 84">
+                        <circle cx="42" cy="42" r="${r}" fill="transparent" stroke="rgba(45,40,30,0.12)" stroke-width="7" />
+                        <circle
+                          cx="42"
+                          cy="42"
+                          r="${r}"
+                          fill="transparent"
+                          stroke="${pct >= 100 ? '#10B981' : '#E86A33'}"
+                          stroke-width="7"
+                          stroke-dasharray="${circ}"
+                          stroke-dashoffset="${offset}"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                      <span class="text-xs font-extrabold text-[#1E1E1E] absolute tabular-nums">${pct}%</span>
+                    </div>
+
+                    <div>
+                      <h3 class="text-xs sm:text-sm font-extrabold text-[#1E1E1E] leading-snug">${m.title}</h3>
+                      <div class="text-xs font-bold text-[#787268] mt-1 tabular-nums">
+                        ${fmtNum(m.current)} / ${fmtNum(targetVal)}
+                      </div>
+                    </div>
+                  </div>
+
+                  ${
+                    isGa4Live
+                      ? ''
+                      : `<button
+                          onclick="incrementMilestone('${m.id}')"
+                          class="skeuo-btn w-full py-2.5 rounded-xl text-xs font-extrabold text-[#1E1E1E] mt-3 flex items-center justify-center gap-1.5"
+                        >
+                          <i data-lucide="plus" class="w-3.5 h-3.5 text-[#E86A33]"></i>
+                          <span>Add +${fmtNum(m.increment)}</span>
+                        </button>`
+                  }
+                </div>
+              `;
+              })
+              .join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // ========================================================================
+    // 8. TAB 4: LIVE ACTIVITY RENDERER
+    // ========================================================================
+    function renderLiveTab() {
+      const conc = getConcurrentStats();
+      const isGa4Live = state.ga4.mode === 'live';
+
+      if (isGa4Live) {
+        const trendRows = [...state.ga4.dailyTrend].reverse();
+        return `
+          <div class="animate-view space-y-6">
+            <!-- Header & Sync Now Button -->
+            <div class="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <div class="flex items-center gap-2.5">
+                  <span class="w-3 h-3 rounded-full led-emerald animate-pulse"></span>
+                  <h1 class="text-2xl sm:text-[28px] font-extrabold text-[#1E1E1E] tracking-tight">GA4 Live Telemetry</h1>
+                </div>
+                <p class="text-xs sm:text-sm text-[#787268] mt-0.5">
+                  Real-time active user heartbeat and daily Google Analytics 4 breakdown.
+                </p>
+              </div>
+
+              ${
+                state.ga4.url
+                  ? `<button
+                      onclick="syncGa4LiveData()"
+                      class="skeuo-btn-accent px-4 py-2.5 rounded-2xl text-xs font-extrabold flex items-center gap-2"
+                    >
+                      <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                      <span>Sync Realtime Now</span>
+                    </button>`
+                  : ''
+              }
+            </div>
+
+            <!-- 4 GA4-Connected Telemetry Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div class="skeuo-card rounded-[26px] p-5">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold text-[#787268]">Online Right Now</span>
+                  <span class="w-2.5 h-2.5 rounded-full led-emerald animate-pulse"></span>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] tabular-nums">${fmtNum(conc.current)}</div>
+                <div class="text-[11px] font-semibold text-[#0D9468] mt-1">GA4 Realtime (last 30 mins)</div>
+              </div>
+
+              <div class="skeuo-card rounded-[26px] p-5">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold text-[#787268]">Daily Active (1-Day)</span>
+                  <i data-lucide="user-check" class="w-4 h-4 text-[#E86A33]"></i>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] tabular-nums">${fmtNum(state.scopes.DAU.count)}</div>
+                <div class="text-[11px] font-semibold text-[#787268] mt-1">active1DayUsers</div>
+              </div>
+
+              <div class="skeuo-card rounded-[26px] p-5">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold text-[#787268]">Weekly Active (7-Day)</span>
+                  <i data-lucide="activity" class="w-4 h-4 text-[#10B981]"></i>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] tabular-nums">${fmtNum(state.scopes.WAU.count)}</div>
+                <div class="text-[11px] font-semibold text-[#787268] mt-1">active7DayUsers</div>
+              </div>
+
+              <div class="skeuo-card rounded-[26px] p-5">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold text-[#787268]">Monthly Active (28-Day)</span>
+                  <i data-lucide="users" class="w-4 h-4 text-[#1E1E1E]"></i>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] tabular-nums">${fmtNum(state.scopes.MAU.count)}</div>
+                <div class="text-[11px] font-semibold text-[#787268] mt-1">active28DayUsers</div>
+              </div>
+            </div>
+
+            <!-- Real GA4 Daily Breakdown Ledger -->
+            <div class="skeuo-card rounded-[28px] p-5 sm:p-6">
+              <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                <div>
+                  <h2 class="text-base sm:text-lg font-extrabold text-[#1E1E1E]">GA4 Daily Activity Breakdown</h2>
+                  <p class="text-xs text-[#787268]">Verified daily active and new user counts from Property ID 565933593</p>
+                </div>
+                <span class="skeuo-recessed px-3.5 py-1.5 rounded-full text-xs font-extrabold text-[#1E1E1E] tabular-nums">
+                  Last sync: ${state.ga4.lastSync || 'Just now'}
+                </span>
+              </div>
+
+              ${
+                trendRows.length === 0
+                  ? `<div class="skeuo-recessed rounded-2xl p-8 text-center">
+                      <p class="text-xs sm:text-sm font-extrabold text-[#1E1E1E]">Realtime connection is active — awaiting daily historical rows</p>
+                      <p class="text-xs text-[#787268] mt-1">Google Analytics 4 populates daily summary rows 24–48 hours after a new property begins receiving traffic.</p>
+                    </div>`
+                  : `<div class="overflow-x-auto">
+                      <table class="w-full text-left border-collapse min-w-[520px]">
+                        <thead>
+                          <tr class="text-[11px] font-extrabold uppercase tracking-wider text-[#787268] border-b border-[#787268]/15">
+                            <th class="pb-3 pl-2">Date</th>
+                            <th class="pb-3 text-right">Active Users</th>
+                            <th class="pb-3 text-right">New Users</th>
+                            <th class="pb-3 pr-2 text-right">Returning Users</th>
+                          </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#787268]/10 text-xs tabular-nums">
+                          ${trendRows
+                            .map((row) => {
+                              const returning = Math.max(0, row.activeUsers - row.newUsers);
+                              return `
+                                <tr class="hover:bg-white/45 transition-colors">
+                                  <td class="py-3.5 pl-2 font-extrabold text-[#1E1E1E]">${formatGa4Date(row.date)}</td>
+                                  <td class="py-3.5 text-right font-extrabold text-[#1E1E1E]">${fmtNum(row.activeUsers)}</td>
+                                  <td class="py-3.5 text-right font-extrabold text-[#E86A33]">+${fmtNum(row.newUsers)}</td>
+                                  <td class="py-3.5 pr-2 text-right font-bold text-[#0D9468]">${fmtNum(returning)}</td>
+                                </tr>
+                              `;
+                            })
+                            .join('')}
+                        </tbody>
+                      </table>
+                    </div>`
+              }
+            </div>
+          </div>
+        `;
+      }
+
+      const filteredEvents = state.eventLedger.filter(
+        (ev) => state.eventFilter === 'All Events' || ev.type === state.eventFilter
+      );
+
+      return `
+        <div class="animate-view space-y-6">
+          <!-- Header & Live Stream Simulator Switch -->
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2.5">
+                <span class="w-3 h-3 rounded-full ${state.liveSimulatorOn ? 'led-emerald animate-ping' : 'led-amber'}"></span>
+                <h1 class="text-2xl sm:text-[28px] font-extrabold text-[#1E1E1E] tracking-tight">Live Activity Stream</h1>
+              </div>
+              <p class="text-xs sm:text-sm text-[#787268] mt-0.5">
+                Real-time user registrations, workspace upgrades, and global login telemetry.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <button
+                onclick="injectLiveEventManual()"
+                class="skeuo-btn px-4 py-2.5 rounded-2xl text-xs font-extrabold text-[#1E1E1E] flex items-center gap-2"
+              >
+                <i data-lucide="plus-circle" class="w-4 h-4 text-[#E86A33]"></i>
+                <span>Trigger Event</span>
+              </button>
+
+              <div class="skeuo-card px-4 py-2 rounded-2xl flex items-center gap-3">
+                <span class="text-xs font-extrabold text-[#1E1E1E]">Live Stream</span>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked="${state.liveSimulatorOn}"
+                  onclick="toggleLiveSimulator()"
+                  class="mech-switch ${state.liveSimulatorOn ? 'on' : ''}"
+                >
+                  <span class="mech-thumb"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 Live Telemetry Counter Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="skeuo-card rounded-[26px] p-5">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-[#787268]">Online Right Now</span>
+                <span class="w-2.5 h-2.5 rounded-full led-emerald animate-pulse"></span>
+              </div>
+              <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] tabular-nums">${fmtNum(conc.current)}</div>
+              <div class="text-[11px] font-semibold text-[#0D9468] mt-1">Active websocket heartbeats</div>
+            </div>
+
+            <div class="skeuo-card rounded-[26px] p-5">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-[#787268]">Signups Today</span>
+                <i data-lucide="user-plus" class="w-4 h-4 text-[#E86A33]"></i>
+              </div>
+              <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] tabular-nums">+${fmtNum(state.signupsToday)}</div>
+              <div class="text-[11px] font-semibold text-[#0D9468] mt-1">+22.4% vs yesterday</div>
+            </div>
+
+            <div class="skeuo-card rounded-[26px] p-5">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-[#787268]">Active Sessions</span>
+                <i data-lucide="activity" class="w-4 h-4 text-[#10B981]"></i>
+              </div>
+              <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] tabular-nums">${fmtNum(state.activeSessions)}</div>
+              <div class="text-[11px] font-semibold text-[#787268] mt-1">Avg. 14m 32s duration</div>
+            </div>
+
+            <div class="skeuo-card rounded-[26px] p-5">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-[#787268]">Churn Risk Alerts</span>
+                <span class="w-2.5 h-2.5 rounded-full led-amber"></span>
+              </div>
+              <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] tabular-nums">${fmtNum(state.churnRisk)}</div>
+              <div class="text-[11px] font-semibold text-[#D97706] mt-1">Auto-retention queued</div>
+            </div>
+          </div>
+
+          <!-- Event Ledger with Tactile Category Filter Pills -->
+          <div class="skeuo-card rounded-[28px] p-5 sm:p-6">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+              <div>
+                <h2 class="text-base sm:text-lg font-extrabold text-[#1E1E1E]">Real-Time Event Ledger</h2>
+                <p class="text-xs text-[#787268]">Live stream updates automatically every 3.5 seconds when enabled</p>
+              </div>
+
+              <div class="skeuo-recessed p-1 rounded-full flex items-center gap-1 overflow-x-auto">
+                ${['All Events', 'Signups', 'Upgrades', 'Logins']
+                  .map(
+                    (f) => `
+                  <button
+                    onclick="setEventFilter('${f}')"
+                    class="px-3.5 py-1.5 rounded-full text-xs font-extrabold whitespace-nowrap transition-all ${
+                      state.eventFilter === f ? 'skeuo-btn-dark text-white' : 'text-[#787268] hover:text-[#1E1E1E]'
+                    }"
+                  >
+                    ${f}
+                  </button>
+                `
+                  )
+                  .join('')}
+              </div>
+            </div>
+
+            <div class="space-y-2.5">
+              ${filteredEvents
+                .map((ev) => {
+                  const badgeStyle =
+                    ev.type === 'Signups'
+                      ? 'bg-[#E86A33]/14 text-[#E86A33]'
+                      : ev.type === 'Upgrades'
+                      ? 'bg-[#10B981]/14 text-[#0D9468]'
+                      : 'skeuo-recessed text-[#5C574F]';
+
+                  return `
+                  <div class="skeuo-recessed rounded-2xl p-3.5 sm:px-4 flex flex-wrap items-center justify-between gap-3 animate-feed-item">
+                    <div class="flex items-center gap-3">
+                      <div class="skeuo-card w-9 h-9 rounded-xl flex items-center justify-center text-[#1E1E1E] shrink-0">
+                        <i data-lucide="${ev.icon}" class="w-4 h-4 text-[#E86A33]"></i>
+                      </div>
+                      <div>
+                        <div class="flex flex-wrap items-center gap-2">
+                          <span class="text-xs sm:text-sm font-extrabold text-[#1E1E1E]">${ev.user}</span>
+                          <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${badgeStyle}">
+                            ${ev.type}
+                          </span>
+                        </div>
+                        <div class="text-xs text-[#787268] mt-0.5">${ev.action}</div>
+                      </div>
+                    </div>
+
+                    <div class="flex items-center gap-4 text-xs">
+                      <span class="hidden sm:inline-flex items-center gap-1 font-semibold text-[#787268]">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                        ${ev.city}
+                      </span>
+                      <span class="font-bold text-[#1E1E1E] tabular-nums">${ev.time}</span>
+                    </div>
+                  </div>
+                `;
+                })
+                .join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ========================================================================
+    // 9. INTERACTIVE CONTROLS & ACTION HANDLERS
+    // ========================================================================
+    function setActiveScope(scopeKey) {
+      playMechanicalClick(600);
+      state.activeScope = scopeKey;
+      renderCurrentTab();
+    }
+
+    function toggleTrafficSpike() {
+      playMechanicalClick(680);
+      state.trafficSpikeActive = !state.trafficSpikeActive;
+      renderCurrentTab();
+      showToast(
+        state.trafficSpikeActive ? 'Simulated APAC traffic spike (+24% concurrency)' : 'Server load normalized',
+        'zap'
+      );
+    }
+
+    function setChartPlatformFilter(filter) {
+      playMechanicalClick(560);
+      state.chartPlatformFilter = filter;
+      renderCurrentTab();
+    }
+
+    function handleDirectorySearch(val) {
+      state.directorySearch = val;
+      renderCurrentTab();
+    }
+
+    function setDirectoryFilter(pill) {
+      playMechanicalClick(560);
+      state.directoryFilter = pill;
+      renderCurrentTab();
+    }
+
+    function setTrafficTimeframe(tf) {
+      playMechanicalClick(580);
+      state.trafficTimeframe = tf;
+      state.selectedDeviceIdx = null;
+      renderCurrentTab();
+    }
+
+    function selectDeviceSlice(idx) {
+      if (state.selectedDeviceIdx === idx) return;
+      state.selectedDeviceIdx = idx;
+      renderCurrentTab();
+    }
+
+    function handleMauTargetSlider(val) {
+      state.mauTargetSlider = Number(val);
+      const display = document.getElementById('mauSliderTargetDisplay');
+      if (display) display.textContent = fmtNum(state.mauTargetSlider);
+      renderCurrentTab();
+    }
+
+    function triggerCampaignBoost() {
+      playMechanicalClick(700);
+      state.scopes.DAU.count += 500;
+      state.scopes.WAU.count += 500;
+      state.scopes.MAU.count += 500;
+      state.milestones[0].current += 500;
+      state.signupsToday += 500;
+      renderCurrentTab();
+      showToast('+500 Campaign Boost applied to active users!', 'rocket');
+    }
+
+    function toggleAutomationSwitch(id) {
+      playMechanicalClick(620);
+      const target = state.automations.find((a) => a.id === id);
+      if (target) {
+        target.enabled = !target.enabled;
+        renderCurrentTab();
+        showToast(`${target.title}: ${target.enabled ? 'ENABLED' : 'PAUSED'}`, 'sliders');
+      }
+    }
+
+    function incrementMilestone(id) {
+      playMechanicalClick(640);
+      const m = state.milestones.find((item) => item.id === id);
+      if (m) {
+        m.current += m.increment;
+        if (m.linkedToSlider) {
+          state.scopes.MAU.count = m.current;
+        }
+        renderCurrentTab();
+        showToast(`+${fmtNum(m.increment)} added to ${m.title}`, 'trending-up');
+      }
+    }
+
+    function toggleLiveSimulator() {
+      playMechanicalClick(600);
+      state.liveSimulatorOn = !state.liveSimulatorOn;
+      renderCurrentTab();
+      showToast(state.liveSimulatorOn ? 'Live event stream resumed' : 'Live event stream paused', 'radio');
+    }
+
+    function setEventFilter(filter) {
+      playMechanicalClick(560);
+      state.eventFilter = filter;
+      renderCurrentTab();
+    }
+
+    function injectLiveEventManual() {
+      playMechanicalClick(660);
+      const sampleEvents = [
+        { type: 'Signups', user: 'Thanawat R.', action: 'Registered via GitHub OAuth', city: 'Bangkok, TH', device: 'Desktop Web', icon: 'monitor' },
+        { type: 'Upgrades', user: 'Hana Kimura', action: 'Upgraded workspace to Pro Plan', city: 'Osaka, JP', device: 'iOS App', icon: 'smartphone' },
+        { type: 'Logins', user: 'Daniel Park', action: 'Opened real-time check sheet telemetry', city: 'Seoul, KR', device: 'Android App', icon: 'tablet-smartphone' },
+      ];
+      const pick = sampleEvents[Math.floor(Math.random() * sampleEvents.length)];
+      state.eventLedger.unshift({
+        id: 'EVT-' + Math.floor(600 + Math.random() * 399),
+        ...pick,
+        time: 'Just now',
+      });
+      if (state.eventLedger.length > 15) state.eventLedger.pop();
+      state.signupsToday += pick.type === 'Signups' ? 1 : 0;
+      state.activeSessions += 1;
+      renderCurrentTab();
+    }
+
+    // Signup Modal Controllers
+    function openSignupModal() {
+      playMechanicalClick(600);
+      const modal = document.getElementById('simulateSignupsModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeSignupModal() {
+      playMechanicalClick(480);
+      const modal = document.getElementById('simulateSignupsModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function selectSignupBatch(size) {
+      playMechanicalClick(580);
+      state.modalBatchSize = size;
+      document.querySelectorAll('.batch-btn').forEach((btn) => {
+        const isSelected = Number(btn.getAttribute('data-batch')) === size;
+        btn.className = isSelected
+          ? 'batch-btn skeuo-btn-dark py-2.5 rounded-2xl text-xs font-extrabold'
+          : 'batch-btn skeuo-btn py-2.5 rounded-2xl text-xs font-extrabold text-[#1E1E1E]';
+      });
+    }
+
+    function selectSignupPlatform(plat) {
+      playMechanicalClick(580);
+      state.modalPlatform = plat;
+      document.querySelectorAll('.plat-btn').forEach((btn) => {
+        const isSelected = btn.getAttribute('data-plat') === plat;
+        btn.className = isSelected
+          ? 'plat-btn skeuo-btn-dark py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5'
+          : 'plat-btn py-2 rounded-xl text-xs font-bold text-[#787268] hover:text-[#1E1E1E] flex items-center justify-center gap-1.5';
+      });
+    }
+
+    function handleSimulateSignupsSubmit(e) {
+      e.preventDefault();
+      playMechanicalClick(700);
+      const batch = state.modalBatchSize;
+      const plat = state.modalPlatform;
+      const planDist = document.getElementById('signupPlanSelect')?.value || 'mixed';
+
+      // Update active counts & platform share
+      state.scopes.DAU.count += batch;
+      state.scopes.WAU.count += batch;
+      state.scopes.MAU.count += batch;
+      state.milestones[0].current += batch;
+      state.platforms[plat].users += batch;
+      state.signupsToday += batch;
+
+      if (plat === 'iOS' || plat === 'Android') {
+        state.milestones[2].current += batch;
+      }
+
+      if (planDist === 'pro') {
+        state.tiers.proSeats += batch;
+        state.milestones[1].current += batch;
+      } else if (planDist === 'free') {
+        state.tiers.freeUsers += batch;
+      } else {
+        const proAdd = Math.round(batch * 0.15);
+        state.tiers.proSeats += proAdd;
+        state.tiers.freeUsers += batch - proAdd;
+        state.milestones[1].current += proAdd;
+      }
+
+      // Add a representative new entry to Directory & Live Feed
+      state.usersDirectory.unshift({
+        id: 'USR-' + Math.floor(9100 + Math.random() * 899),
+        name: `New ${plat} Member`,
+        email: `member.${Date.now().toString().slice(-4)}@pulsemetrics.io`,
+        platform: plat,
+        plan: planDist === 'pro' ? 'Pro' : 'Free',
+        session: '01m 12s',
+        status: 'Online',
+        isNew: true,
+      });
+
+      closeSignupModal();
+      renderCurrentTab();
+      showToast(`Injected +${fmtNum(batch)} new ${plat} signups!`, 'user-plus');
+    }
+
+    function exportUsersCSV() {
+      playMechanicalClick(620);
+      let csvContent = '';
+      let filename = '';
+
+      if (state.ga4.mode === 'live') {
+        const lines = [
+          ['Metric', 'Value'].join(','),
+          ['Realtime Active Users (30m)', state.concurrentBase].join(','),
+          ['DAU (1-Day Active Users)', state.scopes.DAU.count].join(','),
+          ['WAU (7-Day Active Users)', state.scopes.WAU.count].join(','),
+          ['MAU (28-Day Active Users)', state.scopes.MAU.count].join(','),
+          ['Web Users', state.platforms.Web.users].join(','),
+          ['iOS Users', state.platforms.iOS.users].join(','),
+          ['Android Users', state.platforms.Android.users].join(','),
+          '',
+          ['Date', 'ActiveUsers', 'NewUsers'].join(','),
+          ...state.ga4.dailyTrend.map((d) => [formatGa4Date(d.date), d.activeUsers, d.newUsers].join(',')),
+        ];
+        csvContent = lines.join('\n');
+        filename = `pulsemetrics-ga4-report-${new Date().toISOString().slice(0, 10)}.csv`;
+      } else {
+        const headers = ['ID', 'Name', 'Email', 'Platform', 'Plan', 'SessionTime', 'Status'];
+        const rows = state.usersDirectory.map((u) => [
+          u.id,
+          `"${u.name}"`,
+          u.email,
+          u.platform,
+          u.plan,
+          `"${u.session}"`,
+          u.status,
+        ]);
+        csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+        filename = `pulsemetrics-users-${new Date().toISOString().slice(0, 10)}.csv`;
+      }
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast(state.ga4.mode === 'live' ? 'Exported GA4 telemetry CSV!' : 'Exported user directory CSV!', 'download');
+    }
+
+    // ========================================================================
+    // 10. REAL-TIME LIVE TELEMETRY SIMULATOR (DEMO MODE ONLY)
+    // ========================================================================
+    function startLiveEventTicker() {
+      const livePool = [
+        { type: 'Signups', user: 'Kittipong S.', action: 'Created new inspection workspace', city: 'Bangkok, TH', device: 'Desktop Web', icon: 'monitor' },
+        { type: 'Logins', user: 'Yuki Tanaka', action: 'Synced mobile check sheet session', city: 'Nagoya, JP', device: 'iOS App', icon: 'smartphone' },
+        { type: 'Upgrades', user: 'Sarah Jenkins', action: 'Activated Pro Analytics License', city: 'Sydney, AU', device: 'Desktop Web', icon: 'monitor' },
+        { type: 'Signups', user: 'Nadia Rahman', action: 'Verified engineering team profile', city: 'Kuala Lumpur, MY', device: 'Android App', icon: 'tablet-smartphone' },
+      ];
+
+      setInterval(() => {
+        if (state.ga4.mode === 'live' || !state.liveSimulatorOn) return;
+        const pick = livePool[Math.floor(Math.random() * livePool.length)];
+        state.eventLedger.unshift({
+          id: 'EVT-' + Math.floor(700 + Math.random() * 299),
+          ...pick,
+          time: 'Just now',
+        });
+        if (state.eventLedger.length > 15) state.eventLedger.pop();
+
+        if (pick.type === 'Signups') {
+          state.signupsToday += 1;
+        }
+        if (state.activeTab === 'live') {
+          renderCurrentTab();
+        }
+      }, 3500);
+    }
+
+    // ========================================================================
+    // 11. GOOGLE ANALYTICS 4 (GA4) LIVE CONNECTOR & APPS SCRIPT BRIDGE
+    // ========================================================================
+    const GA4_STORAGE_KEY = 'pulsemetrics_ga4_url';
+    const DEFAULT_GA4_WEB_APP_URL =
+      'https://script.google.com/macros/s/AKfycbyuw4cxjNe8Pflw2wWnkAIH7luFE9TOp8LPc8eqlaOW_gfjVnDzPf3RxNIz0OqZLyctSg/exec';
+
+    const GA4_APPS_SCRIPT_TEMPLATE = `/**
+ * PulseMetrics — Google Analytics 4 (GA4) Data API Bridge
+ * 1. In Apps Script, enable "Google Analytics Data API" under Services.
+ * 2. Verify PROPERTY_ID matches your numeric GA4 Property ID.
+ * 3. Deploy -> New deployment -> Web app (Execute as: Me, Who has access: Anyone).
+ */
+const PROPERTY_ID = '565933593';
+
+function doGet(e) {
+  try {
+    const property = 'properties/' + PROPERTY_ID;
+
+    // 1. DAU / WAU / MAU KPIs (Last 28 days)
+    const kpiRes = AnalyticsData.Properties.runReport({
+      dateRanges: [{ startDate: '28daysAgo', endDate: 'today' }],
+      metrics: [
+        { name: 'active1DayUsers' },
+        { name: 'active7DayUsers' },
+        { name: 'active28DayUsers' }
+      ]
+    }, property);
+    const kpiRow = (kpiRes.rows && kpiRes.rows[0] && kpiRes.rows[0].metricValues) || [];
+
+    // 2. Realtime Concurrent Active Users
+    let realtimeUsers = 0;
+    try {
+      const rtRes = AnalyticsData.Properties.runRealtimeReport({
+        metrics: [{ name: 'activeUsers' }]
+      }, property);
+      realtimeUsers = Number((rtRes.rows && rtRes.rows[0] && rtRes.rows[0].metricValues[0].value) || 0);
+    } catch (rtErr) {
+      realtimeUsers = 0;
+    }
+
+    // 3. Platforms (Web / iOS / Android)
+    const platRes = AnalyticsData.Properties.runReport({
+      dateRanges: [{ startDate: '28daysAgo', endDate: 'today' }],
+      dimensions: [{ name: 'platform' }],
+      metrics: [{ name: 'activeUsers' }]
+    }, property);
+    const platforms = (platRes.rows || []).map(r => ({
+      name: r.dimensionValues[0].value,
+      users: Number(r.metricValues[0].value || 0)
+    }));
+
+    // 4. Acquisition Channels
+    const chRes = AnalyticsData.Properties.runReport({
+      dateRanges: [{ startDate: '28daysAgo', endDate: 'today' }],
+      dimensions: [{ name: 'sessionDefaultChannelGroup' }],
+      metrics: [{ name: 'activeUsers' }],
+      limit: 6
+    }, property);
+    const channels = (chRes.rows || []).map(r => ({
+      channel: r.dimensionValues[0].value,
+      users: Number(r.metricValues[0].value || 0)
+    }));
+
+    // 5. Devices (desktop / mobile / tablet)
+    const devRes = AnalyticsData.Properties.runReport({
+      dateRanges: [{ startDate: '28daysAgo', endDate: 'today' }],
+      dimensions: [{ name: 'deviceCategory' }],
+      metrics: [{ name: 'activeUsers' }]
+    }, property);
+    const devices = (devRes.rows || []).map(r => ({
+      device: r.dimensionValues[0].value,
+      users: Number(r.metricValues[0].value || 0)
+    }));
+
+    // 6. Daily Trend (Last 12 days)
+    const trendRes = AnalyticsData.Properties.runReport({
+      dateRanges: [{ startDate: '12daysAgo', endDate: 'today' }],
+      dimensions: [{ name: 'date' }],
+      metrics: [{ name: 'activeUsers' }, { name: 'newUsers' }],
+      orderBys: [{ dimension: { dimensionName: 'date' } }]
+    }, property);
+    const dailyTrend = (trendRes.rows || []).map(r => ({
+      date: r.dimensionValues[0].value,
+      activeUsers: Number(r.metricValues[0].value || 0),
+      newUsers: Number(r.metricValues[1].value || 0)
+    }));
+
+    const payload = {
+      status: 'ok',
+      updatedAt: new Date().toISOString(),
+      kpis: {
+        dau: Number((kpiRow[0] && kpiRow[0].value) || 0),
+        wau: Number((kpiRow[1] && kpiRow[1].value) || 0),
+        mau: Number((kpiRow[2] && kpiRow[2].value) || 0),
+        realtime: realtimeUsers
+      },
+      platforms: platforms,
+      channels: channels,
+      devices: devices,
+      dailyTrend: dailyTrend
+    };
+
+    return ContentService
+      .createTextOutput(JSON.stringify(payload))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', message: err.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}`;
+
+    function formatGa4Date(rawDate) {
+      const str = String(rawDate || '');
+      if (/^\d{8}$/.test(str)) {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const mIdx = Math.max(0, Math.min(11, parseInt(str.slice(4, 6), 10) - 1));
+        const day = parseInt(str.slice(6, 8), 10);
+        return `${months[mIdx]} ${day}`;
+      }
+      return str;
+    }
+
+    function syncHeaderGa4Controls() {
+      const isLive = state.ga4.mode === 'live';
+
+      // Desktop elements
+      const dLed = document.getElementById('ga4DesktopLed');
+      const dBadge = document.getElementById('ga4DesktopBadge');
+      const dRefreshBtn = document.getElementById('ga4DesktopRefreshBtn');
+      const dRefreshIcon = document.getElementById('ga4DesktopRefreshIcon');
+
+      if (dLed) {
+        dLed.className = `w-2.5 h-2.5 rounded-full ${isLive ? 'led-emerald animate-pulse' : 'led-amber'}`;
+      }
+      if (dBadge) {
+        dBadge.textContent = isLive ? (state.ga4.isSamplePreview ? 'GA4 Sample' : 'GA4 Live') : 'Demo Data';
+        dBadge.className = isLive
+          ? 'px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#10B981]/15 text-[#0D9468] border border-[#10B981]/30'
+          : 'px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#F59E0B]/15 text-[#B45309] border border-[#F59E0B]/25';
+      }
+      if (dRefreshBtn) {
+        if (isLive && state.ga4.url) {
+          dRefreshBtn.classList.remove('hidden');
+        } else {
+          dRefreshBtn.classList.add('hidden');
+        }
+      }
+      if (dRefreshIcon) {
+        dRefreshIcon.classList.toggle('animate-spin', state.ga4.isSyncing);
+      }
+
+      // Mobile elements
+      const mLed = document.getElementById('ga4MobileLed');
+      const mBadge = document.getElementById('ga4MobileBadge');
+      const mRefreshBtn = document.getElementById('ga4MobileRefreshBtn');
+
+      if (mLed) {
+        mLed.className = `w-2 h-2 rounded-full ${isLive ? 'led-emerald animate-pulse' : 'led-amber'}`;
+      }
+      if (mBadge) {
+        mBadge.textContent = isLive ? 'Live' : 'Demo';
+        mBadge.className = isLive
+          ? 'px-1.5 py-0.2 rounded-full text-[9px] font-extrabold bg-[#10B981]/15 text-[#0D9468]'
+          : 'px-1.5 py-0.2 rounded-full text-[9px] font-extrabold bg-[#F59E0B]/15 text-[#B45309]';
+      }
+      if (mRefreshBtn) {
+        if (isLive && state.ga4.url) {
+          mRefreshBtn.classList.remove('hidden');
+        } else {
+          mRefreshBtn.classList.add('hidden');
+        }
+      }
+
+      // Sync Notification Dropdown with real GA4 status when Live
+      const notifBody = document.getElementById('notifDropdownBody');
+      if (notifBody) {
+        if (isLive) {
+          notifBody.innerHTML = `
+            <div class="skeuo-recessed rounded-xl p-2.5 flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full led-emerald mt-1.5 shrink-0"></span>
+              <div>
+                <p class="font-bold text-[#1E1E1E]">GA4 Property 565933593 Connected</p>
+                <p class="text-[11px] text-[#787268] mt-0.5">Realtime active users: ${fmtNum(state.concurrentBase)}</p>
+              </div>
+            </div>
+            <div class="skeuo-recessed rounded-xl p-2.5 flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full led-emerald mt-1.5 shrink-0"></span>
+              <div>
+                <p class="font-bold text-[#1E1E1E]">Last Telemetry Sync</p>
+                <p class="text-[11px] text-[#787268] mt-0.5">${state.ga4.lastSync || 'Synced just now'}</p>
+              </div>
+            </div>
+          `;
+        } else {
+          notifBody.innerHTML = `
+            <div class="skeuo-recessed rounded-xl p-2.5 flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full led-emerald mt-1.5 shrink-0"></span>
+              <div>
+                <p class="font-bold text-[#1E1E1E]">MAU Milestone 85% Reached</p>
+                <p class="text-[11px] text-[#787268] mt-0.5">128,450 monthly active users verified</p>
+              </div>
+            </div>
+            <div class="skeuo-recessed rounded-xl p-2.5 flex items-start gap-2.5">
+              <span class="w-2 h-2 rounded-full led-amber mt-1.5 shrink-0"></span>
+              <div>
+                <p class="font-bold text-[#1E1E1E]">APAC Peak Concurrency</p>
+                <p class="text-[11px] text-[#787268] mt-0.5">Bangkok &amp; Singapore nodes at 76.8% load</p>
+              </div>
+            </div>
+          `;
+        }
+      }
+    }
+
+    function copyAppsScriptSnippet() {
+      playMechanicalClick(640);
+      const tempTextarea = document.createElement('textarea');
+      tempTextarea.value = GA4_APPS_SCRIPT_TEMPLATE;
+      tempTextarea.style.position = 'fixed';
+      tempTextarea.style.opacity = '0';
+      document.body.appendChild(tempTextarea);
+      tempTextarea.select();
+      try {
+        document.execCommand('copy');
+        showToast('Copied Google Apps Script (Code.gs) to clipboard!', 'copy');
+      } catch (err) {
+        showToast('Unable to copy automatically — please select and copy the snippet.', 'alert-circle');
+      }
+      document.body.removeChild(tempTextarea);
+    }
+
+    function openGa4Modal() {
+      playMechanicalClick(600);
+      const modal = document.getElementById('ga4ConnectModal');
+      const urlInput = document.getElementById('ga4WebAppUrlInput');
+      const scriptSource = document.getElementById('ga4AppsScriptSource');
+
+      if (urlInput && state.ga4.url) {
+        urlInput.value = state.ga4.url;
+      }
+      if (scriptSource && !scriptSource.textContent) {
+        scriptSource.textContent = GA4_APPS_SCRIPT_TEMPLATE;
+      }
+
+      renderGa4ModalState();
+      if (modal) modal.classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeGa4Modal() {
+      playMechanicalClick(480);
+      const modal = document.getElementById('ga4ConnectModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function toggleAppsScriptDrawer() {
+      playMechanicalClick(560);
+      const drawer = document.getElementById('appsScriptDrawer');
+      const toggleText = document.getElementById('appsScriptDrawerToggleText');
+      const scriptSource = document.getElementById('ga4AppsScriptSource');
+
+      if (scriptSource && !scriptSource.textContent) {
+        scriptSource.textContent = GA4_APPS_SCRIPT_TEMPLATE;
+      }
+
+      if (drawer) {
+        const isNowHidden = drawer.classList.toggle('hidden');
+        if (toggleText) {
+          toggleText.textContent = isNowHidden ? 'Show Apps Script Code' : 'Hide Apps Script Code';
+        }
+      }
+    }
+
+    function renderGa4ModalState() {
+      const isLive = state.ga4.mode === 'live';
+      const modePill = document.getElementById('ga4ModalModePill');
+      const statusLed = document.getElementById('ga4ModalStatusLed');
+      const statusText = document.getElementById('ga4ModalStatusText');
+      const lastSyncEl = document.getElementById('ga4ModalLastSync');
+      const errorBox = document.getElementById('ga4ModalErrorBox');
+      const errorMsg = document.getElementById('ga4ModalErrorMsg');
+      const submitBtn = document.getElementById('ga4ConnectSubmitBtn');
+
+      if (modePill) {
+        modePill.textContent = isLive ? (state.ga4.isSamplePreview ? 'GA4 SAMPLE' : 'GA4 LIVE') : 'DEMO MODE';
+        modePill.className = isLive
+          ? 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#10B981]/15 text-[#0D9468]'
+          : 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#F59E0B]/15 text-[#B45309]';
+      }
+
+      if (statusLed) {
+        statusLed.className = `w-2.5 h-2.5 rounded-full ${isLive ? 'led-emerald animate-pulse' : 'led-amber'}`;
+      }
+
+      if (statusText) {
+        statusText.textContent = isLive
+          ? state.ga4.isSamplePreview
+            ? 'Previewing Sample GA4 Live Payload'
+            : 'Connected to Google Analytics 4 (Property 565933593)'
+          : 'Using Built-in Demo Dataset';
+      }
+
+      if (lastSyncEl) {
+        lastSyncEl.textContent = `Last sync: ${state.ga4.lastSync || 'Not synced yet'}`;
+      }
+
+      if (errorBox && errorMsg) {
+        if (state.ga4.error) {
+          errorBox.classList.remove('hidden');
+          errorMsg.textContent = state.ga4.error;
+        } else {
+          errorBox.classList.add('hidden');
+          errorMsg.textContent = '';
+        }
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = state.ga4.isSyncing;
+        submitBtn.innerHTML = state.ga4.isSyncing
+          ? '<i data-lucide="refresh-cw" class="w-4 h-4 animate-spin"></i><span>Syncing Live Data...</span>'
+          : '<i data-lucide="refresh-cw" class="w-4 h-4"></i><span>Connect &amp; Sync Live Data</span>';
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    function applyGa4Payload(payload, isSample = false) {
+      if (!payload || payload.status !== 'ok') {
+        throw new Error((payload && payload.message) || 'Invalid GA4 payload structure.');
+      }
+
+      const kpis = payload.kpis || {};
+      const dau = Number(kpis.dau) || 0;
+      const wau = Number(kpis.wau) || 0;
+      const mau = Number(kpis.mau) || 0;
+      const realtime = Number(kpis.realtime) || 0;
+
+      // 1. Map DAU / WAU / MAU to Active Users Card & MAU Goal
+      state.scopes.DAU.count = dau;
+      state.scopes.DAU.trend = isSample ? 'Sample GA4 DAU' : 'Live GA4 DAU (1-Day)';
+      state.scopes.WAU.count = wau;
+      state.scopes.WAU.trend = isSample ? 'Sample GA4 WAU' : 'Live GA4 WAU (7-Day)';
+      state.scopes.MAU.count = mau;
+      state.scopes.MAU.trend = isSample ? 'Sample GA4 MAU' : 'Live GA4 MAU (28-Day)';
+      state.milestones[0].current = mau;
+
+      // 2. Map Realtime Users to Concurrent Online Users Meter
+      state.trafficSpikeActive = false;
+      state.concurrentBase = realtime;
+      if (realtime <= 800) {
+        state.concurrentMax = 1000;
+      } else if (realtime <= 4500) {
+        state.concurrentMax = 5000;
+      } else {
+        state.concurrentMax = Math.ceil((realtime * 1.25) / 1000) * 1000;
+      }
+
+      // 3. Map Platforms (Web, iOS, Android)
+      if (Array.isArray(payload.platforms)) {
+        let webUsers = 0;
+        let iosUsers = 0;
+        let androidUsers = 0;
+
+        payload.platforms.forEach((p) => {
+          const pName = String(p.name || '').toLowerCase();
+          const pCount = Number(p.users) || 0;
+          if (pName.includes('web')) webUsers += pCount;
+          else if (pName.includes('ios')) iosUsers += pCount;
+          else if (pName.includes('android')) androidUsers += pCount;
+        });
+
+        state.platforms.Web.users = webUsers;
+        state.platforms.Web.growth = isSample ? 'GA4 Sample' : 'GA4 Live';
+        state.platforms.Web.sparkline = [...state.platforms.Web.sparkline.slice(1), Math.max(0, webUsers)];
+
+        state.platforms.iOS.users = iosUsers;
+        state.platforms.iOS.growth = isSample ? 'GA4 Sample' : 'GA4 Live';
+        state.platforms.iOS.sparkline = [...state.platforms.iOS.sparkline.slice(1), Math.max(0, iosUsers)];
+
+        state.platforms.Android.users = androidUsers;
+        state.platforms.Android.growth = isSample ? 'GA4 Sample' : 'GA4 Live';
+        state.platforms.Android.sparkline = [...state.platforms.Android.sparkline.slice(1), Math.max(0, androidUsers)];
+
+        state.milestones[2].current = iosUsers + androidUsers;
+      }
+
+      // 4. Map Daily Trend (YYYYMMDD -> MMM DD)
+      if (Array.isArray(payload.dailyTrend)) {
+        state.ga4.dailyTrend = payload.dailyTrend.map((d) => ({
+          date: d.date,
+          activeUsers: Number(d.activeUsers) || 0,
+          newUsers: Number(d.newUsers) || 0,
+        }));
+
+        if (state.ga4.dailyTrend.length >= 2) {
+          const realSpark = state.ga4.dailyTrend.slice(-7).map((d) => d.activeUsers);
+          state.platforms.Web.sparkline = realSpark;
+          state.platforms.iOS.sparkline = realSpark;
+          state.platforms.Android.sparkline = realSpark;
+        }
+      }
+
+      // 5. Map Acquisition Channels
+      if (Array.isArray(payload.channels)) {
+        state.ga4.liveChannels = payload.channels
+          .map((c) => ({
+            channel: String(c.channel || 'Other'),
+            users: Number(c.users) || 0,
+          }))
+          .sort((a, b) => b.users - a.users);
+      }
+
+      // 6. Map Device Breakdown (desktop, mobile, tablet)
+      if (Array.isArray(payload.devices) && payload.devices.length > 0) {
+        const totalDev = payload.devices.reduce((acc, d) => acc + (Number(d.users) || 0), 0) || 1;
+        const mapped = payload.devices
+          .map((d) => {
+            const raw = String(d.device || 'other').toLowerCase();
+            const users = Number(d.users) || 0;
+            let label = d.device;
+            let icon = 'cpu';
+            let color = '#8A847A';
+
+            if (raw.includes('desktop')) {
+              label = 'Desktop Web';
+              icon = 'monitor';
+              color = '#1E1E1E';
+            } else if (raw.includes('mobile')) {
+              label = 'Mobile';
+              icon = 'smartphone';
+              color = '#E86A33';
+            } else if (raw.includes('tablet')) {
+              label = 'Tablet';
+              icon = 'tablet';
+              color = '#10B981';
+            }
+
+            return {
+              name: label,
+              users,
+              pct: Math.round((users / totalDev) * 100),
+              color,
+              icon,
+            };
+          })
+          .sort((a, b) => b.users - a.users);
+
+        // Ensure percentages sum cleanly to 100%
+        const pctSum = mapped.reduce((s, item) => s + item.pct, 0);
+        if (mapped.length > 0 && pctSum !== 100) {
+          mapped[0].pct = Math.max(0, mapped[0].pct + (100 - pctSum));
+        }
+
+        state.ga4.liveDevices = mapped;
+        state.selectedDeviceIdx = null;
+      }
+
+      state.ga4.mode = 'live';
+      state.ga4.isSamplePreview = isSample;
+      state.ga4.error = null;
+
+      const syncDate = payload.updatedAt ? new Date(payload.updatedAt) : new Date();
+      state.ga4.lastSync = isNaN(syncDate.getTime())
+        ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+        : syncDate.toLocaleString([], {
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+          });
+
+      syncHeaderGa4Controls();
+      renderGa4ModalState();
+      renderCurrentTab();
+    }
+
+    async function syncGa4LiveData(options = {}) {
+      const targetUrl = (options.url || state.ga4.url || '').trim();
+      if (!targetUrl) {
+        openGa4Modal();
+        return;
+      }
+
+      if (!/^https?:\/\//i.test(targetUrl)) {
+        state.ga4.error = 'Please enter a valid Google Apps Script Web App URL starting with https://';
+        renderGa4ModalState();
+        return;
+      }
+
+      state.ga4.url = targetUrl;
+      state.ga4.isSyncing = true;
+      state.ga4.error = null;
+      syncHeaderGa4Controls();
+      renderGa4ModalState();
+
+      try {
+        // Standard CORS-safe GET fetch with NO custom headers so Apps Script 302 redirects succeed cleanly
+        const res = await fetch(targetUrl, {
+          method: 'GET',
+          redirect: 'follow',
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: Unable to reach Apps Script Web App endpoint.`);
+        }
+
+        const rawText = await res.text();
+        let data;
+        try {
+          data = JSON.parse(rawText);
+        } catch (parseErr) {
+          throw new Error(
+            "Received non-JSON response. Please ensure your Apps Script Web App is deployed with 'Who has access: Anyone'."
+          );
+        }
+
+        if (data.status === 'error') {
+          throw new Error(data.message || 'Google Apps Script returned an error status.');
+        }
+
+        localStorage.setItem(GA4_STORAGE_KEY, targetUrl);
+        applyGa4Payload(data, false);
+
+        if (!options.silent) {
+          showToast('Synced live metrics from Google Analytics 4!', 'check-circle-2');
+        }
+      } catch (err) {
+        state.ga4.error = err.message || 'Failed to fetch data from Google Apps Script.';
+        if (!options.silent) {
+          showToast('GA4 Sync failed — check connection details', 'alert-circle');
+        }
+      } finally {
+        state.ga4.isSyncing = false;
+        syncHeaderGa4Controls();
+        renderGa4ModalState();
+      }
+    }
+
+    function handleGa4ConnectSubmit(e) {
+      e.preventDefault();
+      playMechanicalClick(660);
+      const input = document.getElementById('ga4WebAppUrlInput');
+      const urlVal = input ? input.value.trim() : '';
+      syncGa4LiveData({ url: urlVal, silent: false });
+    }
+
+    function switchToDemoMode() {
+      playMechanicalClick(540);
+      const restored = JSON.parse(JSON.stringify(INITIAL_DEMO_SNAPSHOT));
+      state.scopes = restored.scopes;
+      state.platforms = restored.platforms;
+      state.concurrentBase = restored.concurrentBase;
+      state.concurrentMax = restored.concurrentMax;
+      state.milestones = restored.milestones;
+      state.trafficSpikeActive = false;
+      state.selectedDeviceIdx = null;
+
+      state.ga4.mode = 'demo';
+      state.ga4.isSamplePreview = false;
+      state.ga4.error = null;
+      state.ga4.dailyTrend = [];
+      state.ga4.liveChannels = [];
+      state.ga4.liveDevices = [];
+
+      syncHeaderGa4Controls();
+      renderGa4ModalState();
+      renderCurrentTab();
+      showToast('Switched back to Demo Dataset', 'database');
+    }
+
+    function testWithSampleGa4Payload() {
+      playMechanicalClick(680);
+      const samplePayload = {
+        status: 'ok',
+        updatedAt: new Date().toISOString(),
+        kpis: {
+          dau: 24680,
+          wau: 78450,
+          mau: 194320,
+          realtime: 842,
+        },
+        platforms: [
+          { name: 'Web', users: 108400 },
+          { name: 'iOS', users: 56220 },
+          { name: 'Android', users: 29700 },
+        ],
+        channels: [
+          { channel: 'Organic Search', users: 84200 },
+          { channel: 'Direct', users: 51400 },
+          { channel: 'Organic Social', users: 34920 },
+          { channel: 'Referral', users: 23800 },
+        ],
+        devices: [
+          { device: 'desktop', users: 102990 },
+          { device: 'mobile', users: 81614 },
+          { device: 'tablet', users: 9716 },
+        ],
+        dailyTrend: [
+          { date: '20261115', activeUsers: 19200, newUsers: 3140 },
+          { date: '20261116', activeUsers: 18450, newUsers: 2980 },
+          { date: '20261117', activeUsers: 21300, newUsers: 3620 },
+          { date: '20261118', activeUsers: 22890, newUsers: 3910 },
+          { date: '20261119', activeUsers: 23410, newUsers: 4120 },
+          { date: '20261120', activeUsers: 24100, newUsers: 4380 },
+          { date: '20261121', activeUsers: 21950, newUsers: 3740 },
+          { date: '20261122', activeUsers: 20640, newUsers: 3490 },
+          { date: '20261123', activeUsers: 23780, newUsers: 4210 },
+          { date: '20261124', activeUsers: 24680, newUsers: 4590 },
+        ],
+      };
+
+      applyGa4Payload(samplePayload, true);
+      showToast('Applied Sample GA4 Live Payload across all charts!', 'flask-conical');
+    }
+
+    // ========================================================================
+    // 12. INITIALIZE ON LOAD
+    // ========================================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      syncNavigationPills();
+      syncHeaderGa4Controls();
+      renderCurrentTab();
+      startLiveEventTicker();
+
+      const savedUrl = localStorage.getItem(GA4_STORAGE_KEY) || DEFAULT_GA4_WEB_APP_URL;
+      if (savedUrl) {
+        state.ga4.url = savedUrl;
+        state.ga4.mode = 'live';
+        state.scopes.DAU.count = 0;
+        state.scopes.DAU.trend = 'Syncing GA4 DAU...';
+        state.scopes.WAU.count = 0;
+        state.scopes.WAU.trend = 'Syncing GA4 WAU...';
+        state.scopes.MAU.count = 0;
+        state.scopes.MAU.trend = 'Syncing GA4 MAU...';
+        state.platforms.Web.users = 0;
+        state.platforms.Web.growth = 'Syncing...';
+        state.platforms.iOS.users = 0;
+        state.platforms.iOS.growth = 'Syncing...';
+        state.platforms.Android.users = 0;
+        state.platforms.Android.growth = 'Syncing...';
+        state.concurrentBase = 0;
+        syncHeaderGa4Controls();
+        renderCurrentTab();
+        syncGa4LiveData({ url: savedUrl, silent: false });
+      }
+    });
+  </script>
+</body>
+</html>
