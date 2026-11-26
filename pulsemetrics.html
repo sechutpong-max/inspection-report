@@ -389,9 +389,10 @@
       box-shadow: 0 0 8px rgba(245, 158, 11, 0.75);
     }
 
-    /* Country Polygon Hover Transition */
-    .ga4-country-path {
-      transition: fill 0.18s ease, stroke 0.18s ease, stroke-width 0.18s ease, filter 0.18s ease;
+    /* Country Polygon & Pin Marker Hover Transition */
+    .ga4-country-path,
+    .ga4-country-pin {
+      transition: fill 0.18s ease, stroke 0.18s ease, filter 0.18s ease;
       cursor: pointer;
     }
 
@@ -1064,6 +1065,7 @@
       ga4: {
         mode: 'demo',
         url: '',
+        propertyId: '565933593',
         isSyncing: false,
         lastSync: null,
         error: null,
@@ -1115,73 +1117,43 @@
       return `${clean} Traffic`;
     }
 
-    // Distinct Multi-Color Palette per Country
     const COUNTRY_PALETTE = [
-      '#E86A33', // Terracotta Orange
-      '#2B5B9E', // Cobalt Blue
-      '#10B981', // Emerald Green
-      '#8B5CF6', // Royal Violet
-      '#F59E0B', // Warm Amber
-      '#EC4899', // Magenta Rose
-      '#06B6D4', // Cyan Teal
-      '#6366F1', // Indigo
-      '#14B8A6', // Deep Teal
-      '#D97706', // Burnt Gold
-      '#EF4444', // Coral Red
-      '#3B82F6', // Bright Blue
-      '#84CC16', // Lime Green
-      '#A855F7', // Purple
-      '#0EA5E9', // Sky Blue
-      '#F97316', // Tangerine
+      '#E86A33', '#2B5B9E', '#10B981', '#8B5CF6', '#F59E0B', '#EC4899',
+      '#06B6D4', '#6366F1', '#14B8A6', '#D97706', '#EF4444', '#3B82F6',
+      '#84CC16', '#A855F7', '#0EA5E9', '#F97316',
     ];
 
     const COUNTRY_FLAGS = {
-      'Thailand': '🇹🇭',
-      'Singapore': '🇸🇬',
-      'Vietnam': '🇻🇳',
-      'Indonesia': '🇮🇩',
-      'Philippines': '🇵🇭',
-      'Malaysia': '🇲🇾',
-      'Brunei': '🇧🇳',
-      'Taiwan': '🇹🇼',
-      'Australia': '🇦🇺',
-      'New Zealand': '🇳🇿',
-      'Japan': '🇯🇵',
-      'South Korea': '🇰🇷',
-      'China': '🇨🇳',
-      'Hong Kong': '🇭🇰',
-      'India': '🇮🇳',
-      'Myanmar': '🇲🇲',
-      'Cambodia': '🇰🇭',
-      'Laos': '🇱🇦',
-      'Russia': '🇷🇺',
-      'United States': '🇺🇸',
-      'United States of America': '🇺🇸',
-      'Canada': '🇨🇦',
-      'Brazil': '🇧🇷',
-      'Mexico': '🇲🇽',
-      'Argentina': '🇦🇷',
-      'Chile': '🇨🇱',
-      'Colombia': '🇨🇴',
-      'Peru': '🇵🇪',
-      'United Kingdom': '🇬🇧',
-      'Germany': '🇩🇪',
-      'France': '🇫🇷',
-      'Italy': '🇮🇹',
-      'Spain': '🇪🇸',
-      'Netherlands': '🇳🇱',
-      'Sweden': '🇸🇪',
-      'Norway': '🇳🇴',
-      'Finland': '🇫🇮',
-      'Poland': '🇵🇱',
-      'Ukraine': '🇺🇦',
-      'Turkey': '🇹🇷',
-      'Saudi Arabia': '🇸🇦',
-      'United Arab Emirates': '🇦🇪',
-      'Egypt': '🇪🇬',
-      'South Africa': '🇿🇦',
-      'Nigeria': '🇳🇬',
-      'Kenya': '🇰🇪',
+      'Thailand': '🇹🇭', 'Singapore': '🇸🇬', 'Vietnam': '🇻🇳', 'Indonesia': '🇮🇩',
+      'Philippines': '🇵🇭', 'Malaysia': '🇲🇾', 'Brunei': '🇧🇳', 'Taiwan': '🇹🇼',
+      'Australia': '🇦🇺', 'New Zealand': '🇳🇿', 'Japan': '🇯🇵', 'South Korea': '🇰🇷',
+      'China': '🇨🇳', 'Hong Kong': '🇭🇰', 'India': '🇮🇳', 'Myanmar': '🇲🇲',
+      'Cambodia': '🇰🇭', 'Laos': '🇱🇦', 'Russia': '🇷🇺', 'United States': '🇺🇸',
+      'United States of America': '🇺🇸', 'Canada': '🇨🇦', 'Brazil': '🇧🇷',
+      'Mexico': '🇲🇽', 'Argentina': '🇦🇷', 'Chile': '🇨🇱', 'Colombia': '🇨🇴',
+      'Peru': '🇵🇪', 'United Kingdom': '🇬🇧', 'Germany': '🇩🇪', 'France': '🇫🇷',
+      'Italy': '🇮🇹', 'Spain': '🇪🇸', 'Netherlands': '🇳🇱', 'Sweden': '🇸🇪',
+      'Norway': '🇳🇴', 'Finland': '🇫🇮', 'Poland': '🇵🇱', 'Ukraine': '🇺🇦',
+      'Turkey': '🇹🇷', 'Saudi Arabia': '🇸🇦', 'United Arab Emirates': '🇦🇪',
+      'Egypt': '🇪🇬', 'South Africa': '🇿🇦', 'Nigeria': '🇳🇬', 'Kenya': '🇰🇪',
+    };
+
+    // Pin coordinates [longitude, latitude] for micro-states / islands not visible on 110m world atlas
+    const MICRO_COUNTRY_COORDS = {
+      'singapore': [103.8198, 1.3521],
+      'hong kong': [114.1694, 22.3193],
+      'macao': [113.5439, 22.1987],
+      'macau': [113.5439, 22.1987],
+      'bahrain': [50.5577, 26.0667],
+      'maldives': [73.2207, 3.2028],
+      'mauritius': [57.5522, -20.3484],
+      'malta': [14.3754, 35.9375],
+      'monaco': [7.4246, 43.7384],
+      'luxembourg': [6.1296, 49.8153],
+      'brunei': [114.7277, 4.5353],
+      'timor-leste': [125.7275, -8.8742],
+      'seychelles': [55.4920, -4.6796],
+      'guam': [144.7937, 13.4443],
     };
 
     function getCountryFlag(name) {
@@ -1205,6 +1177,23 @@
     let cachedWorldFeatures = null;
     let worldAtlasPromise = null;
 
+    // Interactive Map Zoom State & Helpers
+    let mapSvgSelection = null;
+    let mapZoomBehavior = null;
+    let currentMapZoomScale = 1;
+
+    function zoomGa4MapBy(factor) {
+      if (!mapSvgSelection || !mapZoomBehavior) return;
+      playTactileClick(factor > 1 ? 660 : 480);
+      mapSvgSelection.transition().duration(240).call(mapZoomBehavior.scaleBy, factor);
+    }
+
+    function resetGa4MapZoom() {
+      if (!mapSvgSelection || !mapZoomBehavior) return;
+      playTactileClick(540);
+      mapSvgSelection.transition().duration(280).call(mapZoomBehavior.transform, d3.zoomIdentity);
+    }
+
     function loadWorldAtlas() {
       if (cachedWorldFeatures) return Promise.resolve(cachedWorldFeatures);
       if (worldAtlasPromise) return worldAtlasPromise;
@@ -1226,7 +1215,6 @@
       const countriesData = state.ga4.liveCountries || [];
       const totalUsers = countriesData.reduce((s, c) => s + (Number(c.users) || 0), 0);
 
-      // Precompute cumulative stats for each country
       let runningSum = 0;
       const lookup = {};
       countriesData.forEach((c, idx) => {
@@ -1249,13 +1237,32 @@
 
         const width = 620;
         const height = 310;
+        currentMapZoomScale = 1;
+
+        // Track which countries already have a polygon in the 110m map
+        const matchedPolygonKeys = new Set();
+        features.forEach((f) => {
+          const k = normalizeGeoKey(f.properties && f.properties.name);
+          if (lookup[k]) matchedPolygonKeys.add(k);
+        });
+
+        // Build pin markers for small countries / city-states (e.g., Singapore, Hong Kong) missing from 110m polygons
+        const pinEntries = Object.entries(lookup)
+          .filter(([key, entry]) => !matchedPolygonKeys.has(key) && entry.users > 0 && MICRO_COUNTRY_COORDS[key])
+          .map(([key, entry]) => ({
+            key,
+            coords: MICRO_COUNTRY_COORDS[key],
+            entry,
+          }));
 
         container.innerHTML = '';
         const svg = d3
           .select(container)
           .append('svg')
           .attr('viewBox', `0 0 ${width} ${height}`)
-          .attr('class', 'w-full h-auto block select-none');
+          .attr('class', 'w-full h-auto block select-none cursor-grab active:cursor-grabbing rounded-xl');
+
+        const mapGroup = svg.append('g').attr('class', 'ga4-map-zoom-layer');
 
         const projection = d3
           .geoNaturalEarth1()
@@ -1264,8 +1271,80 @@
 
         const path = d3.geoPath().projection(projection);
 
-        svg
-          .append('g')
+        function showEntryTooltip(displayName, entry) {
+          const tip = document.getElementById('ga4MapTooltip');
+          if (!tip) return;
+          const u = entry ? entry.users : 0;
+          const pct = entry ? entry.pct : '0.0';
+          const dotColor = entry ? entry.color : '#A39E93';
+          const cumStr =
+            state.overviewAccumulative && entry
+              ? ` &bull; Cum: ${formatNum(entry.cumUsers)} (${entry.cumPct}%)`
+              : '';
+          tip.innerHTML = `
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full shrink-0" style="background-color: ${dotColor};"></span>
+              <span>${getCountryFlag(displayName)}</span>
+              <span class="font-extrabold text-[#1E1E1E]">${escapeHtml(displayName)}</span>
+            </div>
+            <div class="text-[11px] font-bold text-[#787268] mt-0.5 tabular-nums">
+              ${formatNum(u)} active users (${pct}%)${cumStr}
+            </div>
+          `;
+          tip.classList.remove('hidden');
+        }
+
+        function moveEntryTooltip(event) {
+          const tip = document.getElementById('ga4MapTooltip');
+          const wrap = document.getElementById('ga4MapWrapper');
+          if (!tip || !wrap) return;
+          const rect = wrap.getBoundingClientRect();
+          const x = Math.min(rect.width - 175, Math.max(8, event.clientX - rect.left + 12));
+          const y = Math.min(rect.height - 54, Math.max(8, event.clientY - rect.top - 16));
+          tip.style.left = `${x}px`;
+          tip.style.top = `${y}px`;
+        }
+
+        function hideEntryTooltip() {
+          const tip = document.getElementById('ga4MapTooltip');
+          if (tip) tip.classList.add('hidden');
+        }
+
+        const zoom = d3
+          .zoom()
+          .scaleExtent([1, 8])
+          .translateExtent([
+            [-80, -40],
+            [width + 80, height + 40],
+          ])
+          .on('zoom', (event) => {
+            currentMapZoomScale = event.transform.k;
+            mapGroup.attr('transform', event.transform);
+            mapGroup
+              .selectAll('path.ga4-country-path')
+              .attr('stroke-width', 0.65 / currentMapZoomScale);
+
+            // Keep micro-country pin markers crisp & proportional across all zoom levels
+            mapGroup
+              .selectAll('circle.ga4-pin-halo')
+              .attr('r', 8.5 / Math.sqrt(currentMapZoomScale));
+            mapGroup
+              .selectAll('circle.ga4-country-pin')
+              .attr('r', 4.5 / Math.sqrt(currentMapZoomScale))
+              .attr('stroke-width', 1.4 / Math.sqrt(currentMapZoomScale));
+
+            const levelEl = document.getElementById('ga4MapZoomLevel');
+            if (levelEl) {
+              levelEl.textContent = `${currentMapZoomScale.toFixed(1)}x`;
+            }
+          });
+
+        svg.call(zoom).on('dblclick.zoom', null);
+        mapSvgSelection = svg;
+        mapZoomBehavior = zoom;
+
+        // 1. Render Country Polygons
+        mapGroup
           .selectAll('path')
           .data(features)
           .join('path')
@@ -1284,45 +1363,62 @@
             const rawName = (d.properties && d.properties.name) || 'Unknown';
             const key = normalizeGeoKey(rawName);
             const entry = lookup[key];
-            const tip = document.getElementById('ga4MapTooltip');
-            if (tip) {
-              const displayName = entry ? entry.country : rawName;
-              const u = entry ? entry.users : 0;
-              const pct = entry ? entry.pct : '0.0';
-              const dotColor = entry ? entry.color : '#A39E93';
-              const cumStr =
-                state.overviewAccumulative && entry
-                  ? ` &bull; Cum: ${formatNum(entry.cumUsers)} (${entry.cumPct}%)`
-                  : '';
-              tip.innerHTML = `
-                <div class="flex items-center gap-1.5">
-                  <span class="w-2 h-2 rounded-full shrink-0" style="background-color: ${dotColor};"></span>
-                  <span>${getCountryFlag(displayName)}</span>
-                  <span class="font-extrabold text-[#1E1E1E]">${escapeHtml(displayName)}</span>
-                </div>
-                <div class="text-[11px] font-bold text-[#787268] mt-0.5 tabular-nums">
-                  ${formatNum(u)} active users (${pct}%)${cumStr}
-                </div>
-              `;
-              tip.classList.remove('hidden');
-            }
-            d3.select(this).attr('stroke', '#1E1E1E').attr('stroke-width', 1.4);
+            showEntryTooltip(entry ? entry.country : rawName, entry);
+            d3.select(this)
+              .attr('stroke', '#1E1E1E')
+              .attr('stroke-width', 1.4 / currentMapZoomScale);
           })
-          .on('mousemove', function (event) {
-            const tip = document.getElementById('ga4MapTooltip');
-            const wrap = document.getElementById('ga4MapWrapper');
-            if (!tip || !wrap) return;
-            const rect = wrap.getBoundingClientRect();
-            const x = Math.min(rect.width - 175, Math.max(8, event.clientX - rect.left + 12));
-            const y = Math.min(rect.height - 54, Math.max(8, event.clientY - rect.top - 16));
-            tip.style.left = `${x}px`;
-            tip.style.top = `${y}px`;
-          })
+          .on('mousemove', moveEntryTooltip)
           .on('mouseleave', function () {
-            const tip = document.getElementById('ga4MapTooltip');
-            if (tip) tip.classList.add('hidden');
-            d3.select(this).attr('stroke', '#F6F4EF').attr('stroke-width', 0.65);
+            hideEntryTooltip();
+            d3.select(this)
+              .attr('stroke', '#F6F4EF')
+              .attr('stroke-width', 0.65 / currentMapZoomScale);
           });
+
+        // 2. Render Pin Markers for Small Countries (e.g., Singapore)
+        if (pinEntries.length > 0) {
+          const pinGroups = mapGroup
+            .selectAll('g.ga4-pin-group')
+            .data(pinEntries)
+            .join('g')
+            .attr('class', 'ga4-pin-group')
+            .attr('transform', (d) => {
+              const projected = projection(d.coords) || [0, 0];
+              return `translate(${projected[0]}, ${projected[1]})`;
+            });
+
+          // Translucent outer pulse ring
+          pinGroups
+            .append('circle')
+            .attr('class', 'ga4-pin-halo pointer-events-none')
+            .attr('r', 8.5)
+            .attr('fill', (d) => d.entry.color)
+            .attr('fill-opacity', 0.28);
+
+          // Solid interactive pin dot
+          pinGroups
+            .append('circle')
+            .attr('class', 'ga4-country-pin')
+            .attr('data-geo-key', (d) => d.key)
+            .attr('r', 4.5)
+            .attr('fill', (d) => d.entry.color)
+            .attr('stroke', '#FFFFFF')
+            .attr('stroke-width', 1.4)
+            .on('mouseenter', function (event, d) {
+              showEntryTooltip(d.entry.country, d.entry);
+              d3.select(this)
+                .attr('stroke', '#1E1E1E')
+                .attr('r', 6.5 / Math.sqrt(currentMapZoomScale));
+            })
+            .on('mousemove', moveEntryTooltip)
+            .on('mouseleave', function () {
+              hideEntryTooltip();
+              d3.select(this)
+                .attr('stroke', '#FFFFFF')
+                .attr('r', 4.5 / Math.sqrt(currentMapZoomScale));
+            });
+        }
       });
     }
 
@@ -1332,8 +1428,19 @@
       paths.forEach((p) => {
         if (p.getAttribute('data-geo-key') === key) {
           p.setAttribute('stroke', isHover ? '#1E1E1E' : '#F6F4EF');
-          p.setAttribute('stroke-width', isHover ? '1.8' : '0.65');
+          p.setAttribute('stroke-width', String((isHover ? 1.8 : 0.65) / currentMapZoomScale));
           if (isHover && p.parentNode) p.parentNode.appendChild(p);
+        }
+      });
+
+      const pins = document.querySelectorAll('#ga4WorldMapContainer .ga4-country-pin');
+      pins.forEach((pin) => {
+        if (pin.getAttribute('data-geo-key') === key) {
+          pin.setAttribute('stroke', isHover ? '#1E1E1E' : '#FFFFFF');
+          pin.setAttribute('r', String((isHover ? 6.8 : 4.5) / Math.sqrt(currentMapZoomScale)));
+          if (isHover && pin.parentNode && pin.parentNode.parentNode) {
+            pin.parentNode.parentNode.appendChild(pin.parentNode);
+          }
         }
       });
     }
@@ -1406,6 +1513,7 @@ function doGet(e) {
 
     const payload = {
       status: 'ok',
+      propertyId: PROPERTY_ID,
       syncedAt: new Date().toISOString(),
       realtimeUsers: realtimeUsers,
       dau: m[0] ? Number(m[0].value) : 0,
@@ -1520,6 +1628,18 @@ function doGet(e) {
       try {
         const d = new Date(isoStr);
         return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      } catch (e) {
+        return 'Just now';
+      }
+    }
+
+    function formatSyncDateTimeBadge(isoStr) {
+      if (!isoStr) return 'Not synced yet';
+      try {
+        const d = new Date(isoStr);
+        const datePart = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        const timePart = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        return `${datePart}, ${timePart}`;
       } catch (e) {
         return 'Just now';
       }
@@ -1704,7 +1824,8 @@ function doGet(e) {
       if (!obj || typeof obj !== 'object') return undefined;
       for (const k of keys) {
         if (obj[k] !== undefined && obj[k] !== null && obj[k] !== '') {
-          return Number(obj[k]);
+          const parsed = Number(obj[k]);
+          if (!Number.isNaN(parsed)) return parsed;
         }
       }
       for (const val of Object.values(obj)) {
@@ -1718,42 +1839,37 @@ function doGet(e) {
 
     function applyGa4Payload(data, options = {}) {
       const daily = Array.isArray(data.dailyTrend) ? data.dailyTrend : [];
-      const latestDayActive = daily.length > 0 ? Number(daily[daily.length - 1].activeUsers) || 0 : 0;
-      const sumDailyActive = daily.reduce((s, d) => s + (Number(d.activeUsers) || 0), 0);
+      const latestDayActive = daily.length > 0 ? Math.max(0, Number(daily[daily.length - 1].activeUsers) || 0) : 0;
+      const sumDailyActive = daily.reduce((s, d) => s + Math.max(0, Number(d.activeUsers) || 0), 0);
 
-      const dau = Math.max(
-        0,
-        deepPickMetric(data, ['dau', 'active1DayUsers', 'dailyActiveUsers', 'activeUsers1d']) ?? latestDayActive
-      );
-      const wau = Math.max(
-        0,
-        deepPickMetric(data, ['wau', 'active7DayUsers', 'weeklyActiveUsers', 'activeUsers7d']) ?? sumDailyActive
-      );
-      const mau = Math.max(
-        0,
-        deepPickMetric(data, ['mau', 'active28DayUsers', 'monthlyActiveUsers', 'activeUsers28d', 'totalUsers']) ?? sumDailyActive
-      );
-      const realtime = Math.max(
-        0,
-        deepPickMetric(data, [
-          'realtimeUsers',
-          'realtime',
-          'realtimeActiveUsers',
-          'activeUsersRealtime',
-          'onlineUsers',
-          'currentUsers',
-        ]) ?? 0
-      );
+      const rawDau = deepPickMetric(data, ['dau', 'active1DayUsers', 'dailyActiveUsers', 'activeUsers1d']);
+      const rawWau = deepPickMetric(data, ['wau', 'active7DayUsers', 'weeklyActiveUsers', 'activeUsers7d']);
+      const rawMau = deepPickMetric(data, ['mau', 'active28DayUsers', 'monthlyActiveUsers', 'activeUsers28d', 'totalUsers']);
+      const rawRealtime = deepPickMetric(data, [
+        'realtimeUsers',
+        'realtime',
+        'realtimeActiveUsers',
+        'activeUsersRealtime',
+        'onlineUsers',
+        'currentUsers',
+      ]);
+
+      const dau = Math.max(0, rawDau !== undefined ? rawDau : latestDayActive);
+      const wau = Math.max(0, rawWau !== undefined ? rawWau : sumDailyActive);
+      const mau = Math.max(0, rawMau !== undefined ? rawMau : sumDailyActive);
+      const realtime = Math.max(0, rawRealtime !== undefined ? rawRealtime : 0);
+
+      const rawNew28 = deepPickMetric(data, ['newUsers28d', 'newUsers']);
       const newUsers28d = Math.max(
         0,
-        deepPickMetric(data, ['newUsers28d', 'newUsers']) ??
-          daily.reduce((s, d) => s + (Number(d.newUsers) || 0), 0)
+        rawNew28 !== undefined ? rawNew28 : daily.reduce((s, d) => s + Math.max(0, Number(d.newUsers) || 0), 0)
       );
       const engRate = Math.min(1, Math.max(0, deepPickMetric(data, ['engagementRate']) ?? 0));
       const avgSec = Math.max(0, deepPickMetric(data, ['avgSessionDurationSec', 'averageSessionDuration']) ?? 0);
 
       state.ga4.mode = 'ga4';
       state.ga4.isSamplePreview = Boolean(options.isSample);
+      if (data.propertyId) state.ga4.propertyId = String(data.propertyId);
       state.ga4.lastSync = data.syncedAt || new Date().toISOString();
       state.ga4.error = null;
 
@@ -1773,7 +1889,6 @@ function doGet(e) {
         trend: `${formatNum(newUsers28d)} new users in 28d`,
       };
 
-      const daily = Array.isArray(data.dailyTrend) ? data.dailyTrend : [];
       state.ga4.dailyTrend = daily.map((d) => ({
         date: d.date,
         label: formatGa4ShortDate(d.date),
@@ -2072,6 +2187,7 @@ function doGet(e) {
       playTactileClick(720);
       const samplePayload = {
         status: 'ok',
+        propertyId: '565933593',
         syncedAt: new Date().toISOString(),
         realtimeUsers: 48,
         dau: 1940,
@@ -2173,7 +2289,6 @@ function doGet(e) {
       });
     }
 
-    // Page 1: Toggle Accumulative View across all cards
     function toggleOverviewAccumulative() {
       playTactileClick(660);
       state.overviewAccumulative = !state.overviewAccumulative;
@@ -2462,7 +2577,7 @@ function doGet(e) {
     });
 
     /* ========================================================================
-       TAB 1: OVERVIEW (WITH FULL ACCUMULATIVE VIEW TOGGLE)
+       TAB 1: OVERVIEW (WITH FULL ACCUMULATIVE VIEW TOGGLE & ZOOMABLE MAP + PINS)
        ======================================================================== */
     function renderOverviewTab() {
       const isGa4Live = state.ga4.mode === 'ga4';
@@ -2470,16 +2585,12 @@ function doGet(e) {
       const currentScopeObj = state.scopes[state.activeScope];
       const liveRatio = Math.min(100, Math.round((state.concurrentBase / Math.max(1, state.concurrentMax)) * 100));
 
-      // Compute Accumulative metrics for Hero & Highlights
       const dailyTrend = state.ga4.dailyTrend || [];
       const sumDailyActive = dailyTrend.reduce((s, d) => s + (Number(d.activeUsers) || 0), 0);
       const sumDailyNew = dailyTrend.reduce((s, d) => s + (Number(d.newUsers) || 0), 0);
       const sumCountryUsers = (state.ga4.liveCountries || []).reduce((s, c) => s + (Number(c.users) || 0), 0);
-
-      // Demo mode 12-month cumulative sum
       const sumDemoMonthly = state.monthlyGrowth.reduce((s, m) => s + m.newAll + m.retAll, 0);
 
-      // Hero KPI Value & Labels
       const heroCount = isAcc
         ? (isGa4Live
             ? Math.max(state.scopes.MAU.count, sumDailyActive, sumCountryUsers)
@@ -2498,12 +2609,10 @@ function doGet(e) {
             ? `${Math.min(100, ((currentScopeObj.count / Math.max(1, state.mauTargetSlider)) * 100)).toFixed(1)}% of Goal`
             : `${Math.min(100, ((currentScopeObj.count / Math.max(1, state.mauTargetSlider)) * 100)).toFixed(1)}% of MAU Goal`);
 
-      // Build Highlights Cards (Normal vs Accumulative)
       let highlightItems = [];
       if (isGa4Live) {
         const peakDayUsers = dailyTrend.length > 0 ? Math.max(...dailyTrend.map((d) => d.activeUsers)) : state.scopes.DAU.count;
 
-        // Running cumulative sparklines
         let runNew = 0;
         const cumNewSpark = dailyTrend.slice(-7).map((d) => {
           runNew += d.newUsers;
@@ -2518,7 +2627,7 @@ function doGet(e) {
         highlightItems = [
           {
             name: isAcc ? 'Accumulative New Visitors' : 'New Visitors',
-            users: isAcc ? sumDailyNew : sumDailyNew,
+            users: sumDailyNew,
             growth: isAcc ? 'Cumulative total' : `${dailyTrend.length || 0}d trend`,
             icon: 'user-plus',
             sparkline: isAcc
@@ -2554,7 +2663,6 @@ function doGet(e) {
         });
       }
 
-      // Build Middle-Left Bar Chart (Normal vs Accumulative Running Total)
       let growthBarsHTML = '';
       if (isGa4Live) {
         if (dailyTrend.length === 0) {
@@ -2648,7 +2756,6 @@ function doGet(e) {
           .join('');
       }
 
-      // GA4 Events Breakdown HTML (Middle-Right Card) — supports Accumulative running total & %
       const eventsList = state.ga4.liveEvents || [];
       const totalEventCount = Math.max(1, eventsList.reduce((s, e) => s + (Number(e.count) || 0), 0));
       const maxEventCount = Math.max(1, ...eventsList.map((e) => Number(e.count) || 0));
@@ -2692,7 +2799,6 @@ function doGet(e) {
               })
               .join('');
 
-      // GA4 Country Table HTML (Bottom Full-Width Map + Table Card) — supports Accumulative running total & %
       const countriesList = state.ga4.liveCountries || [];
       const totalCountryUsers = Math.max(1, countriesList.reduce((s, c) => s + (Number(c.users) || 0), 0));
       let cumCountrySum = 0;
@@ -2876,7 +2982,6 @@ function doGet(e) {
                   </span>
                 </div>
 
-                <!-- Recessed Progress Track with Diagonal Striped Emerald Fill -->
                 <div class="mt-4">
                   <div class="skeuo-recessed h-5 rounded-full p-1 overflow-hidden">
                     <div
@@ -2917,10 +3022,10 @@ function doGet(e) {
             </div>
           </div>
 
-          <!-- MIDDLE ROW: Growth Bar Chart + Events by Activity Name (or Membership Tiers in Demo) -->
+          <!-- MIDDLE ROW: Growth Bar Chart + Events by Activity Name -->
           <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 sm:gap-6">
 
-            <!-- Left 7 Cols: Daily Active vs New Users (or 12-Month Growth in Demo) -->
+            <!-- Left 7 Cols: Daily Active vs New Users -->
             <div class="xl:col-span-7 skeuo-card rounded-3xl p-5 sm:p-6">
               <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
                 <div>
@@ -2982,7 +3087,6 @@ function doGet(e) {
                 </div>
               </div>
 
-              <!-- Recessed Chart Well -->
               <div class="skeuo-recessed rounded-2xl p-4 sm:p-5 overflow-x-auto no-scrollbar">
                 <div class="min-w-[480px] h-52 sm:h-56 flex items-end justify-between gap-2 pt-6">
                   ${growthBarsHTML}
@@ -2990,7 +3094,7 @@ function doGet(e) {
               </div>
             </div>
 
-            <!-- Right 5 Cols: GA4 Events by Activity Name (or Membership Tiers in Demo) -->
+            <!-- Right 5 Cols: GA4 Events by Activity Name -->
             <div class="xl:col-span-5 skeuo-card rounded-3xl p-5 sm:p-6 flex flex-col justify-between">
               ${
                 isGa4Live
@@ -3073,7 +3177,7 @@ function doGet(e) {
             </div>
           </div>
 
-          <!-- BOTTOM SECTION: GA4 Country Choropleth Map + Table (or Active User Directory in Demo) -->
+          <!-- BOTTOM SECTION: GA4 Country Choropleth Map (ZOOMABLE + PIN MARKERS) + Table -->
           ${
             isGa4Live
               ? `
@@ -3114,22 +3218,48 @@ function doGet(e) {
               </div>
 
               <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-                <!-- Left 7 Cols: Interactive World Choropleth Map -->
-                <div id="ga4MapWrapper" class="lg:col-span-7 skeuo-recessed rounded-2xl p-3 sm:p-4 relative flex flex-col justify-between min-h-[260px]">
-                  <div id="ga4WorldMapContainer" class="w-full flex-1 flex items-center justify-center">
+                <div id="ga4MapWrapper" class="lg:col-span-7 skeuo-recessed rounded-2xl p-3 sm:p-4 relative flex flex-col justify-between min-h-[260px] overflow-hidden">
+                  <!-- Floating Tactile Zoom & Reset Controls -->
+                  <div class="absolute top-3 right-3 z-20 flex items-center gap-1 bg-[#F6F4EF]/90 backdrop-blur-sm p-1 rounded-xl border border-white/80 shadow-sm">
+                    <span id="ga4MapZoomLevel" class="px-1.5 text-[10px] font-extrabold text-[#787268] tabular-nums">1.0x</span>
+                    <button
+                      type="button"
+                      onclick="zoomGa4MapBy(1.5)"
+                      class="skeuo-btn w-7 h-7 rounded-lg flex items-center justify-center text-[#1E1E1E]"
+                      title="Zoom In (+)"
+                    >
+                      <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button
+                      type="button"
+                      onclick="zoomGa4MapBy(1 / 1.5)"
+                      class="skeuo-btn w-7 h-7 rounded-lg flex items-center justify-center text-[#1E1E1E]"
+                      title="Zoom Out (-)"
+                    >
+                      <i data-lucide="minus" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button
+                      type="button"
+                      onclick="resetGa4MapZoom()"
+                      class="skeuo-btn w-7 h-7 rounded-lg flex items-center justify-center text-[#E86A33]"
+                      title="Reset Map View"
+                    >
+                      <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+
+                  <div id="ga4WorldMapContainer" class="w-full flex-1 flex items-center justify-center overflow-hidden rounded-xl">
                     <div class="text-xs font-bold text-[#787268] py-12">Loading world map projection...</div>
                   </div>
 
-                  <!-- Floating Map Hover Tooltip -->
                   <div
                     id="ga4MapTooltip"
                     class="hidden absolute z-20 skeuo-card rounded-xl px-3 py-2 text-xs pointer-events-none shadow-lg"
                   ></div>
 
-                  <!-- Color Legend -->
                   <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#787268]/15 text-[11px] font-bold text-[#787268]">
                     <div class="flex items-center gap-2">
-                      <span>Hover any country to inspect ${isAcc ? 'accumulative share' : 'active users'}</span>
+                      <span>Scroll / drag to zoom &amp; pan • Dots mark city-states</span>
                     </div>
                     <div class="flex items-center gap-1.5">
                       <span>0</span>
@@ -3142,7 +3272,6 @@ function doGet(e) {
                   </div>
                 </div>
 
-                <!-- Right 5 Cols: Country Ranking Table -->
                 <div class="lg:col-span-5 skeuo-recessed rounded-2xl p-3.5 sm:p-4 flex flex-col justify-between">
                   <div>
                     <div class="flex items-center justify-between px-3 pb-2 border-b border-[#787268]/15 text-[11px] font-extrabold uppercase tracking-wider text-[#787268]">
@@ -3580,7 +3709,7 @@ function doGet(e) {
     }
 
     /* ========================================================================
-       TAB 3: GROWTH & GOALS (Both Goals initialized to 100)
+       TAB 3: GROWTH & GOALS
        ======================================================================== */
     function renderGrowthTab() {
       const isGa4Live = state.ga4.mode === 'ga4';
@@ -3750,99 +3879,146 @@ function doGet(e) {
     }
 
     /* ========================================================================
-       TAB 4: LIVE ACTIVITY
+       TAB 4: LIVE ACTIVITY (GA4 LIVE TELEMETRY + DAILY BREAKDOWN)
        ======================================================================== */
     function renderLiveTab() {
       const isGa4Live = state.ga4.mode === 'ga4';
 
       if (isGa4Live) {
-        const events = state.ga4.liveEvents || [];
-        const totalEvents = Math.max(1, events.reduce((s, e) => s + e.count, 0));
+        const dailyRows = [...(state.ga4.dailyTrend || [])].reverse();
+        const propIdLabel = state.ga4.propertyId || '565933593';
 
         return `
           <div class="space-y-5 sm:space-y-6 animate-view">
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
-              <div class="skeuo-card rounded-3xl p-5 flex items-center justify-between">
-                <div>
-                  <span class="text-xs font-bold text-[#787268]">GA4 Realtime Users</span>
-                  <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] mt-1 tabular-nums">${formatNum(state.concurrentBase)}</div>
+
+            <!-- Top Header Row: GA4 Live Telemetry + Sync Realtime Now -->
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2.5">
+                  <span class="w-2.5 h-2.5 rounded-full led-emerald animate-pulse"></span>
+                  <h1 class="text-xl sm:text-2xl font-extrabold text-[#1E1E1E] tracking-tight">GA4 Live Telemetry</h1>
                 </div>
-                <div class="skeuo-recessed w-11 h-11 rounded-2xl flex items-center justify-center text-[#10B981]">
-                  <i data-lucide="radio" class="w-5 h-5"></i>
+                <p class="text-xs sm:text-sm font-medium text-[#787268] mt-1">
+                  Real-time active user heartbeat and daily Google Analytics 4 breakdown.
+                </p>
+              </div>
+
+              <button
+                onclick="syncGa4LiveData()"
+                class="skeuo-btn-accent px-5 py-2.5 rounded-full text-xs font-extrabold flex items-center gap-2 shrink-0"
+              >
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5 ${state.ga4.isSyncing ? 'animate-spin' : ''}"></i>
+                <span>Sync Realtime Now</span>
+              </button>
+            </div>
+
+            <!-- 4 KPI Cards Row -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
+              <!-- Card 1: Online Right Now -->
+              <div class="skeuo-card skeuo-card-hover rounded-3xl p-5 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs font-bold text-[#787268]">Online Right Now</span>
+                  <span class="w-2.5 h-2.5 rounded-full led-emerald"></span>
+                </div>
+                <div class="text-3xl sm:text-4xl font-extrabold text-[#1E1E1E] tabular-nums">
+                  ${formatNum(state.concurrentBase)}
+                </div>
+                <div class="mt-2.5 text-xs font-extrabold text-[#10B981]">
+                  GA4 Realtime (last 30 mins)
                 </div>
               </div>
 
-              <div class="skeuo-card rounded-3xl p-5 flex items-center justify-between">
-                <div>
-                  <span class="text-xs font-bold text-[#787268]">Total Tracked Events (28d)</span>
-                  <div class="text-2xl sm:text-3xl font-extrabold text-[#1E1E1E] mt-1 tabular-nums">${formatNum(totalEvents)}</div>
+              <!-- Card 2: Daily Active (1-Day) -->
+              <div class="skeuo-card skeuo-card-hover rounded-3xl p-5 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs font-bold text-[#787268]">Daily Active (1-Day)</span>
+                  <i data-lucide="user-plus" class="w-4 h-4 text-[#E86A33]"></i>
                 </div>
-                <div class="skeuo-recessed w-11 h-11 rounded-2xl flex items-center justify-center text-[#E86A33]">
-                  <i data-lucide="activity" class="w-5 h-5"></i>
+                <div class="text-3xl sm:text-4xl font-extrabold text-[#1E1E1E] tabular-nums">
+                  ${formatNum(state.scopes.DAU.count)}
+                </div>
+                <div class="mt-2.5 text-xs font-semibold text-[#787268]">
+                  active1DayUsers
                 </div>
               </div>
 
-              <div class="skeuo-card rounded-3xl p-5 flex items-center justify-between">
-                <div>
-                  <span class="text-xs font-bold text-[#787268]">Last GA4 Sync</span>
-                  <div class="text-lg sm:text-xl font-extrabold text-[#1E1E1E] mt-1 tabular-nums">${formatSyncClock(state.ga4.lastSync)}</div>
+              <!-- Card 3: Weekly Active (7-Day) -->
+              <div class="skeuo-card skeuo-card-hover rounded-3xl p-5 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs font-bold text-[#787268]">Weekly Active (7-Day)</span>
+                  <i data-lucide="activity" class="w-4 h-4 text-[#10B981]"></i>
                 </div>
-                <button
-                  onclick="syncGa4LiveData()"
-                  class="skeuo-btn-accent px-4 py-2.5 rounded-2xl text-xs font-extrabold flex items-center gap-1.5"
-                >
-                  <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-                  <span>Sync Now</span>
-                </button>
+                <div class="text-3xl sm:text-4xl font-extrabold text-[#1E1E1E] tabular-nums">
+                  ${formatNum(state.scopes.WAU.count)}
+                </div>
+                <div class="mt-2.5 text-xs font-semibold text-[#787268]">
+                  active7DayUsers
+                </div>
+              </div>
+
+              <!-- Card 4: Monthly Active (28-Day) -->
+              <div class="skeuo-card skeuo-card-hover rounded-3xl p-5 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs font-bold text-[#787268]">Monthly Active (28-Day)</span>
+                  <i data-lucide="users" class="w-4 h-4 text-[#1E1E1E]"></i>
+                </div>
+                <div class="text-3xl sm:text-4xl font-extrabold text-[#1E1E1E] tabular-nums">
+                  ${formatNum(state.scopes.MAU.count)}
+                </div>
+                <div class="mt-2.5 text-xs font-semibold text-[#787268]">
+                  active28DayUsers
+                </div>
               </div>
             </div>
 
+            <!-- Bottom Wide Card: GA4 Daily Activity Breakdown -->
             <div class="skeuo-card rounded-3xl p-5 sm:p-6">
               <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
-                <div class="flex items-center gap-2.5">
-                  <span class="w-2.5 h-2.5 rounded-full led-emerald animate-pulse"></span>
-                  <div>
-                    <h2 class="text-base sm:text-lg font-extrabold text-[#1E1E1E]">Top GA4 Event Counts (Last 28 Days)</h2>
-                    <p class="text-xs font-medium text-[#787268]">Aggregated event telemetry directly from Google Analytics Data API</p>
-                  </div>
+                <div>
+                  <h2 class="text-base sm:text-lg font-extrabold text-[#1E1E1E]">GA4 Daily Activity Breakdown</h2>
+                  <p class="text-xs font-medium text-[#787268] mt-0.5">
+                    Verified daily active and new user counts from Property ID ${escapeHtml(propIdLabel)}
+                  </p>
                 </div>
-                <span class="px-3 py-1 rounded-full text-xs font-extrabold bg-[#10B981]/12 text-[#047857]">
-                  GA4 Event Stream
+
+                <span class="skeuo-recessed px-3.5 py-1.5 rounded-full text-[11px] font-extrabold text-[#1E1E1E] tabular-nums">
+                  Last sync: ${formatSyncDateTimeBadge(state.ga4.lastSync)}
                 </span>
               </div>
 
-              ${
-                events.length === 0
-                  ? `<div class="skeuo-recessed rounded-2xl p-8 text-center text-xs font-bold text-[#787268]">No GA4 events recorded in the selected window</div>`
-                  : `
-                <div class="space-y-3">
-                  ${events
-                    .map((ev, idx) => {
-                      const pct = Math.max(4, Math.round((ev.count / totalEvents) * 100));
-                      const isTop = idx === 0;
-                      return `
-                        <div class="skeuo-recessed rounded-2xl p-3.5">
-                          <div class="flex items-center justify-between text-xs font-bold mb-2">
-                            <div class="flex items-center gap-2.5">
-                              <span class="w-2.5 h-2.5 rounded-full ${isTop ? 'bg-[#E86A33]' : 'bg-[#1E1E1E]'}"></span>
-                              <span class="text-[#1E1E1E] font-mono">${escapeHtml(ev.eventName)}</span>
-                            </div>
-                            <span class="tabular-nums text-[#1E1E1E]">${formatNum(ev.count)} events (${pct}%)</span>
-                          </div>
-                          <div class="w-full h-3 rounded-full bg-[#D3CEC4] overflow-hidden">
-                            <div
-                              class="h-full rounded-full ${isTop ? 'bg-gradient-to-r from-[#E86A33] to-[#F3804E]' : 'bg-[#1E1E1E]'}"
-                              style="width: ${pct}%"
-                            ></div>
-                          </div>
-                        </div>
-                      `;
-                    })
-                    .join('')}
-                </div>
-              `
-              }
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[540px]">
+                  <thead>
+                    <tr class="border-b border-[#787268]/15 text-[11px] font-extrabold uppercase tracking-wider text-[#787268]">
+                      <th class="py-3 px-2">DATE</th>
+                      <th class="py-3 px-2 text-right">ACTIVE</th>
+                      <th class="py-3 px-2 text-right">NEW</th>
+                      <th class="py-3 px-2 text-right">RETURNING</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-[#787268]/10 text-xs sm:text-sm font-bold">
+                    ${
+                      dailyRows.length === 0
+                        ? `<tr><td colspan="4" class="py-8 text-center text-xs text-[#787268]">No daily activity rows returned from GA4 yet.</td></tr>`
+                        : dailyRows
+                            .map((row) => {
+                              const returning = Math.max(0, (Number(row.activeUsers) || 0) - (Number(row.newUsers) || 0));
+                              return `
+                                <tr class="hover:bg-white/40 transition-colors">
+                                  <td class="py-3.5 px-2 font-extrabold text-[#1E1E1E]">${escapeHtml(row.label)}</td>
+                                  <td class="py-3.5 px-2 text-right font-extrabold text-[#1E1E1E] tabular-nums">${formatNum(row.activeUsers)}</td>
+                                  <td class="py-3.5 px-2 text-right font-extrabold text-[#E86A33] tabular-nums">+${formatNum(row.newUsers)}</td>
+                                  <td class="py-3.5 px-2 text-right font-extrabold text-[#10B981] tabular-nums">${formatNum(returning)}</td>
+                                </tr>
+                              `;
+                            })
+                            .join('')
+                    }
+                  </tbody>
+                </table>
+              </div>
             </div>
+
           </div>
         `;
       }
