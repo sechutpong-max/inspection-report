@@ -1700,14 +1700,57 @@ function doGet(e) {
       }
     }
 
+    function deepPickMetric(obj, keys) {
+      if (!obj || typeof obj !== 'object') return undefined;
+      for (const k of keys) {
+        if (obj[k] !== undefined && obj[k] !== null && obj[k] !== '') {
+          return Number(obj[k]);
+        }
+      }
+      for (const val of Object.values(obj)) {
+        if (val && typeof val === 'object' && !Array.isArray(val)) {
+          const found = deepPickMetric(val, keys);
+          if (found !== undefined) return found;
+        }
+      }
+      return undefined;
+    }
+
     function applyGa4Payload(data, options = {}) {
-      const dau = Math.max(0, Number(data.dau) || 0);
-      const wau = Math.max(0, Number(data.wau) || 0);
-      const mau = Math.max(0, Number(data.mau) || 0);
-      const realtime = Math.max(0, Number(data.realtimeUsers) || 0);
-      const newUsers28d = Math.max(0, Number(data.newUsers28d) || 0);
-      const engRate = Math.min(1, Math.max(0, Number(data.engagementRate) || 0));
-      const avgSec = Math.max(0, Number(data.avgSessionDurationSec) || 0);
+      const daily = Array.isArray(data.dailyTrend) ? data.dailyTrend : [];
+      const latestDayActive = daily.length > 0 ? Number(daily[daily.length - 1].activeUsers) || 0 : 0;
+      const sumDailyActive = daily.reduce((s, d) => s + (Number(d.activeUsers) || 0), 0);
+
+      const dau = Math.max(
+        0,
+        deepPickMetric(data, ['dau', 'active1DayUsers', 'dailyActiveUsers', 'activeUsers1d']) ?? latestDayActive
+      );
+      const wau = Math.max(
+        0,
+        deepPickMetric(data, ['wau', 'active7DayUsers', 'weeklyActiveUsers', 'activeUsers7d']) ?? sumDailyActive
+      );
+      const mau = Math.max(
+        0,
+        deepPickMetric(data, ['mau', 'active28DayUsers', 'monthlyActiveUsers', 'activeUsers28d', 'totalUsers']) ?? sumDailyActive
+      );
+      const realtime = Math.max(
+        0,
+        deepPickMetric(data, [
+          'realtimeUsers',
+          'realtime',
+          'realtimeActiveUsers',
+          'activeUsersRealtime',
+          'onlineUsers',
+          'currentUsers',
+        ]) ?? 0
+      );
+      const newUsers28d = Math.max(
+        0,
+        deepPickMetric(data, ['newUsers28d', 'newUsers']) ??
+          daily.reduce((s, d) => s + (Number(d.newUsers) || 0), 0)
+      );
+      const engRate = Math.min(1, Math.max(0, deepPickMetric(data, ['engagementRate']) ?? 0));
+      const avgSec = Math.max(0, deepPickMetric(data, ['avgSessionDurationSec', 'averageSessionDuration']) ?? 0);
 
       state.ga4.mode = 'ga4';
       state.ga4.isSamplePreview = Boolean(options.isSample);
