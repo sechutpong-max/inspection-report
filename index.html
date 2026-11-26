@@ -3,6 +3,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Service Portal - Mitsubishi Heavy Industries</title>
+
+  <!-- Auto-redirect out of LINE In-App Browser to Default Browser -->
+  <script>
+    (function() {
+      if (/Line/i.test(navigator.userAgent || '') && window.location.protocol.startsWith('http')) {
+        var url = new URL(window.location.href);
+        if (url.searchParams.get('openExternalBrowser') !== '1') {
+          url.searchParams.set('openExternalBrowser', '1');
+          window.location.replace(url.toString());
+        }
+      }
+    })();
+  </script>
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
  
   <!-- Google Analytics -->
