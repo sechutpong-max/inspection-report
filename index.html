@@ -25,6 +25,44 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
+
+    // แปลง Time Zone เป็นชื่อประเทศทั่วโลกอัตโนมัติ
+    (function() {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+      const cityToCode = {
+        'Bangkok': 'TH', 'Singapore': 'SG', 'Ho_Chi_Minh': 'VN', 'Saigon': 'VN',
+        'Jakarta': 'ID', 'Makassar': 'ID', 'Jayapura': 'ID', 'Pontianak': 'ID',
+        'Manila': 'PH', 'Kuala_Lumpur': 'MY', 'Kuching': 'MY', 'Brunei': 'BN',
+        'Taipei': 'TW', 'Tokyo': 'JP', 'Seoul': 'KR', 'Shanghai': 'CN',
+        'Hong_Kong': 'HK', 'Macau': 'MO', 'Kolkata': 'IN', 'Calcutta': 'IN',
+        'Yangon': 'MM', 'Rangoon': 'MM', 'Phnom_Penh': 'KH', 'Vientiane': 'LA',
+        'Sydney': 'AU', 'Melbourne': 'AU', 'Brisbane': 'AU', 'Perth': 'AU',
+        'Adelaide': 'AU', 'Darwin': 'AU', 'Hobart': 'AU', 'Auckland': 'NZ',
+        'London': 'GB', 'Paris': 'FR', 'Berlin': 'DE', 'Rome': 'IT',
+        'Madrid': 'ES', 'Amsterdam': 'NL', 'Stockholm': 'SE', 'Oslo': 'NO',
+        'Helsinki': 'FI', 'Warsaw': 'PL', 'Kyiv': 'UA', 'Kiev': 'UA',
+        'Moscow': 'RU', 'Istanbul': 'TR', 'Dubai': 'AE', 'Riyadh': 'SA',
+        'Cairo': 'EG', 'Johannesburg': 'ZA', 'Lagos': 'NG', 'Nairobi': 'KE',
+        'New_York': 'US', 'Chicago': 'US', 'Denver': 'US', 'Los_Angeles': 'US',
+        'Phoenix': 'US', 'Anchorage': 'US', 'Honolulu': 'US', 'Detroit': 'US',
+        'Toronto': 'CA', 'Vancouver': 'CA', 'Montreal': 'CA', 'Winnipeg': 'CA',
+        'Mexico_City': 'MX', 'Sao_Paulo': 'BR', 'Buenos_Aires': 'AR',
+        'Santiago': 'CL', 'Bogota': 'CO', 'Lima': 'PE'
+      };
+
+      const city = tz.split('/').pop();
+      const countryCode = cityToCode[city];
+      let country = 'Unknown';
+
+      if (countryCode && typeof Intl.DisplayNames !== 'undefined') {
+        country = new Intl.DisplayNames(['en'], { type: 'region' }).of(countryCode);
+      } else if (tz) {
+        country = tz;
+      }
+
+      gtag('set', 'user_properties', { tz_country: country });
+    })();
+
     gtag('config', 'G-WKBW3FRZ6E');
   </script>
   
