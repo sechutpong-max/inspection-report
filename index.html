@@ -1220,7 +1220,7 @@
       URL.revokeObjectURL(url);
     }
 
-    // เปิดลิงก์เมื่อคลิกการ์ด (รองรับชื่อไฟล์ที่มีเว้นวรรคบนมือถือ)
+    // เปิดลิงก์เมื่อคลิกการ์ด (รองรับชื่อไฟล์ที่มีเว้นวรรคบนมือถือ + ส่งอีเวนต์ form_open เข้า GA4)
     function handleCardClick(event, card) {
       if (isEditing) return;
 
@@ -1230,6 +1230,17 @@
       if (isLocked || !href || href === '#') {
         alert('Module coming soon!');
       } else {
+        const titleEl = card.querySelector('.card-title');
+        const formName = titleEl ? titleEl.innerText.trim() : href;
+
+        if (typeof gtag === 'function') {
+          gtag('event', 'form_open', {
+            form_name: formName,
+            form_url: href,
+            transport_type: 'beacon'
+          });
+        }
+
         window.location.href = encodeURI(href);
       }
     }
