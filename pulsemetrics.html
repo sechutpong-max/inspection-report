@@ -29,6 +29,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-betw
 .seg{display:inline-flex;background:var(--track);border-radius:10px;padding:3px;gap:2px}
 .seg button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:600;font-size:13px;padding:6px 14px;border-radius:8px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(15,27,45,.15)}
+.lang-seg button{padding:6px 10px;font-size:12px}
 button:focus-visible{outline:2px solid var(--a);outline-offset:2px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
 .hero h1{margin:0 0 4px;font-size:15px;font-weight:500;color:var(--muted)}
@@ -36,7 +37,7 @@ button:focus-visible{outline:2px solid var(--a);outline-offset:2px}
 .sub{color:var(--muted);margin:6px 0 0}
 .up{color:var(--up);font-weight:600}
 .goal{margin-top:20px}
-.goal-row{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px}
+.goal-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;font-size:13px;color:var(--muted);margin-bottom:6px}
 .bar{height:10px;border-radius:99px;background:var(--track);overflow:hidden}
 .bar>i{display:block;height:100%;border-radius:99px;background:var(--a)}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:14px 0}
@@ -91,6 +92,7 @@ textarea{width:100%;min-height:110px;border:1px solid var(--line);border-radius:
   <header>
     <div class="brand"><span class="dot"></span>PulseMetrics<span class="badge" id="badge">ข้อมูลจริงจาก GA4</span></div>
     <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <div class="seg lang-seg" role="group" aria-label="Language" id="langSeg"></div>
       <button class="btn alt" id="syncBtn" type="button">ซิงค์ล่าสุด</button>
       <button class="btn alt" id="accBtn" aria-pressed="false">ยอดสะสม</button>
       <div class="seg" role="group" aria-label="ช่วงเวลา" id="scopeSeg"></div>
@@ -102,7 +104,7 @@ textarea{width:100%;min-height:110px;border:1px solid var(--line);border-radius:
     <div class="big" id="heroNum"></div>
     <p class="sub" id="heroSub"></p>
     <div class="goal">
-      <div class="goal-row"><span>ความคืบหน้าสู่เป้าหมายผู้ใช้รายเดือน</span><span><span id="goalTxt"></span> · เป้าหมาย <input class="goal-in" id="goalIn" type="number" min="1" aria-label="ตั้งเป้าหมายผู้ใช้รายเดือน"> คน</span></div>
+      <div class="goal-row"><span id="goalLabel">ความคืบหน้าสู่เป้าหมายผู้ใช้รายเดือน</span><span><span id="goalTxt"></span> · <span id="goalWord">เป้าหมาย</span> <input class="goal-in" id="goalIn" type="number" min="1" aria-label="Monthly user goal"> <span id="goalUnit">คน</span></span></div>
       <div class="bar"><i id="goalBar"></i></div>
     </div>
     <div class="insight" id="insight"></div>
@@ -113,60 +115,60 @@ textarea{width:100%;min-height:110px;border:1px solid var(--line);border-radius:
   <section class="card">
     <h2 id="chTitle">ผู้ใช้งานรายวันย้อนหลัง</h2>
     <p class="hint" id="chHint">แท่งสีเขียวคือผู้ใช้ทั้งหมดในวันนั้น ส่วนสีส้มในแท่งคือผู้ใช้ที่เข้ามาครั้งแรก</p>
-    <div class="legend" id="chLeg"><span><i style="background:var(--a)"></i>ผู้ใช้ทั้งหมด</span><span><i style="background:var(--b)"></i>ผู้ใช้ใหม่</span></div>
+    <div class="legend" id="chLeg"><span><i style="background:var(--a)"></i><span id="legAll">ผู้ใช้ทั้งหมด</span></span><span><i style="background:var(--b)"></i><span id="legNew">ผู้ใช้ใหม่</span></span></div>
     <div style="overflow-x:auto"><div style="min-width:520px" id="chart"></div></div>
   </section>
 
   <div class="grid2">
     <section class="card">
-      <h2>ผู้ใช้เข้ามาจากช่องทางไหน</h2>
-      <p class="hint">28 วันล่าสุด</p>
+      <h2 id="chSecTitle">ผู้ใช้เข้ามาจากช่องทางไหน</h2>
+      <p class="hint" id="chSecHint">28 วันล่าสุด</p>
       <div id="channels"></div>
     </section>
     <section class="card">
-      <h2>ผู้ใช้ใช้อุปกรณ์อะไร</h2>
-      <p class="hint">สัดส่วนผู้ใช้แยกตามประเภทอุปกรณ์</p>
+      <h2 id="devSecTitle">ผู้ใช้ใช้อุปกรณ์อะไร</h2>
+      <p class="hint" id="devSecHint">สัดส่วนผู้ใช้แยกตามประเภทอุปกรณ์</p>
       <div class="stack" id="stack"></div>
       <div id="devices"></div>
     </section>
   </div>
 
-  <section class="card" style="margin-top:14px"><h2>ผู้ใช้ทำอะไรบ้างในเว็บ</h2><p class="hint">กิจกรรมที่ GA4 บันทึกไว้ใน 28 วันล่าสุด</p><div id="events"></div></section>
+  <section class="card" style="margin-top:14px"><h2 id="evSecTitle">ผู้ใช้ทำอะไรบ้างในเว็บ</h2><p class="hint" id="evSecHint">กิจกรรมที่ GA4 บันทึกไว้ใน 28 วันล่าสุด</p><div id="events"></div></section>
 
   <section class="card" style="margin-top:14px">
     <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:flex-start">
-      <div><h2>ผู้ใช้อยู่ประเทศไหน</h2><p class="hint" id="countryHint"></p></div>
+      <div><h2 id="geoSecTitle">ผู้ใช้อยู่ประเทศไหน</h2><p class="hint" id="countryHint"></p></div>
       <div class="seg" role="group" aria-label="แหล่งข้อมูลประเทศ" id="geoSeg"></div>
     </div>
     <div class="seg" id="regSeg" role="group" aria-label="พื้นที่แผนที่" style="margin-bottom:10px"></div>
     <div class="mapbox" id="map"></div>
-    <p class="hint">ขนาดวงกลมแสดงจำนวนผู้ใช้ ชี้ที่วงกลมเพื่อดูตัวเลข แผนที่เป็นแบบย่อเพื่อให้อ่านง่าย</p>
+    <p class="hint" id="mapHint">ขนาดวงกลมแสดงจำนวนผู้ใช้ ชี้ที่วงกลมเพื่อดูตัวเลข แผนที่เป็นแบบย่อเพื่อให้อ่านง่าย</p>
     <div id="countries"></div>
   </section>
 
   <section class="card" style="margin-top:14px">
-    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:flex-start"><div><h2>การเปิดฟอร์มตรวจสอบ</h2><p class="hint" id="fHint"></p></div><div class="seg" id="fSeg" role="group" aria-label="มุมมอง"></div></div>
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:flex-start"><div><h2 id="formSecTitle">การเปิดฟอร์มตรวจสอบ</h2><p class="hint" id="fHint"></p></div><div class="seg" id="fSeg" role="group" aria-label="มุมมอง"></div></div>
     <div id="forms"></div>
-    <p class="hint" style="margin:6px 0 0">ตัวเลขในแท็กคือจำนวนครั้งที่เปิดฟอร์ม เรียงจากมากไปน้อย</p>
+    <p class="hint" id="formFootHint" style="margin:6px 0 0">ตัวเลขในแท็กคือจำนวนครั้งที่เปิดฟอร์ม เรียงจากมากไปน้อย</p>
   </section>
 
-  <details class="card panel" id="ga4Panel"><summary>ตั้งค่าการเชื่อมต่อ GA4 (ล็อคด้วยรหัส)</summary>
+  <details class="card panel" id="ga4Panel"><summary id="ga4Summary">ตั้งค่าการเชื่อมต่อ GA4 (ล็อคด้วยรหัส)</summary>
     <div class="auth-box" id="authBox">
-      <input class="pin-in" id="pinIn" type="password" autocomplete="off" aria-label="รหัสผ่านแก้ไขการเชื่อมต่อ" placeholder="ใส่รหัสเพื่อแก้ไขการเชื่อมต่อ">
+      <input class="pin-in" id="pinIn" type="password" autocomplete="off" aria-label="Connection PIN" placeholder="ใส่รหัสเพื่อแก้ไขการเชื่อมต่อ">
       <button class="btn" type="button" id="pinUnlock">ปลดล็อค</button>
       <button class="btn alt" type="button" id="pinLock" style="display:none">ล็อคกลับ</button>
       <span class="msg" id="authMsg" style="margin:0">สถานะ: ถูกล็อคอยู่</span>
     </div>
     <div class="locked-area" id="ga4Controls" data-locked="true">
-      <label class="field-lbl" for="ga4Url">ลิงก์ Google Apps Script Web App (/exec) สำหรับดึงข้อมูลอัตโนมัติ:</label>
+      <label class="field-lbl" for="ga4Url" id="lblUrl">ลิงก์ Google Apps Script Web App (/exec) สำหรับดึงข้อมูลอัตโนมัติ:</label>
       <input class="url-in" id="ga4Url" type="url" placeholder="https://script.google.com/macros/s/.../exec">
       <div class="btns" style="margin-top:4px"><button class="btn" type="button" id="ga4SaveUrl">บันทึกและซิงค์จากลิงก์</button></div>
 
-      <label class="field-lbl" for="ga4Json">หรือวางข้อมูล JSON ด้วยตนเอง (กรณีดึงอัตโนมัติไม่ได้):</label>
-      <textarea id="ga4Json" aria-label="ข้อมูล JSON จาก GA4" placeholder='{"status":"ok","dau":1940,"wau":8420,"mau":24680,...}'></textarea>
+      <label class="field-lbl" for="ga4Json" id="lblJson">หรือวางข้อมูล JSON ด้วยตนเอง (กรณีดึงอัตโนมัติไม่ได้):</label>
+      <textarea id="ga4Json" aria-label="GA4 JSON data" placeholder='{"status":"ok","dau":1940,"wau":8420,"mau":24680,...}'></textarea>
       <div class="btns"><button class="btn" type="button" id="ga4Load">โหลดข้อมูล JSON</button><button class="btn alt" type="button" id="ga4Reset">รีเซ็ตกลับค่าเริ่มต้น</button></div>
       <p class="msg" id="ga4Msg"></p>
-      <p class="hint" style="margin:8px 0 0">ระบบจะดึงข้อมูลล่าสุดจากลิงก์ที่ตั้งไว้ทุกครั้งที่เปิดหน้าเว็บ</p>
+      <p class="hint" id="autoSyncHint" style="margin:8px 0 0">ระบบจะดึงข้อมูลล่าสุดจากลิงก์ที่ตั้งไว้ทุกครั้งที่เปิดหน้าเว็บ</p>
     </div>
   </details>
   <p class="note" id="note"></p>
@@ -175,7 +177,193 @@ textarea{width:100%;min-height:110px;border:1px solid var(--line);border-radius:
 <script>
 var LOCK_PIN='maco2026', unlocked=false;
 var DEFAULT_URL='https://script.google.com/macros/s/AKfycbywTuFCvdo7swTsOOzphK83O3woZUBrPCGdT6nuD0EDUnj-fZkZ941UqlTl8L_TcbVRkQ/exec';
-var KEY='pulsemetrics_ga4_json', URL_KEY='pulsemetrics_ga4_url';
+var KEY='pulsemetrics_ga4_json', URL_KEY='pulsemetrics_ga4_url', LANG_KEY='pulsemetrics_lang';
+var lang='th';
+try{var savedLang=localStorage.getItem(LANG_KEY);if(savedLang==='en'||savedLang==='th')lang=savedLang;}catch(e){}
+
+var I18N={
+  th:{
+    docTitle:'PulseMetrics – ภาพรวมผู้ใช้งาน',
+    badgeLive:'ซิงค์สดจาก GA4',
+    badgeData:'ข้อมูลจริงจาก GA4',
+    syncBtn:'ซิงค์ล่าสุด',
+    syncing:'กำลังซิงค์...',
+    accBtn:'ยอดสะสม',
+    scopeDaily:'รายวัน',
+    scopeWeekly:'รายสัปดาห์',
+    scopeMonthly:'รายเดือน',
+    dauLabel:'ผู้ใช้งานต่อวัน (DAU)',
+    wauLabel:'ผู้ใช้งานต่อสัปดาห์ (WAU)',
+    mauLabel:'ผู้ใช้งานต่อเดือน (MAU)',
+    heroCumLabel:'ผู้ใช้ใหม่สะสมในช่วงนี้',
+    heroCumSub:'รวมผู้ใช้ที่เข้ามาครั้งแรกตลอด {n} วันที่แสดงในกราฟ',
+    heroLiveSub:'ข้อมูลจริงจาก GA4 (Property {pid})',
+    vsPrev:'เทียบกับช่วงก่อนหน้า',
+    goalLabel:'ความคืบหน้าสู่เป้าหมายผู้ใช้รายเดือน',
+    goalWord:'เป้าหมาย',
+    goalUnit:'คน',
+    noChannel:'ยังไม่มีข้อมูลช่องทางจาก GA4',
+    insightBase:'สรุปสั้นๆ: ผู้ใช้ส่วนใหญ่ ({pct}%) มาจากช่องทาง{ch}',
+    insightGeo:' และมาจากประเทศ{country}มากที่สุด',
+    kpiNew:'ผู้ใช้ใหม่ใน 28 วัน',
+    kpiNewHint:'ผู้ใช้ที่เข้ามาครั้งแรก',
+    kpiDur:'เวลาใช้งานเฉลี่ยต่อครั้ง',
+    kpiDurHint:'ยิ่งนานยิ่งแปลว่าผู้ใช้สนใจ',
+    kpiEng:'อัตราการมีส่วนร่วม',
+    kpiEngHint:'สัดส่วนครั้งที่ผู้ใช้ใช้งานจริงจัง',
+    kpiRt:'ออนไลน์อยู่ตอนนี้',
+    kpiRtHint:'นับจาก 30 นาทีที่ผ่านมา',
+    min:'นาที',
+    sec:'วินาที',
+    personUnit:'คน',
+    timesUnit:'ครั้ง',
+    opensUnit:'ครั้ง',
+    cumTag:'สะสม',
+    chTitleDaily:'ผู้ใช้งานรายวันย้อนหลัง',
+    chHintDaily:'แท่งสีเขียวคือผู้ใช้ทั้งหมดในวันนั้น ส่วนสีส้มในแท่งคือผู้ใช้ที่เข้ามาครั้งแรก',
+    chTitleCum:'ผู้ใช้ใหม่สะสมรายวัน',
+    chHintCum:'ยอดรวมของผู้ใช้ที่เข้ามาครั้งแรก นับต่อเนื่องวันต่อวัน จึงไม่ลดลง',
+    legAll:'ผู้ใช้ทั้งหมด',
+    legNew:'ผู้ใช้ใหม่',
+    datePrefix:'วันที่ ',
+    chSecTitle:'ผู้ใช้เข้ามาจากช่องทางไหน',
+    chSecHint:'28 วันล่าสุด',
+    devSecTitle:'ผู้ใช้ใช้อุปกรณ์อะไร',
+    devSecHint:'สัดส่วนผู้ใช้แยกตามประเภทอุปกรณ์',
+    devDesktop:'คอมพิวเตอร์',
+    devMobile:'มือถือ',
+    devTablet:'แท็บเล็ต',
+    evSecTitle:'ผู้ใช้ทำอะไรบ้างในเว็บ',
+    evSecHint:'กิจกรรมที่ GA4 บันทึกไว้ใน 28 วันล่าสุด',
+    evEmpty:'ยังไม่มีกิจกรรมที่บันทึกไว้',
+    geoSecTitle:'ผู้ใช้อยู่ประเทศไหน',
+    geoIp:'ตาม IP',
+    geoTz:'ตามเขตเวลา',
+    geoHintIp:'นับจากที่อยู่ IP ของผู้ใช้ ถ้าใช้ VPN ผลอาจคลาดเคลื่อน',
+    geoHintTz:'นับจากเขตเวลาของอุปกรณ์ แม่นกว่าเมื่อผู้ใช้ต่อ VPN หรือพร็อกซีองค์กร',
+    regWorld:'ทั่วโลก',
+    regApac:'เอเชีย–แปซิฟิก',
+    mapHint:'ขนาดวงกลมแสดงจำนวนผู้ใช้ ชี้ที่วงกลมเพื่อดูตัวเลข แผนที่เป็นแบบย่อเพื่อให้อ่านง่าย',
+    geoEmpty:'ยังไม่มีข้อมูลประเทศที่ระบุได้ในมุมมองนี้ (พบเฉพาะ (not set) หรือต้องตั้ง Custom Dimension ชื่อ tz_country ใน GA4 ก่อน)',
+    formSecTitle:'การเปิดฟอร์มตรวจสอบ',
+    formViewForm:'ดูตามฟอร์ม',
+    formViewCountry:'ดูตามประเทศ',
+    formHint:'ประเทศนับตาม {geo} (สลับได้ที่ส่วน “ผู้ใช้อยู่ประเทศไหน”)',
+    formGeoIp:'IP',
+    formGeoTz:'เขตเวลา',
+    formEmpty:'ยังไม่มีข้อมูลการเปิดฟอร์มในชุดข้อมูลนี้ (หากเพิ่งสร้าง Custom Dimension form_name ใน GA4 กรุณารอระบบประมวลผล 24–48 ชม. แล้วกด “ซิงค์ล่าสุด”)',
+    formFootHint:'ตัวเลขในแท็กคือจำนวนครั้งที่เปิดฟอร์ม เรียงจากมากไปน้อย',
+    ga4Summary:'ตั้งค่าการเชื่อมต่อ GA4 (ล็อคด้วยรหัส)',
+    pinPlaceholder:'ใส่รหัสเพื่อแก้ไขการเชื่อมต่อ',
+    pinUnlock:'ปลดล็อค',
+    pinLock:'ล็อคกลับ',
+    authLocked:'สถานะ: ถูกล็อคอยู่ (ต้องใส่รหัสก่อนแก้ไข)',
+    authUnlocked:'สถานะ: ปลดล็อคแล้ว (สามารถแก้ไขการเชื่อมต่อได้)',
+    authWrong:'รหัสไม่ถูกต้อง ลองใหม่อีกครั้ง',
+    lblUrl:'ลิงก์ Google Apps Script Web App (/exec) สำหรับดึงข้อมูลอัตโนมัติ:',
+    ga4SaveUrl:'บันทึกและซิงค์จากลิงก์',
+    lblJson:'หรือวางข้อมูล JSON ด้วยตนเอง (กรณีดึงอัตโนมัติไม่ได้):',
+    ga4Load:'โหลดข้อมูล JSON',
+    ga4Reset:'รีเซ็ตกลับค่าเริ่มต้น',
+    autoSyncHint:'ระบบจะดึงข้อมูลล่าสุดจากลิงก์ที่ตั้งไว้ทุกครั้งที่เปิดหน้าเว็บ',
+    noteApi:'เชื่อมต่อ Property {pid} · ซิงค์อัตโนมัติจาก Web App ณ {ts}',
+    noteCache:'เชื่อมต่อ Property {pid} · ข้อมูลจาก GA4 ณ {ts}',
+    latest:'ล่าสุด'
+  },
+  en:{
+    docTitle:'PulseMetrics – User Overview',
+    badgeLive:'Live Sync from GA4',
+    badgeData:'Live Data from GA4',
+    syncBtn:'Sync Now',
+    syncing:'Syncing...',
+    accBtn:'Cumulative',
+    scopeDaily:'Daily',
+    scopeWeekly:'Weekly',
+    scopeMonthly:'Monthly',
+    dauLabel:'Daily Active Users (DAU)',
+    wauLabel:'Weekly Active Users (WAU)',
+    mauLabel:'Monthly Active Users (MAU)',
+    heroCumLabel:'Cumulative New Users in Period',
+    heroCumSub:'Total first-time visitors across the {n} days shown in the chart',
+    heroLiveSub:'Live data from GA4 (Property {pid})',
+    vsPrev:'vs previous period',
+    goalLabel:'Monthly active user goal progress',
+    goalWord:'Goal',
+    goalUnit:'users',
+    noChannel:'No acquisition channel data from GA4 yet',
+    insightBase:'Quick summary: Most users ({pct}%) came via {ch}',
+    insightGeo:' and mostly from {country}',
+    kpiNew:'New Users (28d)',
+    kpiNewHint:'First-time visitors',
+    kpiDur:'Avg. Session Duration',
+    kpiDurHint:'Longer sessions indicate higher engagement',
+    kpiEng:'Engagement Rate',
+    kpiEngHint:'Share of actively engaged sessions',
+    kpiRt:'Active Right Now',
+    kpiRtHint:'Users active in the last 30 minutes',
+    min:'min',
+    sec:'sec',
+    personUnit:'users',
+    timesUnit:'events',
+    opensUnit:'opens',
+    cumTag:'Cum.',
+    chTitleDaily:'Daily Active Users Trend',
+    chHintDaily:'Teal bars show total active users per day; orange bars show first-time users',
+    chTitleCum:'Daily Cumulative New Users',
+    chHintCum:'Running total of first-time visitors accumulated day over day',
+    legAll:'All Users',
+    legNew:'New Users',
+    datePrefix:'',
+    chSecTitle:'Acquisition Channels',
+    chSecHint:'Last 28 days',
+    devSecTitle:'User Devices',
+    devSecHint:'User share by device category',
+    devDesktop:'Desktop',
+    devMobile:'Mobile',
+    devTablet:'Tablet',
+    evSecTitle:'User Activity',
+    evSecHint:'Events recorded by GA4 in the last 28 days',
+    evEmpty:'No recorded events yet',
+    geoSecTitle:'Users by Country',
+    geoIp:'By IP',
+    geoTz:'By Time Zone',
+    geoHintIp:'Detected from IP address; VPN usage may shift location',
+    geoHintTz:'Detected from device time zone; more accurate behind corporate VPNs',
+    regWorld:'World',
+    regApac:'Asia–Pacific',
+    mapHint:'Circle size represents user count. Hover a circle for details. Simplified map view.',
+    geoEmpty:'No identifiable country data in this view (only (not set) found, or tz_country custom dimension not configured yet)',
+    formSecTitle:'Inspection Form Opens',
+    formViewForm:'By Form',
+    formViewCountry:'By Country',
+    formHint:'Country counted by {geo} (switch in “Users by Country” above)',
+    formGeoIp:'IP',
+    formGeoTz:'Time Zone',
+    formEmpty:'No form open events yet (if you just created the form_name Custom Dimension in GA4, wait 24–48h for processing then click “Sync Now”)',
+    formFootHint:'Tag numbers show form open counts, sorted highest to lowest',
+    ga4Summary:'GA4 Connection Settings (PIN Locked)',
+    pinPlaceholder:'Enter PIN to edit connection',
+    pinUnlock:'Unlock',
+    pinLock:'Lock',
+    authLocked:'Status: Locked (PIN required to edit)',
+    authUnlocked:'Status: Unlocked (connection editable)',
+    authWrong:'Incorrect PIN. Please try again.',
+    lblUrl:'Google Apps Script Web App URL (/exec) for auto-sync:',
+    ga4SaveUrl:'Save & Sync from URL',
+    lblJson:'Or paste JSON manually (if auto-sync is unavailable):',
+    ga4Load:'Load JSON',
+    ga4Reset:'Reset to Default',
+    autoSyncHint:'Automatically fetches the latest data from the configured URL on page load',
+    noteApi:'Connected to Property {pid} · Auto-synced from Web App at {ts}',
+    noteCache:'Connected to Property {pid} · GA4 data as of {ts}',
+    latest:'latest'
+  }
+};
+function t(k,vars){
+  var s=(I18N[lang]&&I18N[lang][k])||I18N.th[k]||k;
+  if(vars)Object.keys(vars).forEach(function(vk){s=s.replace('{'+vk+'}',vars[vk])});
+  return s;
+}
 
 var LOCKED_GA4={
   status:"ok",
@@ -226,45 +414,131 @@ var LOCKED_GA4={
 
 var fmt=function(n){return Math.round(n).toLocaleString('en-US')};
 var scopes={
-  DAU:{label:'ผู้ใช้งานต่อวัน (DAU)',n:9},
-  WAU:{label:'ผู้ใช้งานต่อสัปดาห์ (WAU)',n:14},
-  MAU:{label:'ผู้ใช้งานต่อเดือน (MAU)',n:14}
+  DAU:{n:9},
+  WAU:{n:14},
+  MAU:{n:14}
 };
 var goal=20, scope='MAU', geo='ip';
 var daily=[[7,7],[2,0]];
 var channels=[
- ['ทางตรง','พิมพ์ลิงก์เอง บุ๊กมาร์ก สแกน QR หรือกดจาก LINE',6],
- ['ไม่ทราบที่มา','GA4 ระบุแหล่งที่มาไม่ได้',2],
- ['เว็บไซต์อื่นแนะนำ','กดลิงก์มาจากเว็บไซต์อื่น',1]
+ ['Direct',6],
+ ['Unassigned',2],
+ ['Referral',1]
 ];
-var devices=[['คอมพิวเตอร์','#0B8F83',3],['มือถือ','#F2A33A',4],['แท็บเล็ต','#8A97A8',0]];
+var devices=[['desktop','#0B8F83',3],['mobile','#F2A33A',4],['tablet','#8A97A8',0]];
 var geoData={
- ip:[['ไทย',4],['สิงคโปร์',3]],
+ ip:[['Thailand',4],['Singapore',3]],
  tz:[]
-};
-var geoHint={
- ip:'นับจากที่อยู่ IP ของผู้ใช้ ถ้าใช้ VPN ผลอาจคลาดเคลื่อน',
- tz:'นับจากเขตเวลาของอุปกรณ์ แม่นกว่าเมื่อผู้ใช้ต่อ VPN หรือพร็อกซีองค์กร'
 };
 function seg(id,items,cur,fn){
   var el=document.getElementById(id);
   el.innerHTML=items.map(function(i){return '<button aria-pressed="'+(i[0]===cur)+'" data-k="'+i[0]+'">'+i[1]+'</button>'}).join('');
   el.onclick=function(e){var k=e.target.getAttribute('data-k');if(k)fn(k)};
 }
+function scopeLabel(k){return k==='DAU'?t('dauLabel'):k==='WAU'?t('wauLabel'):t('mauLabel')}
+function chInfo(raw){
+  var m={
+    Direct:{th:['ทางตรง','พิมพ์ลิงก์เอง บุ๊กมาร์ก สแกน QR หรือกดจาก LINE'],en:['Direct','Typed URL, bookmark, QR scan, or LINE link']},
+    Referral:{th:['เว็บไซต์อื่นแนะนำ','กดลิงก์มาจากเว็บไซต์อื่น'],en:['Referral','Clicked link from another website']},
+    'Organic Search':{th:['ค้นหาผ่าน Google','ค้นเจอจากเสิร์ชเอนจิน'],en:['Organic Search','Found via search engine']},
+    'Organic Social':{th:['โซเชียลมีเดีย','กดลิงก์จากโพสต์ที่ไม่ได้จ่ายโฆษณา'],en:['Organic Social','Clicked from unpaid social post']},
+    Email:{th:['อีเมล','กดลิงก์จากอีเมล'],en:['Email','Clicked link from email']},
+    'Paid Search':{th:['โฆษณาค้นหา','กดมาจากโฆษณาบนเสิร์ชเอนจิน'],en:['Paid Search','Clicked from search ad']},
+    'Paid Social':{th:['โฆษณาโซเชียล','กดมาจากโฆษณาบนโซเชียล'],en:['Paid Social','Clicked from social ad']},
+    Unassigned:{th:['ไม่ทราบที่มา','GA4 ระบุแหล่งที่มาไม่ได้'],en:['Unassigned','Source could not be identified by GA4']}
+  };
+  return (m[raw]&&m[raw][lang])||[esc(raw),lang==='th'?'ช่องทางจาก GA4':'Channel from GA4'];
+}
+function devLabel(k){return k==='desktop'?t('devDesktop'):k==='mobile'?t('devMobile'):t('devTablet')}
+function evInfo(raw){
+  var m={
+    page_view:{th:['เปิดดูหน้าเว็บ','นับทุกครั้งที่มีการโหลดหน้า'],en:['Page View','Counted each time a page loads']},
+    scroll:{th:['เลื่อนอ่านจนเกือบสุดหน้า','เลื่อนลงถึงราว 90% ของหน้า'],en:['Page Scroll','Scrolled down to ~90% of the page']},
+    user_engagement:{th:['ใช้งานหน้าเว็บอยู่จริง','เปิดหน้าไว้และมีการโต้ตอบ'],en:['User Engagement','Active page focus and interaction']},
+    session_start:{th:['เริ่มเข้าใช้งานรอบใหม่','เริ่มต้นการเข้าใช้ครั้งใหม่'],en:['Session Start','Started a new browsing session']},
+    first_visit:{th:['เข้าเว็บครั้งแรก','ผู้ใช้ที่ไม่เคยเข้ามาก่อน'],en:['First Visit','First-time visitor to the site']},
+    form_open:{th:['เปิดฟอร์มตรวจสอบ','กดเข้าใช้งานฟอร์มตรวจสอบพาร์ท'],en:['Form Open','Opened a part inspection form']},
+    click:{th:['คลิกลิงก์ออกนอกเว็บ','กดลิงก์ที่พาไปเว็บไซต์อื่น'],en:['Outbound Click','Clicked a link to an external site']},
+    file_download:{th:['ดาวน์โหลดไฟล์','กดดาวน์โหลดเอกสารหรือไฟล์'],en:['File Download','Downloaded a document or file']}
+  };
+  return (m[raw]&&m[raw][lang])||[esc(raw),lang==='th'?'กิจกรรมจาก GA4':'Event from GA4'];
+}
+function cname(raw){
+  if(lang==='en')return esc(raw);
+  return TH[raw]||esc(raw);
+}
+function renderStaticUi(){
+  document.documentElement.lang=lang;
+  document.title=t('docTitle');
+  seg('langSeg',[['th','TH'],['en','ENG']],lang,function(k){
+    lang=k;
+    try{localStorage.setItem(LANG_KEY,lang)}catch(e){}
+    applyStaticTexts();
+    refresh();
+  });
+}
+function applyStaticTexts(){
+  document.getElementById('goalLabel').textContent=t('goalLabel');
+  document.getElementById('goalWord').textContent=t('goalWord');
+  document.getElementById('goalUnit').textContent=t('goalUnit');
+  document.getElementById('legAll').textContent=t('legAll');
+  document.getElementById('legNew').textContent=t('legNew');
+  document.getElementById('chSecTitle').textContent=t('chSecTitle');
+  document.getElementById('chSecHint').textContent=t('chSecHint');
+  document.getElementById('devSecTitle').textContent=t('devSecTitle');
+  document.getElementById('devSecHint').textContent=t('devSecHint');
+  document.getElementById('evSecTitle').textContent=t('evSecTitle');
+  document.getElementById('evSecHint').textContent=t('evSecHint');
+  document.getElementById('geoSecTitle').textContent=t('geoSecTitle');
+  document.getElementById('mapHint').textContent=t('mapHint');
+  document.getElementById('formSecTitle').textContent=t('formSecTitle');
+  document.getElementById('formFootHint').textContent=t('formFootHint');
+  document.getElementById('ga4Summary').textContent=t('ga4Summary');
+  document.getElementById('pinIn').placeholder=t('pinPlaceholder');
+  document.getElementById('pinUnlock').textContent=t('pinUnlock');
+  document.getElementById('pinLock').textContent=t('pinLock');
+  document.getElementById('lblUrl').textContent=t('lblUrl');
+  document.getElementById('ga4SaveUrl').textContent=t('ga4SaveUrl');
+  document.getElementById('lblJson').textContent=t('lblJson');
+  document.getElementById('ga4Load').textContent=t('ga4Load');
+  document.getElementById('ga4Reset').textContent=t('ga4Reset');
+  document.getElementById('autoSyncHint').textContent=t('autoSyncHint');
+  var sb=document.getElementById('syncBtn');
+  if(sb&&!sb.disabled)sb.textContent=t('syncBtn');
+  setLockUi();
+}
 function renderTop(){
   var s=scopes[scope];
-  seg('scopeSeg',[['DAU','รายวัน'],['WAU','รายสัปดาห์'],['MAU','รายเดือน']],scope,function(k){scope=k;acc=false;refresh()});
-  document.getElementById('heroLabel').textContent=acc?'ผู้ใช้ใหม่สะสมในช่วงนี้':s.label;
+  seg('scopeSeg',[['DAU',t('scopeDaily')],['WAU',t('scopeWeekly')],['MAU',t('scopeMonthly')]],scope,function(k){scope=k;acc=false;refresh()});
+  document.getElementById('heroLabel').textContent=acc?t('heroCumLabel'):scopeLabel(scope);
   document.getElementById('heroNum').textContent=fmt(acc?daily.reduce(function(a,d){return a+d[1]},0):s.n);
-  document.getElementById('heroSub').innerHTML=acc?'รวมผู้ใช้ที่เข้ามาครั้งแรกตลอด '+daily.length+' วันที่แสดงในกราฟ':s.d?'<span class="up">'+s.d+'</span> เทียบกับช่วงก่อนหน้า':'ข้อมูลจริงจาก GA4 (Property '+(live&&live.pid?live.pid:'565933593')+')';
+  var pid=(live&&live.pid)||LOCKED_GA4.propertyId;
+  document.getElementById('heroSub').innerHTML=acc?t('heroCumSub',{n:daily.length}):s.d?'<span class="up">'+s.d+'</span> '+t('vsPrev'):t('heroLiveSub',{pid:pid});
   var p=Math.min(100,scopes.MAU.n/goal*100);
-  document.getElementById('goalTxt').textContent=fmt(scopes.MAU.n)+' คน ('+p.toFixed(0)+'%)';document.getElementById('goalIn').value=goal;
+  document.getElementById('goalTxt').textContent=fmt(scopes.MAU.n)+' '+t('goalUnit')+' ('+p.toFixed(0)+'%)';
+  document.getElementById('goalIn').value=goal;
   document.getElementById('goalBar').style.width=p+'%';
-  var topCh=channels[0], total=channels.reduce(function(a,c){return a+c[2]},0);
-  document.getElementById('insight').textContent=topCh&&total?'สรุปสั้นๆ: ผู้ใช้ส่วนใหญ่ ('+Math.round(topCh[2]/total*100)+'%) มาจากช่องทาง'+topCh[0]+(geoData[geo].length?' และมาจากประเทศ'+geoData[geo][0][0]+'มากที่สุด':''):'ยังไม่มีข้อมูลช่องทางจาก GA4';
+  var topCh=channels[0], total=channels.reduce(function(a,c){return a+c[1]},0);
+  if(topCh&&total){
+    var chName=chInfo(topCh[0])[0];
+    var txt=t('insightBase',{pct:Math.round(topCh[1]/total*100),ch:chName});
+    if(geoData[geo].length)txt+=t('insightGeo',{country:cname(geoData[geo][0][0])});
+    document.getElementById('insight').textContent=txt;
+  }else{
+    document.getElementById('insight').textContent=t('noChannel');
+  }
 }
 function renderKpis(){
-  var k=live?liveKpis():[['ผู้ใช้ใหม่ใน 28 วัน','+7','ผู้ใช้ที่เข้ามาครั้งแรก'],['เวลาใช้งานเฉลี่ยต่อครั้ง','16 นาที 40 วินาที','ยิ่งนานยิ่งแปลว่าผู้ใช้สนใจ'],['อัตราการมีส่วนร่วม','100.0%','สัดส่วนครั้งที่ผู้ใช้ใช้งานจริงจัง'],['ออนไลน์อยู่ตอนนี้','0 คน','นับจาก 30 นาทีที่ผ่านมา']];
+  var n28=live?live.n28:LOCKED_GA4.newUsers28d;
+  var sec=live?live.sec:LOCKED_GA4.avgSessionDurationSec;
+  var eng=live?live.eng:Math.min(1,LOCKED_GA4.engagementRate);
+  var rt=live?live.rt:LOCKED_GA4.realtimeUsers;
+  var k=[
+    [t('kpiNew'),'+'+fmt(n28),t('kpiNewHint')],
+    [t('kpiDur'),dur(sec),t('kpiDurHint')],
+    [t('kpiEng'),(eng*100).toFixed(1)+'%',t('kpiEngHint')],
+    [t('kpiRt'),fmt(rt)+' '+t('personUnit'),t('kpiRtHint')]
+  ];
   document.getElementById('kpis').innerHTML=k.map(function(x){return '<div class="card kpi"><div class="l">'+x[0]+'</div><div class="v">'+x[1]+'</div><div class="h">'+x[2]+'</div></div>'}).join('');
 }
 function renderChart(){
@@ -277,57 +551,68 @@ function renderChart(){
   S.forEach(function(d,i){
     var h1=(H-pt-pb)*d[0]/max, h2=(H-pt-pb)*d[1]/max, x=pl+i*bw+bw*.2, w=bw*.6;
     var lbl=dTick[i]||'';
-    g+='<g><title>'+dLab[i]+': '+(acc?'ผู้ใช้ใหม่สะสม '+fmt(d[0])+' คน':'ผู้ใช้ทั้งหมด '+fmt(d[0])+' คน, ผู้ใช้ใหม่ '+fmt(d[1])+' คน')+'</title><rect x="'+x+'" y="'+(H-pb-h1)+'" width="'+w+'" height="'+h1+'" rx="4" fill="var(--a)"/><rect x="'+x+'" y="'+(H-pb-h2)+'" width="'+w+'" height="'+h2+'" rx="4" fill="var(--b)"/></g>';
+    var dTitle=t('datePrefix')+lbl;
+    var tip=acc?(t('heroCumLabel')+': '+fmt(d[0])+' '+t('personUnit')):(t('legAll')+' '+fmt(d[0])+' '+t('personUnit')+', '+t('legNew')+' '+fmt(d[1])+' '+t('personUnit'));
+    g+='<g><title>'+dTitle+': '+tip+'</title><rect x="'+x+'" y="'+(H-pb-h1)+'" width="'+w+'" height="'+h1+'" rx="4" fill="var(--a)"/><rect x="'+x+'" y="'+(H-pb-h2)+'" width="'+w+'" height="'+h2+'" rx="4" fill="var(--b)"/></g>';
     if(lbl)g+='<text x="'+(x+w/2)+'" y="'+(H-8)+'" text-anchor="middle" font-size="11" fill="var(--muted)">'+lbl+'</text>';
   });
-  document.getElementById('chart').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="กราฟแท่งผู้ใช้งานรายวัน">'+g+'</svg>';
+  document.getElementById('chart').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+t('chTitleDaily')+'"><g>'+g+'</g></svg>';
 }
 function renderChannels(){
-  var max=channels.length?channels[0][2]:1, total=channels.reduce(function(a,c){return a+c[2]},0);
+  var max=channels.length?channels[0][1]:1, total=channels.reduce(function(a,c){return a+c[1]},0);
   document.getElementById('channels').innerHTML=channels.map(function(c,i){
-    return '<div class="row"><div class="row-top"><span>'+c[0]+'</span><span>'+tag(channels,i,2,total)+'</span></div><small>'+c[1]+'</small><div class="bar"><i style="width:'+wid(channels,i,2,max,total)+'%"></i></div></div>';
+    var info=chInfo(c[0]);
+    return '<div class="row"><div class="row-top"><span>'+info[0]+'</span><span>'+tag(channels,i,1,total)+'</span></div><small>'+info[1]+'</small><div class="bar"><i style="width:'+wid(channels,i,1,max,total)+'%"></i></div></div>';
   }).join('');
 }
 function renderDevices(){
   var total=devices.reduce(function(a,d){return a+d[2]},0)||1;
-  document.getElementById('stack').innerHTML=devices.map(function(d){return '<i style="width:'+(d[2]/total*100)+'%;background:'+d[1]+'" title="'+d[0]+'"></i>'}).join('');
+  document.getElementById('stack').innerHTML=devices.map(function(d){return '<i style="width:'+(d[2]/total*100)+'%;background:'+d[1]+'" title="'+devLabel(d[0])+'"></i>'}).join('');
   document.getElementById('devices').innerHTML=devices.map(function(d){
-    return '<div class="dev"><span><i class="sw" style="background:'+d[1]+'"></i>'+d[0]+'</span><span><b>'+Math.round(d[2]/total*100)+'%</b> <span style="color:var(--muted)">('+fmt(d[2])+' คน)</span></span></div>';
+    return '<div class="dev"><span><i class="sw" style="background:'+d[1]+'"></i>'+devLabel(d[0])+'</span><span><b>'+Math.round(d[2]/total*100)+'%</b> <span style="color:var(--muted)">('+fmt(d[2])+' '+t('personUnit')+')</span></span></div>';
   }).join('');
 }
 function renderCountries(){
-  seg('geoSeg',[['ip','ตาม IP'],['tz','ตามเขตเวลา']],geo,function(k){geo=k;renderCountries()});
-  document.getElementById('countryHint').textContent=geoHint[geo];renderMap();renderForms();
+  seg('geoSeg',[['ip',t('geoIp')],['tz',t('geoTz')]],geo,function(k){geo=k;renderCountries()});
+  document.getElementById('countryHint').textContent=geo==='ip'?t('geoHintIp'):t('geoHintTz');
+  renderMap();renderForms();
   var list=geoData[geo];
-  if(!list.length){document.getElementById('countries').innerHTML='<p class="hint">ยังไม่มีข้อมูลประเทศที่ระบุได้ในมุมมองนี้ (พบเฉพาะ (not set) หรือต้องตั้ง Custom Dimension ชื่อ tz_country ใน GA4 ก่อน)</p>';return}
+  if(!list.length){document.getElementById('countries').innerHTML='<p class="hint">'+t('geoEmpty')+'</p>';return}
   var total=list.reduce(function(a,c){return a+c[1]},0), max=list[0][1];
   document.getElementById('countries').innerHTML=list.map(function(c,i){
-    return '<div class="row"><div class="row-top"><span>'+c[0]+'</span><span>'+tag(list,i,1,total)+'</span></div><div class="bar" style="margin-top:6px"><i style="width:'+wid(list,i,1,max,total)+'%"></i></div></div>';
+    return '<div class="row"><div class="row-top"><span>'+cname(c[0])+'</span><span>'+tag(list,i,1,total)+'</span></div><div class="bar" style="margin-top:6px"><i style="width:'+wid(list,i,1,max,total)+'%"></i></div></div>';
   }).join('');
 }
 var live=null,acc=false,region='world';
 function cumSeries(){var s=0;return daily.map(function(d){s+=d[1];return [s,0]})}
-function tag(a,i,k,total,u){var v=a[i][k],t=fmt(v)+(u||'');if(!acc)return t+' ('+(v/total*100).toFixed(1)+'%)';var s=0;for(var j=0;j<=i;j++)s+=a[j][k];return t+' · สะสม '+fmt(s)+' ('+(s/total*100).toFixed(1)+'%)'}
+function tag(a,i,k,total,u){
+  var v=a[i][k],txt=fmt(v)+(u||'');
+  if(!acc)return txt+' ('+(v/total*100).toFixed(1)+'%)';
+  var s=0;for(var j=0;j<=i;j++)s+=a[j][k];
+  return txt+' · '+t('cumTag')+' '+fmt(s)+' ('+(s/total*100).toFixed(1)+'%)'
+}
 function wid(a,i,k,max,total){if(!acc)return a[i][k]/max*100;var s=0;for(var j=0;j<=i;j++)s+=a[j][k];return s/total*100}
 function accUi(){
-  var b=document.getElementById('accBtn');b.className=acc?'btn':'btn alt';b.setAttribute('aria-pressed',acc);
-  document.getElementById('chTitle').textContent=acc?'ผู้ใช้ใหม่สะสมรายวัน':'ผู้ใช้งานรายวันย้อนหลัง';
-  document.getElementById('chHint').textContent=acc?'ยอดรวมของผู้ใช้ที่เข้ามาครั้งแรก นับต่อเนื่องวันต่อวัน จึงไม่ลดลง':'แท่งสีเขียวคือผู้ใช้ทั้งหมดในวันนั้น ส่วนสีส้มในแท่งคือผู้ใช้ที่เข้ามาครั้งแรก';
+  var b=document.getElementById('accBtn');b.className=acc?'btn':'btn alt';b.setAttribute('aria-pressed',acc);b.textContent=t('accBtn');
+  document.getElementById('chTitle').textContent=acc?t('chTitleCum'):t('chTitleDaily');
+  document.getElementById('chHint').textContent=acc?t('chHintCum'):t('chHintDaily');
   document.getElementById('chLeg').style.display=acc?'none':'';
 }
-var EVTH={page_view:['เปิดดูหน้าเว็บ','นับทุกครั้งที่มีการโหลดหน้า'],scroll:['เลื่อนอ่านจนเกือบสุดหน้า','เลื่อนลงถึงราว 90% ของหน้า'],user_engagement:['ใช้งานหน้าเว็บอยู่จริง','เปิดหน้าไว้และมีการโต้ตอบ'],session_start:['เริ่มเข้าใช้งานรอบใหม่','เริ่มต้นการเข้าใช้ครั้งใหม่'],first_visit:['เข้าเว็บครั้งแรก','ผู้ใช้ที่ไม่เคยเข้ามาก่อน'],form_open:['เปิดฟอร์มตรวจสอบ','กดเข้าใช้งานฟอร์มตรวจสอบพาร์ท'],click:['คลิกลิงก์ออกนอกเว็บ','กดลิงก์ที่พาไปเว็บไซต์อื่น'],file_download:['ดาวน์โหลดไฟล์','กดดาวน์โหลดเอกสารหรือไฟล์']};
 var events=[
-  ['เปิดดูหน้าเว็บ',EVTH.page_view[1],76],
-  ['เลื่อนอ่านจนเกือบสุดหน้า',EVTH.scroll[1],73],
-  ['ใช้งานหน้าเว็บอยู่จริง',EVTH.user_engagement[1],62],
-  ['เริ่มเข้าใช้งานรอบใหม่',EVTH.session_start[1],22],
-  ['เข้าเว็บครั้งแรก',EVTH.first_visit[1],7]
+  ['page_view',76],
+  ['scroll',73],
+  ['user_engagement',62],
+  ['session_start',22],
+  ['first_visit',7]
 ];
 function renderEvents(){
-  var max=events.length?events[0][2]:1,etot=events.reduce(function(a,e){return a+e[2]},0)||1;
-  document.getElementById('events').innerHTML=events.length?events.map(function(e,i){return '<div class="row"><div class="row-top"><span>'+e[0]+'</span><span>'+tag(events,i,2,etot,' ครั้ง')+'</span></div><small>'+e[1]+'</small><div class="bar"><i style="width:'+wid(events,i,2,max,etot)+'%"></i></div></div>'}).join(''):'<p class="hint">ยังไม่มีกิจกรรมที่บันทึกไว้</p>';
+  var max=events.length?events[0][1]:1,etot=events.reduce(function(a,e){return a+e[1]},0)||1;
+  document.getElementById('events').innerHTML=events.length?events.map(function(e,i){
+    var info=evInfo(e[0]);
+    return '<div class="row"><div class="row-top"><span>'+info[0]+'</span><span>'+tag(events,i,1,etot,' '+t('timesUnit'))+'</span></div><small>'+info[1]+'</small><div class="bar"><i style="width:'+wid(events,i,1,max,etot)+'%"></i></div></div>';
+  }).join(''):'<p class="hint">'+t('evEmpty')+'</p>';
 }
-var dTick=['26/11','27/11'],dLab=['วันที่ 26/11','วันที่ 27/11'];
+var dTick=['26/11','27/11'];
 var TH={Thailand:'ไทย',Singapore:'สิงคโปร์',Vietnam:'เวียดนาม',Indonesia:'อินโดนีเซีย',Philippines:'ฟิลิปปินส์',Malaysia:'มาเลเซีย',Australia:'ออสเตรเลีย',Japan:'ญี่ปุ่น','United States':'สหรัฐอเมริกา',Taiwan:'ไต้หวัน','South Korea':'เกาหลีใต้',China:'จีน','Hong Kong':'ฮ่องกง',India:'อินเดีย',Myanmar:'เมียนมา',Cambodia:'กัมพูชา',Laos:'ลาว','United Kingdom':'สหราชอาณาจักร',Germany:'เยอรมนี',France:'ฝรั่งเศส',Canada:'แคนาดา','New Zealand':'นิวซีแลนด์'};
 var ENof={};Object.keys(TH).forEach(function(k){ENof[TH[k]]=k});
 var XY={Thailand:[100.9,15.9],Singapore:[103.8,1.35],Vietnam:[106,16],Indonesia:[113,-2],Philippines:[122,12.5],Malaysia:[102,4],Australia:[134,-25],Japan:[138,36],'United States':[-98,39],Taiwan:[121,23.7],'South Korea':[127.8,36.5],China:[104,35],'Hong Kong':[114.2,22.3],India:[79,22],Myanmar:[96,21],Cambodia:[105,12.5],Laos:[102.5,18],'United Kingdom':[-2,54],Germany:[10.4,51],France:[2.5,46.5],Canada:[-106,56],'New Zealand':[172,-41],Brazil:[-52,-10],Russia:[100,60],Mexico:[-102,23],Italy:[12.5,42.5],Netherlands:[5.3,52.2],Spain:[-3.7,40.4],Turkey:[35,39],'Saudi Arabia':[45,24],'United Arab Emirates':[54,24],'South Africa':[25,-29],Egypt:[30,27],Nigeria:[8,9]};
@@ -339,42 +624,42 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function num(v){v=Number(v);return isFinite(v)&&v>0?v:0}
 function coord(n){return XY[ENof[n]||n]}
 function renderMap(){
-  seg('regSeg',[['world','ทั่วโลก'],['apac','เอเชีย–แปซิฟิก']],region,function(k){region=k;renderMap()});
+  seg('regSeg',[['world',t('regWorld')],['apac',t('regApac')]],region,function(k){region=k;renderMap()});
   var list=geoData[geo].slice().sort(function(a,b){return b[1]-a[1]}),total=list.reduce(function(a,c){return a+c[1]},0)||1,max=list.length?list[0][1]:1,s='',k=region==='world'?24:15,shown=0;
   [-60,-30,0,30,60].forEach(function(la){var y=proj(0,la)[1];s+='<line class="grat" x1="0" x2="'+MW+'" y1="'+y+'" y2="'+y+'"/>'});
   [-150,-120,-90,-60,-30,0,30,60,90,120,150].forEach(function(lo){var x=proj(lo,0)[0];s+='<line class="grat" y1="0" y2="'+MH+'" x1="'+x+'" x2="'+x+'"/>'});
   LAND.forEach(function(poly){s+='<polygon class="land" points="'+poly.map(function(p){return proj(p[0],p[1]).map(function(v){return v.toFixed(1)}).join(',')}).join(' ')+'"/>'});
-  list.forEach(function(c){var xy=coord(c[0]);if(!xy)return;var p=proj(xy[0],xy[1]),r=Math.max(3,Math.sqrt(c[1]/max)*k);
-    s+='<circle class="bub" cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+r.toFixed(1)+'"><title>'+c[0]+': '+fmt(c[1])+' คน ('+(c[1]/total*100).toFixed(1)+'%)</title></circle>';
-    if(shown++<3)s+='<text class="lab" text-anchor="middle" x="'+p[0].toFixed(1)+'" y="'+(p[1]-r-2).toFixed(1)+'">'+c[0]+'</text>'});
-  document.getElementById('map').innerHTML='<svg viewBox="'+(region==='world'?'0 0 720 276':'470 60 250 190')+'" role="img" aria-label="แผนที่ผู้ใช้แยกตามประเทศ">'+s+'</svg>';
+  list.forEach(function(c){var xy=coord(c[0]);if(!xy)return;var p=proj(xy[0],xy[1]),r=Math.max(3,Math.sqrt(c[1]/max)*k),label=cname(c[0]);
+    s+='<circle class="bub" cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+r.toFixed(1)+'"><title>'+label+': '+fmt(c[1])+' '+t('personUnit')+' ('+(c[1]/total*100).toFixed(1)+'%)</title></circle>';
+    if(shown++<3)s+='<text class="lab" text-anchor="middle" x="'+p[0].toFixed(1)+'" y="'+(p[1]-r-2).toFixed(1)+'">'+label+'</text>'});
+  document.getElementById('map').innerHTML='<svg viewBox="'+(region==='world'?'0 0 720 276':'470 60 250 190')+'" role="img" aria-label="'+t('geoSecTitle')+'">'+s+'</svg>';
 }
-function dur(s){return Math.floor(s/60)+' นาที '+Math.round(s%60)+' วินาที'}
-function liveKpis(){return [['ผู้ใช้ใหม่ใน 28 วัน','+'+fmt(live.n28),'ผู้ใช้ที่เข้ามาครั้งแรก'],['เวลาใช้งานเฉลี่ยต่อครั้ง',dur(live.sec),'ยิ่งนานยิ่งแปลว่าผู้ใช้สนใจ'],['อัตราการมีส่วนร่วม',(live.eng*100).toFixed(1)+'%','สัดส่วนครั้งที่ผู้ใช้ใช้งานจริงจัง'],['ออนไลน์อยู่ตอนนี้',fmt(live.rt)+' คน','นับจาก 30 นาทีที่ผ่านมา']]}
-var CHTH={Direct:['ทางตรง','พิมพ์ลิงก์เอง บุ๊กมาร์ก สแกน QR หรือกดจาก LINE'],Referral:['เว็บไซต์อื่นแนะนำ','กดลิงก์มาจากเว็บไซต์อื่น'],'Organic Search':['ค้นหาผ่าน Google','ค้นเจอจากเสิร์ชเอนจิน'],'Organic Social':['โซเชียลมีเดีย','กดลิงก์จากโพสต์ที่ไม่ได้จ่ายโฆษณา'],Email:['อีเมล','กดลิงก์จากอีเมล'],'Paid Search':['โฆษณาค้นหา','กดมาจากโฆษณาบนเสิร์ชเอนจิน'],'Paid Social':['โฆษณาโซเชียล','กดมาจากโฆษณาบนโซเชียล'],Unassigned:['ไม่ทราบที่มา','GA4 ระบุแหล่งที่มาไม่ได้']};
-function cmap(a){return (a||[]).map(function(c){var raw=String(c.country||'');return [TH[raw]||esc(raw),num(c.users)]}).filter(function(c){return c[0]&&c[0]!=='(not set)'&&c[1]>0}).sort(function(a,b){return b[1]-a[1]})}
+function dur(s){return Math.floor(s/60)+' '+t('min')+' '+Math.round(s%60)+' '+t('sec')}
+function cmap(a){return (a||[]).map(function(c){var raw=String(c.country||'').trim();return [raw,num(c.users)]}).filter(function(c){return c[0]&&c[0]!=='(not set)'&&c[1]>0}).sort(function(a,b){return b[1]-a[1]})}
 function fd(d){d=String(d);return d.length===8?(+d.slice(6))+'/'+(+d.slice(4,6)):d}
 function status(){
   var b=document.getElementById('badge');
   var isApi=live&&live.src==='api';
-  b.textContent=isApi?'ซิงค์สดจาก GA4':'ข้อมูลจริงจาก GA4';
+  b.textContent=isApi?t('badgeLive'):t('badgeData');
   b.style.background='var(--a-soft)';b.style.color='var(--a)';
   var pid=(live&&live.pid)||LOCKED_GA4.propertyId;
-  var ts=(live&&live.t)||new Date(LOCKED_GA4.syncedAt).toLocaleString('th-TH');
-  document.getElementById('note').textContent='เชื่อมต่อ Property '+pid+' · '+(isApi?'ซิงค์อัตโนมัติจาก Web App':'ข้อมูลจาก GA4')+' ณ '+ts;
+  var rawTs=(live&&live.rawTs)||LOCKED_GA4.syncedAt;
+  var dt=new Date(rawTs);
+  var ts=isNaN(dt)?t('latest'):dt.toLocaleString(lang==='th'?'th-TH':'en-US');
+  document.getElementById('note').textContent=t(isApi?'noteApi':'noteCache',{pid:pid,ts:ts});
 }
 var fview='form';
 function ingestForms(j){
-  function rows(a){return (Array.isArray(a)?a:[]).map(function(r){var raw=String(r.country||'');return [esc(r.form||''),TH[raw]||esc(raw),num(r.users),num(r.count)]}).filter(function(r){return r[0]&&r[0]!=='(not set)'&&r[1]!=='(not set)'&&r[3]>0})}
+  function rows(a){return (Array.isArray(a)?a:[]).map(function(r){var raw=String(r.country||'').trim();return [esc(r.form||''),raw,num(r.users),num(r.count)]}).filter(function(r){return r[0]&&r[0]!=='(not set)'&&r[1]&&r[1]!=='(not set)'&&r[3]>0})}
   var tot=(Array.isArray(j.formTotals)?j.formTotals:[]).map(function(r){return [esc(r.form||''),num(r.users),num(r.count)]}).filter(function(r){return r[0]&&r[0]!=='(not set)'&&r[2]>0});
   return {tot:tot,ip:rows(j.forms),tz:rows(j.tzForms)};
 }
 var FD=ingestForms(LOCKED_GA4);
 function renderForms(){
-  seg('fSeg',[['form','ดูตามฟอร์ม'],['country','ดูตามประเทศ']],fview,function(k){fview=k;renderForms()});
-  document.getElementById('fHint').textContent='ประเทศนับตาม '+(geo==='ip'?'IP':'เขตเวลา')+' (สลับได้ที่ส่วน “ผู้ใช้อยู่ประเทศไหน”)';
+  seg('fSeg',[['form',t('formViewForm')],['country',t('formViewCountry')]],fview,function(k){fview=k;renderForms()});
+  document.getElementById('fHint').textContent=t('formHint',{geo:geo==='ip'?t('formGeoIp'):t('formGeoTz')});
   var el=document.getElementById('forms'),rows=FD[geo]||[];
-  if(!rows.length){el.innerHTML='<p class="hint">ยังไม่มีข้อมูลการเปิดฟอร์มในชุดข้อมูลนี้ (หากเพิ่งสร้าง Custom Dimension form_name ใน GA4 กรุณารอระบบประมวลผล 24–48 ชม. แล้วกด “ซิงค์ล่าสุด”)</p>';return}
+  if(!rows.length){el.innerHTML='<p class="hint">'+t('formEmpty')+'</p>';return}
   var tm={};FD.tot.forEach(function(t){tm[t[0]]=t});
   var kk=fview==='form'?0:1,oo=1-kk,by={};
   rows.forEach(function(r){var g=by[r[kk]]||(by[r[kk]]={n:r[kk],c:0,u:0,it:[]});g.c+=r[3];g.u+=r[2];g.it.push([r[oo],r[3]])});
@@ -382,49 +667,49 @@ function renderForms(){
   var max=list[0].c||1;
   el.innerHTML=list.map(function(g,i){
     g.it.sort(function(a,b){return b[1]-a[1]});
-    var chips=g.it.slice(0,6).map(function(x){return '<span class="chip">'+x[0]+' · '+fmt(x[1])+'</span>'}).join('');
-    return '<div class="row"><div class="row-top"><span>'+(i+1)+'. '+g.n+'</span><span>'+fmt(g.c)+' ครั้ง'+(fview==='form'?' · '+fmt(g.u)+' คน':'')+'</span></div><div class="bar" style="margin-top:6px"><i style="width:'+(g.c/max*100)+'%"></i></div><div class="chips">'+chips+'</div></div>';
+    var title=fview==='country'?cname(g.n):g.n;
+    var chips=g.it.slice(0,6).map(function(x){return '<span class="chip">'+(oo===1?cname(x[0]):x[0])+' · '+fmt(x[1])+'</span>'}).join('');
+    return '<div class="row"><div class="row-top"><span>'+(i+1)+'. '+title+'</span><span>'+fmt(g.c)+' '+t('opensUnit')+(fview==='form'?' · '+fmt(g.u)+' '+t('personUnit'):'')+'</span></div><div class="bar" style="margin-top:6px"><i style="width:'+(g.c/max*100)+'%"></i></div><div class="chips">'+chips+'</div></div>';
   }).join('');
 }
-function refresh(){accUi();renderEvents();renderForms();renderTop();renderKpis();renderChart();renderChannels();renderDevices();renderCountries();status()}
+function refresh(){renderStaticUi();accUi();renderEvents();renderForms();renderTop();renderKpis();renderChart();renderChannels();renderDevices();renderCountries();status()}
 function applyGa4(j,src){
   var days=Array.isArray(j.dailyTrend)?j.dailyTrend:[],last=days.length?num(days[days.length-1].activeUsers):0,sum=days.reduce(function(a,d){return a+num(d.activeUsers)},0);
   var mau=num(j.mau)||sum;
-  scopes={DAU:{label:'ผู้ใช้งานต่อวัน (DAU)',n:num(j.dau)||last},WAU:{label:'ผู้ใช้งานต่อสัปดาห์ (WAU)',n:num(j.wau)||sum},MAU:{label:'ผู้ใช้งานต่อเดือน (MAU)',n:mau}};
+  scopes={DAU:{n:num(j.dau)||last},WAU:{n:num(j.wau)||sum},MAU:{n:mau}};
   daily=days.map(function(d){return [num(d.activeUsers),num(d.newUsers)]});
-  dTick=days.map(function(d){return fd(d.date)});dLab=dTick.map(function(t){return 'วันที่ '+t});
-  channels=(Array.isArray(j.channels)?j.channels:[]).map(function(c){var t=CHTH[c.channel]||[esc(c.channel),'ช่องทางจาก GA4'];return [t[0],t[1],num(c.users)]});
+  dTick=days.map(function(d){return fd(d.date)});
+  channels=(Array.isArray(j.channels)?j.channels:[]).map(function(c){return [String(c.channel||''),num(c.users)]});
   var dm={desktop:0,mobile:0,tablet:0};(Array.isArray(j.devices)?j.devices:[]).forEach(function(x){var k=String(x.device).toLowerCase();k=k.indexOf('mobile')>-1?'mobile':k.indexOf('tablet')>-1?'tablet':'desktop';dm[k]+=num(x.users)});
-  devices=[['คอมพิวเตอร์','#0B8F83',dm.desktop],['มือถือ','#F2A33A',dm.mobile],['แท็บเล็ต','#8A97A8',dm.tablet]];
+  devices=[['desktop','#0B8F83',dm.desktop],['mobile','#F2A33A',dm.mobile],['tablet','#8A97A8',dm.tablet]];
   geoData={ip:cmap(j.countries),tz:cmap(j.tzCountries)};
-  var t=new Date(j.syncedAt||j.updatedAt||Date.now());
-  live={src:src||'cache',pid:String(j.propertyId||'565933593'),n28:num(j.newUsers28d),sec:num(j.avgSessionDurationSec),eng:Math.min(1,num(j.engagementRate)),rt:num(j.realtimeUsers),t:isNaN(t)?'ล่าสุด':t.toLocaleString('th-TH')};
-  events=(Array.isArray(j.events)?j.events:[]).map(function(e){var t=EVTH[e.eventName]||[esc(e.eventName),'กิจกรรมจาก GA4'];return [t[0],t[1],num(e.count)]}).filter(function(e){return e[2]>0});
+  live={src:src||'cache',pid:String(j.propertyId||'565933593'),n28:num(j.newUsers28d),sec:num(j.avgSessionDurationSec),eng:Math.min(1,num(j.engagementRate)),rt:num(j.realtimeUsers),rawTs:j.syncedAt||j.updatedAt||Date.now()};
+  events=(Array.isArray(j.events)?j.events:[]).map(function(e){return [String(e.eventName||''),num(e.count)]}).filter(function(e){return e[1]>0});
   FD=ingestForms(j);
   goal=Math.max(10,Math.ceil(mau*1.25/5)*5);
   refresh();
 }
-function msg(t,err){var m=document.getElementById('ga4Msg');m.className=err?'msg err':'msg';m.textContent=t}
+function msg(txt,err){var m=document.getElementById('ga4Msg');m.className=err?'msg err':'msg';m.textContent=txt}
 function syncLive(silent){
   var u=(document.getElementById('ga4Url').value||DEFAULT_URL).trim();
-  if(!/^https?:\/\//i.test(u)){if(!silent)msg('ลิงก์ Web App ไม่ถูกต้อง (ต้องขึ้นต้นด้วย https://)',true);return}
+  if(!/^https?:\/\//i.test(u)){if(!silent)msg(lang==='th'?'ลิงก์ Web App ไม่ถูกต้อง (ต้องขึ้นต้นด้วย https://)':'Invalid Web App URL (must start with https://)',true);return}
   var sb=document.getElementById('syncBtn');
-  if(sb){sb.disabled=true;sb.textContent='กำลังซิงค์...'}
-  if(!silent)msg('กำลังดึงข้อมูลล่าสุดจาก GA4...',false);
+  if(sb){sb.disabled=true;sb.textContent=t('syncing')}
+  if(!silent)msg(lang==='th'?'กำลังดึงข้อมูลล่าสุดจาก GA4...':'Fetching latest data from GA4...',false);
   fetch(u,{cache:'no-store'})
     .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
     .then(function(j){
-      if(!j||j.status==='error')throw new Error((j&&j.message)||'ข้อมูลไม่ถูกต้อง');
-      if(!(j.mau||j.dau||j.dailyTrend))throw new Error('ไม่พบข้อมูลผู้ใช้งานใน JSON');
+      if(!j||j.status==='error')throw new Error((j&&j.message)||'Invalid data');
+      if(!(j.mau||j.dau||j.dailyTrend))throw new Error('No user metrics in JSON');
       applyGa4(j,'api');
       try{localStorage.setItem(KEY,JSON.stringify(j));localStorage.setItem(URL_KEY,u)}catch(e){}
-      if(!silent)msg('ซิงค์ข้อมูลล่าสุดจาก GA4 สำเร็จ',false);
+      if(!silent)msg(lang==='th'?'ซิงค์ข้อมูลล่าสุดจาก GA4 สำเร็จ':'Synced latest data from GA4 successfully',false);
     })
     .catch(function(e){
-      if(!silent)msg('ดึงข้อมูลอัตโนมัติไม่สำเร็จ ('+e.message+') — ตรวจสอบว่าตั้งสิทธิ์ Web App เป็น Anyone หรือวาง JSON ด้านล่างแทน',true);
+      if(!silent)msg(lang==='th'?'ดึงข้อมูลอัตโนมัติไม่สำเร็จ ('+e.message+') — ตรวจสอบว่าตั้งสิทธิ์ Web App เป็น Anyone หรือวาง JSON ด้านล่างแทน':'Auto-sync failed ('+e.message+') — verify Web App access is set to Anyone or paste JSON below',true);
     })
     .finally(function(){
-      if(sb){sb.disabled=false;sb.textContent='ซิงค์ล่าสุด'}
+      if(sb){sb.disabled=false;sb.textContent=t('syncBtn')}
     });
 }
 function setLockUi(){
@@ -439,7 +724,7 @@ function setLockUi(){
   lockBtn.style.display=unlocked?'':'none';
   pinIn.style.display=unlocked?'none':'';
   authMsg.className=unlocked?'msg':'msg err';
-  authMsg.textContent=unlocked?'สถานะ: ปลดล็อคแล้ว (สามารถแก้ไขการเชื่อมต่อได้)':'สถานะ: ถูกล็อคอยู่ (ต้องใส่รหัสก่อนแก้ไข)';
+  authMsg.textContent=unlocked?t('authUnlocked'):t('authLocked');
 }
 document.getElementById('pinUnlock').onclick=function(){
   var v=document.getElementById('pinIn').value;
@@ -450,7 +735,7 @@ document.getElementById('pinUnlock').onclick=function(){
   }else{
     var authMsg=document.getElementById('authMsg');
     authMsg.className='msg err';
-    authMsg.textContent='รหัสไม่ถูกต้อง ลองใหม่อีกครั้ง';
+    authMsg.textContent=t('authWrong');
   }
 };
 document.getElementById('pinLock').onclick=function(){
@@ -458,30 +743,30 @@ document.getElementById('pinLock').onclick=function(){
   setLockUi();
 };
 document.getElementById('ga4SaveUrl').onclick=function(){
-  if(!unlocked){msg('กรุณาใส่รหัสปลดล็อคก่อนแก้ไขการเชื่อมต่อ',true);return}
+  if(!unlocked){msg(t('authLocked'),true);return}
   var u=document.getElementById('ga4Url').value.trim();
-  if(!/^https?:\/\//i.test(u)){msg('กรุณาใส่ลิงก์ที่ขึ้นต้นด้วย https://',true);return}
+  if(!/^https?:\/\//i.test(u)){msg(lang==='th'?'กรุณาใส่ลิงก์ที่ขึ้นต้นด้วย https://':'Please enter a URL starting with https://',true);return}
   try{localStorage.setItem(URL_KEY,u)}catch(e){}
   syncLive(false);
 };
 document.getElementById('ga4Load').onclick=function(){
-  if(!unlocked){msg('กรุณาใส่รหัสปลดล็อคก่อนแก้ไขการเชื่อมต่อ',true);return}
+  if(!unlocked){msg(t('authLocked'),true);return}
   try{
     var raw=document.getElementById('ga4Json').value.trim();
-    if(/^https?:\/\//i.test(raw)){msg('หากต้องการใช้ลิงก์ ให้ใส่ในช่องลิงก์ด้านบนแล้วกด “บันทึกและซิงค์จากลิงก์”',true);return}
+    if(/^https?:\/\//i.test(raw)){msg(lang==='th'?'หากต้องการใช้ลิงก์ ให้ใส่ในช่องลิงก์ด้านบนแล้วกด “บันทึกและซิงค์จากลิงก์”':'To use a URL, paste it in the URL field above and click “Save & Sync from URL”',true);return}
     var j=JSON.parse(raw);
-    if(!j||j.status==='error')throw new Error((j&&j.message)||'ข้อมูลไม่ถูกต้อง');
-    if(!(j.mau||j.dau||j.dailyTrend))throw new Error('ไม่พบข้อมูลผู้ใช้งานใน JSON นี้');
+    if(!j||j.status==='error')throw new Error((j&&j.message)||'Invalid data');
+    if(!(j.mau||j.dau||j.dailyTrend))throw new Error('No user metrics in JSON');
     applyGa4(j,'manual');try{localStorage.setItem(KEY,JSON.stringify(j))}catch(e){}
-    msg('โหลดข้อมูล JSON สำเร็จ',false);
-  }catch(e){msg('โหลดไม่สำเร็จ ตรวจสอบว่าคัดลอก JSON ครบทั้งก้อน ('+e.message+')',true)}
+    msg(lang==='th'?'โหลดข้อมูล JSON สำเร็จ':'JSON loaded successfully',false);
+  }catch(e){msg((lang==='th'?'โหลดไม่สำเร็จ ตรวจสอบว่าคัดลอก JSON ครบทั้งก้อน (':'Load failed. Check that full JSON was copied (')+e.message+')',true)}
 };
 document.getElementById('ga4Reset').onclick=function(){
-  if(!unlocked){msg('กรุณาใส่รหัสปลดล็อคก่อนรีเซ็ตการเชื่อมต่อ',true);return}
+  if(!unlocked){msg(t('authLocked'),true);return}
   try{localStorage.removeItem(KEY);localStorage.removeItem(URL_KEY)}catch(e){}
   document.getElementById('ga4Url').value=DEFAULT_URL;
   applyGa4(LOCKED_GA4,'default');
-  msg('รีเซ็ตกลับไปใช้ลิงก์เริ่มต้นของ Property 565933593 แล้ว',false);
+  msg(lang==='th'?'รีเซ็ตกลับไปใช้ลิงก์เริ่มต้นของ Property 565933593 แล้ว':'Reset to default Property 565933593 settings',false);
 };
 document.getElementById('syncBtn').onclick=function(){syncLive(false)};
 document.getElementById('accBtn').onclick=function(){acc=!acc;refresh()};
@@ -490,7 +775,7 @@ document.getElementById('goalIn').onchange=function(){var v=+this.value;if(v>0){
 var savedUrl=DEFAULT_URL;
 try{savedUrl=localStorage.getItem(URL_KEY)||DEFAULT_URL}catch(e){}
 document.getElementById('ga4Url').value=savedUrl;
-setLockUi();
+applyStaticTexts();
 
 try{
   var saved=localStorage.getItem(KEY);
