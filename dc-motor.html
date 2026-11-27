@@ -7,6 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <style>
     :root {
       color-scheme: light only;
@@ -153,7 +155,7 @@
         grid-template-columns: 1fr !important;
       }
     }
-/* === เพิ่มโค้ดส่วนนี้เพื่อซ่อนปุ่มรูปเฟืองบนมือถือ === */
+    /* === เพิ่มโค้ดส่วนนี้เพื่อซ่อนปุ่มรูปเฟืองบนมือถือ === */
     @media screen and (max-width: 768px), (hover: none) and (pointer: coarse) {
       .designer-fab, #editorPanel {
         display: none !important;
@@ -369,7 +371,7 @@
           <!-- Sample Operation Test Image -->
           <div class="image-preview-box" style="margin-bottom: 0; min-height: 180px;">
             <div class="img-container" style="padding: 4px;">
-              <img src="images/DC Motor Operated test help start by hand.jpg" alt="Sample (Operated test help start by hand)" style="max-height: 130px;">
+              <img src="images/DC Motor Operated test help start by hand.jpg" id="opTestSampleImg" alt="Sample (Operated test help start by hand)" style="max-height: 130px;">
             </div>
             <div class="img-caption">Sample (Operated test help start by hand)</div>
           </div>
@@ -2169,6 +2171,50 @@
     });
   }
 
+  function getImgDataUrlSafe(imgEl) {
+    try {
+      if (!imgEl || !imgEl.complete || !imgEl.naturalWidth) return null;
+      const ratio = imgEl.naturalWidth / imgEl.naturalHeight;
+      if (imgEl.src && imgEl.src.startsWith('data:image/')) {
+        const format = imgEl.src.startsWith('data:image/jpeg') || imgEl.src.startsWith('data:image/jpg') ? 'JPEG' : 'PNG';
+        return { dataUrl: imgEl.src, format, ratio };
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = imgEl.naturalWidth;
+      canvas.height = imgEl.naturalHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(imgEl, 0, 0);
+      return {
+        dataUrl: canvas.toDataURL('image/png'),
+        format: 'PNG',
+        ratio
+      };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function drawPdfCheckbox(doc, x, y, checked) {
+    if (checked) {
+      doc.setFillColor(230, 0, 18);
+      doc.setDrawColor(230, 0, 18);
+      doc.roundedRect(x, y, 3.6, 3.6, 0.7, 0.7, 'FD');
+      doc.setDrawColor(255, 255, 255);
+      doc.setLineWidth(0.45);
+      doc.line(x + 0.8, y + 1.9, x + 1.5, y + 2.7);
+      doc.line(x + 1.5, y + 2.7, x + 2.9, y + 1.0);
+      doc.setLineWidth(0.3);
+    } else {
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(203, 213, 225);
+      doc.roundedRect(x, y, 3.6, 3.6, 0.7, 0.7, 'FD');
+    }
+  }
+
+  function formatUnitPdf(unitStr) {
+    return (unitStr || '').replace(/MΩ/g, 'MOhm').replace(/kΩ/g, 'kOhm').replace(/Ω/g, 'Ohm');
+  }
+
   function generatePDF() {
     const serviceReportInput = document.getElementById('serviceReportNo');
     const reportVal = serviceReportInput ? serviceReportInput.value.trim().toUpperCase() : '';
@@ -2180,29 +2226,539 @@
     }
 
     prepareDOMForPDF();
+    updateSummarySection();
+    renderAttachedImages();
 
-    const originalTitle = document.title;
-    let originalTopTitle = '';
     const safeFileName = reportVal.replace(/[\/\\:*?"<>|]/g, '-');
 
-    document.title = safeFileName;
-    try {
-      if (window.top && window.top !== window) {
-        originalTopTitle = window.top.document.title;
-        window.top.document.title = safeFileName;
+    // กรณีโหลดไลบรารี jsPDF ไม่ได้ ให้สลับไปใช้คำสั่งพิมพ์ของเบราว์เซอร์แทน
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      document.title = safeFileName;
+      window.print();
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const pageW = 210;
+    const margin = 12;
+    const contentW = pageW - margin * 2; // 186mm
+    let y = 10;
+
+    // 1. Header (Logo + Service Report Badge)
+    const logoImg = document.querySelector('.brand-logo-img');
+    const logoData = getImgDataUrlSafe(logoImg);
+    if (logoData) {
+      const logoH = 9.5;
+      const logoW = Math.min(55, logoH * logoData.ratio);
+      doc.addImage(logoData.dataUrl, logoData.format, margin, y, logoW, logoH);
+    } else {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(17, 17, 17);
+      doc.text('MITSUBISHI HEAVY INDUSTRIES', margin, y + 6.5);
+    }
+
+    const badgeText = `Service Report No: ${reportVal}`;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    const badgeW = Math.max(58, doc.getTextWidth(badgeText) + 10);
+    const badgeX = pageW - margin - badgeW;
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(badgeX, y + 0.5, badgeW, 8.5, 4, 4, 'FD');
+    doc.setTextColor(100, 116, 139);
+    doc.text('Service Report No:', badgeX + 4, y + 6);
+    const prefixW = doc.getTextWidth('Service Report No: ');
+    doc.setTextColor(17, 17, 17);
+    doc.text(reportVal, badgeX + 4 + prefixW, y + 6);
+
+    y += 13;
+    doc.setDrawColor(230, 0, 18);
+    doc.setLineWidth(0.8);
+    doc.line(margin, y, pageW - margin, y);
+    y += 7;
+
+    // 2. Report Title
+    const formTitle = document.getElementById('displayFormTitle')?.textContent.trim() || 'Checking Part Report (DC Motor)';
+    doc.setFillColor(230, 0, 18);
+    doc.roundedRect(margin, y - 4.5, 1.5, 5.5, 0.5, 0.5, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12.5);
+    doc.setTextColor(17, 17, 17);
+    doc.text(formTitle, margin + 4, y);
+    y += 5;
+
+    function drawSectionHeader(title, startY) {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(17, 17, 17);
+      doc.text(title.toUpperCase(), margin + 4, startY + 5.5);
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.3);
+      doc.line(margin + 4, startY + 7.5, pageW - margin - 4, startY + 7.5);
+    }
+
+    // 3. Section 1: General Information
+    const sec1H = 23;
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(margin, y, contentW, sec1H, 2, 2, 'FD');
+    drawSectionHeader('General Information', y);
+
+    const genFields = [
+      { label: 'Model', val: document.getElementById('Model')?.value.trim() || '-' },
+      { label: 'Serial No. (S/N)', val: document.getElementById('SN')?.value.trim() || '-' },
+      { label: 'Part No.', val: document.getElementById('partNo')?.value.trim() || '-' }
+    ];
+    const colGap = 4;
+    const colW = (contentW - 8 - colGap * 2) / 3;
+    genFields.forEach((f, idx) => {
+      const cx = margin + 4 + idx * (colW + colGap);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(30, 41, 59);
+      doc.text(f.label, cx, y + 11.5);
+
+      doc.setFillColor(250, 250, 250);
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(cx, y + 13, colW, 7, 1.5, 1.5, 'FD');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.text(f.val, cx + 2.5, y + 17.8);
+    });
+    y += sec1H + 4;
+
+    // 4. Section 2: Symptom (DC Motor)
+    const appChecked = !!document.getElementById('chk_appearance')?.checked;
+    const errChecked = !!document.getElementById('chk_error_main')?.checked;
+    const errCodeVal = document.getElementById('txt_error_code')?.value.trim() || '';
+    const rotChecked = !!document.getElementById('chk_rotate_by_hand')?.checked;
+    const indoorChecked = !!document.getElementById('chk_indoor_motor')?.checked;
+    const outdoorChecked = !!document.getElementById('chk_outdoor_motor')?.checked;
+
+    const appSubH = appChecked ? 8.5 : 0;
+    const rotSubH = rotChecked ? 8.5 : 0;
+    const leftColH = (8 + appSubH) + 2.5 + 8.5 + 2.5 + (8 + rotSubH);
+    const rightColH = 44;
+    const bodyH = Math.max(leftColH, rightColH);
+    const sec2H = 17 + bodyH + 3;
+
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(margin, y, contentW, sec2H, 2, 2, 'FD');
+    drawSectionHeader('Symptom (DC Motor)', y);
+
+    // DC Motor Type Row
+    let sy = y + 10;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(17, 17, 17);
+    doc.text('DC Motor Type:', margin + 4, sy + 2.8);
+
+    const indoorX = margin + 32;
+    drawPdfCheckbox(doc, indoorX, sy, indoorChecked);
+    doc.setFont('helvetica', indoorChecked ? 'bold' : 'normal');
+    doc.setTextColor(30, 41, 59);
+    doc.text('Indoor motor', indoorX + 5.2, sy + 2.8);
+
+    const outdoorX = margin + 65;
+    drawPdfCheckbox(doc, outdoorX, sy, outdoorChecked);
+    doc.setFont('helvetica', outdoorChecked ? 'bold' : 'normal');
+    doc.text('Outdoor motor', outdoorX + 5.2, sy + 2.8);
+
+    sy += 6.5;
+    const leftX = margin + 4;
+    const leftW = 116;
+    const rightX = leftX + leftW + 4;
+    const rightW = contentW - 8 - leftW - 4; // 58mm
+
+    // Box 1: Appearance NG
+    let curY = sy;
+    const box1H = 8 + appSubH;
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(leftX, curY, leftW, box1H, 1.5, 1.5, 'FD');
+    drawPdfCheckbox(doc, leftX + 3, curY + 2.2, appChecked);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(30, 41, 59);
+    doc.text('Appearance NG', leftX + 8.2, curY + 5);
+
+    if (appChecked) {
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(203, 213, 225);
+      doc.roundedRect(leftX + 3, curY + 7.2, leftW - 6, 7.2, 1, 1, 'FD');
+      const bwChk = !!document.querySelector('input[data-parent-symptom="Appearance NG"][value="Broken Wire"]')?.checked;
+      const bsChk = !!document.querySelector('input[data-parent-symptom="Appearance NG"][value="Bent Shaft"]')?.checked;
+      drawPdfCheckbox(doc, leftX + 5, curY + 9, bwChk);
+      doc.setFont('helvetica', bwChk ? 'bold' : 'normal');
+      doc.setFontSize(7.5);
+      doc.text('-> Broken Wire', leftX + 10, curY + 11.7);
+
+      drawPdfCheckbox(doc, leftX + 55, curY + 9, bsChk);
+      doc.setFont('helvetica', bsChk ? 'bold' : 'normal');
+      doc.text('-> Bent Shaft', leftX + 60, curY + 11.7);
+    }
+    curY += box1H + 2.5;
+
+    // Box 2: Error + Error Code Input
+    const box2H = 8.5;
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(leftX, curY, leftW, box2H, 1.5, 1.5, 'FD');
+    drawPdfCheckbox(doc, leftX + 3, curY + 2.4, errChecked);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(30, 41, 59);
+    doc.text('Error', leftX + 8.2, curY + 5.2);
+
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(leftX + 24, curY + 1.5, 52, 5.5, 1, 1, 'FD');
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(errCodeVal ? 30 : 148, errCodeVal ? 41 : 163, errCodeVal ? 59 : 184);
+    doc.text(errCodeVal || 'Enter Error Code...', leftX + 26, curY + 5.1);
+    curY += box2H + 2.5;
+
+    // Box 3: Rotate by hand
+    const box3H = 8 + rotSubH;
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(leftX, curY, leftW, box3H, 1.5, 1.5, 'FD');
+    drawPdfCheckbox(doc, leftX + 3, curY + 2.2, rotChecked);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(30, 41, 59);
+    doc.text('Rotate by hand', leftX + 8.2, curY + 5);
+
+    if (rotChecked) {
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(203, 213, 225);
+      doc.roundedRect(leftX + 3, curY + 7.2, leftW - 6, 7.2, 1, 1, 'FD');
+      const easyChk = !!document.querySelector('input[data-parent-symptom="Rotate by hand"][value="Easy rotation"]')?.checked;
+      const hardChk = !!document.querySelector('input[data-parent-symptom="Rotate by hand"][value="Hard rotation"]')?.checked;
+      drawPdfCheckbox(doc, leftX + 5, curY + 9, easyChk);
+      doc.setFont('helvetica', easyChk ? 'bold' : 'normal');
+      doc.setFontSize(7.5);
+      doc.text('-> Easy rotation', leftX + 10, curY + 11.7);
+
+      drawPdfCheckbox(doc, leftX + 55, curY + 9, hardChk);
+      doc.setFont('helvetica', hardChk ? 'bold' : 'normal');
+      doc.text('-> Hard rotation', leftX + 60, curY + 11.7);
+    }
+
+    // Right Column: Sample Operation Test Image
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(rightX, sy, rightW, bodyH, 1.5, 1.5, 'FD');
+
+    const captionH = 7;
+    const imgAreaH = bodyH - captionH;
+    const sampleImgEl = document.getElementById('opTestSampleImg');
+    const sampleImgData = getImgDataUrlSafe(sampleImgEl);
+    if (sampleImgData) {
+      const maxW = rightW - 4;
+      const maxH = imgAreaH - 3;
+      let dW = maxW;
+      let dH = dW / sampleImgData.ratio;
+      if (dH > maxH) {
+        dH = maxH;
+        dW = dH * sampleImgData.ratio;
       }
-    } catch (e) {}
+      doc.addImage(sampleImgData.dataUrl, sampleImgData.format, rightX + (rightW - dW) / 2, sy + (imgAreaH - dH) / 2, dW, dH);
+    }
 
-    window.addEventListener('afterprint', () => {
-      document.title = originalTitle;
-      try {
-        if (window.top && window.top !== window && originalTopTitle) {
-          window.top.document.title = originalTopTitle;
+    doc.setFillColor(241, 245, 249);
+    doc.rect(rightX, sy + imgAreaH, rightW, captionH, 'FD');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(6);
+    doc.setTextColor(100, 116, 139);
+    doc.text('Sample (Operated test help start by hand)', rightX + rightW / 2, sy + imgAreaH + 4.5, { align: 'center' });
+
+    y += sec2H + 4;
+
+    // 5. Section 3: Technical Inspection & Defect Locations
+    const partKey = getSelectedPartKey();
+    const spec = partKey ? partsData[partKey] : null;
+    const sec3StartY = y;
+    drawSectionHeader('Technical Inspection & Defect Locations', y);
+
+    if (!spec) {
+      const emptyH = 22;
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.35);
+      doc.roundedRect(margin, sec3StartY, contentW, emptyH, 2, 2, 'S');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139);
+      doc.text('Please enter a Part No. matching available system records to input test results.', pageW / 2, sec3StartY + 15.5, { align: 'center' });
+      y = sec3StartY + emptyH + 4;
+    } else {
+      // Sub-header inside Technical Inspection
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(17, 17, 17);
+      doc.text(spec.title, margin + 4, y + 12.5);
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(100, 116, 139);
+      doc.text(`Matched: ${partKey}`, pageW - margin - 4, y + 12.5, { align: 'right' });
+
+      const paramConfigs = [
+        { key: 'vm', label: 'Vm - Gnd', std: `>= ${spec.vm_val} MOhm` },
+        { key: 'vcc', label: 'Vcc - Gnd', std: `> ${spec.vcc_val} kOhm` },
+        { key: 'vsp', label: 'Vsp - Gnd', std: `> ${spec.vsp_val} kOhm` }
+      ];
+
+      const tableRows = paramConfigs.map(p => {
+        const val = document.getElementById(`val_${partKey}_${p.key}`)?.value.trim() || '';
+        const unit = document.getElementById(`unit_${partKey}_${p.key}`)?.value || '-';
+        const status = document.getElementById(`status_${partKey}_${p.key}`)?.textContent.trim() || '-';
+
+        let measuredDisplay = '-';
+        if (unit === 'OL') measuredDisplay = 'OL';
+        else if (unit !== '-' && val !== '') measuredDisplay = `${val} ${formatUnitPdf(unit)}`;
+        else if (val !== '') measuredDisplay = val;
+
+        return {
+          param: p.label,
+          std: p.std,
+          measured: measuredDisplay,
+          status
+        };
+      });
+
+      doc.autoTable({
+        startY: y + 14.5,
+        margin: { left: margin + 4, right: margin + 4 },
+        theme: 'grid',
+        styles: {
+          font: 'helvetica',
+          fontSize: 8,
+          textColor: [30, 41, 59],
+          lineColor: [226, 232, 240],
+          lineWidth: 0.3,
+          halign: 'center',
+          valign: 'middle',
+          cellPadding: 2.2
+        },
+        headStyles: {
+          fillColor: [248, 250, 252],
+          textColor: [30, 41, 59],
+          fontStyle: 'bold'
+        },
+        columnStyles: {
+          0: { cellWidth: 38, fontStyle: 'bold' },
+          1: { cellWidth: 44 },
+          2: { cellWidth: 62 },
+          3: { cellWidth: 34, fontStyle: 'bold' }
+        },
+        head: [['Parameter', 'Standard Criteria', 'Measured Value & Unit', 'Result Status']],
+        body: tableRows.map(r => [r.param, r.std, r.measured, r.status]),
+        didParseCell: function(data) {
+          if (data.section === 'body' && data.column.index === 3) {
+            data.cell.text = [''];
+          }
+        },
+        didDrawCell: function(data) {
+          if (data.section === 'body' && data.column.index === 3) {
+            const row = tableRows[data.row.index];
+            const { x, y: cy, width, height } = data.cell;
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(7.5);
+            if (row.status === 'OK' || row.status === 'NG') {
+              const isOk = row.status === 'OK';
+              doc.setFillColor(...(isOk ? [236, 253, 245] : [254, 242, 242]));
+              doc.setDrawColor(...(isOk ? [16, 185, 129] : [239, 68, 68]));
+              doc.roundedRect(x + 8, cy + height / 2 - 2.6, width - 16, 5.2, 2.5, 2.5, 'FD');
+              doc.setTextColor(...(isOk ? [16, 185, 129] : [239, 68, 68]));
+              doc.text(row.status, x + width / 2, cy + height / 2 + 1, { align: 'center' });
+            } else {
+              doc.setTextColor(30, 41, 59);
+              doc.text('-', x + width / 2, cy + height / 2 + 1, { align: 'center' });
+            }
+          }
         }
-      } catch (e) {}
-    }, { once: true });
+      });
 
-    setTimeout(() => { window.print(); }, 100);
+      // Operation Test Box below Table
+      let opY = doc.lastAutoTable.finalY + 3.5;
+      const opMainChecked = !!document.getElementById('chk_op_test_main')?.checked;
+      const opBoxH = opMainChecked ? 22 : 13.5;
+
+      doc.setFillColor(248, 250, 252);
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(margin + 4, opY, contentW - 8, opBoxH, 1.5, 1.5, 'FD');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(17, 17, 17);
+      doc.text('Operation Test', margin + 7, opY + 5);
+
+      drawPdfCheckbox(doc, margin + 7, opY + 7.2, opMainChecked);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(30, 41, 59);
+      doc.text('Operation test', margin + 12.2, opY + 10);
+
+      if (opMainChecked) {
+        doc.setFillColor(255, 255, 255);
+        doc.setDrawColor(203, 213, 225);
+        doc.roundedRect(margin + 7, opY + 12.5, contentW - 14, 7.2, 1, 1, 'FD');
+
+        const opOpts = [
+          { val: 'OK', label: '-> OK', xOff: 9 },
+          { val: 'NG', label: '-> NG', xOff: 42 },
+          { val: 'Help start by hand', label: '-> Help start by hand', xOff: 75 },
+          { val: 'Noise', label: '-> Noise', xOff: 132 }
+        ];
+        opOpts.forEach(opt => {
+          const isSubChk = !!document.querySelector(`input[data-op-test-sub="Operation test"][value="${opt.val}"]`)?.checked;
+          drawPdfCheckbox(doc, margin + opt.xOff, opY + 14.3, isSubChk);
+          doc.setFont('helvetica', isSubChk ? 'bold' : 'normal');
+          doc.setFontSize(7.5);
+          doc.text(opt.label, margin + opt.xOff + 5, opY + 17);
+        });
+      }
+
+      const sec3EndY = opY + opBoxH + 3.5;
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.35);
+      doc.roundedRect(margin, sec3StartY, contentW, sec3EndY - sec3StartY, 2, 2, 'S');
+      y = sec3EndY + 4;
+    }
+
+    // 6. Section 4: Attached Motor Nameplate Pictures (แสดงเฉพาะเมื่อมีการแนบรูป)
+    const activeImgKeys = Object.keys(formState.uploadedImages).filter(k => formState.uploadedImages[k].src);
+    if (activeImgKeys.length > 0) {
+      const imgCardW = (contentW - 12) / 2;
+      const imgBoxH = 38;
+      const cardH = imgBoxH + 10;
+      const imgRows = Math.ceil(activeImgKeys.length / 2);
+      const sec4H = 12 + imgRows * (cardH + 4);
+
+      if (y + sec4H > 285) {
+        doc.addPage();
+        y = 12;
+      }
+
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.35);
+      doc.roundedRect(margin, y, contentW, sec4H, 2, 2, 'FD');
+      drawSectionHeader('Attached Motor Nameplate Pictures', y);
+
+      activeImgKeys.forEach((key, idx) => {
+        const item = formState.uploadedImages[key];
+        const r = Math.floor(idx / 2);
+        const c = idx % 2;
+        const ix = margin + 4 + c * (imgCardW + 4);
+        const iy = y + 10 + r * (cardH + 4);
+
+        doc.setFillColor(250, 250, 250);
+        doc.setDrawColor(226, 232, 240);
+        doc.roundedRect(ix, iy, imgCardW, cardH, 1.5, 1.5, 'FD');
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.setTextColor(17, 17, 17);
+        doc.text(item.title || `Motor Nameplate ${idx + 1}`, ix + 3, iy + 5.5);
+
+        doc.setFillColor(255, 255, 255);
+        doc.rect(ix + 3, iy + 7.5, imgCardW - 6, imgBoxH, 'FD');
+
+        const domImg = document.querySelector(`#attached_container .attached-card:nth-child(${idx + 1}) img`);
+        const imgData = getImgDataUrlSafe(domImg);
+        if (imgData) {
+          const maxW = imgCardW - 8;
+          const maxH = imgBoxH - 2;
+          let drawW = maxW;
+          let drawH = drawW / imgData.ratio;
+          if (drawH > maxH) {
+            drawH = maxH;
+            drawW = drawH * imgData.ratio;
+          }
+          const offsetX = ix + 3 + (imgCardW - 6 - drawW) / 2;
+          const offsetY = iy + 7.5 + (imgBoxH - drawH) / 2;
+          doc.addImage(imgData.dataUrl, imgData.format, offsetX, offsetY, drawW, drawH);
+        }
+      });
+
+      y += sec4H + 4;
+    }
+
+    // 7. Section 5: Inspection Summary & Comments
+    const summaryRows = [];
+    const domRows = document.querySelectorAll('#summary_comment_content .summary-item-row');
+    if (domRows.length > 0) {
+      domRows.forEach(el => {
+        const txt = el.textContent
+          .replace(/MΩ/g, 'MOhm')
+          .replace(/kΩ/g, 'kOhm')
+          .replace(/Ω/g, 'Ohm')
+          .replace(/➡/g, '->')
+          .replace(/•/g, '-')
+          .trim();
+        const isNg = el.style.color && el.style.color.includes('danger');
+        const isOk = el.style.color && el.style.color.includes('success');
+        summaryRows.push({ text: txt, type: isNg ? 'ng' : (isOk ? 'ok' : 'normal') });
+      });
+    } else {
+      summaryRows.push({ text: 'No inspection summary available', type: 'muted' });
+    }
+
+    doc.setFontSize(8);
+    let totalLines = 0;
+    const wrappedRows = summaryRows.map(r => {
+      const lines = doc.splitTextToSize(r.text, contentW - 14);
+      totalLines += lines.length;
+      return { lines, type: r.type };
+    });
+
+    const innerBoxH = Math.max(10, totalLines * 4.5 + 5);
+    const sec5H = 13 + innerBoxH;
+
+    if (y + sec5H > 285) {
+      doc.addPage();
+      y = 12;
+    }
+
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(margin, y, contentW, sec5H, 2, 2, 'FD');
+    drawSectionHeader('Inspection Summary & Comments', y);
+
+    doc.setFillColor(250, 250, 250);
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(margin + 4, y + 9.5, contentW - 8, innerBoxH, 1.5, 1.5, 'FD');
+
+    let textY = y + 14;
+    wrappedRows.forEach(item => {
+      if (item.type === 'ng') {
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(239, 68, 68);
+      } else if (item.type === 'ok') {
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(16, 185, 129);
+      } else if (item.type === 'muted') {
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(100, 116, 139);
+      } else {
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(30, 41, 59);
+      }
+      doc.text(item.lines, margin + 7, textY);
+      textY += item.lines.length * 4.5;
+    });
+
+    // บันทึกและดาวน์โหลดไฟล์ PDF ทันที
+    doc.save(`${safeFileName}.pdf`);
   }
 </script>
 
