@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
       color-scheme: light only;
@@ -154,14 +155,13 @@
       .section-card { padding: 10px 8px !important; margin-bottom: 10px; }
       .input-control { font-size: 0.8rem; padding: 6px 8px; }
     }
-/* === เพิ่มโค้ดส่วนนี้เพื่อซ่อนปุ่มรูปเฟืองบนมือถือ === */
+    /* ซ่อนปุ่มรูปเฟืองบนมือถือ */
     @media screen and (max-width: 768px), (hover: none) and (pointer: coarse) {
       .designer-fab, #editorPanel {
         display: none !important;
       }
     }
-    /* ========================================== */
-    /* Save PDF / Print Settings (Consistent A4 Layout on Windows & Mobile) */
+    /* Save PDF / Print Fallback Settings */
     @media print {
       @page {
         size: A4 portrait;
@@ -195,7 +195,6 @@
         display: none !important;
       }
 
-      /* Maintain Desktop Proportions on A4 even if printed from Mobile */
       .brand-header {
         padding: 8px 12px !important;
         flex-direction: row !important;
@@ -258,7 +257,6 @@
         height: 145px !important;
       }
 
-      /* Compact Form Controls */
       .input-control {
         border: 1px solid var(--border-color) !important;
         background-color: #FAFAFA !important;
@@ -723,22 +721,31 @@
   }
 
   function handleAppearanceImages(input) {
-    const files = Array.from(input.files);
+    const files = Array.from(input.files || []);
     if (!files || files.length === 0) return;
 
     files.forEach(file => {
       const processFile = (fileObj) => {
         const reader = new FileReader();
         reader.onload = function(e) {
-          uploadedAppearanceImages.push(e.target.result);
+          const dataUrl = e.target.result;
+          const imgItem = { src: dataUrl, ratio: 1.33 };
+          const tempImg = new Image();
+          tempImg.onload = function() {
+            if (tempImg.naturalWidth && tempImg.naturalHeight) {
+              imgItem.ratio = tempImg.naturalWidth / tempImg.naturalHeight;
+            }
+          };
+          tempImg.src = dataUrl;
+          uploadedAppearanceImages.push(imgItem);
           renderAppearanceImages();
         };
         reader.readAsDataURL(fileObj);
       };
 
-      if (file.name.toLowerCase().endsWith('.heic')) {
+      if (file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif')) {
         heic2any({ blob: file, toType: "image/jpeg" }).then(resultBlob => {
-          processFile(resultBlob);
+          processFile(Array.isArray(resultBlob) ? resultBlob[0] : resultBlob);
         }).catch(err => {
           alert("Failed to convert HEIC file: " + err.message);
         });
@@ -768,7 +775,8 @@
     }
 
     container.innerHTML = '';
-    uploadedAppearanceImages.forEach((src, idx) => {
+    uploadedAppearanceImages.forEach((item, idx) => {
+      const src = typeof item === 'string' ? item : item.src;
       const card = document.createElement('div');
       card.className = 'attached-card';
       card.innerHTML = `
@@ -810,7 +818,7 @@
 
     if (ratedVal && measuredVal && badgeText === 'NG') {
       let capSummary = `Rated: ${ratedVal} µF (Range: +${plusVal}%/-${minusVal}%, Acceptable: ${minRange} - ${maxRange} µF), Measured: ${measuredVal} F [NG]`;
-      html += `<div class="summary-item-row" style="color: var(--danger-red); font-weight: 600;"><span style="font-weight:700;">• Capacitance Check Result (NG Detected):</span> ${capSummary}</div>`;
+      html += `<div class="summary-item-row" data-summary-type="ng" style="color: var(--danger-red); font-weight: 600;"><span style="font-weight:700;">• Capacitance Check Result (NG Detected):</span> ${capSummary}</div>`;
     }
 
     box.innerHTML = html || '<div style="color:var(--text-muted);">No inspection summary available</div>';
@@ -829,6 +837,64 @@
     });
   }
 
+  /* =========================================================
+     DIRECT A4 PDF GENERATION (jsPDF)
+  ========================================================= */
+  function getImgDataUrlSafe(imgEl) {
+    try {
+      if (!imgEl || !imgEl.complete || !imgEl.naturalWidth) return null;
+      const ratio = imgEl.naturalWidth / imgEl.naturalHeight;
+      if (imgEl.src && imgEl.src.startsWith('data:image/')) {
+        const format = (imgEl.src.startsWith('data:image/jpeg') || imgEl.src.startsWith('data:image/jpg')) ? 'JPEG' : 'PNG';
+        return { dataUrl: imgEl.src, format, ratio };
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = imgEl.naturalWidth;
+      canvas.height = imgEl.naturalHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(imgEl, 0, 0);
+      return {
+        dataUrl: canvas.toDataURL('image/png'),
+        format: 'PNG',
+        ratio
+      };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function sanitizePdfText(str) {
+    return String(str || '')
+      .replace(/MΩ/g, 'MOhm')
+      .replace(/kΩ/g, 'kOhm')
+      .replace(/Ω/g, 'Ohm')
+      .replace(/≥/g, '>=')
+      .replace(/≤/g, '<=')
+      .replace(/∞/g, 'Inf')
+      .replace(/[—–]/g, '-')
+      .replace(/•/g, '-')
+      .replace(/[“”]/g, '"')
+      .replace(/[‘’]/g, "'")
+      .replace(/[^\x00-\xFF]/g, '');
+  }
+
+  function drawPdfCheckbox(doc, x, y, checked) {
+    if (checked) {
+      doc.setFillColor(230, 0, 18);
+      doc.setDrawColor(230, 0, 18);
+      doc.roundedRect(x, y, 3.4, 3.4, 0.7, 0.7, 'FD');
+      doc.setDrawColor(255, 255, 255);
+      doc.setLineWidth(0.45);
+      doc.line(x + 0.75, y + 1.8, x + 1.4, y + 2.55);
+      doc.line(x + 1.4, y + 2.55, x + 2.75, y + 0.95);
+      doc.setLineWidth(0.3);
+    } else {
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(203, 213, 225);
+      doc.roundedRect(x, y, 3.4, 3.4, 0.7, 0.7, 'FD');
+    }
+  }
+
   function generatePDF() {
     const serviceReportInput = document.getElementById('serviceReportNo');
     const reportVal = serviceReportInput ? serviceReportInput.value.trim().toUpperCase() : '';
@@ -840,29 +906,496 @@
     }
 
     prepareDOMForPDF();
+    updateSummarySection();
 
-    const originalTitle = document.title;
-    let originalTopTitle = '';
     const safeFileName = reportVal.replace(/[\/\\:*?"<>|]/g, '-');
 
-    document.title = safeFileName;
-    try {
-      if (window.top && window.top !== window) {
-        originalTopTitle = window.top.document.title;
-        window.top.document.title = safeFileName;
+    // Fallback to native print if jsPDF is unavailable offline
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      const originalTitle = document.title;
+      document.title = safeFileName;
+      window.addEventListener('afterprint', () => { document.title = originalTitle; }, { once: true });
+      setTimeout(() => { window.print(); }, 100);
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const pageW = 210;
+    const margin = 12;
+    const contentW = pageW - margin * 2;
+    let y = 10;
+
+    function checkPageBreak(neededH) {
+      if (y + neededH > 285) {
+        doc.addPage();
+        y = 12;
       }
-    } catch (e) {}
+    }
 
-    window.addEventListener('afterprint', () => {
-      document.title = originalTitle;
-      try {
-        if (window.top && window.top !== window && originalTopTitle) {
-          window.top.document.title = originalTopTitle;
+    function drawSectionHeader(title, startY) {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(17, 17, 17);
+      doc.text(sanitizePdfText(title).toUpperCase(), margin + 4, startY + 5.5);
+
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.3);
+      doc.line(margin + 4, startY + 7.5, pageW - margin - 4, startY + 7.5);
+    }
+
+    // 1. Brand Header (Logo + Service Report Badge)
+    const logoImg = document.querySelector('.brand-logo-img');
+    const logoData = getImgDataUrlSafe(logoImg);
+    if (logoData) {
+      const logoH = 9.5;
+      const logoW = Math.min(55, logoH * logoData.ratio);
+      doc.addImage(logoData.dataUrl, logoData.format, margin, y, logoW, logoH);
+    } else {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(17, 17, 17);
+      doc.text('MITSUBISHI HEAVY INDUSTRIES', margin, y + 6.5);
+    }
+
+    const cleanReportVal = sanitizePdfText(reportVal);
+    const badgeText = `Service Report No: ${cleanReportVal}`;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    const badgeW = Math.max(58, doc.getTextWidth(badgeText) + 10);
+    const badgeX = pageW - margin - badgeW;
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(badgeX, y + 0.5, badgeW, 8.5, 4, 4, 'FD');
+    doc.setTextColor(100, 116, 139);
+    doc.text('Service Report No:', badgeX + 4, y + 6);
+    const prefixW = doc.getTextWidth('Service Report No: ');
+    doc.setTextColor(17, 17, 17);
+    doc.text(cleanReportVal, badgeX + 4 + prefixW, y + 6);
+
+    y += 13;
+    doc.setDrawColor(230, 0, 18);
+    doc.setLineWidth(0.8);
+    doc.line(margin, y, pageW - margin, y);
+    y += 7;
+
+    // 2. Page Title
+    const formTitle = sanitizePdfText(document.getElementById('displayFormTitle')?.textContent.trim() || 'Checking Part Report (Running Capacitor)');
+    doc.setFillColor(230, 0, 18);
+    doc.roundedRect(margin, y - 4.5, 1.5, 5.5, 0.5, 0.5, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.setTextColor(17, 17, 17);
+    doc.text(formTitle, margin + 4, y);
+    y += 5;
+
+    // 3. Section 1: General Information
+    const sec1H = 23;
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(margin, y, contentW, sec1H, 2, 2, 'FD');
+    drawSectionHeader('General Information', y);
+
+    const genFields = [
+      { label: 'Model', val: sanitizePdfText(document.getElementById('Model')?.value.trim()) || '-' },
+      { label: 'Serial No. (S/N)', val: sanitizePdfText(document.getElementById('SN')?.value.trim()) || '-' },
+      { label: 'Part No.', val: sanitizePdfText(document.getElementById('partNo')?.value.trim()) || '-' }
+    ];
+    const colGap = 4;
+    const colW = (contentW - 8 - colGap * 2) / 3;
+    genFields.forEach((f, idx) => {
+      const cx = margin + 4 + idx * (colW + colGap);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(30, 41, 59);
+      doc.text(f.label, cx, y + 11.5);
+
+      doc.setFillColor(250, 250, 250);
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(cx, y + 13, colW, 7, 1.5, 1.5, 'FD');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.text(f.val, cx + 2.5, y + 17.8);
+    });
+    y += sec1H + 4;
+
+    // 4. Section 2: Symptom
+    const sec2H = 39;
+    checkPageBreak(sec2H);
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(margin, y, contentW, sec2H, 2, 2, 'FD');
+    drawSectionHeader('Symptom', y);
+
+    // Group 1: Appearance failure
+    let symY = y + 11.5;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.8);
+    doc.setTextColor(17, 17, 17);
+    doc.text('Appearance failure', margin + 4, symY);
+
+    symY += 2;
+    const appItems = [
+      { id: 'chk_app_swell', label: 'Swell' },
+      { id: 'chk_app_dent', label: 'Dent' },
+      { id: 'chk_app_crack', label: 'Crack' },
+      { id: 'chk_app_leak', label: 'Leak' }
+    ];
+    let curX = margin + 4;
+    appItems.forEach(item => {
+      const isChk = document.getElementById(item.id)?.checked || false;
+      doc.setFont('helvetica', isChk ? 'bold' : 'normal');
+      doc.setFontSize(7.4);
+      const boxW = doc.getTextWidth(item.label) + 10.5;
+      doc.setFillColor(248, 250, 252);
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(curX, symY, boxW, 6.8, 1.2, 1.2, 'FD');
+      drawPdfCheckbox(doc, curX + 2, symY + 1.7, isChk);
+      doc.setTextColor(30, 41, 59);
+      doc.text(item.label, curX + 6.8, symY + 4.5);
+      curX += boxW + 3;
+    });
+
+    // Group 2: Capacitance failure
+    symY += 11.5;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.8);
+    doc.setTextColor(17, 17, 17);
+    doc.text('Capacitance failure', margin + 4, symY);
+
+    symY += 2;
+    const capItems = [
+      { id: 'chk_cap_short', label: 'Short circuit' },
+      { id: 'chk_cap_open', label: 'Open circuit' },
+      { id: 'chk_cap_less', label: 'Capacitance is less than specification' }
+    ];
+    curX = margin + 4;
+    capItems.forEach(item => {
+      const isChk = document.getElementById(item.id)?.checked || false;
+      doc.setFont('helvetica', isChk ? 'bold' : 'normal');
+      doc.setFontSize(7.4);
+      const boxW = doc.getTextWidth(item.label) + 10.5;
+      doc.setFillColor(248, 250, 252);
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(curX, symY, boxW, 6.8, 1.2, 1.2, 'FD');
+      drawPdfCheckbox(doc, curX + 2, symY + 1.7, isChk);
+      doc.setTextColor(30, 41, 59);
+      doc.text(item.label, curX + 6.8, symY + 4.5);
+      curX += boxW + 3;
+    });
+
+    y += sec2H + 4;
+
+    // 5. Section 3 on PDF: Technical Inspection & Defect Locations (Capacitance check result)
+    // (Note: #section_technical_reference is hidden on PDF per @media print rules)
+    const sec3H = 54;
+    checkPageBreak(sec3H);
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(margin, y, contentW, sec3H, 2, 2, 'FD');
+    drawSectionHeader('Technical Inspection & Defect Locations', y);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.2);
+    doc.setTextColor(17, 17, 17);
+    doc.text('Capacitance check result', margin + 4, y + 12.5);
+
+    // Left Column: Specification Chart (Control Range)
+    const leftX = margin + 4;
+    const leftW = 76;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(30, 41, 59);
+    doc.text('Specification Chart (Control Range)', leftX, y + 18);
+
+    const chartBoxY = y + 20.5;
+    const chartBoxH = 22;
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(leftX, chartBoxY, leftW, chartBoxH, 1.5, 1.5, 'FD');
+
+    const barX = leftX + 5;
+    const barW = leftW - 10;
+    const barY = chartBoxY + 6.5;
+    const barH = 3.2;
+
+    // Gray track background
+    doc.setFillColor(226, 232, 240);
+    doc.roundedRect(barX, barY, barW, barH, 1, 1, 'F');
+
+    // Green spec range (15% to 85%)
+    const specX = barX + barW * 0.15;
+    const specW = barW * 0.70;
+    doc.setFillColor(187, 247, 208);
+    doc.rect(specX, barY, specW, barH, 'F');
+    doc.setDrawColor(16, 185, 129);
+    doc.setLineWidth(0.55);
+    doc.line(specX, barY, specX, barY + barH);
+    doc.line(specX + specW, barY, specX + specW, barY + barH);
+
+    // Center Std line (50%)
+    const centerX = barX + barW * 0.50;
+    doc.setDrawColor(2, 132, 199);
+    doc.setLineWidth(0.55);
+    doc.line(centerX, barY - 0.8, centerX, barY + barH + 0.8);
+
+    // Measured point dot (if valid numbers entered)
+    const ratedNum = parseFloat(document.getElementById('rated_cap')?.value);
+    const plusNum = parseFloat(document.getElementById('range_plus')?.value) || 0;
+    const minusNum = parseFloat(document.getElementById('range_minus')?.value) || 0;
+    const measuredNum = parseFloat(document.getElementById('measured_cap')?.value);
+
+    if (!isNaN(ratedNum) && !isNaN(measuredNum)) {
+      const minR = ratedNum * (1 - minusNum / 100);
+      const maxR = ratedNum * (1 + plusNum / 100);
+      const isOk = (measuredNum >= minR && measuredNum <= maxR);
+
+      const totalRange = (maxR - minR) / SPEC_RANGE_PERCENT;
+      const scaleMin = minR - (totalRange * SPEC_MARGIN_PERCENT);
+      const scaleMax = maxR + (totalRange * SPEC_MARGIN_PERCENT);
+
+      let posPercent = 50;
+      if (scaleMax > scaleMin) {
+        posPercent = ((measuredNum - scaleMin) / (scaleMax - scaleMin)) * 100;
+      }
+      if (posPercent < 1) posPercent = 1;
+      if (posPercent > 99) posPercent = 99;
+
+      const dotX = barX + (barW * posPercent) / 100;
+      const dotY = barY + barH / 2;
+
+      doc.setFillColor(...(isOk ? [16, 185, 129] : [239, 68, 68]));
+      doc.setDrawColor(255, 255, 255);
+      doc.setLineWidth(0.5);
+      doc.circle(dotX, dotY, 2.2, 'FD');
+    }
+
+    // Chart Labels (Min / Std / Max)
+    const lblMinTxt = sanitizePdfText(document.getElementById('lbl_min_cap')?.textContent || 'Min -');
+    const lblStdTxt = sanitizePdfText(document.getElementById('lbl_std_cap')?.textContent || 'Std -');
+    const lblMaxTxt = sanitizePdfText(document.getElementById('lbl_max_cap')?.textContent || 'Max -');
+    const lblY = barY + barH + 5;
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(6.6);
+    doc.setTextColor(100, 116, 139);
+    doc.text(lblMinTxt, specX, lblY, { align: 'center' });
+    doc.setTextColor(2, 132, 199);
+    doc.text(lblStdTxt, centerX, lblY, { align: 'center' });
+    doc.setTextColor(100, 116, 139);
+    doc.text(lblMaxTxt, specX + specW, lblY, { align: 'center' });
+
+    // Right Column: Detailed Capacitance Values
+    const rightX = leftX + leftW + 7;
+    const rightW = contentW - 8 - leftW - 7;
+    const rightEndX = rightX + rightW;
+    let rY = y + 18;
+
+    const ratedStr = sanitizePdfText(document.getElementById('rated_cap')?.value.trim()) || '-';
+    const plusStr = sanitizePdfText(document.getElementById('range_plus')?.value.trim()) || '0';
+    const minusStr = sanitizePdfText(document.getElementById('range_minus')?.value.trim()) || '0';
+    const minRangeStr = sanitizePdfText(document.getElementById('display_min_range')?.textContent.trim()) || '-';
+    const maxRangeStr = sanitizePdfText(document.getElementById('display_max_range')?.textContent.trim()) || '-';
+    const measuredStr = sanitizePdfText(document.getElementById('measured_cap')?.value.trim()) || '-';
+    const judgeStr = sanitizePdfText(document.getElementById('judge_badge_cap')?.textContent.trim()) || '-';
+
+    // Row 1: Rated capacitance marked on the body
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.8);
+    doc.setTextColor(30, 41, 59);
+    doc.text('Rated capacitance marked on the body :', rightX, rY);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${ratedStr} µF`, rightEndX, rY, { align: 'right' });
+
+    // Row 2: Percent operation range
+    rY += 7;
+    doc.setFont('helvetica', 'normal');
+    doc.text('Percent operation range :', rightX, rY);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`+${plusStr} %  /  -${minusStr} %`, rightEndX, rY, { align: 'right' });
+
+    // Row 3: Acceptable operation range
+    rY += 7;
+    doc.setFont('helvetica', 'normal');
+    doc.text('Acceptable operation range :', rightX, rY);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(2, 132, 199);
+    doc.text(`${minRangeStr}  to  ${maxRangeStr} µF`, rightEndX, rY, { align: 'right' });
+
+    // Dashed Divider
+    rY += 3.5;
+    doc.setDrawColor(203, 213, 225);
+    doc.setLineWidth(0.3);
+    doc.setLineDashPattern([1.2, 1.2], 0);
+    doc.line(rightX, rY, rightEndX, rY);
+    doc.setLineDashPattern([], 0);
+
+    // Row 4: Measured capacitance + Judgement Badge
+    rY += 6.5;
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(30, 41, 59);
+    doc.text('Measured capacitance :', rightX, rY);
+
+    const badgePillW = 14;
+    const badgePillH = 5;
+    const badgePillX = rightEndX - badgePillW;
+    const badgePillY = rY - 3.6;
+
+    if (judgeStr === 'OK' || judgeStr === 'NG') {
+      const isOk = judgeStr === 'OK';
+      doc.setFillColor(...(isOk ? [236, 253, 245] : [254, 242, 242]));
+      doc.setDrawColor(...(isOk ? [16, 185, 129] : [239, 68, 68]));
+      doc.roundedRect(badgePillX, badgePillY, badgePillW, badgePillH, 2.2, 2.2, 'FD');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.2);
+      doc.setTextColor(...(isOk ? [16, 185, 129] : [239, 68, 68]));
+      doc.text(judgeStr, badgePillX + badgePillW / 2, rY - 0.2, { align: 'center' });
+    } else {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.8);
+      doc.setTextColor(30, 41, 59);
+      doc.text('-', badgePillX + badgePillW / 2, rY, { align: 'center' });
+    }
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.2);
+    doc.setTextColor(17, 17, 17);
+    doc.text(`${measuredStr} F`, badgePillX - 4, rY, { align: 'right' });
+
+    y += sec3H + 4;
+
+    // 6. Section 4 on PDF: Attached Pictures (Only if images uploaded)
+    if (uploadedAppearanceImages.length > 0) {
+      const picColGap = 4;
+      const picCardW = (contentW - 8 - picColGap) / 2;
+      const picImgBoxH = 44;
+      const picCardH = 54;
+      const picRows = Math.ceil(uploadedAppearanceImages.length / 2);
+
+      checkPageBreak(12 + picCardH + 4);
+      let curSecStartY = y;
+      drawSectionHeader('Attached Pictures (Appearance Failure)', y);
+      y += 10.5;
+
+      for (let r = 0; r < picRows; r++) {
+        if (r > 0 && y + picCardH + 4 > 285) {
+          doc.setDrawColor(226, 232, 240);
+          doc.setLineWidth(0.35);
+          doc.roundedRect(margin, curSecStartY, contentW, (y + 1) - curSecStartY, 2, 2, 'S');
+
+          doc.addPage();
+          y = 12;
+          curSecStartY = y;
+          drawSectionHeader('Attached Pictures (Appearance Failure - Cont.)', y);
+          y += 10.5;
         }
-      } catch (e) {}
-    }, { once: true });
 
-    setTimeout(() => { window.print(); }, 100);
+        const colsInRow = Math.min(2, uploadedAppearanceImages.length - r * 2);
+        for (let c = 0; c < colsInRow; c++) {
+          const picIdx = r * 2 + c;
+          const item = uploadedAppearanceImages[picIdx];
+          const imgSrc = typeof item === 'string' ? item : item.src;
+          const ratio = (typeof item === 'object' && item.ratio) ? item.ratio : 1.33;
+
+          const px = margin + 4 + c * (picCardW + picColGap);
+          const py = y;
+
+          doc.setFillColor(250, 250, 250);
+          doc.setDrawColor(226, 232, 240);
+          doc.roundedRect(px, py, picCardW, picCardH, 1.5, 1.5, 'FD');
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.8);
+          doc.setTextColor(17, 17, 17);
+          doc.text(`Appearance Image ${picIdx + 1}`, px + 2.5, py + 5);
+
+          const innerX = px + 2.5;
+          const innerY = py + 7;
+          const innerW = picCardW - 5;
+          const innerH = picImgBoxH;
+
+          doc.setFillColor(255, 255, 255);
+          doc.setDrawColor(226, 232, 240);
+          doc.roundedRect(innerX, innerY, innerW, innerH, 1, 1, 'FD');
+
+          try {
+            const imgFormat = (imgSrc.startsWith('data:image/jpeg') || imgSrc.startsWith('data:image/jpg')) ? 'JPEG' : 'PNG';
+            let drawW = innerW - 1.5;
+            let drawH = drawW / ratio;
+            if (drawH > innerH - 1.5) {
+              drawH = innerH - 1.5;
+              drawW = drawH * ratio;
+            }
+            doc.addImage(imgSrc, imgFormat, innerX + (innerW - drawW) / 2, innerY + (innerH - drawH) / 2, drawW, drawH);
+          } catch (err) {
+            console.error('PDF appearance image render error:', err);
+          }
+        }
+        y += picCardH + 3;
+      }
+
+      const secEndY = y + 1;
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.35);
+      doc.roundedRect(margin, curSecStartY, contentW, secEndY - curSecStartY, 2, 2, 'S');
+      y = secEndY + 4;
+    }
+
+    // 7. Section 5 on PDF: Inspection Summary & Comments
+    const summaryRows = [];
+    const domRows = document.querySelectorAll('#summary_comment_content .summary-item-row');
+    if (domRows.length > 0) {
+      domRows.forEach(el => {
+        const txt = sanitizePdfText(el.textContent.trim());
+        const rowType = el.getAttribute('data-summary-type') || 'normal';
+        summaryRows.push({ text: txt, type: rowType });
+      });
+    } else {
+      summaryRows.push({ text: 'No inspection summary available', type: 'muted' });
+    }
+
+    doc.setFontSize(8);
+    let totalLines = 0;
+    const wrappedRows = summaryRows.map(r => {
+      const lines = doc.splitTextToSize(r.text, contentW - 14);
+      totalLines += lines.length;
+      return { lines, type: r.type };
+    });
+
+    const innerBoxH = Math.max(10, totalLines * 4.5 + 5);
+    const secSumH = 13 + innerBoxH;
+
+    checkPageBreak(secSumH);
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(margin, y, contentW, secSumH, 2, 2, 'FD');
+    drawSectionHeader('Inspection Summary & Comments', y);
+
+    doc.setFillColor(250, 250, 250);
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(margin + 4, y + 9.5, contentW - 8, innerBoxH, 1.5, 1.5, 'FD');
+
+    let textY = y + 14;
+    wrappedRows.forEach(item => {
+      if (item.type === 'ng') {
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(239, 68, 68);
+      } else if (item.type === 'muted') {
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(100, 116, 139);
+      } else {
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(30, 41, 59);
+      }
+      doc.text(item.lines, margin + 7, textY);
+      textY += item.lines.length * 4.5;
+    });
+
+    doc.save(`${safeFileName}.pdf`);
   }
 </script>
 
