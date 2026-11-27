@@ -6,6 +6,8 @@
   <title id="pageHeaderTitle">Checking Part Report (Compressor)</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <style>
     :root {
       color-scheme: light only;
@@ -167,14 +169,13 @@
       .dual-image-grid, .attached-grid { grid-template-columns: 1fr !important; }
       .others-row { flex-direction: column; align-items: stretch; }
     }
-/* === เพิ่มโค้ดส่วนนี้เพื่อซ่อนปุ่มรูปเฟืองบนมือถือ === */
+    /* ซ่อนปุ่มรูปเฟืองบนมือถือ */
     @media screen and (max-width: 768px), (hover: none) and (pointer: coarse) {
       .designer-fab, #editorPanel {
         display: none !important;
       }
     }
-    /* ========================================== */
-    /* Save PDF / Print Settings (Consistent A4 Layout on Windows & Mobile) */
+    /* Save PDF / Print Fallback Settings */
     @media print {
       @page {
         size: A4 portrait;
@@ -983,16 +984,24 @@
       const processFile = (fileObj) => {
         const reader = new FileReader();
         reader.onload = function(e) {
-          formState.uploadedImages[attachId] = { title, src: e.target.result };
+          const dataUrl = e.target.result;
+          formState.uploadedImages[attachId] = { title, src: dataUrl, ratio: 1.33 };
+          const tempImg = new Image();
+          tempImg.onload = function() {
+            if (tempImg.naturalWidth && tempImg.naturalHeight) {
+              formState.uploadedImages[attachId].ratio = tempImg.naturalWidth / tempImg.naturalHeight;
+            }
+          };
+          tempImg.src = dataUrl;
           updateUploadZoneVisual();
           renderAttachedImages();
         };
         reader.readAsDataURL(fileObj);
       };
 
-      if (file.name.toLowerCase().endsWith('.heic')) {
+      if (file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif')) {
         heic2any({ blob: file, toType: "image/jpeg" }).then(resultBlob => {
-          processFile(resultBlob);
+          processFile(Array.isArray(resultBlob) ? resultBlob[0] : resultBlob);
         }).catch(err => {
           alert("Failed to convert HEIC file: " + err.message);
         });
@@ -1116,9 +1125,9 @@
       });
 
       if (ngResults.length > 0) {
-        html += `<div class="summary-item-row" style="color: var(--danger-red); font-weight: 600;"><span class="summary-part-name" style="color: var(--danger-red);">• Defective Measurements (NG Only):</span> ${ngResults.join(' | ')}</div>`;
+        html += `<div class="summary-item-row" data-summary-type="ng" style="color: var(--danger-red); font-weight: 600;"><span class="summary-part-name" style="color: var(--danger-red);">• Defective Measurements (NG Only):</span> ${ngResults.join(' | ')}</div>`;
       } else if (totalMeasured > 0) {
-        html += `<div class="summary-item-row" style="color: var(--success-green);"><span class="summary-part-name">• Measurement Result:</span> All Pass (No NG Parameters)</div>`;
+        html += `<div class="summary-item-row" data-summary-type="ok" style="color: var(--success-green);"><span class="summary-part-name">• Measurement Result:</span> All Pass (No NG Parameters)</div>`;
       }
     }
 
@@ -1242,6 +1251,64 @@
     });
   }
 
+  /* =========================================================
+     DIRECT A4 PDF GENERATION (jsPDF + AutoTable)
+  ========================================================= */
+  function getImgDataUrlSafe(imgEl) {
+    try {
+      if (!imgEl || !imgEl.complete || !imgEl.naturalWidth) return null;
+      const ratio = imgEl.naturalWidth / imgEl.naturalHeight;
+      if (imgEl.src && imgEl.src.startsWith('data:image/')) {
+        const format = (imgEl.src.startsWith('data:image/jpeg') || imgEl.src.startsWith('data:image/jpg')) ? 'JPEG' : 'PNG';
+        return { dataUrl: imgEl.src, format, ratio };
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = imgEl.naturalWidth;
+      canvas.height = imgEl.naturalHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(imgEl, 0, 0);
+      return {
+        dataUrl: canvas.toDataURL('image/png'),
+        format: 'PNG',
+        ratio
+      };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function sanitizePdfText(str) {
+    return String(str || '')
+      .replace(/MΩ/g, 'MOhm')
+      .replace(/kΩ/g, 'kOhm')
+      .replace(/Ω/g, 'Ohm')
+      .replace(/≥/g, '>=')
+      .replace(/≤/g, '<=')
+      .replace(/∞/g, 'Inf')
+      .replace(/[—–]/g, '-')
+      .replace(/•/g, '-')
+      .replace(/[“”]/g, '"')
+      .replace(/[‘’]/g, "'")
+      .replace(/[^\x00-\xFF]/g, '');
+  }
+
+  function drawPdfCheckbox(doc, x, y, checked) {
+    if (checked) {
+      doc.setFillColor(230, 0, 18);
+      doc.setDrawColor(230, 0, 18);
+      doc.roundedRect(x, y, 3.4, 3.4, 0.7, 0.7, 'FD');
+      doc.setDrawColor(255, 255, 255);
+      doc.setLineWidth(0.45);
+      doc.line(x + 0.75, y + 1.8, x + 1.4, y + 2.55);
+      doc.line(x + 1.4, y + 2.55, x + 2.75, y + 0.95);
+      doc.setLineWidth(0.3);
+    } else {
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(203, 213, 225);
+      doc.roundedRect(x, y, 3.4, 3.4, 0.7, 0.7, 'FD');
+    }
+  }
+
   function generatePDF() {
     const serviceReportInput = document.getElementById('serviceReportNo');
     const reportVal = serviceReportInput ? serviceReportInput.value.trim().toUpperCase() : '';
@@ -1253,29 +1320,612 @@
     }
 
     prepareDOMForPDF();
+    updateSummarySection();
+    renderAttachedImages();
 
-    const originalTitle = document.title;
-    let originalTopTitle = '';
     const safeFileName = reportVal.replace(/[\/\\:*?"<>|]/g, '-');
 
-    document.title = safeFileName;
-    try {
-      if (window.top && window.top !== window) {
-        originalTopTitle = window.top.document.title;
-        window.top.document.title = safeFileName;
+    // Fallback to native print if jsPDF is unavailable offline
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      const originalTitle = document.title;
+      document.title = safeFileName;
+      window.addEventListener('afterprint', () => { document.title = originalTitle; }, { once: true });
+      setTimeout(() => { window.print(); }, 100);
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const pageW = 210;
+    const margin = 12;
+    const contentW = pageW - margin * 2;
+    let y = 10;
+
+    function checkPageBreak(neededH) {
+      if (y + neededH > 285) {
+        doc.addPage();
+        y = 12;
       }
-    } catch (e) {}
+    }
 
-    window.addEventListener('afterprint', () => {
-      document.title = originalTitle;
-      try {
-        if (window.top && window.top !== window && originalTopTitle) {
-          window.top.document.title = originalTopTitle;
+    function drawSectionHeader(title, startY, rightSubtitle = '') {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(17, 17, 17);
+      doc.text(sanitizePdfText(title).toUpperCase(), margin + 4, startY + 5.5);
+
+      if (rightSubtitle) {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7.2);
+        doc.setTextColor(100, 116, 139);
+        doc.text(sanitizePdfText(rightSubtitle), pageW - margin - 4, startY + 5.5, { align: 'right' });
+      }
+
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.3);
+      doc.line(margin + 4, startY + 7.5, pageW - margin - 4, startY + 7.5);
+    }
+
+    // 1. Brand Header (Logo + Service Report Badge)
+    const logoImg = document.querySelector('.brand-logo-img');
+    const logoData = getImgDataUrlSafe(logoImg);
+    if (logoData) {
+      const logoH = 9.5;
+      const logoW = Math.min(55, logoH * logoData.ratio);
+      doc.addImage(logoData.dataUrl, logoData.format, margin, y, logoW, logoH);
+    } else {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(17, 17, 17);
+      doc.text('MITSUBISHI HEAVY INDUSTRIES', margin, y + 6.5);
+    }
+
+    const cleanReportVal = sanitizePdfText(reportVal);
+    const badgeText = `Service Report No: ${cleanReportVal}`;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    const badgeW = Math.max(58, doc.getTextWidth(badgeText) + 10);
+    const badgeX = pageW - margin - badgeW;
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(badgeX, y + 0.5, badgeW, 8.5, 4, 4, 'FD');
+    doc.setTextColor(100, 116, 139);
+    doc.text('Service Report No:', badgeX + 4, y + 6);
+    const prefixW = doc.getTextWidth('Service Report No: ');
+    doc.setTextColor(17, 17, 17);
+    doc.text(cleanReportVal, badgeX + 4 + prefixW, y + 6);
+
+    y += 13;
+    doc.setDrawColor(230, 0, 18);
+    doc.setLineWidth(0.8);
+    doc.line(margin, y, pageW - margin, y);
+    y += 7;
+
+    // 2. Page Title
+    const formTitle = sanitizePdfText(document.getElementById('displayFormTitle')?.textContent.trim() || 'Checking Part Report (Compressor)');
+    doc.setFillColor(230, 0, 18);
+    doc.roundedRect(margin, y - 4.5, 1.5, 5.5, 0.5, 0.5, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.setTextColor(17, 17, 17);
+    doc.text(formTitle, margin + 4, y);
+    y += 5;
+
+    // 3. Section 1: General Information
+    const sec1H = 23;
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(margin, y, contentW, sec1H, 2, 2, 'FD');
+    drawSectionHeader('General Information', y);
+
+    const genFields = [
+      { label: 'Model', val: sanitizePdfText(document.getElementById('Model')?.value.trim()) || '-' },
+      { label: 'Serial No. (S/N)', val: sanitizePdfText(document.getElementById('SN')?.value.trim()) || '-' },
+      { label: 'Part No.', val: sanitizePdfText(document.getElementById('partNo')?.value.trim()) || '-' }
+    ];
+    const colGap = 4;
+    const colW = (contentW - 8 - colGap * 2) / 3;
+    genFields.forEach((f, idx) => {
+      const cx = margin + 4 + idx * (colW + colGap);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(30, 41, 59);
+      doc.text(f.label, cx, y + 11.5);
+
+      doc.setFillColor(250, 250, 250);
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(cx, y + 13, colW, 7, 1.5, 1.5, 'FD');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.text(f.val, cx + 2.5, y + 17.8);
+    });
+    y += sec1H + 4;
+
+    // 4. Section 2: Symptom (Compressor)
+    const chkOthers = document.getElementById('chk_sym_others')?.checked || false;
+    const txtOthersVal = sanitizePdfText(document.getElementById('txt_sym_others')?.value.trim() || '');
+    const showOthersRow = chkOthers && txtOthersVal !== '';
+    const sec2H = showOthersRow ? 49 : 39;
+
+    checkPageBreak(sec2H);
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(margin, y, contentW, sec2H, 2, 2, 'FD');
+    drawSectionHeader('Symptom (Compressor)', y);
+
+    // Phase Row
+    const phaseRowY = y + 10.5;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.8);
+    doc.setTextColor(17, 17, 17);
+    doc.text('Compressor Phase:', margin + 4, phaseRowY + 5);
+
+    const phases = [
+      { id: 'chk_phase_1', label: '1 Ø phase', x: margin + 35 },
+      { id: 'chk_phase_3', label: '3 Ø phase', x: margin + 68 }
+    ];
+    phases.forEach(p => {
+      const isChk = document.getElementById(p.id)?.checked || false;
+      doc.setFillColor(248, 250, 252);
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(p.x, phaseRowY, 29, 7.5, 1.5, 1.5, 'FD');
+      drawPdfCheckbox(doc, p.x + 2.2, phaseRowY + 2.05, isChk);
+      doc.setFont('helvetica', isChk ? 'bold' : 'normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(30, 41, 59);
+      doc.text(sanitizePdfText(p.label), p.x + 7.2, phaseRowY + 4.9);
+    });
+
+    // 6 Symptom Checkboxes (2 rows x 3 columns)
+    const symptomList = [
+      { id: 'chk_sym_locked', label: 'Locked' },
+      { id: 'chk_sym_nopressure', label: 'No pressure' },
+      { id: 'chk_sym_leaked', label: 'Leaked' },
+      { id: 'chk_sym_venting', label: 'Terminal venting' },
+      { id: 'chk_sym_noise', label: 'Noise' },
+      { id: 'chk_sym_others', label: 'Others' }
+    ];
+    const symGridStartY = phaseRowY + 10;
+    const symCellW = (contentW - 8 - 8) / 3;
+    symptomList.forEach((sym, idx) => {
+      const r = Math.floor(idx / 3);
+      const c = idx % 3;
+      const sx = margin + 4 + c * (symCellW + 4);
+      const sy = symGridStartY + r * 9;
+      const isChk = document.getElementById(sym.id)?.checked || false;
+
+      doc.setFillColor(248, 250, 252);
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(sx, sy, symCellW, 7.5, 1.5, 1.5, 'FD');
+      drawPdfCheckbox(doc, sx + 2.2, sy + 2.05, isChk);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(30, 41, 59);
+      doc.text(sanitizePdfText(sym.label), sx + 7.2, sy + 4.9);
+    });
+
+    if (showOthersRow) {
+      const othY = symGridStartY + 19;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(30, 41, 59);
+      doc.text('Others Detail:', margin + 4, othY + 4.8);
+
+      doc.setFillColor(250, 250, 250);
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(margin + 26, othY, contentW - 30, 7, 1.5, 1.5, 'FD');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.8);
+      doc.text(txtOthersVal, margin + 28.5, othY + 4.8);
+    }
+
+    y += sec2H + 4;
+
+    // 5. Section 3: Technical Data Reference & Electrical Check
+    checkPageBreak(36);
+    const sec3StartY = y;
+    const sec3StartPage = doc.internal.getNumberOfPages();
+    drawSectionHeader('Technical Data Reference & Electrical Check', y, 'Multimeter (Ohm) & Megohmmeter (500Vdc)');
+    y += 10;
+
+    if (!activePhase) {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139);
+      doc.text('No Compressor Phase selected (1 Ø phase or 3 Ø phase).', margin + contentW / 2, y + 6, { align: 'center' });
+      y += 13;
+    } else {
+      const cfg = activePhase === '1phase' ? PHASE_1_CONFIG : PHASE_3_CONFIG;
+      const tol = standardCriteria.tolerancePercent;
+      const minInsul = Number(standardCriteria.minInsulationMOhm).toFixed(1);
+      const insulVolt = sanitizePdfText(standardCriteria.insulationVoltage);
+
+      // Sub-header (Phase Title + Criteria)
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8.2);
+      doc.setTextColor(17, 17, 17);
+      doc.text(sanitizePdfText(cfg.title), margin + 4, y + 3.5);
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7);
+      doc.setTextColor(230, 0, 18);
+      doc.text(`Tolerance: ±${tol}% | Min Insulation: ${minInsul} MOhm @ ${insulVolt}`, pageW - margin - 4, y + 3.5, { align: 'right' });
+
+      y += 5.5;
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.25);
+      doc.line(margin + 4, y, pageW - margin - 4, y);
+      y += 2.5;
+
+      // Ambient Temp Bar (T1, T2, Same Area)
+      const tempBarH = 14.5;
+      doc.setFillColor(248, 250, 252);
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(margin + 4, y, contentW - 8, tempBarH, 1.5, 1.5, 'FD');
+
+      const t1Val = sanitizePdfText(document.getElementById('temp_t1')?.value.trim() || '') || '-';
+      const t2Val = sanitizePdfText(document.getElementById('temp_t2')?.value.trim() || '') || '-';
+      const sameAreaChk = document.getElementById('chk_same_area')?.checked || false;
+
+      const tBoxW = 56;
+      // T1
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7);
+      doc.setTextColor(30, 41, 59);
+      doc.text('T1: Ambient Temp - Spare Part (°C)', margin + 7, y + 4.3);
+      doc.setFillColor(255, 255, 255);
+      doc.roundedRect(margin + 7, y + 5.6, tBoxW, 6.8, 1.2, 1.2, 'FD');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.8);
+      doc.text(t1Val === '-' ? '-' : `${t1Val} °C`, margin + 9.5, y + 10.1);
+
+      // T2
+      const t2X = margin + 7 + tBoxW + 6;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7);
+      doc.setTextColor(30, 41, 59);
+      doc.text('T2: Ambient Temp - Defective Comp (°C)', t2X, y + 4.3);
+      doc.setFillColor(sameAreaChk ? 241 : 255, sameAreaChk ? 245 : 255, sameAreaChk ? 249 : 255);
+      doc.roundedRect(t2X, y + 5.6, tBoxW, 6.8, 1.2, 1.2, 'FD');
+      doc.setFont('helvetica', sameAreaChk ? 'bold' : 'normal');
+      doc.setFontSize(7.8);
+      doc.text(t2Val === '-' ? '-' : `${t2Val} °C`, t2X + 2.5, y + 10.1);
+
+      // Same Area Checkbox
+      const sameX = t2X + tBoxW + 6;
+      const sameW = contentW - 8 - (sameX - (margin + 4)) - 3;
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(sameX, y + 5.6, sameW, 6.8, 1.2, 1.2, 'FD');
+      drawPdfCheckbox(doc, sameX + 2, y + 7.3, sameAreaChk);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7);
+      doc.setTextColor(30, 41, 59);
+      doc.text('Same Area (T1 = T2)', sameX + 6.8, y + 10);
+
+      y += tempBarH + 3.5;
+
+      // Table 1: Winding Resistance Check (Ohm)
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.8);
+      doc.setTextColor(17, 17, 17);
+      doc.text('1. Winding Resistance Check (Ohm)', margin + 4, y + 2.5);
+      y += 4;
+
+      const windMeta = cfg.windingPairs.map(p => {
+        const r1Raw = document.getElementById(`val_r1_${p.id}`)?.value.trim() || '';
+        const r2Text = sanitizePdfText(document.getElementById(`calc_r2_${p.id}`)?.textContent.trim() || '-');
+        const rangeText = sanitizePdfText(document.getElementById(`range_r2_${p.id}`)?.textContent.trim() || '-');
+        const unitR3 = document.getElementById(`unit_r3_${p.id}`)?.value || 'Ohm';
+        const valR3 = document.getElementById(`val_r3_${p.id}`)?.value.trim() || '';
+        const status = sanitizePdfText(document.getElementById(`status_wind_${p.id}`)?.textContent.trim() || '-');
+
+        const r1Display = r1Raw !== '' ? sanitizePdfText(`${r1Raw} Ohm`) : '-';
+        let r3Display = '-';
+        if (unitR3 === 'OL') r3Display = 'OL';
+        else if (valR3 !== '') r3Display = sanitizePdfText(`${valR3} Ohm`);
+
+        return {
+          pair: sanitizePdfText(p.label),
+          r1Display,
+          r2Text,
+          rangeText,
+          r3Display,
+          status
+        };
+      });
+
+      doc.autoTable({
+        startY: y,
+        margin: { left: margin + 4, right: margin + 4 },
+        theme: 'grid',
+        styles: {
+          font: 'helvetica',
+          fontSize: 7.3,
+          textColor: [30, 41, 59],
+          lineColor: [226, 232, 240],
+          lineWidth: 0.3,
+          halign: 'center',
+          valign: 'middle',
+          cellPadding: 2,
+          minCellHeight: 7.5
+        },
+        headStyles: {
+          fillColor: [241, 245, 249],
+          textColor: [17, 17, 17],
+          fontStyle: 'bold'
+        },
+        columnStyles: {
+          0: { cellWidth: 24, fillColor: [248, 250, 252], fontStyle: 'bold' },
+          1: { cellWidth: 28 },
+          2: { cellWidth: 28, fontStyle: 'bold' },
+          3: { cellWidth: 44, textColor: [100, 116, 139] },
+          4: { cellWidth: 32, fontStyle: 'bold' },
+          5: { cellWidth: 22 }
+        },
+        head: [[
+          'Terminal Pair',
+          'Spare Part R1',
+          'Std R2 at T2',
+          `Acceptable Range (±${tol}%)`,
+          'Defective Comp R3',
+          'Judgement'
+        ]],
+        body: windMeta.map(r => [r.pair, r.r1Display, r.r2Text, r.rangeText, r.r3Display, '']),
+        didDrawCell: function(data) {
+          if (data.section === 'body' && data.column.index === 5) {
+            const st = windMeta[data.row.index].status;
+            const { x, y: cy, width, height } = data.cell;
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(7);
+            if (st === 'OK' || st === 'NG') {
+              const isOk = st === 'OK';
+              doc.setFillColor(...(isOk ? [236, 253, 245] : [254, 242, 242]));
+              doc.setDrawColor(...(isOk ? [16, 185, 129] : [239, 68, 68]));
+              doc.roundedRect(x + 3.5, cy + height / 2 - 2.3, width - 7, 4.6, 2, 2, 'FD');
+              doc.setTextColor(...(isOk ? [16, 185, 129] : [239, 68, 68]));
+              doc.text(st, x + width / 2, cy + height / 2 + 0.85, { align: 'center' });
+            } else {
+              doc.setTextColor(30, 41, 59);
+              doc.text('-', x + width / 2, cy + height / 2 + 0.85, { align: 'center' });
+            }
+          }
         }
-      } catch (e) {}
-    }, { once: true });
+      });
 
-    setTimeout(() => { window.print(); }, 100);
+      y = doc.lastAutoTable.finalY + 4;
+
+      // Table 2: Insulation Resistance Check
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.8);
+      doc.setTextColor(17, 17, 17);
+      doc.text(`2. Insulation Resistance Check (Megohmmeter @ ${insulVolt})`, margin + 4, y + 2.5);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(6.8);
+      doc.setTextColor(100, 116, 139);
+      doc.text(`* Less than ${minInsul} MOhm = Defective (NG)`, pageW - margin - 4, y + 2.5, { align: 'right' });
+      y += 4;
+
+      const insulMeta = cfg.insulationPairs.map(p => {
+        const unitIns = document.getElementById(`unit_ins_${p.id}`)?.value || 'MOhm';
+        const valIns = document.getElementById(`val_ins_${p.id}`)?.value.trim() || '';
+        const status = sanitizePdfText(document.getElementById(`status_ins_${p.id}`)?.textContent.trim() || '-');
+
+        let valDisplay = '-';
+        if (unitIns === 'OL') valDisplay = 'OL (Inf)';
+        else if (valIns !== '') valDisplay = sanitizePdfText(`${valIns} MOhm`);
+
+        return {
+          pair: sanitizePdfText(p.label),
+          setting: insulVolt,
+          standard: `>= ${minInsul} MOhm`,
+          valDisplay,
+          status
+        };
+      });
+
+      doc.autoTable({
+        startY: y,
+        margin: { left: margin + 4, right: margin + 4 },
+        theme: 'grid',
+        styles: {
+          font: 'helvetica',
+          fontSize: 7.3,
+          textColor: [30, 41, 59],
+          lineColor: [226, 232, 240],
+          lineWidth: 0.3,
+          halign: 'center',
+          valign: 'middle',
+          cellPadding: 2,
+          minCellHeight: 7.5
+        },
+        headStyles: {
+          fillColor: [241, 245, 249],
+          textColor: [17, 17, 17],
+          fontStyle: 'bold'
+        },
+        columnStyles: {
+          0: { cellWidth: 32, fillColor: [248, 250, 252], fontStyle: 'bold' },
+          1: { cellWidth: 34, textColor: [100, 116, 139], fontStyle: 'bold' },
+          2: { cellWidth: 38, fontStyle: 'bold' },
+          3: { cellWidth: 46, fontStyle: 'bold' },
+          4: { cellWidth: 28 }
+        },
+        head: [[
+          'Terminal - Gnd',
+          'Test Setting',
+          'Standard',
+          'Measured Value (MOhm)',
+          'Judgement'
+        ]],
+        body: insulMeta.map(r => [r.pair, r.setting, r.standard, r.valDisplay, '']),
+        didDrawCell: function(data) {
+          if (data.section === 'body' && data.column.index === 4) {
+            const st = insulMeta[data.row.index].status;
+            const { x, y: cy, width, height } = data.cell;
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(7);
+            if (st === 'OK' || st === 'NG') {
+              const isOk = st === 'OK';
+              doc.setFillColor(...(isOk ? [236, 253, 245] : [254, 242, 242]));
+              doc.setDrawColor(...(isOk ? [16, 185, 129] : [239, 68, 68]));
+              doc.roundedRect(x + 6.5, cy + height / 2 - 2.3, width - 13, 4.6, 2, 2, 'FD');
+              doc.setTextColor(...(isOk ? [16, 185, 129] : [239, 68, 68]));
+              doc.text(st, x + width / 2, cy + height / 2 + 0.85, { align: 'center' });
+            } else {
+              doc.setTextColor(30, 41, 59);
+              doc.text('-', x + width / 2, cy + height / 2 + 0.85, { align: 'center' });
+            }
+          }
+        }
+      });
+
+      y = doc.lastAutoTable.finalY + 3;
+    }
+
+    const sec3EndY = y + 1;
+    if (doc.internal.getNumberOfPages() === sec3StartPage) {
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.35);
+      doc.roundedRect(margin, sec3StartY, contentW, sec3EndY - sec3StartY, 2, 2, 'S');
+    }
+    y = sec3EndY + 4;
+
+    // 6. Section 4: Attached Compressor Pictures (2-Column Grid, if images exist)
+    const activePicKeys = Object.keys(formState.uploadedImages).filter(k => formState.uploadedImages[k].src);
+    if (activePicKeys.length > 0) {
+      const picColGap = 4;
+      const picCardW = (contentW - 8 - picColGap) / 2;
+      const picImgBoxH = 44;
+      const picCardH = 54;
+      const picRows = Math.ceil(activePicKeys.length / 2);
+
+      checkPageBreak(12 + picCardH + 4);
+      let curSecStartY = y;
+      drawSectionHeader('Attached Compressor Pictures', y);
+      y += 10.5;
+
+      for (let r = 0; r < picRows; r++) {
+        if (r > 0 && y + picCardH + 4 > 285) {
+          doc.setDrawColor(226, 232, 240);
+          doc.setLineWidth(0.35);
+          doc.roundedRect(margin, curSecStartY, contentW, (y + 1) - curSecStartY, 2, 2, 'S');
+
+          doc.addPage();
+          y = 12;
+          curSecStartY = y;
+          drawSectionHeader('Attached Compressor Pictures (Cont.)', y);
+          y += 10.5;
+        }
+
+        const colsInRow = Math.min(2, activePicKeys.length - r * 2);
+        for (let c = 0; c < colsInRow; c++) {
+          const picIdx = r * 2 + c;
+          const k = activePicKeys[picIdx];
+          const item = formState.uploadedImages[k];
+          const px = margin + 4 + c * (picCardW + picColGap);
+          const py = y;
+
+          doc.setFillColor(250, 250, 250);
+          doc.setDrawColor(226, 232, 240);
+          doc.roundedRect(px, py, picCardW, picCardH, 1.5, 1.5, 'FD');
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.8);
+          doc.setTextColor(17, 17, 17);
+          doc.text(`Compressor Picture ${picIdx + 1}`, px + 2.5, py + 5);
+
+          const innerX = px + 2.5;
+          const innerY = py + 7;
+          const innerW = picCardW - 5;
+          const innerH = picImgBoxH;
+
+          doc.setFillColor(255, 255, 255);
+          doc.setDrawColor(226, 232, 240);
+          doc.roundedRect(innerX, innerY, innerW, innerH, 1, 1, 'FD');
+
+          try {
+            const imgFormat = (item.src.startsWith('data:image/jpeg') || item.src.startsWith('data:image/jpg')) ? 'JPEG' : 'PNG';
+            const ratio = item.ratio || 1.33;
+            let drawW = innerW - 1.5;
+            let drawH = drawW / ratio;
+            if (drawH > innerH - 1.5) {
+              drawH = innerH - 1.5;
+              drawW = drawH * ratio;
+            }
+            doc.addImage(item.src, imgFormat, innerX + (innerW - drawW) / 2, innerY + (innerH - drawH) / 2, drawW, drawH);
+          } catch (err) {
+            console.error('PDF compressor image render error:', err);
+          }
+        }
+        y += picCardH + 3;
+      }
+
+      const secEndY = y + 1;
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.35);
+      doc.roundedRect(margin, curSecStartY, contentW, secEndY - curSecStartY, 2, 2, 'S');
+      y = secEndY + 4;
+    }
+
+    // 7. Section 5: Inspection Summary & Comments
+    const summaryRows = [];
+    const domRows = document.querySelectorAll('#summary_comment_content .summary-item-row');
+    if (domRows.length > 0) {
+      domRows.forEach(el => {
+        const txt = sanitizePdfText(el.textContent.trim());
+        const rowType = el.getAttribute('data-summary-type') || 'normal';
+        summaryRows.push({ text: txt, type: rowType });
+      });
+    } else {
+      summaryRows.push({ text: 'No inspection summary available', type: 'muted' });
+    }
+
+    doc.setFontSize(8);
+    let totalLines = 0;
+    const wrappedRows = summaryRows.map(r => {
+      const lines = doc.splitTextToSize(r.text, contentW - 14);
+      totalLines += lines.length;
+      return { lines, type: r.type };
+    });
+
+    const innerBoxH = Math.max(10, totalLines * 4.5 + 5);
+    const secSumH = 13 + innerBoxH;
+
+    checkPageBreak(secSumH);
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(margin, y, contentW, secSumH, 2, 2, 'FD');
+    drawSectionHeader('Inspection Summary & Comments', y);
+
+    doc.setFillColor(250, 250, 250);
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(margin + 4, y + 9.5, contentW - 8, innerBoxH, 1.5, 1.5, 'FD');
+
+    let textY = y + 14;
+    wrappedRows.forEach(item => {
+      if (item.type === 'ng') {
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(239, 68, 68);
+      } else if (item.type === 'ok') {
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(16, 185, 129);
+      } else if (item.type === 'muted') {
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(100, 116, 139);
+      } else {
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(30, 41, 59);
+      }
+      doc.text(item.lines, margin + 7, textY);
+      textY += item.lines.length * 4.5;
+    });
+
+    doc.save(`${safeFileName}.pdf`);
   }
 </script>
 </body></html>
